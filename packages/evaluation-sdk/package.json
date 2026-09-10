@@ -1,0 +1,20 @@
+{
+  "name": "@ai-employee/evaluation-sdk",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "eval:catalog": "node --test dist/test/evaluation.test.js"
+  },
+  "dependencies": {
+    "@ai-employee/shared": "1.0.0",
+    "@ai-employee/rolepack": "1.0.0",
+    "@ai-employee/runtime": "1.0.0",
+    "@ai-employee/tool-sdk": "1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0"
+  }
+}

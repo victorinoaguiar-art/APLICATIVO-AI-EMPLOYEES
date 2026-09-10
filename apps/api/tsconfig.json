@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "references": [
+    { "path": "../../packages/shared" },
+    { "path": "../../packages/rolepack" },
+    { "path": "../../packages/runtime" },
+    { "path": "../../packages/approvals" },
+    { "path": "../../packages/tool-sdk" },
+    { "path": "../../packages/policies" },
+    { "path": "../../packages/marketplace-billing" }
+  ],
+  "include": ["src/**/*"]
+}

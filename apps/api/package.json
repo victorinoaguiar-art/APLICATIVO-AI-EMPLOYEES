@@ -1,0 +1,27 @@
+{
+  "name": "@ai-employee/api",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "node dist/server.js",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@ai-employee/shared": "1.0.0",
+    "@ai-employee/rolepack": "1.0.0",
+    "@ai-employee/runtime": "1.0.0",
+    "@ai-employee/approvals": "1.0.0",
+    "@ai-employee/tool-sdk": "1.0.0",
+    "@ai-employee/policies": "1.0.0",
+    "@ai-employee/marketplace-billing": "1.0.0",
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/node": "^20.11.0"
+  }
+}

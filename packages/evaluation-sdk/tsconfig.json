@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "references": [
+    { "path": "../shared" },
+    { "path": "../rolepack" },
+    { "path": "../runtime" },
+    { "path": "../tool-sdk" }
+  ],
+  "include": ["src/**/*"]
+}

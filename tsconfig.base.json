@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "composite": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@ai-employee/shared": ["packages/shared/src/index.ts"],
+      "@ai-employee/rolepack": ["packages/rolepack/src/index.ts"],
+      "@ai-employee/permissions": ["packages/permissions/src/index.ts"],
+      "@ai-employee/policies": ["packages/policies/src/index.ts"],
+      "@ai-employee/approvals": ["packages/approvals/src/index.ts"],
+      "@ai-employee/tool-sdk": ["packages/tool-sdk/src/index.ts"],
+      "@ai-employee/runtime": ["packages/runtime/src/index.ts"],
+      "@ai-employee/evaluation-sdk": ["packages/evaluation-sdk/src/index.ts"]
+    }
+  }
+}

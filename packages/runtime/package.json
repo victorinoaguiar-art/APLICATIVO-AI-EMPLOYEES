@@ -1,0 +1,22 @@
+{
+  "name": "@ai-employee/runtime",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test dist/test/orchestrator.test.js dist/test/durableEngine.test.js dist/test/modelGateway.test.js"
+  },
+  "dependencies": {
+    "@ai-employee/shared": "1.0.0",
+    "@ai-employee/rolepack": "1.0.0",
+    "@ai-employee/permissions": "1.0.0",
+    "@ai-employee/policies": "1.0.0",
+    "@ai-employee/approvals": "1.0.0",
+    "@ai-employee/tool-sdk": "1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "ai-employee-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI Employee Platform — Digital Workforce Operating System (500 Canonical Role Packs)",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test:catalog && npm run test:runtime && npm run test:security && npm run eval:catalog",
+    "test:catalog": "npm run test --workspace=packages/rolepack",
+    "test:runtime": "npm run test --workspace=packages/runtime",
+    "test:security": "npm run test --workspace=packages/policies",
+    "eval:catalog": "npm run eval:catalog --workspace=packages/evaluation-sdk",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "dev:web": "npm run dev --workspace=apps/web"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "caniuse-lite": "^1.0.30001810",
+    "typescript": "^5.9.3"
+  }
+}

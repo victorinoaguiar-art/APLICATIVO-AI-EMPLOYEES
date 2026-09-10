@@ -1,0 +1,17 @@
+{
+  "name": "@ai-employee/policies",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test dist/test/redTeam.test.js"
+  },
+  "dependencies": {
+    "@ai-employee/shared": "1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0"
+  }
+}
