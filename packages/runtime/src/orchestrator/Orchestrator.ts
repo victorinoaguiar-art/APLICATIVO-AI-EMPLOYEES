@@ -11,7 +11,7 @@ import { PolicyEngine } from '@ai-employee/policies';
 import { ApprovalGateway } from '@ai-employee/approvals';
 import { ToolAdapter, ToolExecutionContext } from '@ai-employee/tool-sdk';
 import { TaskStateMachine } from '../task/TaskStateMachine.js';
-import { randomUUID } from 'node:crypto';
+import { randomUUID } from 'crypto';
 
 export interface ExecuteTaskOptions {
   task: TaskRecord;

@@ -1,0 +1,1 @@
+{"version":3,"file":"SystemEventWebhookAdapter.d.ts","sourceRoot":"","sources":["SystemEventWebhookAdapter.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,qBAAqB,EAAkB,MAAM,qBAAqB,CAAC;AAG5E,qBAAa,yBAAyB;WACtB,YAAY,CACxB,cAAc,EAAE,MAAM,EACtB,YAAY,EAAE,MAAM,EACpB,SAAS,EAAE,MAAM,EACjB,OAAO,EAAE,MAAM,CAAC,MAAM,EAAE,OAAO,CAAC,EAChC,eAAe,EAAE,MAAM,EACvB,MAAM,EAAE,MAAM,GACb,qBAAqB;CAiCzB"}

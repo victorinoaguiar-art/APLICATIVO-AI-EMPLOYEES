@@ -203,3 +203,180 @@ export interface CertificationResult {
   blockingFailures: string[];
   timestamp: string;
 }
+
+// V2.1 Work Contract & Enterprise Data Fabric Types
+export type ActivationMode =
+  | 'MANUAL_TASK'
+  | 'API_TASK'
+  | 'UPSTREAM_EMPLOYEE_HANDOFF'
+  | 'EVENT'
+  | 'SCHEDULE_OPTIONAL'
+  | 'FILE_OR_MESSAGE_ARRIVAL';
+
+import { DocumentDeliveryPolicy } from '../document/documentServiceTypes.js';
+export * from '../document/documentServiceTypes.js';
+
+export interface WorkContractTemplate {
+  schema_version: string;
+  employee_id: number;
+  role_key: string;
+  display_name: string;
+  department: string;
+  rolepack_version: string;
+  documentDelivery?: DocumentDeliveryPolicy;
+  activation: {
+    modes: ActivationMode[];
+    canonical_triggers: string[];
+    rule: string;
+  };
+  inputs: {
+    canonical_data_products: string[];
+    business_source_context: string[];
+    connection_families: Array<{
+      tool: string;
+      family: string;
+      examples: string[];
+    }>;
+    ingestion_methods: string[];
+  };
+  processing_contract: {
+    processing_style: string;
+    stages: Array<{
+      stage_number: number;
+      name: string;
+      objective: string;
+      validation_rule: string;
+    }>;
+    deterministic_validation: string[];
+    transformation_rules: string[];
+    missing_data_policy: 'WAITING_DATA' | 'PARTIAL_WITH_WARNING' | 'BLOCK';
+  };
+  outputs: {
+    output_contracts: string[];
+    delivered_artifacts: string[];
+    handoffs: string[];
+    downstream_consumers: string[];
+  };
+  governance: {
+    risk: {
+      level: RiskLevel;
+      materiality_threshold_usd: number;
+      approval_triggers: string[];
+    };
+    autonomy: {
+      default: AutonomyLevel;
+      maximum: AutonomyLevel;
+    };
+    approval_policy: ApprovalPolicy;
+    audit_requirements: string[];
+  };
+  kpis_and_slas: {
+    measurable_kpis: string[];
+    target_slas: Array<{
+      priority: string;
+      target_completion: string;
+    }>;
+    quality_gates: string[];
+  };
+}
+
+export interface DataEnvelope<T = unknown> {
+  envelopeId: string;
+  organizationId: string;
+  sourceConnectionId: string;
+  sourceSystem: string;
+  sourceRecordId?: string;
+  sourceDeepLink?: string;
+  schemaKey: string;
+  schemaVersion: string;
+  eventType?: string;
+  occurredAt?: string;
+  ingestedAt: string;
+  classification: 'PUBLIC' | 'INTERNAL' | 'CONFIDENTIAL' | 'RESTRICTED' | 'HIGHLY_RESTRICTED';
+  payload: T;
+  attachmentRefs: string[];
+  lineage: Array<{ step: string; system: string; timestamp: string }>;
+  idempotencyKey: string;
+  checksum: string;
+  confidence?: number;
+  freshness?: { asOf: string; status: 'FRESH' | 'STALE' | 'UNKNOWN' };
+}
+
+export interface OutputRoute {
+  routeId: string;
+  employeeId: string;
+  roleKey: string;
+  outputContract: string;
+  destinationType: string;
+  destinationTarget: string;
+  autoDelivery: boolean;
+}
+
+export interface WorkProductEnvelope<T = unknown> {
+  workProductId: string;
+  organizationId: string;
+  taskId: string;
+  employeeId: string;
+  roleKey: string;
+  rolePackVersion: string;
+  type: string;
+  status: 'DRAFT' | 'READY_FOR_REVIEW' | 'APPROVED' | 'DELIVERED' | 'FAILED';
+  structuredPayload?: T;
+  artifactRefs: string[];
+  sourceSnapshotId: string;
+  sourceLineage: Array<{ step: string; system: string; timestamp: string }>;
+  confidence?: number;
+  approvalId?: string;
+  deliveryRoutes: OutputRoute[];
+  checksum: string;
+  createdAt: string;
+}
+
+export interface DeliveryReceipt {
+  receiptId: string;
+  workProductId: string;
+  organizationId: string;
+  destinationType: 'HUMAN' | 'SYSTEM' | 'EMPLOYEE' | 'ARTIFACT' | 'EMAIL' | 'WEBHOOK' | 'STORAGE';
+  destinationTarget: string;
+  deliveredAt: string;
+  status: 'DELIVERED' | 'PENDING' | 'FAILED';
+  receiptProof: string;
+}
+
+export interface ConnectionProfile {
+  id: string;
+  organizationId: string;
+  name: string;
+  systemType: 'ERP' | 'CRM' | 'BI' | 'DATABASE' | 'SPREADSHEET' | 'FILE_STORAGE' | 'API' | 'WEBHOOK';
+  provider: string;
+  status: 'CONNECTED' | 'DISCONNECTED' | 'DEGRADED' | 'SYNCING';
+  authType: 'OAUTH2' | 'API_KEY' | 'BASIC' | 'GATEWAY_AGENT';
+  scopes: string[];
+  lastSyncedAt?: string;
+  health: 'HEALTHY' | 'WARNING' | 'ERROR';
+  deepLinkPattern?: string;
+}
+
+export interface InputBinding {
+  bindingId: string;
+  employeeId: string;
+  roleKey: string;
+  dataProduct: string;
+  connectionId: string;
+  sourceFamily: string;
+  ingestionMethod: string;
+  status: 'ACTIVE' | 'PAUSED' | 'ERROR';
+}
+
+export interface EmployeeWorkBinding {
+  organizationId: string;
+  employeeId: string;
+  roleKey: string;
+  workContractVersion: string;
+  inputBindings: InputBinding[];
+  triggerBindings: Array<{ triggerType: string; connectionId: string; filter?: string }>;
+  outputRoutes: OutputRoute[];
+  supervisorId?: string;
+  policySetId: string;
+}
+

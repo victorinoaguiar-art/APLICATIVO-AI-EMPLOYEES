@@ -1,0 +1,1 @@
+{"version":3,"file":"PdfRenderer.d.ts","sourceRoot":"","sources":["PdfRenderer.ts"],"names":[],"mappings":"AAAA,OAAO,EACL,iBAAiB,EACjB,gBAAgB,EAEjB,MAAM,qBAAqB,CAAC;AAG7B,qBAAa,WAAW;WACF,MAAM,CAAC,GAAG,EAAE,iBAAiB,GAAG,OAAO,CAAC,gBAAgB,CAAC;CAiD9E"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"XlsxRenderer.d.ts","sourceRoot":"","sources":["XlsxRenderer.ts"],"names":[],"mappings":"AAAA,OAAO,EACL,iBAAiB,EACjB,gBAAgB,EAEjB,MAAM,qBAAqB,CAAC;AAG7B,qBAAa,YAAY;WACH,MAAM,CAAC,GAAG,EAAE,iBAAiB,GAAG,OAAO,CAAC,gBAAgB,CAAC;CAgD9E"}

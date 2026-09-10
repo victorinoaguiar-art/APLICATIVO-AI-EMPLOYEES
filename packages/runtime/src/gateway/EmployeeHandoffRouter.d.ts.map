@@ -1,0 +1,1 @@
+{"version":3,"file":"EmployeeHandoffRouter.d.ts","sourceRoot":"","sources":["EmployeeHandoffRouter.ts"],"names":[],"mappings":"AAAA,OAAO,EACL,uBAAuB,EACvB,sBAAsB,EAEvB,MAAM,qBAAqB,CAAC;AAI7B,qBAAa,qBAAqB;IAChC,OAAO,CAAC,YAAY,CAAiC;IAE9C,eAAe,CAAC,OAAO,EAAE,uBAAuB,GAAG,sBAAsB;IAwCzE,0BAA0B,CAAC,cAAc,EAAE,MAAM,GAAG,uBAAuB,EAAE;CAGrF"}

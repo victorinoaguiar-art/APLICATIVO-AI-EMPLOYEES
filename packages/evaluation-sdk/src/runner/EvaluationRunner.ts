@@ -1,6 +1,6 @@
 import { RolePack, CertificationResult } from '@ai-employee/shared';
 import { evaluateBlockingGates, BlockingFailureType } from '../gates/blockingGates.js';
-import { createHash } from 'node:crypto';
+import { createHash } from 'crypto';
 
 export interface EvaluationTestCase {
   id: string;

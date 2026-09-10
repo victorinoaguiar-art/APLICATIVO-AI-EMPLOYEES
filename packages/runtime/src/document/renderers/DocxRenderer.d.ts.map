@@ -1,0 +1,1 @@
+{"version":3,"file":"DocxRenderer.d.ts","sourceRoot":"","sources":["DocxRenderer.ts"],"names":[],"mappings":"AAAA,OAAO,EACL,iBAAiB,EACjB,gBAAgB,EAEjB,MAAM,qBAAqB,CAAC;AAG7B,qBAAa,YAAY;WACH,MAAM,CAAC,GAAG,EAAE,iBAAiB,GAAG,OAAO,CAAC,gBAAgB,CAAC;CA4E9E"}
