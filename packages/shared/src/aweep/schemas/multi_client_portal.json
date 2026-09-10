@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MultiClientPortalSchema",
+  "type": "object",
+  "properties": {
+    "firm_id": { "type": "string" },
+    "legal_name": { "type": "string" },
+    "partner_status": { "type": "string", "enum": ["ACTIVE", "PENDING_VERIFICATION", "SUSPENDED", "RETIRED"] },
+    "billing_model": { "type": "string", "enum": ["FIRM_PAID", "CLIENT_PAID", "RESOLD", "REVENUE_SHARE", "MANAGED_SERVICE"] }
+  },
+  "required": ["firm_id", "legal_name", "partner_status", "billing_model"]
+}

@@ -6,7 +6,9 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "node --test dist/test/orchestrator.test.js dist/test/durableEngine.test.js dist/test/modelGateway.test.js dist/test/utcegGateway.test.js dist/test/ordksKnowledgeEngine.test.js dist/test/readinessProgram500_300_200.test.js dist/test/operationalizationEngine.test.js dist/test/priorityProgramV2.test.js dist/test/eremsEngine.test.js dist/test/caqrsEngine.test.js dist/test/clbgsEngine.test.js dist/test/aessreEngine.test.js dist/test/atccrsEngine.test.js"
+    "test": "node --test dist/test/orchestrator.test.js dist/test/durableEngine.test.js dist/test/modelGateway.test.js dist/test/utcegGateway.test.js dist/test/ordksKnowledgeEngine.test.js dist/test/readinessProgram500_300_200.test.js dist/test/operationalizationEngine.test.js dist/test/priorityProgramV2.test.js dist/test/eremsEngine.test.js dist/test/caqrsEngine.test.js dist/test/clbgsEngine.test.js dist/test/aessreEngine.test.js dist/test/atccrsEngine.test.js dist/test/apcatosEngine.test.js dist/test/emvtcsEngine.test.js dist/test/eptowdsEngine.test.js dist/test/peipIntegrationEngine.test.js"
+
+
   },
   "dependencies": {
     "@ai-employee/shared": "1.0.0",

@@ -21,12 +21,15 @@ export class WorkContractRegistry {
 
   private loadContracts() {
     if (this.isLoaded) return;
+    if (typeof (globalThis as any).window !== 'undefined') return;
 
     try {
+      if (!fs || typeof fs.existsSync !== 'function') return;
+
+      const cwd = typeof process !== 'undefined' && process.cwd ? process.cwd() : '.';
       const possiblePaths = [
-        path.resolve(process.cwd(), 'AI_Employee_500_Work_Contracts_v1.json'),
-        path.resolve(process.cwd(), '../../AI_Employee_500_Work_Contracts_v1.json'),
-        path.resolve(__dirname, '../../../../AI_Employee_500_Work_Contracts_v1.json'),
+        path.resolve(cwd, 'AI_Employee_500_Work_Contracts_v1.json'),
+        path.resolve(cwd, '../../AI_Employee_500_Work_Contracts_v1.json'),
         'c:/Users/Victorino Aguiar/OneDrive/Desktop/APLICATIVO AI EMPLOYEES/AI_Employee_500_Work_Contracts_v1.json'
       ];
 

@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ValueEvent",
+  "type": "object",
+  "properties": {
+    "event_id": { "type": "string" },
+    "employee_instance_id": { "type": "string" },
+    "type": { "type": "string" },
+    "measurement_type": { "type": "string", "enum": ["MEASURED", "ESTIMATED", "ASSUMED"] },
+    "amount_usd": { "type": "number" }
+  },
+  "required": ["event_id", "employee_instance_id", "type", "measurement_type"]
+}

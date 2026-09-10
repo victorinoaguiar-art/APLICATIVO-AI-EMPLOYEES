@@ -1,0 +1,12 @@
+{
+  "suite_name": "GWNIS Comprehensive Verification Suite",
+  "categories": [
+    "Authentication & Token Refresh",
+    "Multi-Tenant Isolation",
+    "Drive Search & Metadata Read",
+    "Docs Native Creation & PDF Export",
+    "Sheets Range Read/Update & Formula Guard",
+    "DLP & Anti-Prompt Injection",
+    "Pilot Flow Verification (#261, #286, #73)"
+  ]
+}

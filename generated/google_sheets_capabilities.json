@@ -1,0 +1,13 @@
+{
+  "service": "Google Sheets",
+  "capabilities": {
+    "native_creation": true,
+    "range_level_authorization": true,
+    "batch_update": true,
+    "data_validation": true,
+    "apps_script_execution": false,
+    "export_xlsx": true,
+    "export_csv": true,
+    "delete_permitted": false
+  }
+}

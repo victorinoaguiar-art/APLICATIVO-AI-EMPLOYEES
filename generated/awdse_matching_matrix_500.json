@@ -1,0 +1,5 @@
+{
+  "matrix_version": "1.0",
+  "archetypes": ["ANA", "MON", "EXE", "WRI", "REV", "PLN", "FOR", "COA", "SUP", "MAN"],
+  "matching_strategies": ["DIRECT_MATCH", "TEAM_MATCH", "DEPARTMENT_MATCH", "PARTIAL_MATCH", "NO_SAFE_MATCH"]
+}

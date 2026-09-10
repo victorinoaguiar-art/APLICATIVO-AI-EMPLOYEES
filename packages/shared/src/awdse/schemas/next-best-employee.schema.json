@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NextBestEmployeeRecommendation",
+  "type": "object",
+  "properties": {
+    "recommendation_id": { "type": "string" },
+    "organization_id": { "type": "string" },
+    "recommended_employee_id": { "type": "number" },
+    "upsell_type": { "type": "string" },
+    "status": { "type": "string" }
+  },
+  "required": ["recommendation_id", "organization_id", "recommended_employee_id", "upsell_type", "status"]
+}

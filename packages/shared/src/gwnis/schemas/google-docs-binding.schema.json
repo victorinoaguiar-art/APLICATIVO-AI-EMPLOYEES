@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GoogleDocsBinding",
+  "type": "object",
+  "properties": {
+    "employee_instance_id": { "type": "string" },
+    "allowed_documents": { "type": "array", "items": { "type": "string" } },
+    "operations": { "type": "array", "items": { "type": "string" } }
+  },
+  "required": ["employee_instance_id"]
+}

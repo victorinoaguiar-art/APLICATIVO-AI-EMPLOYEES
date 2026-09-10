@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GoogleResourceAllowlist",
+  "type": "object",
+  "properties": {
+    "organization_id": { "type": "string" },
+    "allowed_file_ids": { "type": "array", "items": { "type": "string" } },
+    "allowed_folder_ids": { "type": "array", "items": { "type": "string" } },
+    "allowed_shared_drives": { "type": "array", "items": { "type": "string" } }
+  },
+  "required": ["organization_id"]
+}

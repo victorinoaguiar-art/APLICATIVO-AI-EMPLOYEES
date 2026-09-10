@@ -1,0 +1,11 @@
+{
+  "service": "Google Drive",
+  "capabilities": {
+    "search_natural_language": true,
+    "shared_drives": true,
+    "versioning": true,
+    "mime_types_supported": ["application/pdf", "application/vnd.google-apps.document", "application/vnd.google-apps.spreadsheet", "text/csv", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
+    "delete_permitted": false,
+    "external_sharing_default": false
+  }
+}

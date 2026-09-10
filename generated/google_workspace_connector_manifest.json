@@ -1,0 +1,56 @@
+{
+  "suite": "Google Workspace Native Integration Suite (GWNIS)",
+  "version": "1.0.0",
+  "connectors": [
+    {
+      "id": "google-drive",
+      "name": "Google Drive Connector",
+      "status": "ACTIVE",
+      "supported_operations": [
+        "drive.file.list",
+        "drive.file.search",
+        "drive.file.metadata.read",
+        "drive.file.download",
+        "drive.file.upload",
+        "drive.file.create",
+        "drive.folder.create",
+        "drive.file.version.read"
+      ]
+    },
+    {
+      "id": "google-docs",
+      "name": "Google Docs Connector",
+      "status": "ACTIVE",
+      "supported_operations": [
+        "docs.create",
+        "docs.read",
+        "docs.update",
+        "docs.append",
+        "docs.replace_text",
+        "docs.export_pdf",
+        "docs.export_docx"
+      ]
+    },
+    {
+      "id": "google-sheets",
+      "name": "Google Sheets Connector",
+      "status": "ACTIVE",
+      "supported_operations": [
+        "sheets.create",
+        "sheets.metadata.read",
+        "sheets.values.read",
+        "sheets.range.read",
+        "sheets.range.update",
+        "sheets.rows.append",
+        "sheets.export_xlsx",
+        "sheets.export_csv"
+      ]
+    }
+  ],
+  "security": {
+    "delete_allowed": false,
+    "external_share_by_default": false,
+    "macro_execution_blocked": true,
+    "anti_prompt_injection": true
+  }
+}

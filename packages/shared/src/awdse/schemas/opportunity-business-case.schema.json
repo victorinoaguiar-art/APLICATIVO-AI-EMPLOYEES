@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EmployeeOpportunityBusinessCase",
+  "type": "object",
+  "properties": {
+    "business_case_id": { "type": "string" },
+    "process_candidate_id": { "type": "string" },
+    "recommended_employee_id": { "type": "number" },
+    "estimated_savings_usd_monthly": { "type": "number" },
+    "estimated_payback_months": { "type": "number" },
+    "status": { "type": "string" }
+  },
+  "required": ["business_case_id", "process_candidate_id", "recommended_employee_id", "status"]
+}

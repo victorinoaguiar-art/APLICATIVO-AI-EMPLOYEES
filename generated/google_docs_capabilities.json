@@ -1,0 +1,12 @@
+{
+  "service": "Google Docs",
+  "capabilities": {
+    "native_creation": true,
+    "template_cloning": true,
+    "brand_governance_integration": true,
+    "conflict_detection": true,
+    "export_pdf": true,
+    "export_docx": true,
+    "delete_permitted": false
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GoogleSheetRangeAuthorization",
+  "type": "object",
+  "properties": {
+    "spreadsheet_id": { "type": "string" },
+    "sheet_id_or_name": { "type": "string" },
+    "allowed_ranges": { "type": "array", "items": { "type": "string" } },
+    "operations": { "type": "array", "items": { "type": "string" } },
+    "classification": { "type": "string", "enum": ["PUBLIC", "INTERNAL", "CONFIDENTIAL", "RESTRICTED"] }
+  },
+  "required": ["spreadsheet_id", "sheet_id_or_name", "allowed_ranges", "operations"]
+}

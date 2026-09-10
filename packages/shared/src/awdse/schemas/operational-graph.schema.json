@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OperationalGraph",
+  "type": "object",
+  "properties": {
+    "organization_id": { "type": "string" },
+    "nodes": { "type": "array" },
+    "edges": { "type": "array" }
+  },
+  "required": ["organization_id"]
+}

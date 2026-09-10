@@ -16,6 +16,17 @@ export * from './caqrs/caqrsTypes.js';
 export * from './clbgs/clbgsTypes.js';
 export * from './aessre/aessreTypes.js';
 export * from './atccrs/atccrsTypes.js';
+export * from './apcatos/apcatostypes.js';
+export * from './emvtcs/emvtcstypes.js';
+export * from './eptowds/eptowdstypes.js';
+export * from './peip/peiptypes.js';
+export * from './gwnis/gwnistypes.js';
+export * from './awdse/awdsetypes.js';
+export * from './aweep/aweeptypes.js';
+export * from './ordks/AngolaPGCAChart.js';
+
+
+
 
 
 

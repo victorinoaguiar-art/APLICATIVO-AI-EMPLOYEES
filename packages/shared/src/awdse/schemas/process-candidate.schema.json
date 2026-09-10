@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ProcessCandidate",
+  "type": "object",
+  "properties": {
+    "process_candidate_id": { "type": "string" },
+    "organization_id": { "type": "string" },
+    "name": { "type": "string" },
+    "department": { "type": "string" },
+    "automation_candidate_status": { "type": "string" },
+    "friction_score": { "type": "number" }
+  },
+  "required": ["process_candidate_id", "organization_id", "name", "automation_candidate_status"]
+}

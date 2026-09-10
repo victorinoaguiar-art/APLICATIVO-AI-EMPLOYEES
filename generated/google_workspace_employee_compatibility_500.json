@@ -1,0 +1,9 @@
+{
+  "total_employees": 500,
+  "compatibility_samples": [
+    { "employee_id": 66, "title": "Document Classification", "drive": "RECOMMENDED", "docs": "OPTIONAL", "sheets": "OPTIONAL" },
+    { "employee_id": 73, "title": "Management Reporting", "drive": "RECOMMENDED", "docs": "RECOMMENDED", "sheets": "RECOMMENDED" },
+    { "employee_id": 261, "title": "Document Creator", "drive": "RECOMMENDED", "docs": "REQUIRED", "sheets": "OPTIONAL" },
+    { "employee_id": 286, "title": "Spreadsheet Employee", "drive": "RECOMMENDED", "docs": "OPTIONAL", "sheets": "REQUIRED" }
+  ]
+}

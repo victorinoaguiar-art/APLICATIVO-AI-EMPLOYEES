@@ -1,0 +1,8 @@
+{
+  "catalog_version": "1.0",
+  "discovery_sources": [
+    "ERP events", "CRM events", "Email patterns", "Drive folders",
+    "Google Docs", "Google Sheets", "Excel files", "Workflow logs",
+    "Task ticketing", "Bank read-only events", "Manual process declarations"
+  ]
+}

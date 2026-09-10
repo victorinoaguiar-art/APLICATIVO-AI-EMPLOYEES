@@ -1,0 +1,9 @@
+{
+  "rules_version": "1.0",
+  "triggers": ["new_repetitive_process", "high_manual_workload", "workflow_bottleneck", "high_error_rate", "overloaded_employee"],
+  "upsell_types": ["ADD_EMPLOYEE", "ADD_SECOND_INSTANCE", "CREATE_TEAM", "CREATE_DEPARTMENT", "UPGRADE_PLAN", "ADD_CONNECTOR", "ADD_INDUSTRY_PACK", "ADD_JURISDICTION_PACK"],
+  "guards": {
+    "client_approval_required": true,
+    "no_spam_on_rejected": true
+  }
+}

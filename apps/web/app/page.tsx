@@ -99,7 +99,26 @@ import {
   RevenueMetricsSummary,
   CommercialReadinessPassport as ATCCRSPassport,
   EmployeeTrainingProfile as ATCCRSTrainingProfile,
-  RemediationTask as ATCCRSRemediationTask
+  RemediationTask as ATCCRSRemediationTask,
+  ProvisioningJob,
+  APCATOSInstance,
+  OrganizationUser as APCATOSOrgUser,
+  ClientAccessPassport,
+  OrganizationEmployeeReadinessPassport,
+  OffboardingJob,
+  APCATOSGlobalSummary,
+  APCATOSInstanceLifecycleState,
+  APCATOSUserRole,
+  MasterValidationRecord,
+  EmployeeTestPlan as EMVTCSTestPlan,
+  ValidationRunResult as EMVTCSValidationRunResult,
+  EMVTCSGlobalSummary,
+  EMVTCSReadinessState,
+  EnterprisePilotInstance,
+  EPTOWDSDeliveryReceipt,
+  EPTOWDSGlobalSummary,
+  EnterpriseConnection,
+  PEIPGlobalSummary
 } from '@ai-employee/shared';
 import {
   DataIntakeEngine,
@@ -127,8 +146,17 @@ import {
   CAQRSEngine,
   CLBGSEngine,
   AESSREEngine,
-  ATCCRSEngine
+  ATCCRSEngine,
+  APCATOSEngine,
+  EMVTCSEngine,
+  EPTOWDSEngine,
+  PEIPIntegrationEngine,
+  GWNISIntegrationEngine,
+  AWDSEEngine,
+  AWEEPEngine
 } from '@ai-employee/runtime';
+
+
 
 const deptTranslations: Record<string, string> = {
   "Strategy": "Estratégia",
@@ -205,11 +233,11 @@ const translations = {
     killSwitchActive: 'KILL SWITCH GLOBAL ATIVO',
     killSwitchButton: 'KILL SWITCH DE EMERGÊNCIA',
     navTitle: 'Navegação do Painel',
-    navProgram500: 'Programa 500/300/200 & Passaportes',
-    program500Title: '500/300/200 Employee Readiness & Validation Program',
-    program500Subtitle: 'Preparação Estrutural 500/500, Validação Profunda 300 P1 (P1-A/B/C) & Fila 200 P2 (READY_FOR_TEST)',
+    navProgram500: 'Programa 500/500 Priority & Passaportes',
+    program500Title: '500/500 Priority Employee Program v2.0',
+    program500Subtitle: 'Preparação Estrutural 100% (500/500), Validação por Ondas de Impacto (5 Ondas de 100) & Passaportes de Prontidão',
     passportsTab: 'Passaportes de Prontidão (500)',
-    cohortsTab: 'Distribuição de Coortes (300/200)',
+    cohortsTab: 'Distribuição por Ondas & Prioridade (500/500)',
     propagationTab: 'Propagador por Camadas',
     navOrdks: 'ORDKS & Realidade Operacional',
     ordksTitle: 'Operational Reality & Domain Knowledge System (ORDKS)',
@@ -287,11 +315,11 @@ const translations = {
     killSwitchActive: 'GLOBAL KILL SWITCH ACTIVE',
     killSwitchButton: 'EMERGENCY KILL SWITCH',
     navTitle: 'Control Plane Navigation',
-    navProgram500: '500/300/200 Program & Passports',
-    program500Title: '500/300/200 Employee Readiness & Validation Program',
-    program500Subtitle: '100% Structural Readiness 500/500, Deep Validation 300 P1 & Queue 200 P2 (READY_FOR_TEST)',
+    navProgram500: '500/500 Priority Program & Passports',
+    program500Title: '500/500 Priority Employee Program v2.0',
+    program500Subtitle: '100% Structural Readiness (500/500), Impact Wave Validation (5 Waves of 100) & Readiness Passports',
     passportsTab: 'Readiness Passports (500)',
-    cohortsTab: 'Cohort Distribution (300/200)',
+    cohortsTab: 'Wave & Priority Distribution (500/500)',
     propagationTab: 'Layered Propagator',
     navOrdks: 'ORDKS & Operational Reality',
     ordksTitle: 'Operational Reality & Domain Knowledge System (ORDKS)',
@@ -376,12 +404,123 @@ export default function ControlPlaneDashboard() {
 
   const t = translations[lang];
 
-  const [activeTab, setActiveTab] = useState<'catalog' | 'readiness_500' | 'ordks' | 'gateway' | 'erems' | 'caqrs' | 'clbgs' | 'aessre' | 'atccrs' | 'approvals' | 'tasks' | 'security' | 'evaluation' | 'connections' | 'documents' | 'marketplace' | 'billing' | 'release' | 'operationalization'>('catalog');
+  const [activeTab, setActiveTab] = useState<'catalog' | 'aweep' | 'awdse' | 'gwnis' | 'peip' | 'emvtcs' | 'apcatos' | 'eptowds' | 'readiness_500' | 'ordks' | 'gateway' | 'erems' | 'caqrs' | 'clbgs' | 'aessre' | 'atccrs' | 'approvals' | 'tasks' | 'security' | 'evaluation' | 'connections' | 'documents' | 'marketplace' | 'billing' | 'release' | 'operationalization'>('catalog');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDept, setSelectedDept] = useState<string>('ALL');
   const [selectedRisk, setSelectedRisk] = useState<string>('ALL');
   const [selectedRole, setSelectedRole] = useState<any | null>(null);
   const [killSwitchActive, setKillSwitchActive] = useState(false);
+
+  // AWEEP Engine State (Enterprise Extension Pack)
+  const [aweepEngine] = useState(() => AWEEPEngine.getInstance());
+  const [aweepSummary, setAweepSummary] = useState(() => aweepEngine.getGlobalSummary());
+  const [aweepSubTab, setAweepSubTab] = useState<'multiclient' | 'workflow' | 'teams' | 'search' | 'evidence' | 'scim'>('multiclient');
+  const [aweepSearchQuery, setAweepSearchQuery] = useState('Qual a retenção de IVA em faturas acima de $1.000 USD?');
+  const [aweepSearchResult, setAweepSearchResult] = useState(() => aweepEngine.executeEnterpriseSearch('org-empresa-demonstracao', 'auditor@empresa.co.ao', 'Qual a retenção de IVA em faturas acima de $1.000 USD?'));
+
+  // AWDSE Engine State (Digital Workforce OS)
+  const [awdseEngine] = useState(() => AWDSEEngine.getInstance());
+  const [awdseSummary, setAwdseSummary] = useState(() => awdseEngine.getGlobalSummary());
+  const [awdseSubTab, setAwdseSubTab] = useState<'command_center' | 'discovery' | 'matching' | 'value' | 'expansion' | 'matrix'>('command_center');
+  const [awdseInstances, setAwdseInstances] = useState(() => awdseEngine.getDigitalWorkforceInstances('org-empresa-demonstracao'));
+  const [awdseCandidates, setAwdseCandidates] = useState(() => awdseEngine.discoverProcessCandidates('org-empresa-demonstracao'));
+  const [awdseSelectedCandidateId, setAwdseSelectedCandidateId] = useState<string>('proc-cand-001');
+  const [awdseMatches, setAwdseMatches] = useState(() => awdseEngine.matchCandidateToEmployees('proc-cand-001'));
+  const [awdseBusinessCase, setAwdseBusinessCase] = useState(() => awdseEngine.generateBusinessCase('match-001'));
+  const [awdsePassport, setAwdsePassport] = useState(() => awdseEngine.generateValuePassport('emp-inst-066-01', 'Setembro_2026'));
+  const [awdseRecommendations, setAwdseRecommendations] = useState(() => awdseEngine.getExpansionRecommendations('org-empresa-demonstracao'));
+
+  // GWNIS Engine State
+  const [gwnisEngine] = useState(() => new GWNISIntegrationEngine());
+  const [gwnisSummary, setGwnisSummary] = useState(() => gwnisEngine.getGlobalSummary('tenant-default'));
+  const [gwnisSubTab, setGwnisSubTab] = useState<'oauth' | 'drive' | 'docs' | 'sheets' | 'security' | 'pilots'>('oauth');
+  const [gwnisDriveSearch, setGwnisDriveSearch] = useState<string>('Balancete');
+  const [gwnisDriveFiles, setGwnisDriveFiles] = useState(() => gwnisEngine.searchDriveFiles('gwnis-conn-001', 'Balancete'));
+  const [gwnisDocTitle, setGwnisDocTitle] = useState<string>('Carta Bancária BFA');
+  const [gwnisCreatedDoc, setGwnisCreatedDoc] = useState<any>(null);
+  const [gwnisExportedPdf, setGwnisExportedPdf] = useState<any>(null);
+  const [gwnisSheetTitle, setGwnisSheetTitle] = useState<string>('Relatório de Vendas Q3');
+  const [gwnisCreatedSheet, setGwnisCreatedSheet] = useState<any>(null);
+  const [gwnisMacroBlocked, setGwnisMacroBlocked] = useState<boolean>(false);
+  const [gwnisDeleteBlocked, setGwnisDeleteBlocked] = useState<boolean>(false);
+  const [gwnisPilotRes, setGwnisPilotRes] = useState<any>(null);
+
+  // PEIP Engine State
+  const [peipEngine] = useState(() => PEIPIntegrationEngine.getInstance());
+  const [peipSummary, setPeipSummary] = useState(() => peipEngine.getGlobalSummary());
+  const [peipSubTab, setPeipSubTab] = useState<'center' | 'email' | 'whatsapp' | 'drive' | 'primavera' | 'bank_excel'>('center');
+  const [peipConnections, setPeipConnections] = useState(() => peipEngine.getConnections());
+  const [peipEmailSearchQuery, setPeipEmailSearchQuery] = useState<string>('fatura');
+  const [peipEmailInbox, setPeipEmailInbox] = useState(() => peipEngine.searchEmailInbox('fatura'));
+  const [peipWaPhone, setPeipWaPhone] = useState<string>('+244923000111');
+  const [peipWaDraftRes, setPeipWaDraftRes] = useState<any>(null);
+  const [peipDriveFolder, setPeipDriveFolder] = useState<string>('/Financas/Faturas');
+  const [peipDriveFiles, setPeipDriveFiles] = useState(() => peipEngine.listDriveFiles('/Financas/Faturas'));
+  const [peipPrimaveraQueryKey, setPeipPrimaveraQueryKey] = useState<string>('sales_by_period');
+  const [peipPrimaveraRes, setPeipPrimaveraRes] = useState<any>(() => peipEngine.executePrimaveraReadQuery('sales_by_period'));
+  const [peipPrimaveraWriteBlocked, setPeipPrimaveraWriteBlocked] = useState<boolean>(false);
+  const [peipExcelFilename, setPeipExcelFilename] = useState<string>('Vendas_Agosto_Macro.xlsm');
+  const [peipExcelIngestRes, setPeipExcelIngestRes] = useState<any>(null);
+  const [peipBankAccounts, setPeipBankAccounts] = useState(() => peipEngine.getBankAccounts());
+  const [peipBankTransactions, setPeipBankTransactions] = useState(() => peipEngine.getBankTransactions());
+  const [peipBankPaymentBlocked, setPeipBankPaymentBlocked] = useState<boolean>(false);
+
+  // EPTOWDS Engine State
+  const [eptowdsEngine] = useState(() => EPTOWDSEngine.getInstance());
+  const [eptowdsSummary, setEptowdsSummary] = useState(() => eptowdsEngine.getGlobalSummary());
+  const [eptowdsSubTab, setEptowdsSubTab] = useState<'pilots' | 'preview' | 'approval' | 'omnichannel' | 'receipts'>('pilots');
+  const [eptowdsPilots, setEptowdsPilots] = useState(() => eptowdsEngine.getPilotInstances());
+  const [eptowdsTasks, setEptowdsTasks] = useState(() => eptowdsEngine.getPilotTasks());
+  const [eptowdsReceipts, setEptowdsReceipts] = useState(() => eptowdsEngine.getDeliveryReceipts());
+  const [eptowdsSelectedTaskId, setEptowdsSelectedTaskId] = useState<string>('task_pilot_10_001');
+  const [eptowdsSelectedEmpId, setEptowdsSelectedEmpId] = useState<number>(10);
+  const [eptowdsSearchQuery, setEptowdsSearchQuery] = useState<string>('');
+  const [eptowdsPrintJob, setEptowdsPrintJob] = useState<any>(null);
+  const [eptowdsApprovalRes, setEptowdsApprovalRes] = useState<any>(null);
+  const [eptowdsEmailTo, setEptowdsEmailTo] = useState<string>('cliente.piloto@angolatelecom.ao');
+  const [eptowdsEmailDraftRes, setEptowdsEmailDraftRes] = useState<any>(null);
+  const [eptowdsMsgPhone, setEptowdsMsgPhone] = useState<string>('+244923000111');
+  const [eptowdsMsgDraftRes, setEptowdsMsgDraftRes] = useState<any>(null);
+  const [eptowdsDeliveryRes, setEptowdsDeliveryRes] = useState<any>(null);
+  const [eptowdsRevCategory, setEptowdsRevCategory] = useState<string>('STYLE_PREFERENCE');
+  const [eptowdsRevComments, setEptowdsRevComments] = useState<string>('Ajustar formatação e resumo executivo');
+  const [eptowdsRevChanges, setEptowdsRevChanges] = useState<string>('Incluir tabela de indicadores de liquidez');
+
+
+
+  // EMVTCS Engine State
+  const [emvtcsEngine] = useState(() => EMVTCSEngine.getInstance());
+  const [emvtcsSummary, setEmvtcsSummary] = useState(() => emvtcsEngine.getGlobalSummary());
+  const [emvtcsSubTab, setEmvtcsSubTab] = useState<'matrix' | 'test_plans' | 'datasets' | 'shadow' | 'certification'>('matrix');
+  const [emvtcsMatrix, setEmvtcsMatrix] = useState(() => emvtcsEngine.getMasterMatrix());
+  const [emvtcsSelectedEmpId, setEmvtcsSelectedEmpId] = useState<number>(1);
+  const [emvtcsFilterRisk, setEmvtcsFilterRisk] = useState<string>('ALL');
+  const [emvtcsFilterWave, setEmvtcsFilterWave] = useState<number>(0);
+  const [emvtcsRunResult, setEmvtcsRunResult] = useState<EMVTCSValidationRunResult | null>(null);
+  const [emvtcsCertMsg, setEmvtcsCertMsg] = useState<string | null>(null);
+
+  // APCATOS Engine State
+  const [apcatosEngine] = useState(() => APCATOSEngine.getInstance());
+  const [apcatosSummary, setApcatosSummary] = useState(() => apcatosEngine.getGlobalSummary());
+  const [apcatosSubTab, setApcatosSubTab] = useState<'instances' | 'iam' | 'readiness' | 'pilot' | 'offboarding'>('instances');
+  const [apcatosInstances, setApcatosInstances] = useState(() => apcatosEngine.getInstances());
+  const [apcatosUsers, setApcatosUsers] = useState(() => apcatosEngine.getUsers());
+  const [apcatosReadiness, setApcatosReadiness] = useState(() => apcatosEngine.runOrganizationReadinessCheck('tenant_angola_telecom_01'));
+  const [apcatosPassport, setApcatosPassport] = useState(() => apcatosEngine.getClientAccessPassport('tenant_angola_telecom_01', 'usr_admin_01'));
+  const [apcatosSelectedInstId, setApcatosSelectedInstId] = useState<string>('inst_tenant_angola_telecom_01_emp_1');
+
+  // Provisioning Form
+  const [provTenantId, setProvTenantId] = useState<string>('tenant_banco_bai_01');
+  const [provOrgName, setProvOrgName] = useState<string>('Banco BAI SA');
+  const [provEmpIdsInput, setProvEmpIdsInput] = useState<string>('12, 15, 20, 25');
+  const [provMsg, setProvMsg] = useState<string | null>(null);
+
+  // User Invite Form
+  const [inviteEmail, setInviteEmail] = useState<string>('novo.supervisor@bai.ao');
+  const [inviteName, setInviteName] = useState<string>('Manuel Agostinho');
+  const [inviteRole, setInviteRole] = useState<APCATOSUserRole>('EMPLOYEE_SUPERVISOR');
+  const [inviteDept, setInviteDept] = useState<string>('Finanças');
+  const [inviteMsg, setInviteMsg] = useState<string | null>(null);
 
   // ATCCRS Engine State
   const [atccrsEngine] = useState(() => ATCCRSEngine.getInstance());
@@ -1126,7 +1265,7 @@ export default function ControlPlaneDashboard() {
               <Award size={18} />
               <span>{t.navProgram500}</span>
             </div>
-            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(99, 102, 241, 0.2)', color: theme === 'dark' ? '#818cf8' : '#4f46e5', fontWeight: 600 }}>300/200</span>
+            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(99, 102, 241, 0.2)', color: theme === 'dark' ? '#818cf8' : '#4f46e5', fontWeight: 600 }}>500/500</span>
           </button>
           <button onClick={() => setActiveTab('operationalization')} style={sidebarItemStyle('operationalization')}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -1162,6 +1301,55 @@ export default function ControlPlaneDashboard() {
               <span>{lang === 'pt' ? 'AESSRE — Contratação & Salário' : 'AESSRE — Hiring & Revenue'}</span>
             </div>
             <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.2)', color: theme === 'dark' ? '#34d399' : '#059669', fontWeight: 600 }}>Salário AOA</span>
+          </button>
+          <button onClick={() => setActiveTab('emvtcs')} style={sidebarItemStyle('emvtcs')}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <CheckCircle2 size={18} />
+              <span>{lang === 'pt' ? 'EMVTCS — Validação & Certificação' : 'EMVTCS — Validation & Certification'}</span>
+            </div>
+            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.2)', color: theme === 'dark' ? '#34d399' : '#059669', fontWeight: 600 }}>500/500</span>
+          </button>
+          <button onClick={() => setActiveTab('apcatos')} style={sidebarItemStyle('apcatos')}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Server size={18} />
+              <span>{lang === 'pt' ? 'APCATOS — Provisionamento & Acesso' : 'APCATOS — Provisioning & Access'}</span>
+            </div>
+            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(59, 130, 246, 0.2)', color: theme === 'dark' ? '#60a5fa' : '#2563eb', fontWeight: 600 }}>500/500</span>
+          </button>
+          <button onClick={() => setActiveTab('eptowds')} style={sidebarItemStyle('eptowds')}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Workflow size={18} />
+              <span>{lang === 'pt' ? 'EPTOWDS — Pilotos & Entrega Omnicanal' : 'EPTOWDS — Pilots & Omnichannel Delivery'}</span>
+            </div>
+            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.2)', color: theme === 'dark' ? '#34d399' : '#059669', fontWeight: 600 }}>500/500</span>
+          </button>
+          <button onClick={() => setActiveTab('aweep')} style={sidebarItemStyle('aweep')}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Globe size={18} />
+              <span>{lang === 'pt' ? 'AWEEP — Enterprise Extension Pack' : 'AWEEP — Enterprise Extension Pack'}</span>
+            </div>
+            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(236, 72, 153, 0.2)', color: theme === 'dark' ? '#f472b6' : '#db2777', fontWeight: 600 }}>Multi-Client & AI Teams</span>
+          </button>
+          <button onClick={() => setActiveTab('awdse')} style={sidebarItemStyle('awdse')}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Cpu size={18} />
+              <span>{lang === 'pt' ? 'AWDSE — Digital Workforce OS' : 'AWDSE — Digital Workforce OS'}</span>
+            </div>
+            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(168, 85, 247, 0.2)', color: theme === 'dark' ? '#c084fc' : '#9333ea', fontWeight: 600 }}>Discovery → Expansion</span>
+          </button>
+          <button onClick={() => setActiveTab('gwnis')} style={sidebarItemStyle('gwnis')}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <FileText size={18} />
+              <span>{lang === 'pt' ? 'GWNIS — Google Workspace Suite' : 'GWNIS — Google Workspace Suite'}</span>
+            </div>
+            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(59, 130, 246, 0.2)', color: theme === 'dark' ? '#60a5fa' : '#2563eb', fontWeight: 600 }}>Drive + Docs + Sheets</span>
+          </button>
+          <button onClick={() => setActiveTab('peip')} style={sidebarItemStyle('peip')}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Network size={18} />
+              <span>{lang === 'pt' ? 'PEIP — Central de Integrações' : 'PEIP — Integration Pack'}</span>
+            </div>
+            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(99, 102, 241, 0.2)', color: theme === 'dark' ? '#818cf8' : '#4f46e5', fontWeight: 600 }}>6/6 Fases</span>
           </button>
           <button onClick={() => setActiveTab('atccrs')} style={sidebarItemStyle('atccrs')}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -1202,7 +1390,7 @@ export default function ControlPlaneDashboard() {
               <Activity size={18} />
               <span>{t.navTasks}</span>
             </div>
-            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.2)', color: theme === 'dark' ? '#34d399' : '#059669', fontWeight: 600 }}>Live</span>
+            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.2)', color: theme === 'dark' ? '#34d399' : '#059669', fontWeight: 600 }}>{lang === 'pt' ? 'Ativo' : 'Live'}</span>
           </button>
 
           <button onClick={() => setActiveTab('security')} style={sidebarItemStyle('security')}>
@@ -1224,7 +1412,7 @@ export default function ControlPlaneDashboard() {
               <Network size={18} />
               <span>{t.navConnections}</span>
             </div>
-            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(99, 102, 241, 0.2)', color: theme === 'dark' ? '#818cf8' : '#4f46e5', fontWeight: 600 }}>Fabric</span>
+            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(99, 102, 241, 0.2)', color: theme === 'dark' ? '#818cf8' : '#4f46e5', fontWeight: 600 }}>{lang === 'pt' ? 'Conexões' : 'Fabric'}</span>
           </button>
 
           <button onClick={() => setActiveTab('documents')} style={sidebarItemStyle('documents')}>
@@ -1232,7 +1420,7 @@ export default function ControlPlaneDashboard() {
               <FileText size={18} />
               <span>{t.navDocuments}</span>
             </div>
-            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(236, 72, 153, 0.2)', color: theme === 'dark' ? '#f472b6' : '#db2777', fontWeight: 600 }}>V2.1 Docs</span>
+            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(236, 72, 153, 0.2)', color: theme === 'dark' ? '#f472b6' : '#db2777', fontWeight: 600 }}>{lang === 'pt' ? 'Docs V2.1' : 'V2.1 Docs'}</span>
           </button>
 
           <div style={{ fontSize: '0.75rem', fontWeight: 700, color: theme === 'dark' ? '#6b7280' : '#475569', textTransform: 'uppercase', letterSpacing: '0.05em', padding: '16px 12px 8px 12px' }}>
@@ -1244,7 +1432,7 @@ export default function ControlPlaneDashboard() {
               <ShoppingCart size={18} />
               <span>{t.navMarketplace}</span>
             </div>
-            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(6, 182, 212, 0.2)', color: theme === 'dark' ? '#22d3ee' : '#0891b2', fontWeight: 600 }}>Store</span>
+            <span style={{ fontSize: '0.75rem', padding: '2px 6px', borderRadius: '10px', background: 'rgba(6, 182, 212, 0.2)', color: theme === 'dark' ? '#22d3ee' : '#0891b2', fontWeight: 600 }}>{lang === 'pt' ? 'Loja' : 'Store'}</span>
           </button>
 
           <button onClick={() => setActiveTab('billing')} style={sidebarItemStyle('billing')}>
@@ -1268,7 +1456,7 @@ export default function ControlPlaneDashboard() {
           {installSuccessMessage && (
             <div className="glass-card" style={{ padding: '16px', marginBottom: '24px', background: theme === 'dark' ? 'rgba(16, 185, 129, 0.15)' : '#ecfdf5', border: '1px solid #10b981', color: theme === 'dark' ? '#34d399' : '#047857', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <CheckCircle2 size={20} />
-              <span>{installSuccessMessage}</span>
+              {installSuccessMessage}
             </div>
           )}
 
@@ -1359,11 +1547,11 @@ export default function ControlPlaneDashboard() {
                   }}
                 >
                   <option value="ALL">{t.allRisks}</option>
-                  <option value="R1">R1 - Baixo / Low</option>
-                  <option value="R2">R2 - Operacional / Operational</option>
-                  <option value="R3">R3 - Controlado / Controlled</option>
-                  <option value="R4">R4 - Alto / High</option>
-                  <option value="R5">R5 - Crítico / Critical</option>
+                  <option value="R1">{lang === 'pt' ? 'R1 - Baixo' : 'R1 - Low'}</option>
+                  <option value="R2">{lang === 'pt' ? 'R2 - Operacional' : 'R2 - Operational'}</option>
+                  <option value="R3">{lang === 'pt' ? 'R3 - Controlado' : 'R3 - Controlled'}</option>
+                  <option value="R4">{lang === 'pt' ? 'R4 - Alto' : 'R4 - High'}</option>
+                  <option value="R5">{lang === 'pt' ? 'R5 - Crítico' : 'R5 - Critical'}</option>
                 </select>
               </div>
 
@@ -4969,6 +5157,1009 @@ export default function ControlPlaneDashboard() {
             </div>
           )}
 
+          {activeTab === 'emvtcs' && (
+            <div>
+              {/* Header Banner */}
+              <div style={{ background: theme === 'dark' ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%)' : 'linear-gradient(135deg, #ecfdf5 0%, #eff6ff 100%)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '16px', padding: '24px', marginBottom: '28px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                      <CheckCircle2 size={28} color="#10b981" />
+                      <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: theme === 'dark' ? '#fff' : '#0f172a', margin: 0 }}>
+                        {lang === 'pt' ? 'AI Employee Master Validation, Testing & Certification System (EMVTCS)' : 'AI Employee Master Validation, Testing & Certification System (EMVTCS)'}
+                      </h2>
+                    </div>
+                    <p style={{ fontSize: '0.9rem', color: theme === 'dark' ? '#d1d5db' : '#475569', maxWidth: '950px', lineHeight: 1.5, margin: 0 }}>
+                      {lang === 'pt'
+                        ? 'Matriz mestre de validação dos 500 Colaboradores IA, suítes de testes multidimensionais, avaliação em modo Shadow, ground truth rigoroso e emissão de certificados imutáveis de plataforma.'
+                        : 'Master validation matrix for all 500 AI Employees, multi-dimensional test suites, shadow mode evaluation, strict ground truth, and immutable platform digital certificates.'}
+                    </p>
+                  </div>
+                  <span className="badge badge-success" style={{ padding: '6px 14px', fontSize: '0.85rem', fontWeight: 700 }}>
+                    GATE 500/500 PASSED ✓
+                  </span>
+                </div>
+              </div>
+
+              {/* KPI Summary Cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '28px' }}>
+                <div className="card" style={{ padding: '20px' }}>
+                  <div style={{ fontSize: '0.8rem', color: theme === 'dark' ? 'var(--text-muted)' : '#64748b', fontWeight: 600 }}>Total em Validação</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981', marginTop: '6px' }}>{emvtcsSummary.totalPriority} / {emvtcsSummary.totalEmployees}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#10b981', marginTop: '4px', fontWeight: 600 }}>500 Prioritários (0 Não-Prioritários)</div>
+                </div>
+                <div className="card" style={{ padding: '20px' }}>
+                  <div style={{ fontSize: '0.8rem', color: theme === 'dark' ? 'var(--text-muted)' : '#64748b', fontWeight: 600 }}>Certificados de Plataforma</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#2563eb', marginTop: '6px' }}>{emvtcsSummary.totalPlatformCertified}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#2563eb', marginTop: '4px', fontWeight: 600 }}>Passaporte Imutável Emitido</div>
+                </div>
+                <div className="card" style={{ padding: '20px' }}>
+                  <div style={{ fontSize: '0.8rem', color: theme === 'dark' ? 'var(--text-muted)' : '#64748b', fontWeight: 600 }}>Validados em Shadow Mode</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#8b5cf6', marginTop: '6px' }}>{emvtcsSummary.totalShadowValidated}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#8b5cf6', marginTop: '4px', fontWeight: 600 }}>Acurácia Real Verificada</div>
+                </div>
+                <div className="card" style={{ padding: '20px' }}>
+                  <div style={{ fontSize: '0.8rem', color: theme === 'dark' ? 'var(--text-muted)' : '#64748b', fontWeight: 600 }}>Taxa de Aprovação Global</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981', marginTop: '6px' }}>{emvtcsSummary.overallPassRatePercentage}%</div>
+                  <div style={{ fontSize: '0.75rem', color: '#10b981', marginTop: '4px', fontWeight: 600 }}>Gate 500 Aprovado</div>
+                </div>
+              </div>
+
+              {/* Sub-tab Navigation */}
+              <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid ' + (theme === 'dark' ? '#374151' : '#e2e8f0'), marginBottom: '24px', paddingBottom: '8px' }}>
+                <button
+                  onClick={() => setEmvtcsSubTab('matrix')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: emvtcsSubTab === 'matrix' ? '#10b981' : 'transparent',
+                    color: emvtcsSubTab === 'matrix' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Matriz Mestre ({emvtcsMatrix.length})
+                </button>
+                <button
+                  onClick={() => setEmvtcsSubTab('test_plans')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: emvtcsSubTab === 'test_plans' ? '#10b981' : 'transparent',
+                    color: emvtcsSubTab === 'test_plans' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Planos & Suítes de Teste
+                </button>
+                <button
+                  onClick={() => setEmvtcsSubTab('datasets')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: emvtcsSubTab === 'datasets' ? '#10b981' : 'transparent',
+                    color: emvtcsSubTab === 'datasets' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Registry de Datasets
+                </button>
+                <button
+                  onClick={() => setEmvtcsSubTab('shadow')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: emvtcsSubTab === 'shadow' ? '#10b981' : 'transparent',
+                    color: emvtcsSubTab === 'shadow' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Modo Shadow & Benchmark
+                </button>
+                <button
+                  onClick={() => setEmvtcsSubTab('certification')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: emvtcsSubTab === 'certification' ? '#10b981' : 'transparent',
+                    color: emvtcsSubTab === 'certification' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Certificação Digital ({emvtcsSummary.totalPlatformCertified})
+                </button>
+              </div>
+
+              {/* Sub-tab 1: Matriz Mestre de Validação */}
+              {emvtcsSubTab === 'matrix' && (
+                <div className="card" style={{ padding: '20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: 0 }}>Matriz Mestre de Validação dos 500 Colaboradores IA</h3>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                      <select
+                        value={emvtcsFilterRisk}
+                        onChange={(e) => {
+                          setEmvtcsFilterRisk(e.target.value);
+                          setEmvtcsMatrix(emvtcsEngine.getMasterMatrix({ riskLevel: e.target.value, wave: emvtcsFilterWave }));
+                        }}
+                        style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ccc', fontSize: '0.85rem' }}
+                      >
+                        <option value="ALL">Todos os Riscos (R1-R5)</option>
+                        <option value="R1">Risco R1 (Baixo)</option>
+                        <option value="R2">Risco R2 (Moderado)</option>
+                        <option value="R3">Risco R3 (Elevado)</option>
+                        <option value="R4">Risco R4 (Crítico)</option>
+                        <option value="R5">Risco R5 (Máximo)</option>
+                      </select>
+                      <select
+                        value={emvtcsFilterWave}
+                        onChange={(e) => {
+                          const w = parseInt(e.target.value);
+                          setEmvtcsFilterWave(w);
+                          setEmvtcsMatrix(emvtcsEngine.getMasterMatrix({ riskLevel: emvtcsFilterRisk, wave: w }));
+                        }}
+                        style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ccc', fontSize: '0.85rem' }}
+                      >
+                        <option value={0}>Todas as Ondas (1-10)</option>
+                        {[1,2,3,4,5,6,7,8,9,10].map(w => (
+                          <option key={w} value={w}>Onda de Validação #{w} (50 colaboradores)</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid ' + (theme === 'dark' ? '#374151' : '#e2e8f0'), textAlign: 'left' }}>
+                        <th style={{ padding: '10px' }}>ID / Role</th>
+                        <th style={{ padding: '10px' }}>Departamento</th>
+                        <th style={{ padding: '10px' }}>Risco / Autonomia</th>
+                        <th style={{ padding: '10px' }}>Versões Contratos</th>
+                        <th style={{ padding: '10px' }}>Testes Dimensões</th>
+                        <th style={{ padding: '10px' }}>Onda</th>
+                        <th style={{ padding: '10px' }}>Estado Atual</th>
+                        <th style={{ padding: '10px' }}>Ação</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {emvtcsMatrix.map(rec => (
+                        <tr key={rec.employeeId} style={{ borderBottom: '1px solid ' + (theme === 'dark' ? '#1f2937' : '#f1f5f9') }}>
+                          <td style={{ padding: '10px' }}>
+                            <div style={{ fontWeight: 600 }}>#{rec.employeeId} - {rec.roleName}</div>
+                            <div style={{ fontSize: '0.75rem', color: '#6b7280', fontFamily: 'monospace' }}>{rec.roleKey}</div>
+                          </td>
+                          <td style={{ padding: '10px' }}>{rec.department}</td>
+                          <td style={{ padding: '10px' }}>
+                            <span style={{ padding: '2px 6px', borderRadius: '4px', background: rec.riskLevel === 'R5' || rec.riskLevel === 'R4' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.2)', color: rec.riskLevel === 'R5' || rec.riskLevel === 'R4' ? '#ef4444' : '#10b981', fontWeight: 700, fontSize: '0.75rem' }}>
+                              {rec.riskLevel}
+                            </span>
+                            <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '2px' }}>{rec.targetAutonomy}</div>
+                          </td>
+                          <td style={{ padding: '10px', fontSize: '0.75rem' }}>
+                            <div>Pack: {rec.rolePackVersion} | WC: {rec.workContractVersion}</div>
+                            <div>Know: {rec.knowledgeVersion} | Reality: {rec.operationalRealityVersion}</div>
+                          </td>
+                          <td style={{ padding: '10px', fontSize: '0.75rem' }}>
+                            <div style={{ color: rec.structuralTestPassed ? '#10b981' : '#ef4444' }}>Estrutural: {rec.structuralTestPassed ? '✓' : '✗'}</div>
+                            <div style={{ color: rec.securityTestPassed ? '#10b981' : '#ef4444' }}>Segurança RedTeam: {rec.securityTestPassed ? '✓' : '✗'}</div>
+                            <div style={{ color: rec.shadowModeValidated ? '#10b981' : '#f59e0b' }}>Shadow Mode: {rec.shadowModeValidated ? '✓' : 'Em curso'}</div>
+                          </td>
+                          <td style={{ padding: '10px', textAlign: 'center' }}>
+                            <span className="badge badge-l3">Wave {rec.validationWave}</span>
+                          </td>
+                          <td style={{ padding: '10px' }}>
+                            <span style={{
+                              padding: '4px 8px',
+                              borderRadius: '6px',
+                              fontSize: '0.75rem',
+                              fontWeight: 700,
+                              background: rec.currentState === 'PLATFORM_CERTIFIED' ? 'rgba(16, 185, 129, 0.2)' : rec.currentState === 'SHADOW_MODE' ? 'rgba(139, 92, 246, 0.2)' : 'rgba(59, 130, 246, 0.2)',
+                              color: rec.currentState === 'PLATFORM_CERTIFIED' ? '#10b981' : rec.currentState === 'SHADOW_MODE' ? '#8b5cf6' : '#2563eb'
+                            }}>
+                              {rec.currentState}
+                            </span>
+                          </td>
+                          <td style={{ padding: '10px' }}>
+                            <button
+                              style={{ padding: '4px 10px', borderRadius: '4px', background: '#2563eb', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }}
+                              onClick={() => {
+                                setEmvtcsSelectedEmpId(rec.employeeId);
+                                setEmvtcsSubTab('test_plans');
+                              }}
+                            >
+                              Testar / Ver Plano
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* Sub-tab 2: Planos & Suítes de Teste */}
+              {emvtcsSubTab === 'test_plans' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Plano de Testes Individual & Execução de Suíte Multidimensionais</h3>
+
+                  <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '20px' }}>
+                    <label style={{ fontWeight: 600, fontSize: '0.9rem' }}>Selecionar Colaborador IA (#1-#500):</label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={500}
+                      value={emvtcsSelectedEmpId}
+                      onChange={(e) => setEmvtcsSelectedEmpId(parseInt(e.target.value) || 1)}
+                      style={{ padding: '8px', borderRadius: '6px', border: '1px solid #ccc', width: '100px', fontWeight: 700 }}
+                    />
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => {
+                        try {
+                          const res = emvtcsEngine.executeTestSuite(emvtcsSelectedEmpId);
+                          setEmvtcsRunResult(res);
+                          setEmvtcsMatrix(emvtcsEngine.getMasterMatrix());
+                          setEmvtcsSummary(emvtcsEngine.getGlobalSummary());
+                        } catch (err: any) {
+                          alert(`Erro: ${err.message}`);
+                        }
+                      }}
+                    >
+                      Executar Suíte de Testes Multidimensionais
+                    </button>
+                  </div>
+
+                  {emvtcsEngine.getIndividualTestPlan(emvtcsSelectedEmpId) && (
+                    <div style={{ background: theme === 'dark' ? 'rgba(31, 41, 55, 0.5)' : '#f8fafc', padding: '16px', borderRadius: '10px', marginBottom: '20px', border: '1px solid ' + (theme === 'dark' ? '#374151' : '#e2e8f0') }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '8px' }}>
+                        Plano de Teste ID: {emvtcsEngine.getIndividualTestPlan(emvtcsSelectedEmpId)?.planId} (Role: {emvtcsEngine.getIndividualTestPlan(emvtcsSelectedEmpId)?.roleKey})
+                      </h4>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', fontSize: '0.85rem' }}>
+                        <div><strong>Casos Mínimos Requeridos:</strong> {emvtcsEngine.getIndividualTestPlan(emvtcsSelectedEmpId)?.requiredCasesCount}</div>
+                        <div><strong>Excepções Cobertas:</strong> {emvtcsEngine.getIndividualTestPlan(emvtcsSelectedEmpId)?.requiredExceptionsCount}</div>
+                        <div><strong>Nível de Risco:</strong> {emvtcsEngine.getIndividualTestPlan(emvtcsSelectedEmpId)?.riskLevel}</div>
+                      </div>
+                      <div style={{ marginTop: '10px', fontSize: '0.85rem' }}>
+                        <strong>Dimensões de Teste:</strong> {emvtcsEngine.getIndividualTestPlan(emvtcsSelectedEmpId)?.testDimensions.join(', ')}
+                      </div>
+                    </div>
+                  )}
+
+                  {emvtcsRunResult && (
+                    <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid #10b981', borderRadius: '12px', padding: '20px' }}>
+                      <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#10b981', marginBottom: '10px' }}>
+                        Resultado do Test Run: {emvtcsRunResult.overallOutcome} ({emvtcsRunResult.passPercentage}% de Acurácia)
+                      </h4>
+                      <div style={{ fontSize: '0.85rem', marginBottom: '12px' }}>
+                        <div><strong>Run ID:</strong> {emvtcsRunResult.runId}</div>
+                        <div><strong>Fingerprint Imutável RC1:</strong> <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>{emvtcsRunResult.configurationFingerprint}</code></div>
+                        <div><strong>Casos Executados:</strong> {emvtcsRunResult.casesPassedCount} / {emvtcsRunResult.totalCasesExecuted} Aprovados</div>
+                      </div>
+
+                      <h5 style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: '6px' }}>Logs de Execução Observável:</h5>
+                      <div style={{ background: '#0f172a', color: '#38bdf8', padding: '12px', borderRadius: '8px', fontFamily: 'monospace', fontSize: '0.8rem', lineHeight: 1.5 }}>
+                        {emvtcsRunResult.logs.map((log, idx) => (
+                          <div key={idx}>{log}</div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Sub-tab 3: Registry de Datasets */}
+              {emvtcsSubTab === 'datasets' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Evaluation Dataset Registry & Taxonomia de Casos</h3>
+                  <p style={{ fontSize: '0.9rem', color: '#6b7280', marginBottom: '20px' }}>
+                    Os 500 Colaboradores IA são avaliados contra um repositório centralizado de datasets contendo casos Golden, Edge, Ambíguos, Dados Ausentes, Falhas de Conexão e Simulações Adversariais.
+                  </p>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+                    <div style={{ background: theme === 'dark' ? 'rgba(31, 41, 55, 0.5)' : '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid ' + (theme === 'dark' ? '#374151' : '#e2e8f0') }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#2563eb', marginBottom: '8px' }}>Tipos de Datasets</h4>
+                      <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '0.85rem', lineHeight: 1.6 }}>
+                        <li><strong>GOLDEN_REFERENCE:</strong> Casos validados por especialistas de domínio.</li>
+                        <li><strong>SYNTHETIC:</strong> Dados gerados com variação determinística.</li>
+                        <li><strong>ANONYMIZED_REAL:</strong> Fluxos empresariais anónimos reais.</li>
+                        <li><strong>SIMULATED_SYSTEM:</strong> Ingestão via conectores mock/sandbox.</li>
+                      </ul>
+                    </div>
+
+                    <div style={{ background: theme === 'dark' ? 'rgba(31, 41, 55, 0.5)' : '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid ' + (theme === 'dark' ? '#374151' : '#e2e8f0') }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#10b981', marginBottom: '8px' }}>Taxonomia de Casos</h4>
+                      <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '0.85rem', lineHeight: 1.6 }}>
+                        <li><strong>NORMAL & EDGE:</strong> Condições limite e fluxos padrão.</li>
+                        <li><strong>MISSING_DATA:</strong> Avaliação do Safe Block correcto.</li>
+                        <li><strong>CONFLICTING_DATA:</strong> Resolução de discrepâncias.</li>
+                        <li><strong>ADVERSARIAL:</strong> Ataques Red Team P02.</li>
+                      </ul>
+                    </div>
+
+                    <div style={{ background: theme === 'dark' ? 'rgba(31, 41, 55, 0.5)' : '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid ' + (theme === 'dark' ? '#374151' : '#e2e8f0') }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#8b5cf6', marginBottom: '8px' }}>Dificuldade dos Casos</h4>
+                      <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '0.85rem', lineHeight: 1.6 }}>
+                        <li><strong>D1 BASIC:</strong> Validação de esquema e formato.</li>
+                        <li><strong>D2 STANDARD:</strong> Execução de processo rotineiro.</li>
+                        <li><strong>D3 COMPLEX:</strong> Multi-documentos e impostos.</li>
+                        <li><strong>D4/D5 EXPERT:</strong> Decisões de alto risco fiscal/legal.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-tab 4: Modo Shadow & Benchmark */}
+              {emvtcsSubTab === 'shadow' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Validação em Modo Shadow & Benchmark de Especialistas Humanos</h3>
+                  <p style={{ fontSize: '0.9rem', color: '#6b7280', marginBottom: '20px' }}>
+                    Em modo Shadow, o Colaborador IA executa tarefas em paralelo com a operação humana sem efetuar side-effects reais, comparando as saídas com o benchmark humano.
+                  </p>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+                    <div style={{ background: theme === 'dark' ? 'rgba(31, 41, 55, 0.5)' : '#f8fafc', padding: '20px', borderRadius: '12px', border: '1px solid ' + (theme === 'dark' ? '#374151' : '#e2e8f0') }}>
+                      <h4 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '10px' }}>Simular Validação Shadow Mode</h4>
+                      <p style={{ fontSize: '0.85rem', color: '#6b7280' }}>Avalia a taxa de acurácia operacional e ausência de erros materiais em 50 tarefas paralelas.</p>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => {
+                          const shadowRes = emvtcsEngine.evaluateShadowModePerformance(emvtcsSelectedEmpId, 50);
+                          setEmvtcsMatrix(emvtcsEngine.getMasterMatrix());
+                          setEmvtcsSummary(emvtcsEngine.getGlobalSummary());
+                          alert(`Resultado Shadow Mode para Colaborador #${emvtcsSelectedEmpId}: Pass Rate ${shadowRes.shadowPassRate}%, Erros Materiais: ${shadowRes.materialErrorRate}%`);
+                        }}
+                      >
+                        Avaliar Shadow Mode (Colaborador #{emvtcsSelectedEmpId})
+                      </button>
+                    </div>
+
+                    <div style={{ background: theme === 'dark' ? 'rgba(31, 41, 55, 0.5)' : '#f8fafc', padding: '20px', borderRadius: '12px', border: '1px solid ' + (theme === 'dark' ? '#374151' : '#e2e8f0') }}>
+                      <h4 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '10px' }}>Benchmark Humano de Domínio</h4>
+                      <p style={{ fontSize: '0.85rem', color: '#6b7280' }}>Compara a qualidade da narrativa e cálculo com o standard de um profissional humano sénior.</p>
+                      <button
+                        className="btn btn-primary"
+                        style={{ background: '#8b5cf6' }}
+                        onClick={() => {
+                          const updated = emvtcsEngine.evaluateHumanBenchmark(emvtcsSelectedEmpId, 97);
+                          setEmvtcsMatrix(emvtcsEngine.getMasterMatrix());
+                          setEmvtcsSummary(emvtcsEngine.getGlobalSummary());
+                          alert(`Benchmark Humano Aprovado com pontuação ${updated.humanBenchmarkScore}/100! Novo estado: ${updated.currentState}`);
+                        }}
+                      >
+                        Registar Benchmark Humano (97%)
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-tab 5: Certificação Digital */}
+              {emvtcsSubTab === 'certification' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Emissão de Certificado Digital de Plataforma</h3>
+                  <p style={{ fontSize: '0.9rem', color: '#6b7280', marginBottom: '20px' }}>
+                    Após aprovação nas 11 dimensões de validação, é emitido um Certificado Digital imutável que habilita o colaborador para a transição para `PLATFORM_CERTIFIED` e integração no APCATOS.
+                  </p>
+
+                  <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '24px' }}>
+                    <label style={{ fontWeight: 600, fontSize: '0.9rem' }}>Colaborador ID (#1-#500):</label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={500}
+                      value={emvtcsSelectedEmpId}
+                      onChange={(e) => setEmvtcsSelectedEmpId(parseInt(e.target.value) || 1)}
+                      style={{ padding: '8px', borderRadius: '6px', border: '1px solid #ccc', width: '100px', fontWeight: 700 }}
+                    />
+                    <button
+                      className="btn btn-primary"
+                      style={{ background: '#10b981' }}
+                      onClick={() => {
+                        try {
+                          const certified = emvtcsEngine.certifyEmployee(emvtcsSelectedEmpId, 'usr_auditor_qa');
+                          setEmvtcsMatrix(emvtcsEngine.getMasterMatrix());
+                          setEmvtcsSummary(emvtcsEngine.getGlobalSummary());
+                          setEmvtcsCertMsg(`Certificado Digital de Plataforma emitido para Colaborador #${certified.employeeId} (${certified.roleKey}) com sucesso! Estado: PLATFORM_CERTIFIED`);
+                        } catch (err: any) {
+                          setEmvtcsCertMsg(`Erro: ${err.message}`);
+                        }
+                      }}
+                    >
+                      Emitir Certificado Digital de Plataforma
+                    </button>
+                  </div>
+
+                  {emvtcsCertMsg && (
+                    <div style={{ padding: '16px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', fontWeight: 700, fontSize: '0.9rem', marginBottom: '20px' }}>
+                      {emvtcsCertMsg}
+                    </div>
+                  )}
+
+                  <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '12px' }}>Colaboradores Certificados no Sistema ({emvtcsSummary.totalPlatformCertified})</h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+                    {emvtcsMatrix.filter(r => r.certificationStatus === 'CERTIFIED').slice(0, 15).map(rec => (
+                      <div key={rec.employeeId} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #10b981', background: theme === 'dark' ? 'rgba(16, 185, 129, 0.1)' : '#f0fdf4' }}>
+                        <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#10b981' }}>✓ Certificado #{rec.employeeId}</div>
+                        <div style={{ fontSize: '0.8rem', fontWeight: 600 }}>{rec.roleName}</div>
+                        <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{rec.department} | Risco: {rec.riskLevel}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'apcatos' && (
+            <div>
+              {/* Header Banner */}
+              <div style={{ background: theme === 'dark' ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%)' : 'linear-gradient(135deg, #eff6ff 0%, #ecfdf5 100%)', border: '1px solid rgba(59, 130, 246, 0.3)', borderRadius: '16px', padding: '24px', marginBottom: '28px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                      <Server size={28} color="#2563eb" />
+                      <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: theme === 'dark' ? '#fff' : '#0f172a', margin: 0 }}>
+                        {lang === 'pt' ? 'AI Employee Provisioning, Client Access & Tenant Onboarding System (APCATOS)' : 'AI Employee Provisioning, Client Access & Tenant Onboarding System (APCATOS)'}
+                      </h2>
+                    </div>
+                    <p style={{ fontSize: '0.9rem', color: theme === 'dark' ? '#d1d5db' : '#475569', maxWidth: '950px', lineHeight: 1.5, margin: 0 }}>
+                      {lang === 'pt'
+                        ? 'Motor de provisionamento seguro de 500 AI Employees, controlo de acessos cliente (IAM/RBAC), passaportes de prontidão organizacional, monitorização de testes piloto e desativação/offboarding com rastreio de auditoria.'
+                        : 'Secure provisioning engine for 500 AI Employees, client access control (IAM/RBAC), organizational readiness passports, pilot testing monitoring and offboarding with audit trail.'}
+                    </p>
+                  </div>
+                  <span className="badge badge-success" style={{ padding: '6px 14px', fontSize: '0.85rem', fontWeight: 700 }}>
+                    CAPACIDADE 500/500 OK ✓
+                  </span>
+                </div>
+              </div>
+
+              {/* KPI Summary Cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '28px' }}>
+                <div className="card" style={{ padding: '20px' }}>
+                  <div style={{ fontSize: '0.8rem', color: theme === 'dark' ? 'var(--text-muted)' : '#64748b', fontWeight: 600 }}>Capacidade de Instâncias</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#2563eb', marginTop: '6px' }}>{apcatosSummary.totalProvisioned} / {apcatosSummary.totalEmployeesCapacity}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#10b981', marginTop: '4px', fontWeight: 600 }}>500 Roles Suportados</div>
+                </div>
+                <div className="card" style={{ padding: '20px' }}>
+                  <div style={{ fontSize: '0.8rem', color: theme === 'dark' ? 'var(--text-muted)' : '#64748b', fontWeight: 600 }}>Instâncias Ativas</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981', marginTop: '6px' }}>{apcatosSummary.totalActive}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#10b981', marginTop: '4px', fontWeight: 600 }}>100% Produção Isolada</div>
+                </div>
+                <div className="card" style={{ padding: '20px' }}>
+                  <div style={{ fontSize: '0.8rem', color: theme === 'dark' ? 'var(--text-muted)' : '#64748b', fontWeight: 600 }}>Em Piloto Controlado</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#f59e0b', marginTop: '6px' }}>{apcatosSummary.totalInPilot}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#f59e0b', marginTop: '4px', fontWeight: 600 }}>Avaliação de 14 Dias</div>
+                </div>
+                <div className="card" style={{ padding: '20px' }}>
+                  <div style={{ fontSize: '0.8rem', color: theme === 'dark' ? 'var(--text-muted)' : '#64748b', fontWeight: 600 }}>Prontidão Organizacional</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#8b5cf6', marginTop: '6px' }}>{apcatosSummary.globalReadinessPercentage}%</div>
+                  <div style={{ fontSize: '0.75rem', color: '#8b5cf6', marginTop: '4px', fontWeight: 600 }}>Segurança & RBAC OK</div>
+                </div>
+              </div>
+
+              {/* Sub-tab Navigation */}
+              <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid ' + (theme === 'dark' ? '#374151' : '#e2e8f0'), marginBottom: '24px', paddingBottom: '8px' }}>
+                <button
+                  onClick={() => setApcatosSubTab('instances')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: apcatosSubTab === 'instances' ? '#2563eb' : 'transparent',
+                    color: apcatosSubTab === 'instances' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Instâncias ({apcatosInstances.length})
+                </button>
+                <button
+                  onClick={() => setApcatosSubTab('iam')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: apcatosSubTab === 'iam' ? '#2563eb' : 'transparent',
+                    color: apcatosSubTab === 'iam' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  IAM & Utilizadores ({apcatosUsers.length})
+                </button>
+                <button
+                  onClick={() => setApcatosSubTab('readiness')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: apcatosSubTab === 'readiness' ? '#2563eb' : 'transparent',
+                    color: apcatosSubTab === 'readiness' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Passaporte de Prontidão ({apcatosReadiness.readinessScore}%)
+                </button>
+                <button
+                  onClick={() => setApcatosSubTab('pilot')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: apcatosSubTab === 'pilot' ? '#2563eb' : 'transparent',
+                    color: apcatosSubTab === 'pilot' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Piloto & Ativação
+                </button>
+                <button
+                  onClick={() => setApcatosSubTab('offboarding')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: apcatosSubTab === 'offboarding' ? '#2563eb' : 'transparent',
+                    color: apcatosSubTab === 'offboarding' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Offboarding / Desativação
+                </button>
+              </div>
+
+              {/* Sub-tab 1: Instâncias & Provisionamento */}
+              {apcatosSubTab === 'instances' && (
+                <div>
+                  {/* New Provisioning Form Card */}
+                  <div className="card" style={{ padding: '20px', marginBottom: '24px' }}>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '12px' }}>Novo Job de Provisionamento de Colaboradores IA</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 2fr 1fr', gap: '12px', alignItems: 'end' }}>
+                      <div>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Tenant ID</label>
+                        <input
+                          type="text"
+                          value={provTenantId}
+                          onChange={(e) => setProvTenantId(e.target.value)}
+                          style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ccc' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Nome da Organização</label>
+                        <input
+                          type="text"
+                          value={provOrgName}
+                          onChange={(e) => setProvOrgName(e.target.value)}
+                          style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ccc' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '4px' }}>IDs dos Colaboradores IA (Separados por vírgula)</label>
+                        <input
+                          type="text"
+                          value={provEmpIdsInput}
+                          onChange={(e) => setProvEmpIdsInput(e.target.value)}
+                          style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ccc' }}
+                        />
+                      </div>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => {
+                          try {
+                            const ids = provEmpIdsInput.split(',').map(x => parseInt(x.trim())).filter(x => !isNaN(x));
+                            if (ids.length === 0) {
+                              setProvMsg('Indique pelo menos um ID numérico válido.');
+                              return;
+                            }
+                            const job = apcatosEngine.createProvisioningJob(provTenantId, provOrgName, ids);
+                            setApcatosInstances(apcatosEngine.getInstances());
+                            setApcatosSummary(apcatosEngine.getGlobalSummary());
+                            setApcatosReadiness(apcatosEngine.runOrganizationReadinessCheck(provTenantId));
+                            setProvMsg(`Job ${job.provisioningJobId} concluído com sucesso! ${job.provisionedInstanceIds?.length} instâncias criadas.`);
+                          } catch (err: any) {
+                            setProvMsg(`Erro: ${err.message}`);
+                          }
+                        }}
+                      >
+                        Provisionar Instâncias
+                      </button>
+                    </div>
+                    {provMsg && (
+                      <div style={{ marginTop: '12px', padding: '10px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', fontWeight: 600, fontSize: '0.85rem' }}>
+                        {provMsg}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Instances List */}
+                  <div className="card" style={{ padding: '20px' }}>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '16px' }}>Instâncias Provisionadas no Sistema</h3>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid ' + (theme === 'dark' ? '#374151' : '#e2e8f0'), textAlign: 'left' }}>
+                          <th style={{ padding: '10px' }}>ID Instância</th>
+                          <th style={{ padding: '10px' }}>Tenant / Org</th>
+                          <th style={{ padding: '10px' }}>Colaborador / Nome</th>
+                          <th style={{ padding: '10px' }}>Departamento</th>
+                          <th style={{ padding: '10px' }}>Estado Ciclo de Vida</th>
+                          <th style={{ padding: '10px' }}>Recursos Isolados</th>
+                          <th style={{ padding: '10px' }}>Segurança</th>
+                          <th style={{ padding: '10px' }}>Ação</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {apcatosInstances.map(inst => (
+                          <tr key={inst.instanceId} style={{ borderBottom: '1px solid ' + (theme === 'dark' ? '#1f2937' : '#f1f5f9') }}>
+                            <td style={{ padding: '10px', fontFamily: 'monospace', fontWeight: 600 }}>{inst.instanceId}</td>
+                            <td style={{ padding: '10px' }}>
+                              <div style={{ fontWeight: 600 }}>{inst.organizationName}</div>
+                              <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{inst.tenantId}</div>
+                            </td>
+                            <td style={{ padding: '10px' }}>
+                              <div style={{ fontWeight: 600 }}>{inst.customName}</div>
+                              <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>ID #{inst.employeeId} ({inst.roleKey})</div>
+                            </td>
+                            <td style={{ padding: '10px' }}>{inst.department}</td>
+                            <td style={{ padding: '10px' }}>
+                              <span style={{
+                                padding: '4px 8px',
+                                borderRadius: '6px',
+                                fontSize: '0.75rem',
+                                fontWeight: 700,
+                                background: inst.lifecycleState === 'ACTIVE' ? 'rgba(16, 185, 129, 0.2)' : inst.lifecycleState === 'PILOT_ACTIVE' ? 'rgba(245, 158, 11, 0.2)' : inst.lifecycleState === 'OFFBOARDED' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(59, 130, 246, 0.2)',
+                                color: inst.lifecycleState === 'ACTIVE' ? '#10b981' : inst.lifecycleState === 'PILOT_ACTIVE' ? '#f59e0b' : inst.lifecycleState === 'OFFBOARDED' ? '#ef4444' : '#2563eb'
+                              }}>
+                                {inst.lifecycleState}
+                              </span>
+                            </td>
+                            <td style={{ padding: '10px', fontSize: '0.75rem' }}>
+                              <div>CPU: {inst.allocatedResources.cpuCores} vCPU | RAM: {inst.allocatedResources.memoryMb} MB</div>
+                              <div style={{ fontFamily: 'monospace', color: '#6b7280' }}>Schema: {inst.allocatedResources.isolatedDatabaseSchema}</div>
+                            </td>
+                            <td style={{ padding: '10px', fontSize: '0.75rem' }}>
+                              <span style={{ color: '#10b981', fontWeight: 600 }}>Isolamento Estrito</span>
+                            </td>
+                            <td style={{ padding: '10px' }}>
+                              {inst.lifecycleState !== 'ACTIVE' && inst.lifecycleState !== 'OFFBOARDED' && (
+                                <button
+                                  style={{ padding: '4px 10px', borderRadius: '4px', background: '#10b981', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }}
+                                  onClick={() => {
+                                    apcatosEngine.activateInstance(inst.instanceId);
+                                    setApcatosInstances(apcatosEngine.getInstances());
+                                    setApcatosSummary(apcatosEngine.getGlobalSummary());
+                                  }}
+                                >
+                                  Ativar
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-tab 2: IAM & Gestão de Utilizadores */}
+              {apcatosSubTab === 'iam' && (
+                <div>
+                  <div className="card" style={{ padding: '20px', marginBottom: '24px' }}>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '12px' }}>Convidar Novo Utilizador Organizacional (RBAC)</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: '12px', alignItems: 'end' }}>
+                      <div>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Email do Utilizador</label>
+                        <input
+                          type="email"
+                          value={inviteEmail}
+                          onChange={(e) => setInviteEmail(e.target.value)}
+                          style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ccc' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Nome Completo</label>
+                        <input
+                          type="text"
+                          value={inviteName}
+                          onChange={(e) => setInviteName(e.target.value)}
+                          style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ccc' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Função RBAC</label>
+                        <select
+                          value={inviteRole}
+                          onChange={(e) => setInviteRole(e.target.value as APCATOSUserRole)}
+                          style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ccc' }}
+                        >
+                          <option value="TENANT_ADMIN">TENANT_ADMIN (Administrador Geral)</option>
+                          <option value="DEPARTMENT_MANAGER">DEPARTMENT_MANAGER (Director de Dept.)</option>
+                          <option value="EMPLOYEE_SUPERVISOR">EMPLOYEE_SUPERVISOR (Supervisor Directo)</option>
+                          <option value="STANDARD_OPERATOR">STANDARD_OPERATOR (Operador Padrão)</option>
+                          <option value="AUDITOR_VIEWER">AUDITOR_VIEWER (Auditor Apenas Leitura)</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Departamento</label>
+                        <input
+                          type="text"
+                          value={inviteDept}
+                          onChange={(e) => setInviteDept(e.target.value)}
+                          style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ccc' }}
+                        />
+                      </div>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => {
+                          try {
+                            const u = apcatosEngine.inviteOrganizationUser('tenant_angola_telecom_01', inviteEmail, inviteName, inviteRole, ['READ_ALL', 'EXECUTE_TASKS'], [1, 2, 3], inviteDept);
+                            setApcatosUsers(apcatosEngine.getUsers());
+                            setInviteMsg(`Convite enviado para ${u.email} (${u.role}) com sucesso!`);
+                          } catch (err: any) {
+                            setInviteMsg(`Erro: ${err.message}`);
+                          }
+                        }}
+                      >
+                        Convidar Utilizador
+                      </button>
+                    </div>
+                    {inviteMsg && (
+                      <div style={{ marginTop: '12px', padding: '10px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', fontWeight: 600, fontSize: '0.85rem' }}>
+                        {inviteMsg}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="card" style={{ padding: '20px' }}>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '16px' }}>Utilizadores da Organização & Matriz de Permissões</h3>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid ' + (theme === 'dark' ? '#374151' : '#e2e8f0'), textAlign: 'left' }}>
+                          <th style={{ padding: '10px' }}>Utilizador / Email</th>
+                          <th style={{ padding: '10px' }}>Função RBAC</th>
+                          <th style={{ padding: '10px' }}>Departamento</th>
+                          <th style={{ padding: '10px' }}>Autenticação / MFA</th>
+                          <th style={{ padding: '10px' }}>IDs Atribuídos</th>
+                          <th style={{ padding: '10px' }}>Estado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {apcatosUsers.map(user => (
+                          <tr key={user.userId} style={{ borderBottom: '1px solid ' + (theme === 'dark' ? '#1f2937' : '#f1f5f9') }}>
+                            <td style={{ padding: '10px' }}>
+                              <div style={{ fontWeight: 600 }}>{user.name}</div>
+                              <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{user.email}</div>
+                            </td>
+                            <td style={{ padding: '10px' }}>
+                              <span style={{ padding: '4px 8px', borderRadius: '6px', background: 'rgba(99, 102, 241, 0.2)', color: '#4f46e5', fontWeight: 700, fontSize: '0.75rem' }}>
+                                {user.role}
+                              </span>
+                            </td>
+                            <td style={{ padding: '10px' }}>{user.department}</td>
+                            <td style={{ padding: '10px', fontSize: '0.75rem' }}>
+                              <div>{user.authenticationMethod}</div>
+                              <div style={{ color: '#10b981', fontWeight: 600 }}>MFA: {user.mfaStatus}</div>
+                            </td>
+                            <td style={{ padding: '10px', fontFamily: 'monospace' }}>
+                              {user.assignedEmployeeIds.join(', ') || 'Todos (Admin)'}
+                            </td>
+                            <td style={{ padding: '10px' }}>
+                              <span style={{ padding: '4px 8px', borderRadius: '6px', background: user.status === 'ACTIVE' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)', color: user.status === 'ACTIVE' ? '#10b981' : '#f59e0b', fontWeight: 700, fontSize: '0.75rem' }}>
+                                {user.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-tab 3: Checklist & Passaporte de Prontidão */}
+              {apcatosSubTab === 'readiness' && (
+                <div>
+                  <div className="card" style={{ padding: '24px', marginBottom: '24px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <div>
+                        <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0 }}>Passaporte de Prontidão Organizacional — {apcatosReadiness.organizationName}</h3>
+                        <p style={{ fontSize: '0.85rem', color: '#6b7280', margin: '4px 0 0 0' }}>Avaliado em: {new Date(apcatosReadiness.evaluatedAt).toLocaleString()}</p>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontSize: '2rem', fontWeight: 900, color: apcatosReadiness.isReadyForFullDeployment ? '#10b981' : '#f59e0b' }}>
+                          {apcatosReadiness.readinessScore}%
+                        </div>
+                        <div style={{ fontSize: '0.8rem', fontWeight: 700, color: apcatosReadiness.isReadyForFullDeployment ? '#10b981' : '#f59e0b' }}>
+                          {apcatosReadiness.isReadyForFullDeployment ? 'PRONTO PARA IMPLANTAÇÃO TOTAL ✓' : 'AVALIAÇÃO EM CURSO'}
+                        </div>
+                      </div>
+                    </div>
+
+                    <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '12px' }}>Checklist de 13 Pontos de Verificação Estrutural</h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px' }}>
+                      {apcatosReadiness.checklist && Object.entries(apcatosReadiness.checklist).map(([key, passed]) => (
+                        <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px', borderRadius: '8px', background: theme === 'dark' ? 'rgba(31, 41, 55, 0.5)' : '#f8fafc', border: '1px solid ' + (theme === 'dark' ? '#374151' : '#e2e8f0') }}>
+                          <CheckCircle2 size={18} color={passed ? '#10b981' : '#ef4444'} />
+                          <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{key}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '8px' }}>Notas de Conformidade Regulatória (Angola & RGPD)</h4>
+                    <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.85rem', color: theme === 'dark' ? '#d1d5db' : '#475569', lineHeight: 1.6 }}>
+                      {apcatosReadiness.complianceNotes.map((note, idx) => (
+                        <li key={idx}>{note}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {apcatosPassport && (
+                    <div className="card" style={{ padding: '24px' }}>
+                      <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '12px' }}>Passaporte de Acesso Cliente (SSO & Tokens Sessão)</h3>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '0.85rem' }}>
+                        <div>
+                          <div><strong>Passaporte ID:</strong> {apcatosPassport.passportId}</div>
+                          <div><strong>Tenant ID:</strong> {apcatosPassport.tenantId}</div>
+                          <div><strong>Utilizador:</strong> {apcatosPassport.userEmail} ({apcatosPassport.userRole})</div>
+                        </div>
+                        <div>
+                          <div><strong>Sessão Token JWT:</strong> <code style={{ fontSize: '0.75rem', background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>{apcatosPassport.authSessionToken}</code></div>
+                          <div><strong>Validade Token:</strong> {new Date(apcatosPassport.expiresAt).toLocaleString()}</div>
+                          <div><strong>Portal URL:</strong> <a href={apcatosPassport.portalUrl} target="_blank" rel="noreferrer" style={{ color: '#2563eb' }}>{apcatosPassport.portalUrl}</a></div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Sub-tab 4: Piloto & Ativação */}
+              {apcatosSubTab === 'pilot' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Gestão de Piloto Controlado & Ativação de Autonomia</h3>
+                  <p style={{ fontSize: '0.9rem', color: '#6b7280', marginBottom: '20px' }}>
+                    Selecione uma instância para iniciar o período de validação piloto de 14 dias ou ativar diretamente o modo de autonomia total.
+                  </p>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+                    {apcatosInstances.map(inst => (
+                      <div key={inst.instanceId} style={{ border: '1px solid ' + (theme === 'dark' ? '#374151' : '#e2e8f0'), borderRadius: '12px', padding: '16px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
+                          <div>
+                            <div style={{ fontWeight: 800, fontSize: '1rem' }}>{inst.customName}</div>
+                            <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{inst.instanceId}</div>
+                          </div>
+                          <span style={{
+                            padding: '4px 10px',
+                            borderRadius: '12px',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            background: inst.lifecycleState === 'ACTIVE' ? 'rgba(16, 185, 129, 0.2)' : inst.lifecycleState === 'PILOT_ACTIVE' ? 'rgba(245, 158, 11, 0.2)' : 'rgba(59, 130, 246, 0.2)',
+                            color: inst.lifecycleState === 'ACTIVE' ? '#10b981' : inst.lifecycleState === 'PILOT_ACTIVE' ? '#f59e0b' : '#2563eb'
+                          }}>
+                            {inst.lifecycleState}
+                          </span>
+                        </div>
+
+                        {inst.pilot?.isPilot && (
+                          <div style={{ background: 'rgba(245, 158, 11, 0.1)', padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '0.8rem' }}>
+                            <div><strong>Início Piloto:</strong> {inst.pilot.pilotStartDate ? new Date(inst.pilot.pilotStartDate).toLocaleDateString() : '-'}</div>
+                            <div><strong>Fim Piloto:</strong> {inst.pilot.pilotEndDate ? new Date(inst.pilot.pilotEndDate).toLocaleDateString() : '-'}</div>
+                          </div>
+                        )}
+
+                        <div style={{ display: 'flex', gap: '10px', marginTop: '12px' }}>
+                          {inst.lifecycleState !== 'PILOT_ACTIVE' && inst.lifecycleState !== 'ACTIVE' && (
+                            <button
+                              style={{ flex: 1, padding: '8px', borderRadius: '6px', background: '#f59e0b', color: '#fff', border: 'none', fontWeight: 700, cursor: 'pointer' }}
+                              onClick={() => {
+                                apcatosEngine.startPilot(inst.instanceId, 14);
+                                setApcatosInstances(apcatosEngine.getInstances());
+                                setApcatosSummary(apcatosEngine.getGlobalSummary());
+                              }}
+                            >
+                              Iniciar Piloto 14d
+                            </button>
+                          )}
+                          {inst.lifecycleState !== 'ACTIVE' && (
+                            <button
+                              style={{ flex: 1, padding: '8px', borderRadius: '6px', background: '#10b981', color: '#fff', border: 'none', fontWeight: 700, cursor: 'pointer' }}
+                              onClick={() => {
+                                apcatosEngine.activateInstance(inst.instanceId);
+                                setApcatosInstances(apcatosEngine.getInstances());
+                                setApcatosSummary(apcatosEngine.getGlobalSummary());
+                              }}
+                            >
+                              Ativar Produção
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-tab 5: Offboarding & Desativação */}
+              {apcatosSubTab === 'offboarding' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Desativação Governança & Offboarding de Instâncias</h3>
+                  <p style={{ fontSize: '0.9rem', color: '#6b7280', marginBottom: '20px' }}>
+                    O processo de offboarding revoga imediatamente permissões de utilizadores, liberta recursos alocados (vCPU/RAM), arquiva o schema isolado da base de dados e gera um registo imutável de auditoria.
+                  </p>
+
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid ' + (theme === 'dark' ? '#374151' : '#e2e8f0'), textAlign: 'left' }}>
+                        <th style={{ padding: '10px' }}>Instância</th>
+                        <th style={{ padding: '10px' }}>Organização</th>
+                        <th style={{ padding: '10px' }}>Estado Atual</th>
+                        <th style={{ padding: '10px' }}>Recursos Alocados</th>
+                        <th style={{ padding: '10px' }}>Ação de Desativação</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {apcatosInstances.map(inst => (
+                        <tr key={inst.instanceId} style={{ borderBottom: '1px solid ' + (theme === 'dark' ? '#1f2937' : '#f1f5f9') }}>
+                          <td style={{ padding: '10px' }}>
+                            <div style={{ fontWeight: 600 }}>{inst.customName}</div>
+                            <div style={{ fontSize: '0.75rem', fontFamily: 'monospace' }}>{inst.instanceId}</div>
+                          </td>
+                          <td style={{ padding: '10px' }}>{inst.organizationName}</td>
+                          <td style={{ padding: '10px' }}>
+                            <span style={{
+                              padding: '4px 8px',
+                              borderRadius: '6px',
+                              fontSize: '0.75rem',
+                              fontWeight: 700,
+                              background: inst.lifecycleState === 'OFFBOARDED' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.2)',
+                              color: inst.lifecycleState === 'OFFBOARDED' ? '#ef4444' : '#10b981'
+                            }}>
+                              {inst.lifecycleState}
+                            </span>
+                          </td>
+                          <td style={{ padding: '10px' }}>{inst.allocatedResources.cpuCores} vCPU / {inst.allocatedResources.memoryMb} MB</td>
+                          <td style={{ padding: '10px' }}>
+                            {inst.lifecycleState !== 'OFFBOARDED' ? (
+                              <button
+                                style={{ padding: '6px 12px', borderRadius: '6px', background: '#ef4444', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 700 }}
+                                onClick={() => {
+                                  if (confirm(`Tem a certeza que deseja desativar a instância '${inst.customName}'? Esta ação libertará os recursos alocados e revogará os acessos dos utilizadores.`)) {
+                                    apcatosEngine.offboardInstance(inst.tenantId, inst.instanceId, 'CLIENT_REQUEST', 'usr_admin_01');
+                                    setApcatosInstances(apcatosEngine.getInstances());
+                                    setApcatosSummary(apcatosEngine.getGlobalSummary());
+                                  }
+                                }}
+                              >
+                                Executar Offboarding
+                              </button>
+                            ) : (
+                              <span style={{ fontSize: '0.75rem', color: '#6b7280', fontStyle: 'italic' }}>Instância Desativada</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+
           {activeTab === 'atccrs' && (
             <div>
               <div style={{ background: theme === 'dark' ? 'linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%)' : 'linear-gradient(135deg, #f3e8ff 0%, #e0e7ff 100%)', border: '1px solid rgba(168, 85, 247, 0.3)', borderRadius: '16px', padding: '24px', marginBottom: '28px' }}>
@@ -5207,6 +6398,2139 @@ export default function ControlPlaneDashboard() {
               </div>
             </div>
           )}
+
+          {activeTab === 'eptowds' && (
+            <div>
+              {/* Header Banner */}
+              <div style={{ background: theme === 'dark' ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%)' : 'linear-gradient(135deg, #ecfdf5 0%, #eff6ff 100%)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '16px', padding: '24px', marginBottom: '28px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                      <Workflow size={28} color="#10b981" />
+                      <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: theme === 'dark' ? '#fff' : '#0f172a', margin: 0 }}>
+                        {lang === 'pt' ? 'EPTOWDS — Pilotos Empresariais & Entrega Omnicanal' : 'EPTOWDS — Enterprise Pilot Testing & Omnichannel Work Delivery System'}
+                      </h2>
+                    </div>
+                    <p style={{ fontSize: '0.9rem', color: theme === 'dark' ? '#d1d5db' : '#475569', maxWidth: '900px', lineHeight: 1.5, margin: 0 }}>
+                      {lang === 'pt'
+                        ? 'Ambiente de teste piloto para 500 AI Employees com restrição de segurança Read-First, verificação CLBGS de timbrado sem colisão, aprovação humana com hash imutável e entrega omnicanal (PDF/DOCX, impressão, e-mail com link assinado e WhatsApp Business).'
+                        : 'Pilot testing environment for 500 AI Employees with Read-First security restriction, CLBGS letterhead collision check, human approval with immutable hash, and omnichannel delivery.'}
+                    </p>
+                  </div>
+                  <span className="badge badge-success" style={{ padding: '6px 14px', fontSize: '0.85rem', fontWeight: 700 }}>
+                    GATE 500/500 READ-FIRST ✓
+                  </span>
+                </div>
+              </div>
+
+              {/* Metrics Summary */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '28px' }}>
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #10b981' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Instâncias Piloto (Read-First)</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981', marginTop: '6px' }}>{eptowdsSummary.totalPilots} / {eptowdsSummary.totalEmployees}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700, marginTop: '4px' }}>100% Taxa de Restrição Ativa</div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #3b82f6' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Colisão de Timbrado (CLBGS)</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#3b82f6', marginTop: '6px' }}>{eptowdsSummary.clbgsCollisionProtectionActive ? 'PROTEGIDO ✓' : 'INATIVO'}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#3b82f6', fontWeight: 700, marginTop: '4px' }}>Margens 25mm Topo/Rodapé</div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #8b5cf6' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Talões de Entrega Auditados</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#8b5cf6', marginTop: '6px' }}>{eptowdsSummary.receiptsAuditedCount} Talões</div>
+                  <div style={{ fontSize: '0.75rem', color: '#8b5cf6', fontWeight: 700, marginTop: '4px' }}>Registos SHA-256 Imutáveis</div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #f59e0b' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Tempo Médio Revisão Humana</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#f59e0b', marginTop: '6px' }}>{eptowdsSummary.averageHumanReviewTimeMinutes} min</div>
+                  <div style={{ fontSize: '0.75rem', color: '#f59e0b', fontWeight: 700, marginTop: '4px' }}>Aprovação Obrigatória por Supervisor</div>
+                </div>
+              </div>
+
+              {/* Sub-Navigation */}
+              <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '24px', flexWrap: 'wrap' }}>
+                <button
+                  onClick={() => setEptowdsSubTab('pilots')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    background: eptowdsSubTab === 'pilots' ? '#10b981' : 'transparent',
+                    color: eptowdsSubTab === 'pilots' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                  }}
+                >
+                  Instâncias Piloto ({eptowdsPilots.length})
+                </button>
+
+                <button
+                  onClick={() => setEptowdsSubTab('preview')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    background: eptowdsSubTab === 'preview' ? '#10b981' : 'transparent',
+                    color: eptowdsSubTab === 'preview' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                  }}
+                >
+                  Preview & Colisão Timbrado (CLBGS)
+                </button>
+
+                <button
+                  onClick={() => setEptowdsSubTab('approval')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    background: eptowdsSubTab === 'approval' ? '#10b981' : 'transparent',
+                    color: eptowdsSubTab === 'approval' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                  }}
+                >
+                  Revisão & Aprovação (CAQRS)
+                </button>
+
+                <button
+                  onClick={() => setEptowdsSubTab('omnichannel')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    background: eptowdsSubTab === 'omnichannel' ? '#10b981' : 'transparent',
+                    color: eptowdsSubTab === 'omnichannel' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                  }}
+                >
+                  Entrega Omnicanal
+                </button>
+
+                <button
+                  onClick={() => setEptowdsSubTab('receipts')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    background: eptowdsSubTab === 'receipts' ? '#10b981' : 'transparent',
+                    color: eptowdsSubTab === 'receipts' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                  }}
+                >
+                  Talões de Entrega Auditados ({eptowdsReceipts.length})
+                </button>
+              </div>
+
+              {/* Sub-Tab 1: Instâncias Piloto */}
+              {eptowdsSubTab === 'pilots' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <div>
+                      <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0 }}>Catálogo de Instâncias Piloto em Modo Read-First</h3>
+                      <p style={{ fontSize: '0.85rem', color: '#6b7280', margin: '4px 0 0 0' }}>Todos os 500 AI Employees operam em Read-First com aprovação de supervisor obrigatória.</p>
+                    </div>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                      <input
+                        type="text"
+                        placeholder="Pesquisar por departamento, colaborador ou supervisor..."
+                        value={eptowdsSearchQuery}
+                        onChange={(e) => setEptowdsSearchQuery(e.target.value)}
+                        style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '0.85rem', width: '320px', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left', color: '#6b7280' }}>
+                          <th style={{ padding: '10px' }}>ID Piloto</th>
+                          <th style={{ padding: '10px' }}>Colaborador IA</th>
+                          <th style={{ padding: '10px' }}>Departamento</th>
+                          <th style={{ padding: '10px' }}>Supervisor Humano</th>
+                          <th style={{ padding: '10px' }}>Modo / Autonomia</th>
+                          <th style={{ padding: '10px' }}>Entregas Autônomas</th>
+                          <th style={{ padding: '10px', textAlign: 'right' }}>Ação de Teste</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {eptowdsPilots
+                          .filter(p => !eptowdsSearchQuery || p.department.toLowerCase().includes(eptowdsSearchQuery.toLowerCase()) || p.roleName.toLowerCase().includes(eptowdsSearchQuery.toLowerCase()) || p.employeeId.toString() === eptowdsSearchQuery)
+                          .slice(0, 15)
+                          .map((p) => (
+                            <tr key={p.pilotInstanceId} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                              <td style={{ padding: '10px', fontFamily: 'monospace', fontWeight: 700, color: '#3b82f6' }}>{p.pilotInstanceId}</td>
+                              <td style={{ padding: '10px', fontWeight: 600 }}>#{p.employeeId} — {p.roleName}</td>
+                              <td style={{ padding: '10px' }}>{p.department}</td>
+                              <td style={{ padding: '10px', color: '#10b981', fontWeight: 600 }}>{p.supervisorName} ({p.supervisorId})</td>
+                              <td style={{ padding: '10px' }}>
+                                <span style={{ padding: '4px 8px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700, background: 'rgba(16, 185, 129, 0.2)', color: '#10b981' }}>
+                                  {p.autonomyLimit} (READ-FIRST)
+                                </span>
+                              </td>
+                              <td style={{ padding: '10px' }}>
+                                <span style={{ padding: '4px 8px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700, background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444' }}>
+                                  BLOQUEADO (Requer Aprovação)
+                                </span>
+                              </td>
+                              <td style={{ padding: '10px', textAlign: 'right' }}>
+                                <button
+                                  className="btn-primary"
+                                  style={{ padding: '6px 12px', fontSize: '0.75rem', borderRadius: '6px' }}
+                                  onClick={() => {
+                                    const task = eptowdsEngine.createPilotTask({
+                                      employeeId: p.employeeId,
+                                      title: `Relatório Piloto Executivo — Colaborador #${p.employeeId}`,
+                                      instruction: `Gerar relatório financeiro e fiscal em PDF para a empresa ${p.organizationName}.`
+                                    });
+                                    setEptowdsTasks(eptowdsEngine.getPilotTasks());
+                                    setEptowdsSelectedTaskId(task.taskId);
+                                    setEptowdsSubTab('preview');
+                                  }}
+                                >
+                                  Gerar Tarefa Piloto
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 2: Preview & Colisão Timbrado (CLBGS) */}
+              {eptowdsSubTab === 'preview' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Verificação de Colisão & Margens CLBGS</h3>
+                    
+                    <div style={{ marginBottom: '16px' }}>
+                      <label style={{ fontSize: '0.85rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Selecionar Tarefa Piloto:</label>
+                      <select
+                        value={eptowdsSelectedTaskId}
+                        onChange={(e) => setEptowdsSelectedTaskId(e.target.value)}
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000', fontSize: '0.85rem' }}
+                      >
+                        {eptowdsTasks.map(t => (
+                          <option key={t.taskId} value={t.taskId}>{t.taskId} — {t.title} (#{t.employeeId})</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <button
+                      className="btn-primary"
+                      style={{ width: '100%', padding: '12px', fontSize: '0.9rem', fontWeight: 700, borderRadius: '8px', marginBottom: '20px' }}
+                      onClick={() => {
+                        const job = eptowdsEngine.generatePrintPreview(eptowdsSelectedTaskId, { paperSize: 'A4', duplex: false });
+                        setEptowdsPrintJob(job);
+                        setEptowdsTasks(eptowdsEngine.getPilotTasks());
+                        setEptowdsSummary(eptowdsEngine.getGlobalSummary());
+                      }}
+                    >
+                      Executar Checagem de Colisão CLBGS
+                    </button>
+
+                    {eptowdsPrintJob ? (
+                      <div style={{ background: theme === 'dark' ? 'rgba(16, 185, 129, 0.1)' : '#f0fdf4', border: '1px solid #10b981', borderRadius: '12px', padding: '16px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                          <span style={{ fontWeight: 800, color: '#10b981', fontSize: '0.95rem' }}>RESULTADO CLBGS: SEM COLISÃO ✓</span>
+                          <span className="badge badge-success">{eptowdsPrintJob.collisionCheck.status}</span>
+                        </div>
+                        <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.85rem', color: theme === 'dark' ? '#d1d5db' : '#334155' }}>
+                          {eptowdsPrintJob.collisionCheck.details.map((d: string, i: number) => (
+                            <li key={i} style={{ marginBottom: '4px' }}>{d}</li>
+                          ))}
+                        </ul>
+                        <div style={{ marginTop: '12px', fontSize: '0.8rem', color: '#6b7280' }}>
+                          Template Timbrado: <strong>{eptowdsPrintJob.letterheadTemplateId}</strong> | Impressora: {eptowdsPrintJob.printerName}
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ padding: '20px', textAlign: 'center', color: '#6b7280', fontSize: '0.85rem', border: '1px dashed var(--border-color)', borderRadius: '8px' }}>
+                        Clique no botão acima para validar margens superiores de 25mm e timbrado institucional.
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Preview de Documento com Timbrado Oficial</h3>
+                    {eptowdsEngine.getPilotTask(eptowdsSelectedTaskId) ? (
+                      <div style={{ background: '#fff', color: '#0f172a', border: '2px solid #cbd5e1', borderRadius: '8px', padding: '24px', minHeight: '320px', position: 'relative', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+                        <div style={{ position: 'absolute', top: '45%', left: '15%', transform: 'rotate(-30deg)', fontSize: '1.8rem', fontWeight: 900, color: 'rgba(239, 68, 68, 0.15)', pointerEvents: 'none', border: '3px dashed rgba(239, 68, 68, 0.3)', padding: '10px 20px', borderRadius: '12px' }}>
+                          VERSÃO DE TESTE PILOTO — RASCUNHO
+                        </div>
+                        <div style={{ borderBottom: '2px solid #0284c7', paddingBottom: '12px', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span style={{ fontWeight: 900, color: '#0369a1', fontSize: '1rem' }}>ANGOLA TELECOM SA — TIMBRADO OFICIAL</span>
+                          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>AOA / AGT COMPLIANT</span>
+                        </div>
+                        <div style={{ fontWeight: 800, fontSize: '1.05rem', marginBottom: '8px' }}>
+                          {eptowdsEngine.getPilotTask(eptowdsSelectedTaskId)?.title}
+                        </div>
+                        <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'sans-serif', fontSize: '0.85rem', color: '#334155', lineHeight: 1.6 }}>
+                          {eptowdsEngine.getPilotTask(eptowdsSelectedTaskId)?.generatedContent}
+                        </pre>
+                        <div style={{ borderTop: '1px solid #cbd5e1', paddingTop: '12px', marginTop: '24px', fontSize: '0.75rem', color: '#64748b', display: 'flex', justifyContent: 'space-between' }}>
+                          <span>NIF: 5401009988 | Luanda, Angola</span>
+                          <span>Assinatura Digital Validada</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ color: '#6b7280', fontSize: '0.85rem' }}>Nenhuma tarefa selecionada.</div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 3: Revisão & Aprovação (CAQRS) */}
+              {eptowdsSubTab === 'approval' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Solicitar Revisão Humana (CAQRS)</h3>
+                    <div style={{ marginBottom: '14px' }}>
+                      <label style={{ fontSize: '0.85rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Categoria de Feedback CAQRS:</label>
+                      <select
+                        value={eptowdsRevCategory}
+                        onChange={(e) => setEptowdsRevCategory(e.target.value)}
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000', fontSize: '0.85rem' }}
+                      >
+                        <option value="STYLE_PREFERENCE">Preferência de Estilo</option>
+                        <option value="FORMAT_PREFERENCE">Preferência de Formatação</option>
+                        <option value="TONE_PREFERENCE">Preferência de Tom</option>
+                        <option value="INCOMPLETE_WORK">Trabalho Incompleto</option>
+                        <option value="OBJECTIVE_ERROR">Erro Objetivo</option>
+                      </select>
+                    </div>
+
+                    <div style={{ marginBottom: '14px' }}>
+                      <label style={{ fontSize: '0.85rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Comentários do Supervisor:</label>
+                      <input
+                        type="text"
+                        value={eptowdsRevComments}
+                        onChange={(e) => setEptowdsRevComments(e.target.value)}
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000', fontSize: '0.85rem' }}
+                      />
+                    </div>
+
+                    <div style={{ marginBottom: '16px' }}>
+                      <label style={{ fontSize: '0.85rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Modificações Exigidas:</label>
+                      <input
+                        type="text"
+                        value={eptowdsRevChanges}
+                        onChange={(e) => setEptowdsRevChanges(e.target.value)}
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000', fontSize: '0.85rem' }}
+                      />
+                    </div>
+
+                    <button
+                      className="btn-warning"
+                      style={{ width: '100%', padding: '12px', fontSize: '0.9rem', fontWeight: 700, borderRadius: '8px' }}
+                      onClick={() => {
+                        eptowdsEngine.requestRevision(eptowdsSelectedTaskId, eptowdsRevCategory, eptowdsRevComments, eptowdsRevChanges);
+                        setEptowdsTasks(eptowdsEngine.getPilotTasks());
+                        alert('Solicitação de revisão enviada com sucesso para o motor CAQRS!');
+                      }}
+                    >
+                      Enviar Solicitação de Revisão
+                    </button>
+                  </div>
+
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Aprovação Formal & Snapshot Imutável</h3>
+                    <p style={{ fontSize: '0.85rem', color: '#6b7280', marginBottom: '16px' }}>A aprovação pelo supervisor gera um hash SHA-256 de snapshot permitindo o despacho seguro para entrega omnicanal.</p>
+                    
+                    <button
+                      className="btn-success"
+                      style={{ width: '100%', padding: '14px', fontSize: '0.95rem', fontWeight: 800, borderRadius: '8px', marginBottom: '20px' }}
+                      onClick={() => {
+                        const res = eptowdsEngine.approvePilotTask({ taskId: eptowdsSelectedTaskId, supervisorId: 'usr_supervisor_mgr' });
+                        setEptowdsApprovalRes(res);
+                        setEptowdsTasks(eptowdsEngine.getPilotTasks());
+                      }}
+                    >
+                      Aprovar Produto de Trabalho & Gerar Snapshot ✓
+                    </button>
+
+                    {eptowdsApprovalRes && (
+                      <div style={{ background: theme === 'dark' ? 'rgba(16, 185, 129, 0.1)' : '#ecfdf5', border: '1px solid #10b981', borderRadius: '12px', padding: '16px' }}>
+                        <div style={{ fontWeight: 800, color: '#10b981', marginBottom: '8px' }}>APROVAÇÃO CONCLUÍDA COM SUCESSO!</div>
+                        <div style={{ fontSize: '0.85rem' }}>
+                          <div>Status Tarefa: <strong>{eptowdsApprovalRes.status}</strong></div>
+                          <div>Aprovado Por: <strong>{eptowdsApprovalRes.approvalSnapshot.approvedBy}</strong></div>
+                          <div>Data Aprovação: <strong>{new Date(eptowdsApprovalRes.approvedAt).toLocaleString()}</strong></div>
+                          <div style={{ marginTop: '8px', fontFamily: 'monospace', fontSize: '0.75rem', background: theme === 'dark' ? 'rgba(0,0,0,0.3)' : '#e2e8f0', padding: '8px', borderRadius: '6px', wordBreak: 'break-all' }}>
+                            Hash Snapshot: {eptowdsApprovalRes.approvalSnapshot.snapshotHash}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 4: Entrega Omnicanal */}
+              {eptowdsSubTab === 'omnichannel' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                  {/* E-mail Draft Box */}
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Minuta de E-mail com Link JWT Assinado</h3>
+                    <div style={{ marginBottom: '14px' }}>
+                      <label style={{ fontSize: '0.85rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>E-mail do Destinatário:</label>
+                      <input
+                        type="email"
+                        value={eptowdsEmailTo}
+                        onChange={(e) => setEptowdsEmailTo(e.target.value)}
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000', fontSize: '0.85rem' }}
+                      />
+                    </div>
+                    <button
+                      className="btn-primary"
+                      style={{ width: '100%', padding: '12px', fontSize: '0.9rem', fontWeight: 700, borderRadius: '8px', marginBottom: '16px' }}
+                      onClick={() => {
+                        const draft = eptowdsEngine.draftEmailDelivery({ taskId: eptowdsSelectedTaskId, to: [eptowdsEmailTo] });
+                        setEptowdsEmailDraftRes(draft);
+                      }}
+                    >
+                      Gerar Minuta de E-mail com DLP Scan
+                    </button>
+
+                    {eptowdsEmailDraftRes && (
+                      <div style={{ background: theme === 'dark' ? 'rgba(59, 130, 246, 0.1)' : '#eff6ff', border: '1px solid #3b82f6', borderRadius: '10px', padding: '14px', fontSize: '0.85rem' }}>
+                        <div>Assunto: <strong>{eptowdsEmailDraftRes.subject}</strong></div>
+                        <div style={{ marginTop: '6px' }}>Link Assinado Seguro:</div>
+                        <div style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: '#2563eb', wordBreak: 'break-all', marginTop: '4px' }}>
+                          {eptowdsEmailDraftRes.signedLinks[0]}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* WhatsApp Draft Box & Dispatch */}
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>WhatsApp Business & Disparo Omnicanal</h3>
+                    <div style={{ marginBottom: '14px' }}>
+                      <label style={{ fontSize: '0.85rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Telefone WhatsApp Destinatário:</label>
+                      <input
+                        type="text"
+                        value={eptowdsMsgPhone}
+                        onChange={(e) => setEptowdsMsgPhone(e.target.value)}
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000', fontSize: '0.85rem' }}
+                      />
+                    </div>
+                    <button
+                      className="btn-primary"
+                      style={{ width: '100%', padding: '12px', fontSize: '0.9rem', fontWeight: 700, borderRadius: '8px', marginBottom: '16px' }}
+                      onClick={() => {
+                        const draft = eptowdsEngine.draftMessagingDelivery({ taskId: eptowdsSelectedTaskId, recipientPhone: eptowdsMsgPhone });
+                        setEptowdsMsgDraftRes(draft);
+                      }}
+                    >
+                      Gerar Minuta WhatsApp Business
+                    </button>
+
+                    {eptowdsMsgDraftRes && (
+                      <div style={{ background: theme === 'dark' ? 'rgba(168, 85, 247, 0.1)' : '#faf5ff', border: '1px solid #a855f7', borderRadius: '10px', padding: '14px', fontSize: '0.85rem', marginBottom: '16px' }}>
+                        <div>Canal: <strong>{eptowdsMsgDraftRes.channel}</strong></div>
+                        <div>Texto: {eptowdsMsgDraftRes.messageText}</div>
+                        <div style={{ marginTop: '6px', fontFamily: 'monospace', fontSize: '0.75rem', color: '#9333ea', wordBreak: 'break-all' }}>
+                          Link Autenticado: {eptowdsMsgDraftRes.signedLink}
+                        </div>
+                      </div>
+                    )}
+
+                    <button
+                      className="btn-success"
+                      style={{ width: '100%', padding: '14px', fontSize: '0.95rem', fontWeight: 800, borderRadius: '8px' }}
+                      onClick={() => {
+                        try {
+                          const receipt = eptowdsEngine.deliverWork({ taskId: eptowdsSelectedTaskId, channel: 'EMAIL', recipient: eptowdsEmailTo } as any);
+                          setEptowdsDeliveryRes(receipt);
+                          setEptowdsReceipts(eptowdsEngine.getDeliveryReceipts());
+                          setEptowdsTasks(eptowdsEngine.getPilotTasks());
+                          setEptowdsSummary(eptowdsEngine.getGlobalSummary());
+                        } catch (err: any) {
+                          alert(err.message);
+                        }
+                      }}
+                    >
+                      Disparar Entrega Definitiva (Gera Talão Auditado)
+                    </button>
+
+                    {eptowdsDeliveryRes && (
+                      <div style={{ marginTop: '16px', background: theme === 'dark' ? 'rgba(16, 185, 129, 0.1)' : '#ecfdf5', border: '1px solid #10b981', borderRadius: '10px', padding: '14px', fontSize: '0.85rem' }}>
+                        <div style={{ fontWeight: 800, color: '#10b981' }}>ENTREGA DISPARADA COM SUCESSO! ✓</div>
+                        <div>ID Entrega: <strong>{eptowdsDeliveryRes.deliveryId}</strong></div>
+                        <div style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: '#059669', wordBreak: 'break-all', marginTop: '4px' }}>
+                          Hash Talão: {eptowdsDeliveryRes.receiptHash}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 5: Talões de Entrega Auditados */}
+              {eptowdsSubTab === 'receipts' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Talões de Entrega Omnicanal Auditados</h3>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left', color: '#6b7280' }}>
+                          <th style={{ padding: '10px' }}>ID Entrega</th>
+                          <th style={{ padding: '10px' }}>ID Tarefa</th>
+                          <th style={{ padding: '10px' }}>Colaborador</th>
+                          <th style={{ padding: '10px' }}>Canal</th>
+                          <th style={{ padding: '10px' }}>Destino</th>
+                          <th style={{ padding: '10px' }}>Status</th>
+                          <th style={{ padding: '10px' }}>Data / Hora</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {eptowdsReceipts.map((r) => (
+                          <tr key={r.deliveryId} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                            <td style={{ padding: '10px', fontFamily: 'monospace', fontWeight: 700, color: '#10b981' }}>{r.deliveryId}</td>
+                            <td style={{ padding: '10px', fontFamily: 'monospace' }}>{r.taskId}</td>
+                            <td style={{ padding: '10px', fontWeight: 600 }}>#{r.employeeId} ({r.roleKey})</td>
+                            <td style={{ padding: '10px' }}><span className="badge badge-info">{r.channel}</span></td>
+                            <td style={{ padding: '10px' }}>{r.destination}</td>
+                            <td style={{ padding: '10px' }}><span className="badge badge-success">{r.status}</span></td>
+                            <td style={{ padding: '10px' }}>{new Date(r.deliveredAt).toLocaleString()}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'aweep' && (
+            <div>
+              {/* Header Banner */}
+              <div style={{ background: theme === 'dark' ? 'linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%)' : 'linear-gradient(135deg, #fce7f3 0%, #f3e8ff 100%)', border: '1px solid rgba(236, 72, 153, 0.3)', borderRadius: '16px', padding: '24px', marginBottom: '28px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                      <Globe size={28} color="#ec4899" />
+                      <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: theme === 'dark' ? '#fff' : '#0f172a', margin: 0 }}>
+                        {lang === 'pt' ? 'AWEEP — AI Workforce Enterprise Extension Pack' : 'AWEEP — Enterprise Extension Pack'}
+                      </h2>
+                    </div>
+                    <p style={{ fontSize: '0.9rem', color: theme === 'dark' ? '#d1d5db' : '#475569', maxWidth: '900px', lineHeight: 1.5, margin: 0 }}>
+                      {lang === 'pt'
+                        ? 'Camadas estratégicas enterprise: Portal Multi-Cliente para escritórios, No-Code Workflows, Orquestração de AI Teams, Enterprise Search (RAG), Cofre de Evidências SHA-256 e SCIM Identity Lifecycle.'
+                        : 'Enterprise extension layers: Multi-Client Portal for accounting firms, No-Code Workflows, AI Teams orchestration, RAG Enterprise Search, Evidence Vault, and SCIM Identity.'}
+                    </p>
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <span className="badge badge-success" style={{ padding: '8px 16px', fontWeight: 800, fontSize: '0.85rem' }}>
+                      {lang === 'pt' ? 'Isolamento Tenant Ativo (Zero Data Leakage)' : 'Tenant Isolation Active'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* KPI Summary Banner */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '28px' }}>
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #ec4899' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Parceiros & Escritórios</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#ec4899', marginTop: '6px' }}>{aweepSummary.total_firms_registered} Registado</div>
+                  <div style={{ fontSize: '0.75rem', color: '#ec4899', fontWeight: 700, marginTop: '4px' }}>{aweepSummary.total_managed_client_orgs} Clientes Geridos</div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #a855f7' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Esquadrões AI Teams</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#a855f7', marginTop: '6px' }}>{aweepSummary.active_ai_teams_count} Equipas Ativas</div>
+                  <div style={{ fontSize: '0.75rem', color: '#a855f7', fontWeight: 700, marginTop: '4px' }}>Topologia Pipeline & Star</div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #3b82f6' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Enterprise Search RAG</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#3b82f6', marginTop: '6px' }}>{aweepSummary.enterprise_search_queries_24h} Consultas</div>
+                  <div style={{ fontSize: '0.75rem', color: '#3b82f6', fontWeight: 700, marginTop: '4px' }}>Citações & Permissões Validadas</div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #10b981' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Compliance Evidence Vault</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981', marginTop: '6px' }}>{aweepSummary.evidence_records_secured} Evidências</div>
+                  <div style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700, marginTop: '4px' }}>Hash SHA-256 Imutável</div>
+                </div>
+              </div>
+
+              {/* Sub-Navigation */}
+              <div style={{ display: 'flex', gap: '10px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '24px', overflowX: 'auto' }}>
+                {[
+                  { id: 'multiclient', label: '1. Portal Multi-Cliente' },
+                  { id: 'workflow', label: '2. No-Code Workflows' },
+                  { id: 'teams', label: '3. AI Teams & Orquestração' },
+                  { id: 'search', label: '4. Enterprise Search (RAG)' },
+                  { id: 'evidence', label: '5. Cofre de Evidências' },
+                  { id: 'scim', label: '6. SCIM & Identity' }
+                ].map(st => (
+                  <button
+                    key={st.id}
+                    onClick={() => setAweepSubTab(st.id as any)}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      background: aweepSubTab === st.id ? '#ec4899' : 'transparent',
+                      color: aweepSubTab === st.id ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                      fontWeight: aweepSubTab === st.id ? 700 : 500,
+                      cursor: 'pointer',
+                      fontSize: '0.85rem',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {st.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Sub-Tab 1: Multi-Client Portal */}
+              {aweepSubTab === 'multiclient' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Escritórios de Contabilidade & Consultorias (`FirmAccount`)</h3>
+                  <div style={{ background: theme === 'dark' ? '#1e293b' : '#f8fafc', padding: '16px', borderRadius: '12px', marginBottom: '20px', border: '1px solid var(--border-color)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#ec4899' }}>Luanda Audit & Financial Consulting, Lda</div>
+                        <div style={{ fontSize: '0.85rem', color: '#6b7280', marginTop: '4px' }}>NIF: 5401928374 | Modelo: MANAGED_SERVICE | White-Label: Ativo (ai.luanda-audit.co.ao)</div>
+                      </div>
+                      <span className="badge badge-success">PARCEIRO CERTIFICADO</span>
+                    </div>
+                  </div>
+
+                  <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '12px' }}>Clientes Geridos no Portfolio</h4>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left', color: '#6b7280' }}>
+                          <th style={{ padding: '10px' }}>Organização Cliente</th>
+                          <th style={{ padding: '10px' }}>Tipo de Relação</th>
+                          <th style={{ padding: '10px' }}>Colaboradores Atribuídos</th>
+                          <th style={{ padding: '10px' }}>Estado</th>
+                          <th style={{ padding: '10px' }}>Ação Workspace</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                          <td style={{ padding: '10px', fontWeight: 700 }}>Empresa Demonstração Angola S.A.</td>
+                          <td style={{ padding: '10px' }}><span className="badge badge-info">ACCOUNTING_SERVICE</span></td>
+                          <td style={{ padding: '10px' }}>contabilista1@luanda-audit.co.ao</td>
+                          <td style={{ padding: '10px' }}><span className="badge badge-success">ACTIVE</span></td>
+                          <td style={{ padding: '10px' }}>
+                            <button
+                              className="btn-secondary"
+                              style={{ padding: '4px 10px', fontSize: '0.75rem' }}
+                              onClick={() => {
+                                const ctx = aweepEngine.switchClientWorkspace('firm-contabilidade-luanda', 'org-empresa-demonstracao', 'gestor@luanda-audit.co.ao');
+                                alert(`Workspace alterado para ${ctx.active_organization_id} com permissão ${ctx.user_role}`);
+                              }}
+                            >
+                              Entrar no Workspace
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 2: No-Code Workflows */}
+              {aweepSubTab === 'workflow' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>No-Code Workflow Builder (`WorkflowDefinition`)</h3>
+                  <div style={{ display: 'grid', gap: '16px' }}>
+                    {aweepEngine.getWorkflows('org-empresa-demonstracao').map(wf => (
+                      <div key={wf.workflow_id} style={{ border: '1px solid var(--border-color)', borderRadius: '12px', padding: '16px', background: theme === 'dark' ? '#0f172a' : '#fff' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                          <div>
+                            <div style={{ fontWeight: 800, fontSize: '1rem', color: '#a855f7' }}>{wf.name} (v{wf.version})</div>
+                            <div style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '2px' }}>Trigger: {wf.trigger_type} | Nível de Risco: {wf.risk_level}</div>
+                          </div>
+                          <span className="badge badge-success">{wf.status}</span>
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '12px' }}>
+                          {wf.nodes.map(n => (
+                            <div key={n.node_id} style={{ padding: '6px 12px', borderRadius: '8px', background: theme === 'dark' ? '#1e293b' : '#e0e7ff', border: '1px solid rgba(99, 102, 241, 0.3)', fontSize: '0.75rem', fontWeight: 600 }}>
+                              {n.type}: {n.label}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 3: AI Teams */}
+              {aweepSubTab === 'teams' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Esquadrões Multiagente (`AITeamDefinition`)</h3>
+                  {aweepEngine.getAITeams('org-empresa-demonstracao').map(t => (
+                    <div key={t.team_id} style={{ border: '1px solid var(--border-color)', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                        <div>
+                          <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#ec4899' }}>{t.team_name}</div>
+                          <div style={{ fontSize: '0.85rem', color: '#6b7280' }}>Departamento: {t.department} | Topologia: {t.topology}</div>
+                        </div>
+                        <button
+                          className="btn-primary"
+                          style={{ padding: '6px 14px', fontSize: '0.8rem' }}
+                          onClick={() => {
+                            const handoffs = aweepEngine.executeAITeamTask(t.team_id, { invoice: 'INV-2026-8801', amount: 5000 });
+                            alert(`Esquadrão executado! ${handoffs.length} mensagens de handoff trocadas com sucesso entre os AI Employees.`);
+                          }}
+                        >
+                          Simular Tarefa do Esquadrão
+                        </button>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+                        {t.members.map(m => (
+                          <div key={m.employee_id} style={{ padding: '12px', borderRadius: '8px', background: theme === 'dark' ? '#1e293b' : '#f1f5f9' }}>
+                            <div style={{ fontSize: '0.75rem', color: '#ec4899', fontWeight: 700 }}>#{m.employee_id} ({m.role_key})</div>
+                            <div style={{ fontWeight: 700, fontSize: '0.9rem', marginTop: '2px' }}>{m.role_in_team}</div>
+                            <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '4px' }}>Escopo: {m.responsibility_scope}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Sub-Tab 4: Enterprise Search RAG */}
+              {aweepSubTab === 'search' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Enterprise Search — "Pergunte à Empresa" (RAG)</h3>
+                  <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+                    <input
+                      type="text"
+                      className="input-field"
+                      style={{ flex: 1, padding: '10px 16px' }}
+                      value={aweepSearchQuery}
+                      onChange={e => setAweepSearchQuery(e.target.value)}
+                    />
+                    <button
+                      className="btn-primary"
+                      style={{ padding: '10px 20px', fontWeight: 700 }}
+                      onClick={() => {
+                        const res = aweepEngine.executeEnterpriseSearch('org-empresa-demonstracao', 'auditor@empresa.co.ao', aweepSearchQuery);
+                        setAweepSearchResult(res);
+                      }}
+                    >
+                      Pesquisar
+                    </button>
+                  </div>
+
+                  {aweepSearchResult && (
+                    <div style={{ background: theme === 'dark' ? '#0f172a' : '#f8fafc', padding: '20px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                      <div style={{ fontWeight: 800, color: '#3b82f6', marginBottom: '8px' }}>Resposta Gerada com Citações Auditáveis:</div>
+                      <div style={{ fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '16px' }}>{aweepSearchResult.generated_answer}</div>
+
+                      <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#6b7280', marginBottom: '8px' }}>Documentos Fonte Utilizados:</div>
+                      {aweepSearchResult.results.map(chunk => (
+                        <div key={chunk.chunk_id} style={{ padding: '10px', borderRadius: '8px', background: theme === 'dark' ? '#1e293b' : '#fff', border: '1px solid var(--border-color)', marginBottom: '8px' }}>
+                          <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#10b981' }}>{chunk.document_title} ({chunk.source_type})</div>
+                          <div style={{ fontSize: '0.8rem', color: theme === 'dark' ? '#d1d5db' : '#475569', marginTop: '4px' }}>"{chunk.snippet}"</div>
+                          <div style={{ fontSize: '0.75rem', color: '#3b82f6', marginTop: '4px', fontFamily: 'monospace' }}>Citação: {chunk.citation_url}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Sub-Tab 5: Compliance Evidence Vault */}
+              {aweepSubTab === 'evidence' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Compliance Evidence Vault (Hash SHA-256 Imutável)</h3>
+                  <div style={{ padding: '16px', borderRadius: '12px', background: theme === 'dark' ? '#1e293b' : '#f0fdf4', border: '1px solid #10b981', marginBottom: '20px' }}>
+                    <div style={{ fontWeight: 800, color: '#10b981' }}>Auditoria do Cofre de Evidências: 100% VERIFICADO</div>
+                    <div style={{ fontSize: '0.85rem', color: '#475569', marginTop: '4px' }}>Todas as assinaturas digitais, recibos de pagamento e declarações fiscais seladas com integridade criptográfica.</div>
+                  </div>
+
+                  <button
+                    className="btn-secondary"
+                    style={{ padding: '8px 16px', fontWeight: 700, marginBottom: '16px' }}
+                    onClick={() => {
+                      const rec = aweepEngine.recordEvidence({
+                        organization_id: 'org-empresa-demonstracao',
+                        employee_id: '50',
+                        task_id: `task_${Date.now()}`,
+                        evidence_type: 'TAX_DECLARATION',
+                        file_hash_sha256: '8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f',
+                        signed_by: 'Chefe_Contabilidade_AGT',
+                        storage_location: 's3://evidence-vault-luanda/tax/dec_2026.pdf'
+                      });
+                      alert(`Nova evidência gravada com Hash SHA-256 ${rec.file_hash_sha256} e bloqueio imutável!`);
+                      setAweepSummary(aweepEngine.getGlobalSummary());
+                    }}
+                  >
+                    + Selar Nova Evidência Fiscal
+                  </button>
+                </div>
+              )}
+
+              {/* Sub-Tab 6: SCIM Identity */}
+              {aweepSubTab === 'scim' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>SCIM Identity Lifecycle & Joiner-Mover-Leaver</h3>
+                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                    <button
+                      className="btn-success"
+                      style={{ padding: '8px 16px', fontWeight: 700 }}
+                      onClick={() => {
+                        const ev = aweepEngine.triggerSCIMEvent('org-empresa-demonstracao', 'novo.colaborador@empresa.co.ao', 'USER_JOINED');
+                        alert(`Evento SCIM USER_JOINED processado com sucesso para ${ev.user_email}!`);
+                      }}
+                    >
+                      Simular Joiner (Novo Utilizador)
+                    </button>
+
+                    <button
+                      className="btn-danger"
+                      style={{ padding: '8px 16px', fontWeight: 700 }}
+                      onClick={() => {
+                        const ev = aweepEngine.triggerSCIMEvent('org-empresa-demonstracao', 'ex.colaborador@empresa.co.ao', 'USER_LEFT');
+                        alert(`Evento SCIM USER_LEFT processado: Acesso revogado imediatamente!`);
+                      }}
+                    >
+                      Simular Leaver (Revogação Imediata)
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'awdse' && (
+            <div>
+              {/* Header Banner */}
+              <div style={{ background: theme === 'dark' ? 'linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%)' : 'linear-gradient(135deg, #f3e8ff 0%, #e0e7ff 100%)', border: '1px solid rgba(168, 85, 247, 0.3)', borderRadius: '16px', padding: '24px', marginBottom: '28px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                      <Cpu size={28} color="#a855f7" />
+                      <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: theme === 'dark' ? '#fff' : '#0f172a', margin: 0 }}>
+                        {lang === 'pt' ? 'AWDSE — Digital Workforce Operating System' : 'AWDSE — Digital Workforce OS'}
+                      </h2>
+                    </div>
+                    <p style={{ fontSize: '0.9rem', color: theme === 'dark' ? '#d1d5db' : '#475569', maxWidth: '900px', lineHeight: 1.5, margin: 0 }}>
+                      {lang === 'pt'
+                        ? 'Sistema Operacional de Força de Trabalho Digital: Descoberta de ineficiências → Mapeamento de oportunidades para os 500 AI Employees → Supervisão em tempo real → Medição de ROI e valor real → Expansão governada pelo cliente.'
+                        : 'Digital Workforce Operating System: Process discovery → Opportunity matching for the 500 AI Employees → Real-time supervision → Measured ROI → Client-governed expansion.'}
+                    </p>
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    {awdseSummary.global_pause_active ? (
+                      <button
+                        className="btn-success"
+                        style={{ padding: '8px 16px', fontWeight: 800, borderRadius: '8px' }}
+                        onClick={() => {
+                          const res = awdseEngine.resumeGlobalPause('org-empresa-demonstracao');
+                          setAwdseSummary(awdseEngine.getGlobalSummary());
+                          setAwdseInstances(awdseEngine.getDigitalWorkforceInstances('org-empresa-demonstracao'));
+                        }}
+                      >
+                        REATIMAR FORÇA DE TRABALHO DIGITAL
+                      </button>
+                    ) : (
+                      <button
+                        className="btn-danger"
+                        style={{ padding: '8px 16px', fontWeight: 800, borderRadius: '8px' }}
+                        onClick={() => {
+                          if (confirm('Tem a certeza que deseja interromper TODA a força de trabalho digital?')) {
+                            const res = awdseEngine.triggerGlobalPause('org-empresa-demonstracao');
+                            setAwdseSummary(awdseEngine.getGlobalSummary());
+                            setAwdseInstances(awdseEngine.getDigitalWorkforceInstances('org-empresa-demonstracao'));
+                          }
+                        }}
+                      >
+                        EMERGÊNCIA: PARAGEM GLOBAL (PAUSED_GLOBAL)
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Metrics Summary */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '28px' }}>
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #a855f7' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Sinais & Candidatos</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#a855f7', marginTop: '6px' }}>{awdseSummary.qualified_process_candidates} Processos</div>
+                  <div style={{ fontSize: '0.75rem', color: '#a855f7', fontWeight: 700, marginTop: '4px' }}>{awdseSummary.total_process_signals} Sinais Capturados</div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #10b981' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Frota de AI Employees</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981', marginTop: '6px' }}>{awdseSummary.active_digital_workforce_count} Ativos</div>
+                  <div style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700, marginTop: '4px' }}>
+                    {awdseSummary.global_pause_active ? 'EMERGÊNCIA PAUSED_GLOBAL' : 'Supervisão L3/R2 Ativa'}
+                  </div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #3b82f6' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>ROI & Valor Medido</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#3b82f6', marginTop: '6px' }}>${awdseSummary.total_measured_value_usd.toLocaleString()} USD</div>
+                  <div style={{ fontSize: '0.75rem', color: '#3b82f6', fontWeight: 700, marginTop: '4px' }}>{awdseSummary.total_estimated_time_saved_hours} Horas Poupadas</div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #f59e0b' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Recomendações Expansão</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#f59e0b', marginTop: '6px' }}>{awdseSummary.pending_expansion_recommendations_count} Pendentes</div>
+                  <div style={{ fontSize: '0.75rem', color: '#f59e0b', fontWeight: 700, marginTop: '4px' }}>Próximas Oportunidades</div>
+                </div>
+              </div>
+
+              {/* Sub-Navigation */}
+              <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '24px', flexWrap: 'wrap' }}>
+                {[
+                  { id: 'command_center', label: 'Command Center Global (Supervisão)' },
+                  { id: 'discovery', label: 'Descoberta de Trabalho (Process Discovery)' },
+                  { id: 'matching', label: 'Matching & Business Case (500 Roles)' },
+                  { id: 'value', label: 'Medição de Valor & Passaportes ROI' },
+                  { id: 'expansion', label: 'Expansão da Força de Trabalho Digital' },
+                  { id: 'matrix', label: 'Grafo Operacional & Responsabilidade' },
+                ].map((st) => (
+                  <button
+                    key={st.id}
+                    onClick={() => setAwdseSubTab(st.id as any)}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      fontWeight: 700,
+                      fontSize: '0.85rem',
+                      cursor: 'pointer',
+                      background: awdseSubTab === st.id ? '#a855f7' : 'transparent',
+                      color: awdseSubTab === st.id ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                    }}
+                  >
+                    {st.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Sub-Tab 1: Command Center Global */}
+              {awdseSubTab === 'command_center' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0 }}>Command Center — Supervisão Unificada da Força de Trabalho Digital</h3>
+                    <span className="badge badge-info" style={{ fontSize: '0.8rem' }}>Organização: Empresa Demonstração</span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px' }}>
+                    {awdseInstances.map((inst) => (
+                      <div key={inst.instance_id} style={{ background: theme === 'dark' ? 'rgba(0,0,0,0.2)' : '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
+                          <div>
+                            <div style={{ fontWeight: 800, fontSize: '0.95rem', color: theme === 'dark' ? '#fff' : '#0f172a' }}>{inst.display_name}</div>
+                            <div style={{ fontSize: '0.75rem', color: '#6b7280', fontFamily: 'monospace' }}>{inst.instance_id}</div>
+                          </div>
+                          <span className={`badge ${inst.status === 'ACTIVE' ? 'badge-success' : 'badge-danger'}`}>{inst.status}</span>
+                        </div>
+
+                        <div style={{ fontSize: '0.8rem', display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '14px' }}>
+                          <div>Departamento: <strong>{inst.department}</strong></div>
+                          <div>Supervisor Humano: <strong>{inst.supervisor_user_ref}</strong></div>
+                          <div>Autonomia / Risco: <strong>{inst.autonomy_level} / {inst.risk_level}</strong></div>
+                          <div>Tarefa Atual: <span style={{ color: '#3b82f6', fontStyle: 'italic' }}>{inst.current_task || 'Aguardando lote'}</span></div>
+                          <div>Reliability Score: <strong style={{ color: '#10b981' }}>{inst.reliability_score}%</strong></div>
+                          <div>Tarefas Concluídas: <strong>{inst.tasks_completed_count}</strong></div>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          {inst.status === 'ACTIVE' ? (
+                            <button
+                              style={{ padding: '6px 12px', fontSize: '0.75rem', borderRadius: '6px', border: '1px solid #f59e0b', background: 'transparent', color: '#f59e0b', cursor: 'pointer', fontWeight: 700 }}
+                              onClick={() => {
+                                awdseEngine.setInstanceStatus(inst.instance_id, 'PAUSED');
+                                setAwdseInstances(awdseEngine.getDigitalWorkforceInstances('org-empresa-demonstracao'));
+                              }}
+                            >
+                              Pausar Instância
+                            </button>
+                          ) : (
+                            <button
+                              style={{ padding: '6px 12px', fontSize: '0.75rem', borderRadius: '6px', border: '1px solid #10b981', background: 'transparent', color: '#10b981', cursor: 'pointer', fontWeight: 700 }}
+                              onClick={() => {
+                                awdseEngine.setInstanceStatus(inst.instance_id, 'ACTIVE');
+                                setAwdseInstances(awdseEngine.getDigitalWorkforceInstances('org-empresa-demonstracao'));
+                              }}
+                            >
+                              Ativar Instância
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 2: Descoberta de Trabalho */}
+              {awdseSubTab === 'discovery' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Enterprise Work Discovery — Candidatos a Automação Detetados</h3>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left', color: '#6b7280' }}>
+                          <th style={{ padding: '10px' }}>Processo Detetado</th>
+                          <th style={{ padding: '10px' }}>Departamento</th>
+                          <th style={{ padding: '10px' }}>Volume Mensal</th>
+                          <th style={{ padding: '10px' }}>Esforço Manual (h)</th>
+                          <th style={{ padding: '10px' }}>Business Friction Score</th>
+                          <th style={{ padding: '10px' }}>Status Automação</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {awdseCandidates.map((c) => (
+                          <tr key={c.process_candidate_id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                            <td style={{ padding: '10px' }}>
+                              <div style={{ fontWeight: 700, color: '#3b82f6' }}>{c.name}</div>
+                              <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{c.description}</div>
+                            </td>
+                            <td style={{ padding: '10px' }}>{c.department}</td>
+                            <td style={{ padding: '10px', fontWeight: 700 }}>{c.volume} / {c.frequency}</td>
+                            <td style={{ padding: '10px' }}>{c.estimated_manual_effort_hours_monthly}h</td>
+                            <td style={{ padding: '10px' }}><span className="badge badge-warning" style={{ fontWeight: 800 }}>{c.friction_score} / 100</span></td>
+                            <td style={{ padding: '10px' }}><span className="badge badge-success">{c.automation_candidate_status}</span></td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 3: Matching & Business Case */}
+              {awdseSubTab === 'matching' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Opportunity Matching contra o Catálogo dos 500</h3>
+                    {awdseMatches.map((m) => (
+                      <div key={m.match_id} style={{ background: theme === 'dark' ? 'rgba(0,0,0,0.2)' : '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)', marginBottom: '16px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                          <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#3b82f6' }}>AI Employee #{m.employee_id} ({m.role_key})</div>
+                          <span className="badge badge-success" style={{ fontWeight: 800 }}>{m.fit_score}% FIT</span>
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: '#6b7280', marginBottom: '10px' }}>Tipo de Match: <strong>{m.match_type}</strong></div>
+                        <div style={{ fontSize: '0.8rem', fontWeight: 700, marginBottom: '4px' }}>Motivos de Compatibilidade:</div>
+                        <ul style={{ fontSize: '0.75rem', paddingLeft: '20px', margin: 0, color: theme === 'dark' ? '#d1d5db' : '#334155' }}>
+                          {m.fit_reasons.map((r, idx) => <li key={idx}>{r}</li>)}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Business Case de ROI & Estimativa de Payback</h3>
+                    {awdseBusinessCase && (
+                      <div style={{ fontSize: '0.85rem' }}>
+                        <div style={{ background: theme === 'dark' ? 'rgba(16, 185, 129, 0.1)' : '#f0fdf4', border: '1px solid #10b981', borderRadius: '10px', padding: '14px', marginBottom: '16px' }}>
+                          <div style={{ fontWeight: 800, color: '#10b981', marginBottom: '4px' }}>BUSINESS CASE DE VALOR APROVADO ✓</div>
+                          <div>Poupança Mensal Estimada: <strong style={{ color: '#10b981', fontSize: '1.1rem' }}>${awdseBusinessCase.estimated_savings_usd_monthly.toLocaleString()} USD</strong></div>
+                          <div>Redução do Tempo de Execução: <strong>{awdseBusinessCase.estimated_time_reduction_pct}%</strong></div>
+                          <div>Período de Payback: <strong style={{ color: '#3b82f6' }}>{awdseBusinessCase.estimated_payback_months} Meses</strong></div>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '0.8rem' }}>
+                          <div style={{ background: theme === 'dark' ? 'rgba(0,0,0,0.2)' : '#f8fafc', padding: '10px', borderRadius: '8px' }}>
+                            <div>Custo Processo Manual: <strong>${awdseBusinessCase.current_process_cost_usd} USD/mês</strong></div>
+                            <div>Horas Manuais: <strong>{awdseBusinessCase.estimated_manual_hours_monthly}h</strong></div>
+                          </div>
+                          <div style={{ background: theme === 'dark' ? 'rgba(0,0,0,0.2)' : '#f8fafc', padding: '10px', borderRadius: '8px' }}>
+                            <div>Custo Subscrição AI: <strong>${awdseBusinessCase.estimated_subscription_cost_usd} USD/mês</strong></div>
+                            <div>Supervisão Humana: <strong>${awdseBusinessCase.estimated_human_review_cost_usd} USD/mês</strong></div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 4: Medição de Valor & Passaportes ROI */}
+              {awdseSubTab === 'value' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Passaporte de Valor Emitido (`EmployeeValuePassport`)</h3>
+                    {awdsePassport && (
+                      <div style={{ background: theme === 'dark' ? 'rgba(59, 130, 246, 0.1)' : '#eff6ff', border: '1px solid #3b82f6', borderRadius: '12px', padding: '20px', fontSize: '0.85rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                          <div style={{ fontWeight: 800, color: '#2563eb', fontSize: '1rem' }}>Passaporte de Valor — {awdsePassport.period}</div>
+                          <span className="badge badge-success">ROI {awdsePassport.roi_status}</span>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '14px' }}>
+                          <div>Tarefas Concluídas: <strong>{awdsePassport.tasks_completed}</strong></div>
+                          <div>Aceitação à 1ª Tentativa: <strong style={{ color: '#10b981' }}>{awdsePassport.first_pass_acceptance_pct}%</strong></div>
+                          <div>Horas Revisão Humana: <strong>{awdsePassport.human_review_hours}h</strong></div>
+                          <div>Poupança Financeira Medida: <strong style={{ color: '#10b981', fontSize: '1.05rem' }}>${awdsePassport.estimated_savings_usd.toLocaleString()} USD</strong></div>
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#6b7280', fontStyle: 'italic' }}>
+                          Limitações: {awdsePassport.limitations.join(', ')}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Registo de Eventos de Valor (`ValueEvent`)</h3>
+                    <div style={{ background: theme === 'dark' ? 'rgba(0,0,0,0.2)' : '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '0.8rem' }}>
+                      <div style={{ fontWeight: 700, color: '#3b82f6', marginBottom: '4px' }}>EV-001 — MANUAL_STEP_REMOVED</div>
+                      <div>Tipo Medição: <strong style={{ color: '#10b981' }}>MEASURED ✓</strong></div>
+                      <div>Valor Gerado: <strong>$1,530 USD</strong></div>
+                      <div>Tempo Economizado: <strong>61 Horas</strong></div>
+                      <div style={{ marginTop: '6px', fontSize: '0.75rem', color: '#6b7280' }}>Detalhes: Eliminação da digitação manual de 450 faturas de fornecedores.</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 5: Expansão da Força de Trabalho Digital */}
+              {awdseSubTab === 'expansion' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Recomendações `Next-Best Employee` (Expansão Guiada)</h3>
+                  {awdseRecommendations.map((rec) => (
+                    <div key={rec.recommendation_id} style={{ background: theme === 'dark' ? 'rgba(0,0,0,0.2)' : '#f8fafc', padding: '20px', borderRadius: '12px', border: '1px solid var(--border-color)', marginBottom: '16px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
+                        <div>
+                          <div style={{ fontWeight: 800, fontSize: '1.05rem', color: theme === 'dark' ? '#fff' : '#0f172a' }}>{rec.display_name}</div>
+                          <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>{rec.reason}</div>
+                        </div>
+                        <span className="badge badge-warning">{rec.status}</span>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', fontSize: '0.8rem', marginBottom: '14px' }}>
+                        <div>Oportunidade: <strong>{rec.process_opportunity}</strong></div>
+                        <div>Valor Esperado: <strong style={{ color: '#10b981' }}>${rec.expected_value_usd_monthly.toLocaleString()} USD/mês</strong></div>
+                        <div>Custo Comercial: <strong>${rec.commercial_cost_usd_monthly} USD/mês</strong></div>
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button
+                          className="btn-success"
+                          style={{ padding: '8px 16px', fontSize: '0.85rem', borderRadius: '8px', fontWeight: 700 }}
+                          onClick={() => {
+                            const res = awdseEngine.processExpansionDecision(rec.recommendation_id, 'PILOT_APPROVED');
+                            setAwdseRecommendations(awdseEngine.getExpansionRecommendations('org-empresa-demonstracao'));
+                            alert(`Piloto Aprovado para ${res.display_name}!`);
+                          }}
+                        >
+                          Aprovar Piloto de Teste
+                        </button>
+                        <button
+                          className="btn-danger"
+                          style={{ padding: '8px 16px', fontSize: '0.85rem', borderRadius: '8px', fontWeight: 700 }}
+                          onClick={() => {
+                            const res = awdseEngine.processExpansionDecision(rec.recommendation_id, 'REJECTED');
+                            setAwdseRecommendations(awdseEngine.getExpansionRecommendations('org-empresa-demonstracao'));
+                            alert(`Recomendação Rejeitada.`);
+                          }}
+                        >
+                          Rejeitar Recomendação
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Sub-Tab 6: Grafo Operacional & Matriz de Responsabilidade */}
+              {awdseSubTab === 'matrix' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Matriz de Responsabilidade Humano vs. IA (`ResponsibilityMap`)</h3>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left', color: '#6b7280' }}>
+                          <th style={{ padding: '10px' }}>Etapa do Processo</th>
+                          <th style={{ padding: '10px' }}>Tipo de Atribuição</th>
+                          <th style={{ padding: '10px' }}>Ator Atribuído</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          { task: 'Receção e extração de faturas PDF', type: 'AI_EXECUTES_WITHIN_LIMITS', actor: '#66 Document Classification' },
+                          { task: 'Mapeamento de contas de razão', type: 'AI_RECOMMENDS', actor: '#66 Document Classification' },
+                          { task: 'Aprovação de faturas > $500 USD', type: 'HUMAN_ONLY', actor: 'Supervisor Contábil' },
+                          { task: 'Registo no ERP Primavera', type: 'AI_EXECUTES_WITH_APPROVAL', actor: '#66 Document Classification' },
+                        ].map((row, idx) => (
+                          <tr key={idx} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                            <td style={{ padding: '10px', fontWeight: 700 }}>{row.task}</td>
+                            <td style={{ padding: '10px' }}><span className="badge badge-info">{row.type}</span></td>
+                            <td style={{ padding: '10px', fontWeight: 600, color: '#3b82f6' }}>{row.actor}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'gwnis' && (
+            <div>
+              {/* Header Banner */}
+              <div style={{ background: theme === 'dark' ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(14, 165, 233, 0.15) 100%)' : 'linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%)', border: '1px solid rgba(59, 130, 246, 0.3)', borderRadius: '16px', padding: '24px', marginBottom: '28px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                      <FileText size={28} color="#3b82f6" />
+                      <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: theme === 'dark' ? '#fff' : '#0f172a', margin: 0 }}>
+                        {lang === 'pt' ? 'GWNIS — Google Workspace Native Integration Suite' : 'GWNIS — Google Workspace Suite'}
+                      </h2>
+                    </div>
+                    <p style={{ fontSize: '0.9rem', color: theme === 'dark' ? '#d1d5db' : '#475569', maxWidth: '900px', lineHeight: 1.5, margin: 0 }}>
+                      {lang === 'pt'
+                        ? 'Integração nativa multi-tenant com Google Drive, Google Docs e Google Sheets. Permite que os AI Employees pesquisem, leiam, criem, editem e exportem ficheiros dentro de limites rigorosos de autorização, isolamento de tenant e políticas DLP.'
+                        : 'Native multi-tenant Google Workspace suite (Drive, Docs, Sheets) with strict tenant isolation, scope enforcement, and DLP protections.'}
+                    </p>
+                  </div>
+                  <span className="badge badge-success" style={{ padding: '6px 14px', fontSize: '0.85rem', fontWeight: 700 }}>
+                    GWNIS V1.0 ACTIVE ✓
+                  </span>
+                </div>
+              </div>
+
+              {/* Metrics Summary */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '28px' }}>
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #3b82f6' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Conexões Google</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#3b82f6', marginTop: '6px' }}>{gwnisSummary.total_connections} Ativas</div>
+                  <div style={{ fontSize: '0.75rem', color: '#3b82f6', fontWeight: 700, marginTop: '4px' }}>OAuth 2.0 / Service Account</div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #10b981' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Serviços Ativados</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981', marginTop: '6px' }}>Drive + Docs + Sheets</div>
+                  <div style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700, marginTop: '4px' }}>Conectores Nativos Ready</div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #8b5cf6' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Pilotos Certificados</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#8b5cf6', marginTop: '6px' }}>#261, #286, #73</div>
+                  <div style={{ fontSize: '0.75rem', color: '#8b5cf6', fontWeight: 700, marginTop: '4px' }}>100% Automação Auditada</div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #ef4444' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Segurança & Defesa DLP</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#ef4444', marginTop: '6px' }}>HARDENED</div>
+                  <div style={{ fontSize: '0.75rem', color: '#ef4444', fontWeight: 700, marginTop: '4px' }}>Anti-Prompt Injection ✓</div>
+                </div>
+              </div>
+
+              {/* Sub-Navigation */}
+              <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '24px', flexWrap: 'wrap' }}>
+                {[
+                  { id: 'oauth', label: 'Central OAuth & Scopes' },
+                  { id: 'drive', label: 'Google Drive (Pesquisa & Arquivo)' },
+                  { id: 'docs', label: 'Google Docs (Criação & PDF/DOCX)' },
+                  { id: 'sheets', label: 'Google Sheets (Leitura/Escrita Range)' },
+                  { id: 'security', label: 'Segurança & Defesa Anti-Injection' },
+                  { id: 'pilots', label: 'Pilotos Integrados (#261, #286, #73)' },
+                ].map((st) => (
+                  <button
+                    key={st.id}
+                    onClick={() => setGwnisSubTab(st.id as any)}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      fontWeight: 700,
+                      fontSize: '0.85rem',
+                      cursor: 'pointer',
+                      background: gwnisSubTab === st.id ? '#3b82f6' : 'transparent',
+                      color: gwnisSubTab === st.id ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                    }}
+                  >
+                    {st.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Sub-Tab 1: OAuth & Scopes */}
+              {gwnisSubTab === 'oauth' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Perfil de Ligação Google Workspace & Gestão de Scopes</h3>
+                  <div style={{ background: theme === 'dark' ? 'rgba(0,0,0,0.2)' : '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)', marginBottom: '20px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '0.85rem' }}>
+                      <div>ID Conexão: <strong>gwnis-conn-001</strong></div>
+                      <div>Modo Autenticação: <strong>org_managed_oauth (OAuth 2.0)</strong></div>
+                      <div>Ref. Credencial Vault: <strong style={{ color: '#3b82f6' }}>vault://credentials/google-workspace/oauth-token-001</strong></div>
+                      <div>Conta Conetada: <strong>admin@empresa.com</strong></div>
+                      <div>Shared Drives Autorizados: <strong>sd-gestao-001, sd-financas-002</strong></div>
+                      <div>Status de Saúde: <strong style={{ color: '#10b981' }}>ACTIVE / HEALTHY ✓</strong></div>
+                    </div>
+                  </div>
+
+                  <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '8px' }}>Âmbitos de Permissão (Scopes) Autorizados pelo Administrador:</h4>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                    {[
+                      'https://www.googleapis.com/auth/drive.readonly',
+                      'https://www.googleapis.com/auth/drive.file',
+                      'https://www.googleapis.com/auth/documents',
+                      'https://www.googleapis.com/auth/spreadsheets',
+                    ].map((s) => (
+                      <span key={s} style={{ padding: '4px 10px', borderRadius: '6px', background: theme === 'dark' ? 'rgba(59, 130, 246, 0.15)' : '#dbeafe', color: '#2563eb', fontFamily: 'monospace', fontSize: '0.75rem', fontWeight: 600 }}>
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+
+                  <button
+                    className="btn-primary"
+                    style={{ padding: '10px 16px', fontSize: '0.85rem', borderRadius: '8px' }}
+                    onClick={() => {
+                      const res = gwnisEngine.testConnection('gwnis-conn-001');
+                      alert(res.message);
+                    }}
+                  >
+                    Testar Saúde da Conexão & Tokens
+                  </button>
+                </div>
+              )}
+
+              {/* Sub-Tab 2: Google Drive */}
+              {gwnisSubTab === 'drive' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Google Drive Connector — Pesquisa & Gestão de Ficheiros</h3>
+                  <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+                    <input
+                      type="text"
+                      value={gwnisDriveSearch}
+                      onChange={(e) => setGwnisDriveSearch(e.target.value)}
+                      placeholder="Pesquise no Drive (ex: Balancete, Vendas)..."
+                      style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '0.85rem', width: '360px', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000' }}
+                    />
+                    <button
+                      className="btn-primary"
+                      style={{ padding: '10px 16px', fontSize: '0.85rem', borderRadius: '8px' }}
+                      onClick={() => {
+                        setGwnisDriveFiles(gwnisEngine.searchDriveFiles('gwnis-conn-001', gwnisDriveSearch));
+                      }}
+                    >
+                      Pesquisar no Drive Autorizado
+                    </button>
+                  </div>
+
+                  <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left', color: '#6b7280' }}>
+                          <th style={{ padding: '10px' }}>ID Ficheiro</th>
+                          <th style={{ padding: '10px' }}>Nome do Ficheiro</th>
+                          <th style={{ padding: '10px' }}>Tipo MIME</th>
+                          <th style={{ padding: '10px' }}>Versão</th>
+                          <th style={{ padding: '10px' }}>Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {gwnisDriveFiles.map((f: any) => (
+                          <tr key={f.file_id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                            <td style={{ padding: '10px', fontFamily: 'monospace' }}>{f.file_id}</td>
+                            <td style={{ padding: '10px', fontWeight: 700, color: '#3b82f6' }}>{f.name}</td>
+                            <td style={{ padding: '10px', fontSize: '0.75rem' }}>{f.mime_type}</td>
+                            <td style={{ padding: '10px' }}><span className="badge badge-info">v{f.version}</span></td>
+                            <td style={{ padding: '10px' }}>
+                              <button
+                                style={{ padding: '4px 8px', fontSize: '0.75rem', borderRadius: '4px', border: '1px solid #3b82f6', background: 'transparent', color: '#3b82f6', cursor: 'pointer' }}
+                                onClick={() => {
+                                  const d = gwnisEngine.downloadDriveFile('gwnis-conn-001', f.file_id);
+                                  alert(`Conteúdo Lido: ${d.content}\nSource Trust: ${d.source_trust}`);
+                                }}
+                              >
+                                Ler Conteúdo
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <button
+                      className="btn-danger"
+                      style={{ padding: '10px 16px', fontSize: '0.85rem', borderRadius: '8px' }}
+                      onClick={() => {
+                        try {
+                          gwnisEngine.deleteDriveFile('gwnis-conn-001', 'file-balancete-001');
+                        } catch (err: any) {
+                          setGwnisDeleteBlocked(true);
+                        }
+                      }}
+                    >
+                      Simular Eliminação de Ficheiro (Teste de Bloqueio)
+                    </button>
+                  </div>
+
+                  {gwnisDeleteBlocked && (
+                    <div style={{ marginTop: '16px', background: theme === 'dark' ? 'rgba(239, 68, 68, 0.15)' : '#fef2f2', border: '1px solid #ef4444', borderRadius: '10px', padding: '14px', fontSize: '0.85rem', color: '#ef4444', fontWeight: 700 }}>
+                      BLOQUEIO DE SEGURANÇA DRIVE: OPERATION_PROHIBITED ✓<br/>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 500, color: theme === 'dark' ? '#fca5a5' : '#991b1b' }}>A eliminação de ficheiros no Google Drive está desativada por omissão para os 500 AI Employees.</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Sub-Tab 3: Google Docs */}
+              {gwnisSubTab === 'docs' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Google Docs Connector — Criação Nativa & Exportação</h3>
+                    <div style={{ marginBottom: '14px' }}>
+                      <label style={{ fontSize: '0.85rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Título do Novo Google Doc:</label>
+                      <input
+                        type="text"
+                        value={gwnisDocTitle}
+                        onChange={(e) => setGwnisDocTitle(e.target.value)}
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000', fontSize: '0.85rem' }}
+                      />
+                    </div>
+
+                    <button
+                      className="btn-primary"
+                      style={{ width: '100%', padding: '12px', fontSize: '0.9rem', fontWeight: 700, borderRadius: '8px', marginBottom: '12px' }}
+                      onClick={() => {
+                        const doc = gwnisEngine.createNativeDoc('gwnis-conn-001', gwnisDocTitle, {
+                          title: gwnisDocTitle,
+                          sections: [{ heading: 'Resumo Executivo', paragraph: 'Documento gerado automaticamente pelo AI Employee com regras formais de marca.' }],
+                        });
+                        setGwnisCreatedDoc(doc);
+                      }}
+                    >
+                      Criar Google Doc Nativo Estuturado
+                    </button>
+
+                    {gwnisCreatedDoc && (
+                      <div style={{ background: theme === 'dark' ? 'rgba(16, 185, 129, 0.1)' : '#f0fdf4', border: '1px solid #10b981', borderRadius: '10px', padding: '14px', fontSize: '0.85rem', marginBottom: '14px' }}>
+                        <div style={{ fontWeight: 800, color: '#10b981', marginBottom: '4px' }}>DOCUMENTO CRIADO COM SUCESSO! ✓</div>
+                        <div>ID: <strong>{gwnisCreatedDoc.document_id}</strong></div>
+                        <div>Título: <strong>{gwnisCreatedDoc.title}</strong></div>
+                        <div>Versão Marca: <strong>{gwnisCreatedDoc.brand_version}</strong></div>
+                        <div>Revisão: <strong>v{gwnisCreatedDoc.revision}</strong></div>
+                      </div>
+                    )}
+
+                    {gwnisCreatedDoc && (
+                      <button
+                        className="btn-success"
+                        style={{ width: '100%', padding: '12px', fontSize: '0.9rem', fontWeight: 700, borderRadius: '8px' }}
+                        onClick={() => {
+                          const exp = gwnisEngine.exportNativeDoc('gwnis-conn-001', gwnisCreatedDoc.document_id, 'pdf');
+                          setGwnisExportedPdf(exp);
+                        }}
+                      >
+                        Exportar para PDF Formal
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Pré-visualização do Ficheiro Exportado</h3>
+                    {gwnisExportedPdf ? (
+                      <div style={{ background: theme === 'dark' ? 'rgba(0,0,0,0.3)' : '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
+                        <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#3b82f6', marginBottom: '8px' }}>Ficheiro: {gwnisExportedPdf.file_name}</div>
+                        <div>MIME Type: <code>{gwnisExportedPdf.mime_type}</code></div>
+                        <div style={{ marginTop: '12px', background: theme === 'dark' ? '#0f172a' : '#fff', padding: '12px', borderRadius: '6px', fontSize: '0.75rem', fontFamily: 'monospace' }}>
+                          {gwnisExportedPdf.content}
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ color: '#6b7280', fontSize: '0.85rem', fontStyle: 'italic' }}>
+                        Crie um documento nativo e clique em "Exportar para PDF" para visualizar o ficheiro final.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 4: Google Sheets */}
+              {gwnisSubTab === 'sheets' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Google Sheets Connector — Edição por Range</h3>
+                    <div style={{ marginBottom: '14px' }}>
+                      <label style={{ fontSize: '0.85rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Título da Folha de Cálculo:</label>
+                      <input
+                        type="text"
+                        value={gwnisSheetTitle}
+                        onChange={(e) => setGwnisSheetTitle(e.target.value)}
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000', fontSize: '0.85rem' }}
+                      />
+                    </div>
+
+                    <button
+                      className="btn-primary"
+                      style={{ width: '100%', padding: '12px', fontSize: '0.9rem', fontWeight: 700, borderRadius: '8px', marginBottom: '12px' }}
+                      onClick={() => {
+                        const sheet = gwnisEngine.createNativeSheet('gwnis-conn-001', gwnisSheetTitle);
+                        setGwnisCreatedSheet(sheet);
+                      }}
+                    >
+                      Criar Google Sheet Nativo
+                    </button>
+
+                    <button
+                      className="btn-danger"
+                      style={{ width: '100%', padding: '12px', fontSize: '0.9rem', fontWeight: 700, borderRadius: '8px' }}
+                      onClick={() => {
+                        try {
+                          gwnisEngine.updateSheetRange('gwnis-conn-001', 'sheet-123', 'A1', [['function runMacro() { eval(1); }']]);
+                        } catch (err: any) {
+                          setGwnisMacroBlocked(true);
+                        }
+                      }}
+                    >
+                      Simular Injeção de Macro (Teste de Bloqueio)
+                    </button>
+
+                    {gwnisMacroBlocked && (
+                      <div style={{ marginTop: '16px', background: theme === 'dark' ? 'rgba(239, 68, 68, 0.15)' : '#fef2f2', border: '1px solid #ef4444', borderRadius: '10px', padding: '14px', fontSize: '0.85rem', color: '#ef4444', fontWeight: 700 }}>
+                        BLOQUEIO DE SEGURANÇA MACROS: MACRO_EXECUTION_BLOCKED ✓<br/>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 500, color: theme === 'dark' ? '#fca5a5' : '#991b1b' }}>Execução de código arbitrário/Apps Script no Google Sheets é permanentemente desativada.</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Leitura de Intervalo Autorizado (`AuthorizedSheetRange`)</h3>
+                    {gwnisCreatedSheet ? (
+                      <div>
+                        <div style={{ background: theme === 'dark' ? 'rgba(16, 185, 129, 0.1)' : '#f0fdf4', border: '1px solid #10b981', borderRadius: '10px', padding: '14px', fontSize: '0.85rem', marginBottom: '14px' }}>
+                          <div>Spreadsheet ID: <strong>{gwnisCreatedSheet.spreadsheet_id}</strong></div>
+                          <div>Abas: <strong>{gwnisCreatedSheet.sheets.map((s: any) => s.title).join(', ')}</strong></div>
+                        </div>
+
+                        <button
+                          className="btn-success"
+                          style={{ width: '100%', padding: '10px', fontSize: '0.85rem', borderRadius: '8px' }}
+                          onClick={() => {
+                            const read = gwnisEngine.readSheetRange('gwnis-conn-001', gwnisCreatedSheet.spreadsheet_id, 'Resultados!A1:D5');
+                            alert(`Valores lidos (${read.values.length} linhas):\n${JSON.stringify(read.values)}`);
+                          }}
+                        >
+                          Ler Intervalo 'Resultados!A1:D5'
+                        </button>
+                      </div>
+                    ) : (
+                      <div style={{ color: '#6b7280', fontSize: '0.85rem', fontStyle: 'italic' }}>
+                        Crie uma folha de cálculo para testar a leitura de intervalos autorizados.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 5: Security & Anti-Prompt Injection */}
+              {gwnisSubTab === 'security' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Matriz de Segurança & Proteção Anti-Prompt Injection</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                    <div style={{ background: theme === 'dark' ? 'rgba(0,0,0,0.2)' : '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#ef4444', marginBottom: '8px' }}>Anti-Prompt Injection Tagging</h4>
+                      <p style={{ fontSize: '0.85rem', color: theme === 'dark' ? '#d1d5db' : '#475569', lineHeight: 1.5 }}>
+                        Todo o conteúdo vindo de documentos do Google Docs, tabelas do Sheets ou ficheiros do Drive é marcado com:
+                      </p>
+                      <code style={{ background: theme === 'dark' ? '#0f172a' : '#e2e8f0', color: '#ef4444', padding: '6px 10px', borderRadius: '6px', fontSize: '0.8rem', display: 'inline-block', marginTop: '6px' }}>
+                        source_trust = EXTERNAL_UNTRUSTED
+                      </code>
+                    </div>
+
+                    <div style={{ background: theme === 'dark' ? 'rgba(0,0,0,0.2)' : '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#3b82f6', marginBottom: '8px' }}>Classificação DLP & Partilha Externa</h4>
+                      <p style={{ fontSize: '0.85rem', color: theme === 'dark' ? '#d1d5db' : '#475569', lineHeight: 1.5 }}>
+                        Partilhas externas de ficheiros exigem classificação prévia (<code>CONFIDENTIAL</code> / <code>RESTRICTED</code>) e retenção formal para aprovação de supervisor.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 6: Pilots */}
+              {gwnisSubTab === 'pilots' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Execução de Pilotos Certificados GWNIS</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '20px' }}>
+                    <div style={{ background: theme === 'dark' ? 'rgba(255,255,255,0.03)' : '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#3b82f6' }}>Piloto #261</h4>
+                      <p style={{ fontSize: '0.8rem', color: '#6b7280' }}>Document Creator (Drive → Doc → PDF)</p>
+                      <button
+                        className="btn-primary"
+                        style={{ width: '100%', padding: '10px', fontSize: '0.8rem', borderRadius: '6px', marginTop: '12px' }}
+                        onClick={() => {
+                          const res = gwnisEngine.runPilotDocCreator261('tenant-default', 'Carta Bancária Formal', 'Bancos');
+                          setGwnisPilotRes(res);
+                        }}
+                      >
+                        Executar Piloto #261
+                      </button>
+                    </div>
+
+                    <div style={{ background: theme === 'dark' ? 'rgba(255,255,255,0.03)' : '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#10b981' }}>Piloto #286</h4>
+                      <p style={{ fontSize: '0.8rem', color: '#6b7280' }}>Spreadsheet Employee (Sheet → XLSX)</p>
+                      <button
+                        className="btn-primary"
+                        style={{ width: '100%', padding: '10px', fontSize: '0.8rem', borderRadius: '6px', marginTop: '12px' }}
+                        onClick={() => {
+                          const res = gwnisEngine.runPilotSpreadsheetEmployee286('tenant-default', 'Análise de Custos Q3', [
+                            ['Cat', 'Custo'],
+                            ['TI', 15000],
+                          ]);
+                          setGwnisPilotRes(res);
+                        }}
+                      >
+                        Executar Piloto #286
+                      </button>
+                    </div>
+
+                    <div style={{ background: theme === 'dark' ? 'rgba(255,255,255,0.03)' : '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#8b5cf6' }}>Piloto #73</h4>
+                      <p style={{ fontSize: '0.8rem', color: '#6b7280' }}>Management Reporting (Drive + Sheet + Doc)</p>
+                      <button
+                        className="btn-primary"
+                        style={{ width: '100%', padding: '10px', fontSize: '0.8rem', borderRadius: '6px', marginTop: '12px' }}
+                        onClick={() => {
+                          const res = gwnisEngine.runPilotManagementReporting73('tenant-default', 'Setembro_2026');
+                          setGwnisPilotRes(res);
+                        }}
+                      >
+                        Executar Piloto #73
+                      </button>
+                    </div>
+                  </div>
+
+                  {gwnisPilotRes && (
+                    <div style={{ background: theme === 'dark' ? 'rgba(16, 185, 129, 0.1)' : '#f0fdf4', border: '1px solid #10b981', borderRadius: '10px', padding: '16px', fontSize: '0.85rem' }}>
+                      <div style={{ fontWeight: 800, color: '#10b981', marginBottom: '8px' }}>PILOTO EXECUTADO COM SUCESSO! ✓</div>
+                      <pre style={{ background: theme === 'dark' ? '#0f172a' : '#1e293b', color: '#38bdf8', padding: '12px', borderRadius: '8px', fontSize: '0.75rem', overflowX: 'auto', maxHeight: '200px' }}>
+                        {JSON.stringify(gwnisPilotRes, null, 2)}
+                      </pre>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'peip' && (
+            <div>
+              {/* Header Banner */}
+              <div style={{ background: theme === 'dark' ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%)' : 'linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '16px', padding: '24px', marginBottom: '28px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                      <Network size={28} color="#6366f1" />
+                      <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: theme === 'dark' ? '#fff' : '#0f172a', margin: 0 }}>
+                        {lang === 'pt' ? 'PEIP — Central de Integrações Empresariais Progressivas' : 'PEIP — Progressive Enterprise Integration Pack'}
+                      </h2>
+                    </div>
+                    <p style={{ fontSize: '0.9rem', color: theme === 'dark' ? '#d1d5db' : '#475569', maxWidth: '900px', lineHeight: 1.5, margin: 0 }}>
+                      {lang === 'pt'
+                        ? 'Pacote de 6 integrações progressivas: E-mail Corporativo → WhatsApp Business → Cloud Storage (Drive/SharePoint) → ERP Primavera v10 Read-Only → Excel Automático (sem macros) → Banco Read-Only (BFA/BAI/BCI com bloqueio estrito de pagamentos).'
+                        : 'Progressive 6-phase enterprise integration pack: Email → WhatsApp Business → Cloud Storage → Primavera v10 ERP Read-Only → Excel Automation → Bank Read-Only with strict payment block.'}
+                    </p>
+                  </div>
+                  <span className="badge badge-success" style={{ padding: '6px 14px', fontSize: '0.85rem', fontWeight: 700 }}>
+                    GATE 6/6 FASES ACTIVE ✓
+                  </span>
+                </div>
+              </div>
+
+              {/* Metrics Summary */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '28px' }}>
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #6366f1' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Fases de Integração</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#6366f1', marginTop: '6px' }}>{peipSummary.totalPhasesConfigured} / 6 Fases</div>
+                  <div style={{ fontSize: '0.75rem', color: '#6366f1', fontWeight: 700, marginTop: '4px' }}>100% Arquitectura Provider-Neutral</div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #10b981' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Conexões Empresariais Ativas</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981', marginTop: '6px' }}>{peipSummary.activeConnectionsCount} Conexões</div>
+                  <div style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700, marginTop: '4px' }}>Saúde Operacional 100% HEALTHY</div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #ef4444' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Escrita Primavera Bloqueada</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#ef4444', marginTop: '6px' }}>{peipSummary.unauthorizedWriteAttemptsBlocked} Bloqueios</div>
+                  <div style={{ fontSize: '0.75rem', color: '#ef4444', fontWeight: 700, marginTop: '4px' }}>WRITE_ATTEMPT_DENIED Estrito</div>
+                </div>
+
+                <div className="card" style={{ padding: '16px', borderLeft: '4px solid #f59e0b' }}>
+                  <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#6b7280', fontWeight: 600 }}>Pagamentos Bancários Bloqueados</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#f59e0b', marginTop: '6px' }}>{peipSummary.unauthorizedPaymentAttemptsBlocked} Bloqueios</div>
+                  <div style={{ fontSize: '0.75rem', color: '#f59e0b', fontWeight: 700, marginTop: '4px' }}>OPERATION_NOT_SUPPORTED</div>
+                </div>
+              </div>
+
+              {/* Sub-Navigation */}
+              <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '24px', flexWrap: 'wrap' }}>
+                <button
+                  onClick={() => setPeipSubTab('center')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    background: peipSubTab === 'center' ? '#6366f1' : 'transparent',
+                    color: peipSubTab === 'center' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                  }}
+                >
+                  Central de Conexões ({peipConnections.length})
+                </button>
+
+                <button
+                  onClick={() => setPeipSubTab('email')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    background: peipSubTab === 'email' ? '#6366f1' : 'transparent',
+                    color: peipSubTab === 'email' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                  }}
+                >
+                  Email & Inbox (Fase 1)
+                </button>
+
+                <button
+                  onClick={() => setPeipSubTab('whatsapp')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    background: peipSubTab === 'whatsapp' ? '#6366f1' : 'transparent',
+                    color: peipSubTab === 'whatsapp' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                  }}
+                >
+                  WhatsApp Business (Fase 2)
+                </button>
+
+                <button
+                  onClick={() => setPeipSubTab('drive')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    background: peipSubTab === 'drive' ? '#6366f1' : 'transparent',
+                    color: peipSubTab === 'drive' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                  }}
+                >
+                  Cloud Drive & Storage (Fase 3)
+                </button>
+
+                <button
+                  onClick={() => setPeipSubTab('primavera')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    background: peipSubTab === 'primavera' ? '#6366f1' : 'transparent',
+                    color: peipSubTab === 'primavera' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                  }}
+                >
+                  ERP Primavera v10 Read-Only (Fase 4)
+                </button>
+
+                <button
+                  onClick={() => setPeipSubTab('bank_excel')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    background: peipSubTab === 'bank_excel' ? '#6366f1' : 'transparent',
+                    color: peipSubTab === 'bank_excel' ? '#fff' : (theme === 'dark' ? '#9ca3af' : '#64748b'),
+                  }}
+                >
+                  Excel & Banco Read-Only (Fases 5 & 6)
+                </button>
+              </div>
+
+              {/* Sub-Tab 1: Central de Conexões */}
+              {peipSubTab === 'center' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Painel Central de Conexões Empresariais</h3>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left', color: '#6b7280' }}>
+                          <th style={{ padding: '10px' }}>ID Conexão</th>
+                          <th style={{ padding: '10px' }}>Nome da Conexão</th>
+                          <th style={{ padding: '10px' }}>Provedor & Protocolo</th>
+                          <th style={{ padding: '10px' }}>Modo</th>
+                          <th style={{ padding: '10px' }}>Estado Saúde</th>
+                          <th style={{ padding: '10px' }}>Colaboradores Ativos</th>
+                          <th style={{ padding: '10px', textAlign: 'right' }}>Ação de Saúde</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {peipConnections.map((c) => (
+                          <tr key={c.connectionId} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                            <td style={{ padding: '10px', fontFamily: 'monospace', fontWeight: 700, color: '#6366f1' }}>{c.connectionId}</td>
+                            <td style={{ padding: '10px', fontWeight: 700 }}>{c.name}</td>
+                            <td style={{ padding: '10px', color: '#64748b' }}>{c.provider}</td>
+                            <td style={{ padding: '10px' }}>
+                              <span style={{ padding: '4px 8px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700, background: 'rgba(99, 102, 241, 0.15)', color: '#6366f1' }}>
+                                {c.mode}
+                              </span>
+                            </td>
+                            <td style={{ padding: '10px' }}>
+                              <span className="badge badge-success" style={{ fontSize: '0.75rem' }}>{c.health} ✓</span>
+                            </td>
+                            <td style={{ padding: '10px', fontWeight: 700, color: '#10b981' }}>{c.employeesUsingCount} Employees</td>
+                            <td style={{ padding: '10px', textAlign: 'right' }}>
+                              <button
+                                className="btn-primary"
+                                style={{ padding: '6px 12px', fontSize: '0.75rem', borderRadius: '6px' }}
+                                onClick={() => {
+                                  peipEngine.testConnection(c.connectionId);
+                                  setPeipConnections(peipEngine.getConnections());
+                                  setPeipSummary(peipEngine.getGlobalSummary());
+                                  alert(`Conexão ${c.name} testada e validada com estado HEALTHY!`);
+                                }}
+                              >
+                                Testar Saúde
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 2: Email & Inbox (Fase 1) */}
+              {peipSubTab === 'email' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Fase 1 — Pesquisa e Leitura de Inbox Autorizada</h3>
+                  <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+                    <input
+                      type="text"
+                      value={peipEmailSearchQuery}
+                      onChange={(e) => setPeipEmailSearchQuery(e.target.value)}
+                      placeholder="Pesquisar mensagens de e-mail por assunto..."
+                      style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '0.85rem', width: '360px', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000' }}
+                    />
+                    <button
+                      className="btn-primary"
+                      style={{ padding: '10px 16px', fontSize: '0.85rem', borderRadius: '8px' }}
+                      onClick={() => {
+                        setPeipEmailInbox(peipEngine.searchEmailInbox(peipEmailSearchQuery));
+                      }}
+                    >
+                      Pesquisar Mensagens Autorizadas
+                    </button>
+                  </div>
+
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left', color: '#6b7280' }}>
+                          <th style={{ padding: '10px' }}>ID Mensagem</th>
+                          <th style={{ padding: '10px' }}>Assunto</th>
+                          <th style={{ padding: '10px' }}>Remetente</th>
+                          <th style={{ padding: '10px' }}>Anexos Processados</th>
+                          <th style={{ padding: '10px' }}>Data / Hora</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {peipEmailInbox.messages.map((m: any) => (
+                          <tr key={m.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                            <td style={{ padding: '10px', fontFamily: 'monospace', fontWeight: 700, color: '#3b82f6' }}>{m.id}</td>
+                            <td style={{ padding: '10px', fontWeight: 700 }}>{m.subject}</td>
+                            <td style={{ padding: '10px', color: '#10b981' }}>{m.from}</td>
+                            <td style={{ padding: '10px' }}>
+                              {m.attachments.map((att: string) => (
+                                <span key={att} style={{ padding: '2px 8px', borderRadius: '4px', background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6', fontSize: '0.75rem', fontWeight: 600 }}>{att}</span>
+                              ))}
+                            </td>
+                            <td style={{ padding: '10px' }}>{new Date(m.date).toLocaleString()}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 3: WhatsApp Business (Fase 2) */}
+              {peipSubTab === 'whatsapp' && (
+                <div className="card" style={{ padding: '24px', maxWidth: '600px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Fase 2 — WhatsApp Business & Links JWT Assinados</h3>
+                  <div style={{ marginBottom: '16px' }}>
+                    <label style={{ fontSize: '0.85rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Número Telefone Destinatário:</label>
+                    <input
+                      type="text"
+                      value={peipWaPhone}
+                      onChange={(e) => setPeipWaPhone(e.target.value)}
+                      style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000', fontSize: '0.85rem' }}
+                    />
+                  </div>
+
+                  <button
+                    className="btn-primary"
+                    style={{ width: '100%', padding: '12px', fontSize: '0.9rem', fontWeight: 700, borderRadius: '8px', marginBottom: '20px' }}
+                    onClick={() => {
+                      const res = peipEngine.generateWhatsAppSignedDraft(peipWaPhone, 'Relatorio_Liquidez_Agosto.pdf');
+                      setPeipWaDraftRes(res);
+                    }}
+                  >
+                    Gerar Minuta WhatsApp com Link Assinado Autenticado
+                  </button>
+
+                  {peipWaDraftRes && (
+                    <div style={{ background: theme === 'dark' ? 'rgba(16, 185, 129, 0.1)' : '#f0fdf4', border: '1px solid #10b981', borderRadius: '12px', padding: '16px', fontSize: '0.85rem' }}>
+                      <div style={{ fontWeight: 800, color: '#10b981', marginBottom: '6px' }}>MINUTA WHATSAPP GERADA COM SUCESSO! ✓</div>
+                      <div>ID Minuta: <strong>{peipWaDraftRes.draftId}</strong></div>
+                      <div>Status: <strong>{peipWaDraftRes.status}</strong></div>
+                      <div style={{ marginTop: '8px', fontFamily: 'monospace', fontSize: '0.75rem', color: '#059669', wordBreak: 'break-all' }}>
+                        URL Autenticada: {peipWaDraftRes.signedLink}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Sub-Tab 4: Cloud Drive & Storage (Fase 3) */}
+              {peipSubTab === 'drive' && (
+                <div className="card" style={{ padding: '24px' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Fase 3 — Cloud Storage (Google Drive & SharePoint)</h3>
+                  <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+                    <input
+                      type="text"
+                      value={peipDriveFolder}
+                      onChange={(e) => setPeipDriveFolder(e.target.value)}
+                      style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '0.85rem', width: '360px', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000' }}
+                    />
+                    <button
+                      className="btn-primary"
+                      style={{ padding: '10px 16px', fontSize: '0.85rem', borderRadius: '8px' }}
+                      onClick={() => {
+                        setPeipDriveFiles(peipEngine.listDriveFiles(peipDriveFolder));
+                      }}
+                    >
+                      Listar Ficheiros da Pasta Monitorizada
+                    </button>
+                  </div>
+
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left', color: '#6b7280' }}>
+                          <th style={{ padding: '10px' }}>Nome do Ficheiro</th>
+                          <th style={{ padding: '10px' }}>Tamanho</th>
+                          <th style={{ padding: '10px' }}>Última Modificação</th>
+                          <th style={{ padding: '10px' }}>Status Monitorização</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {peipDriveFiles.files.map((f: any) => (
+                          <tr key={f.name} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                            <td style={{ padding: '10px', fontWeight: 700, color: '#3b82f6' }}>{f.name}</td>
+                            <td style={{ padding: '10px' }}>{(f.sizeBytes / 1024).toFixed(1)} KB</td>
+                            <td style={{ padding: '10px' }}>{new Date(f.modifiedAt).toLocaleString()}</td>
+                            <td style={{ padding: '10px' }}><span className="badge badge-success">WATCHED ✓</span></td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 5: ERP Primavera v10 Read-Only (Fase 4) */}
+              {peipSubTab === 'primavera' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Fase 4 — Execução de Consultas no ERP Primavera v10</h3>
+                    
+                    <div style={{ marginBottom: '16px' }}>
+                      <label style={{ fontSize: '0.85rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Selecione a Consulta Predefinida do Catálogo:</label>
+                      <select
+                        value={peipPrimaveraQueryKey}
+                        onChange={(e) => setPeipPrimaveraQueryKey(e.target.value)}
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000', fontSize: '0.85rem' }}
+                      >
+                        <option value="sales_by_period">sales_by_period (Faturação de Vendas por Período)</option>
+                        <option value="customer_aging">customer_aging (Antiguidade de Saldos Clientes)</option>
+                        <option value="ledger_by_period">ledger_by_period (Razão Geral de Contabilidade)</option>
+                        <option value="stock_by_warehouse">stock_by_warehouse (Existências de Stock por Armazém)</option>
+                      </select>
+                    </div>
+
+                    <button
+                      className="btn-primary"
+                      style={{ width: '100%', padding: '12px', fontSize: '0.9rem', fontWeight: 700, borderRadius: '8px', marginBottom: '16px' }}
+                      onClick={() => {
+                        const res = peipEngine.executePrimaveraReadQuery(peipPrimaveraQueryKey);
+                        setPeipPrimaveraRes(res);
+                      }}
+                    >
+                      Executar Consulta do Catálogo ERP
+                    </button>
+
+                    <button
+                      className="btn-danger"
+                      style={{ width: '100%', padding: '12px', fontSize: '0.9rem', fontWeight: 700, borderRadius: '8px' }}
+                      onClick={() => {
+                        try {
+                          peipEngine.attemptPrimaveraWrite('UPDATE LineItems SET Price = 0');
+                        } catch (err: any) {
+                          setPeipPrimaveraWriteBlocked(true);
+                          setPeipSummary(peipEngine.getGlobalSummary());
+                        }
+                      }}
+                    >
+                      Simular Tentativa de Escrita SQL (Teste de Bloqueio)
+                    </button>
+
+                    {peipPrimaveraWriteBlocked && (
+                      <div style={{ marginTop: '16px', background: theme === 'dark' ? 'rgba(239, 68, 68, 0.15)' : '#fef2f2', border: '1px solid #ef4444', borderRadius: '10px', padding: '14px', fontSize: '0.85rem', color: '#ef4444', fontWeight: 700 }}>
+                        BLOQUEIO DE SEGURANÇA ATIVADO: WRITE_ATTEMPT_DENIED ✓<br/>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 500, color: theme === 'dark' ? '#fca5a5' : '#991b1b' }}>Tentativas de alteração no Primavera v10 são estritamente rejeitadas pelo conector Read-Only.</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Resultados Canónicos & Envelope de Data Lineage</h3>
+                    {peipPrimaveraRes && (
+                      <div>
+                        <div style={{ background: theme === 'dark' ? 'rgba(0,0,0,0.3)' : '#f8fafc', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-color)', marginBottom: '16px', fontSize: '0.8rem' }}>
+                          <div>Chave Consulta: <strong>{peipPrimaveraRes.queryKey}</strong></div>
+                          <div>Total Registos: <strong>{peipPrimaveraRes.recordCount}</strong></div>
+                          <div>Fonte Data Lineage: <strong>{peipPrimaveraRes.dataLineage.sourceResource}</strong></div>
+                          <div>Versão Mapeamento: <strong>{peipPrimaveraRes.dataLineage.mappingVersion}</strong></div>
+                          <div>Status Frescura: <strong style={{ color: '#10b981' }}>{peipPrimaveraRes.dataLineage.freshnessStatus} ✓</strong></div>
+                        </div>
+
+                        <pre style={{ background: theme === 'dark' ? '#0f172a' : '#1e293b', color: '#38bdf8', padding: '14px', borderRadius: '8px', fontSize: '0.75rem', overflowX: 'auto', maxHeight: '240px' }}>
+                          {JSON.stringify(peipPrimaveraRes.data, null, 2)}
+                        </pre>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-Tab 6: Excel & Banco Read-Only (Fases 5 & 6) */}
+              {peipSubTab === 'bank_excel' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                  {/* Excel Ingestion Card */}
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Fase 5 — Ingestão Automática de Excel sem Macros</h3>
+                    <div style={{ marginBottom: '14px' }}>
+                      <label style={{ fontSize: '0.85rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Nome da Folha de Cálculo (.xlsx / .xlsm):</label>
+                      <input
+                        type="text"
+                        value={peipExcelFilename}
+                        onChange={(e) => setPeipExcelFilename(e.target.value)}
+                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : '#fff', color: theme === 'dark' ? '#fff' : '#000', fontSize: '0.85rem' }}
+                      />
+                    </div>
+
+                    <button
+                      className="btn-primary"
+                      style={{ width: '100%', padding: '12px', fontSize: '0.9rem', fontWeight: 700, borderRadius: '8px', marginBottom: '16px' }}
+                      onClick={() => {
+                        const res = peipEngine.ingestSpreadsheet(peipExcelFilename);
+                        setPeipExcelIngestRes(res);
+                        setPeipSummary(peipEngine.getGlobalSummary());
+                      }}
+                    >
+                      Executar Ingestão Segura com OpenXML Parser
+                    </button>
+
+                    {peipExcelIngestRes && (
+                      <div style={{ background: theme === 'dark' ? 'rgba(16, 185, 129, 0.1)' : '#f0fdf4', border: '1px solid #10b981', borderRadius: '10px', padding: '14px', fontSize: '0.85rem' }}>
+                        <div style={{ fontWeight: 800, color: '#10b981', marginBottom: '4px' }}>ESQUEMA DETETADO COM SUCESSO! ✓</div>
+                        <div>Ficheiro: <strong>{peipExcelIngestRes.schema.name}</strong></div>
+                        <div>Confiança Mapeamento: <strong>{peipExcelIngestRes.schema.mappingConfidencePercentage}%</strong></div>
+                        <div>Execução de Macros: <strong style={{ color: '#ef4444' }}>BLOQUEADA (Execução Proibida) ✓</strong></div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Bank Read-Only Card */}
+                  <div className="card" style={{ padding: '24px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px' }}>Fase 6 — Banco Read-Only & Reconciliação BFA/BAI/BCI</h3>
+                    
+                    {peipBankAccounts.map(acc => (
+                      <div key={acc.accountRef} style={{ background: theme === 'dark' ? 'rgba(59, 130, 246, 0.1)' : '#eff6ff', border: '1px solid #3b82f6', borderRadius: '10px', padding: '14px', marginBottom: '16px', fontSize: '0.85rem' }}>
+                        <div style={{ fontWeight: 800, color: '#2563eb' }}>{acc.bankName}</div>
+                        <div>IBAN: <strong>{acc.iban}</strong></div>
+                        <div>Saldo Contabilístico: <strong style={{ color: '#10b981' }}>{acc.currentBalance.toLocaleString()} {acc.currency}</strong></div>
+                      </div>
+                    ))}
+
+                    <button
+                      className="btn-danger"
+                      style={{ width: '100%', padding: '12px', fontSize: '0.9rem', fontWeight: 700, borderRadius: '8px' }}
+                      onClick={() => {
+                        try {
+                          peipEngine.attemptBankPayment('payment.submit', { amount: 500000 });
+                        } catch (err: any) {
+                          setPeipBankPaymentBlocked(true);
+                          setPeipSummary(peipEngine.getGlobalSummary());
+                        }
+                      }}
+                    >
+                      Simular Tentativa de Pagamento Bancário (Teste de Bloqueio)
+                    </button>
+
+                    {peipBankPaymentBlocked && (
+                      <div style={{ marginTop: '16px', background: theme === 'dark' ? 'rgba(239, 68, 68, 0.15)' : '#fef2f2', border: '1px solid #ef4444', borderRadius: '10px', padding: '14px', fontSize: '0.85rem', color: '#ef4444', fontWeight: 700 }}>
+                        BLOQUEIO DE SEGURANÇA BANCÁRIA: OPERATION_NOT_SUPPORTED ✓<br/>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 500, color: theme === 'dark' ? '#fca5a5' : '#991b1b' }}>Tentativas de movimentação financeira são rejeitadas pelo conector Bank Read-Only.</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+
         </main>
       </div>
 

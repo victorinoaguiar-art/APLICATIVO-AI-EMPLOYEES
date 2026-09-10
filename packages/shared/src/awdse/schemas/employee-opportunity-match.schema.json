@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EmployeeOpportunityMatch",
+  "type": "object",
+  "properties": {
+    "match_id": { "type": "string" },
+    "process_candidate_id": { "type": "string" },
+    "employee_id": { "type": "number" },
+    "fit_score": { "type": "number" },
+    "match_type": { "type": "string" }
+  },
+  "required": ["match_id", "process_candidate_id", "employee_id", "fit_score", "match_type"]
+}

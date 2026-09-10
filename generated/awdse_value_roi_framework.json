@@ -1,0 +1,9 @@
+{
+  "framework_version": "1.0",
+  "measurement_types": ["MEASURED", "ESTIMATED", "ASSUMED"],
+  "rules": {
+    "double_counting_prevented": true,
+    "baseline_hours_required": true,
+    "passport_generation_period": "MONTHLY"
+  }
+}

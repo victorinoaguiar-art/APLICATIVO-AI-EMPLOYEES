@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ProcessSignal",
+  "type": "object",
+  "properties": {
+    "signal_id": { "type": "string" },
+    "organization_id": { "type": "string" },
+    "source_type": { "type": "string" },
+    "task_pattern": { "type": "string" },
+    "volume": { "type": "number" },
+    "confidence": { "type": "number" }
+  },
+  "required": ["signal_id", "organization_id", "source_type", "task_pattern"]
+}

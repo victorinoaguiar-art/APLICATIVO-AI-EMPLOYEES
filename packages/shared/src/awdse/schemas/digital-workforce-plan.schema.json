@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DigitalWorkforcePlan",
+  "type": "object",
+  "properties": {
+    "organization_id": { "type": "string" },
+    "active_employees": { "type": "array", "items": { "type": "string" } },
+    "recommended_employees": { "type": "array", "items": { "type": "string" } }
+  },
+  "required": ["organization_id"]
+}

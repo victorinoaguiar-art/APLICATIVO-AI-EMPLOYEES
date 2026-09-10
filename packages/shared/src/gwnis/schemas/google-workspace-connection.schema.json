@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GoogleWorkspaceConnectionProfile",
+  "type": "object",
+  "properties": {
+    "connection_id": { "type": "string" },
+    "tenant_id": { "type": "string" },
+    "organization_id": { "type": "string" },
+    "auth_mode": { "type": "string", "enum": ["user_oauth", "org_managed_oauth", "service_account", "domain_delegation"] },
+    "status": { "type": "string" }
+  },
+  "required": ["connection_id", "tenant_id", "organization_id", "auth_mode", "status"]
+}

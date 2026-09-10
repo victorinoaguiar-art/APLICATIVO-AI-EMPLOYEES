@@ -1,0 +1,16 @@
+{
+  "template_id": "gwnis_default_org_v1",
+  "name": "Default Enterprise Google Workspace Template",
+  "drives": ["Management", "Finance", "Operations"],
+  "folders": {
+    "reports": "/Management/Reports",
+    "inputs": "/Management/Inputs",
+    "letters": "/Bancos/Cartas"
+  },
+  "default_scopes": [
+    "https://www.googleapis.com/auth/drive.readonly",
+    "https://www.googleapis.com/auth/drive.file",
+    "https://www.googleapis.com/auth/documents",
+    "https://www.googleapis.com/auth/spreadsheets"
+  ]
+}

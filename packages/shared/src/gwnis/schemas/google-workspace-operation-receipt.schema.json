@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GoogleWorkspaceOperationReceipt",
+  "type": "object",
+  "properties": {
+    "receipt_id": { "type": "string" },
+    "timestamp": { "type": "string" },
+    "tenant_id": { "type": "string" },
+    "organization_id": { "type": "string" },
+    "service": { "type": "string", "enum": ["drive", "docs", "sheets"] },
+    "operation": { "type": "string" },
+    "status": { "type": "string", "enum": ["SUCCESS", "BLOCKED", "REQUIRES_APPROVAL", "FAILED"] }
+  },
+  "required": ["receipt_id", "timestamp", "tenant_id", "service", "operation", "status"]
+}
