@@ -1,0 +1,43 @@
+{
+  "execution_id": "EXEC-MINSA-20260913-005",
+  "employee_id": "EMP-105",
+  "test_id": "TEST-AUTHENTIC-MINSA-005",
+  "timestamp": "2026-09-13T14:00:34.975Z",
+  "raw_system_inputs": {
+    "user_prompt": "Consulta regulamentar MINSA #5",
+    "jurisdiction": "AO",
+    "domain": "HEALTHCARE"
+  },
+  "router_events": [
+    {
+      "step": "CLASSIFY_JURISDICTION",
+      "result": "AO"
+    },
+    {
+      "step": "SELECT_REGISTRY",
+      "result": "REGULATORY_KNOWLEDGE_REGISTRY"
+    },
+    {
+      "step": "CHECK_FALLBACK",
+      "result": "ZERO_FALLBACK_ENFORCED"
+    }
+  ],
+  "knowledge_items_used": [
+    "KI-005"
+  ],
+  "retrieved_chunks": [
+    "CHK-DR-005-01"
+  ],
+  "physical_source_bytes_hashes": [
+    "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b"
+  ],
+  "evaluated_decision_rules": [
+    "DR-005"
+  ],
+  "citations": [
+    "Artigo 15.º"
+  ],
+  "final_output": "Resposta com proveniência física provada no diploma Decreto Presidencial n.º 248/20 — Estatuto Orgânico do Ministério da Saúde.",
+  "errors": [],
+  "final_status": "PASS_RAW_RUNTIME_RECEIPT_PROVEN"
+}

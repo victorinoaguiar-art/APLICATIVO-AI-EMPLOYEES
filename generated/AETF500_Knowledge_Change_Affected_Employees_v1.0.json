@@ -1,0 +1,10 @@
+{
+  "program_id": "AETF500_KNOWLEDGE_GAP_FILLING_COMPETENCY_CERTIFICATION_READINESS_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "as_of_date": "2026-09-12",
+  "employees_affected_total": 500,
+  "delivery_successful_count": 500,
+  "delivery_failed_count": 0,
+  "retest_passed_count": 500,
+  "propagation_mode": "TARGETED_PROPAGATION"
+}

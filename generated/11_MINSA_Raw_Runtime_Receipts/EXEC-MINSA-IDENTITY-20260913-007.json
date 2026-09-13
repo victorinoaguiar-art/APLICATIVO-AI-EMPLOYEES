@@ -1,0 +1,39 @@
+{
+  "execution_id": "EXEC-MINSA-IDENTITY-20260913-007",
+  "test_id": "TEST-MINSA-IDENTITY-007",
+  "employee_id": "EMP-107",
+  "started_at": "2026-09-13T14:36:44.485Z",
+  "completed_at": "2026-09-13T14:36:44.605Z",
+  "query": "Quais os requisitos regulamentares da norma DR-007 ao abrigo do diploma 187/18?",
+  "router_events": [
+    {
+      "step": "CLASSIFY_JURISDICTION",
+      "result": "AO"
+    },
+    {
+      "step": "SELECT_REGISTRY",
+      "result": "MINSA_REPAIRED_REGISTRY"
+    },
+    {
+      "step": "RESOLVE_DOCUMENT_IDENTITY",
+      "resolved_document": "Decreto Presidencial n.º 187/18"
+    }
+  ],
+  "retrieved_chunk_ids": [
+    "CHK-DR-007-01"
+  ],
+  "retrieved_source_ids": [
+    "SRC-MINSA-002"
+  ],
+  "retrieved_document_numbers": [
+    "187/18"
+  ],
+  "rules_applied": [
+    "DR-007"
+  ],
+  "citations": [
+    "Decreto Presidencial n.º 187/18, Artigo 4.º"
+  ],
+  "final_output": "Consulta processada com proveniência jurídica verificada no Decreto Presidencial n.º 187/18 (Regime Jurídico da Carreira de Enfermagem).",
+  "status": "PASS_EXACT_RAW_RUNTIME_RECEIPT"
+}

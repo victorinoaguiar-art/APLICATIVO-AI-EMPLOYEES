@@ -1,0 +1,31 @@
+{
+  "engine_name": "ABWSEMEngineV2",
+  "version": "2.0.0",
+  "specification": "AI_Employee_Prompt_Arquitectura_Comercial_Por_Areas_ABWSEM_v2_48_Areas.md",
+  "taxonomy": {
+    "total_functional_areas": 28,
+    "total_sectoral_areas": 20,
+    "total_platform_layers": 1,
+    "total_sellable_areas": 48,
+    "total_rolepacks": 500,
+    "commercial_home_rolepacks": 490,
+    "platform_rolepacks": 10
+  },
+  "principles": [
+    "SUBSCRIBED_AREA_NOT_EQUALS_ALL_ACTIVE_EMPLOYEES",
+    "ENTITLEMENT_NOT_EQUALS_DATA_AUTHORIZATION",
+    "ONE_ROLEPACK_EXACTLY_ONE_HOME_AREA",
+    "AREA_INDEPENDENCE_TEST_MANDATORY",
+    "ACTIVATION_GATE_7_CHECKS_REQUIRED",
+    "STANDALONE_MARKETING_AREA_MANDATORY"
+  ],
+  "supported_plans": [
+    "SINGLE_AREA",
+    "MULTI_AREA",
+    "FUNCTIONAL_SUITE",
+    "INDUSTRY_SUITE",
+    "BUSINESS_SUITE",
+    "ENTERPRISE_ALL_AREAS"
+  ],
+  "generated_at": "2026-09-10T20:20:00.000Z"
+}

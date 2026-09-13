@@ -1,0 +1,15 @@
+{
+  "program_id": "AETF500_PROFESSIONAL_KNOWLEDGE_COMPETENCY_ASSURANCE_PROGRAM_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "as_of_date": "2026-09-12",
+  "competencies_total": 1450,
+  "critical_competencies_total": 285,
+  "types_distribution": {
+    "GENERAL_KNOWLEDGE": 320,
+    "PROFESSIONAL_TECHNICAL": 410,
+    "PROCEDURAL": 280,
+    "REGULATORY": 215,
+    "LEGAL": 105,
+    "FINANCIAL": 120
+  }
+}

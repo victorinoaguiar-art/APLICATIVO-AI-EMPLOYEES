@@ -1,0 +1,50 @@
+{
+  "gap_id": "GAP-ENG-OWASP-004",
+  "domain": "Software Engineering",
+  "affected_employee_ids": [
+    "EMP-ENG-012"
+  ],
+  "affected_competency_ids": [
+    "COMP-ENG-005",
+    "COMP-ENG-010"
+  ],
+  "original_problem": "OWASP API Top 10 2026 secure coding ruleset missing dependency scan",
+  "original_root_cause": "Tool-specific linter configuration gap",
+  "original_risk_level": "PKA_2_TECHNICAL",
+  "source_before": "OWASP API Top 10 2021",
+  "source_after": "OWASP API Security Top 10 2026",
+  "knowledge_pack_before": "PKP-SOFTWARE-ENG-v1.0",
+  "knowledge_pack_after": "PKP-SOFTWARE-ENG-v2.0_UPDATED",
+  "rule_before": "Read-only code inspection without automated CI/CD linting",
+  "rule_after": "Automated secure coding linter execution within CI/CD sandbox scope",
+  "restriction_before": {
+    "type": "READ_ONLY",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A1"
+  },
+  "restriction_current": {
+    "type": "LIMITED_AUTONOMOUS_EXECUTION",
+    "status": "REMOVED",
+    "level": "A5"
+  },
+  "remediation_actions": [
+    "Integrated OWASP 2026 linter rules",
+    "Updated PKP-SOFTWARE-ENG to v2.0",
+    "Removed READ_ONLY restriction for CI/CD linting"
+  ],
+  "professional_test_run_ids": [
+    "RUN-PROF-GAP-ENG-OWASP-004"
+  ],
+  "professional_test_cases": 25,
+  "test_results": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "expert_review_required": false,
+  "external_validation_required": false,
+  "residual_risk": "VERY_LOW",
+  "recommended_autonomy_decision": "RESTRICTION_REMOVE",
+  "decision_details": "Removed READ_ONLY restriction, promoting to A5 Limited Autonomous Execution in sandbox",
+  "evidence_status": "VERIFIED_EFFECTIVE"
+}

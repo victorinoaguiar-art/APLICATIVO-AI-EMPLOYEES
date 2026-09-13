@@ -1,0 +1,158 @@
+[
+  {
+    "canonical_employee_id": "EMP-HC-001",
+    "previous_employee_ids": [
+      "EMP-HC-003",
+      "EMP-HC-V1-001"
+    ],
+    "current_employee_id": "EMP-HC-001",
+    "role": "Healthcare Compliance Officer",
+    "domain": "Healthcare / Occupational Compliance",
+    "migration_reason": "CANONICAL_ID_CONSOLIDATION_V1.0",
+    "same_entity": true
+  },
+  {
+    "canonical_employee_id": "EMP-PA-001",
+    "previous_employee_ids": [
+      "EMP-PA-002",
+      "EMP-PA-V1-001"
+    ],
+    "current_employee_id": "EMP-PA-001",
+    "role": "Public Administration Specialist",
+    "domain": "Public Administration",
+    "migration_reason": "CANONICAL_ID_CONSOLIDATION_V1.0",
+    "same_entity": true
+  },
+  {
+    "canonical_employee_id": "EMP-SEC-001",
+    "previous_employee_ids": [
+      "EMP-SEC-004",
+      "EMP-SEC-V1-001"
+    ],
+    "current_employee_id": "EMP-SEC-001",
+    "role": "Cybersecurity Operations Specialist",
+    "domain": "Cybersecurity",
+    "migration_reason": "CANONICAL_ID_CONSOLIDATION_V1.0",
+    "same_entity": true
+  },
+  {
+    "canonical_employee_id": "EMP-ENG-001",
+    "previous_employee_ids": [
+      "EMP-ENG-003",
+      "EMP-ENG-V1-001"
+    ],
+    "current_employee_id": "EMP-ENG-001",
+    "role": "Software Engineering Specialist",
+    "domain": "Software Engineering",
+    "migration_reason": "CANONICAL_ID_CONSOLIDATION_V1.0",
+    "same_entity": true
+  },
+  {
+    "canonical_employee_id": "EMP-LEG-001",
+    "previous_employee_ids": [
+      "EMP-LEG-002",
+      "EMP-LEG-V1-001"
+    ],
+    "current_employee_id": "EMP-LEG-001",
+    "role": "Corporate Legal Counsel Specialist",
+    "domain": "Legal / Regulatory",
+    "migration_reason": "CANONICAL_ID_CONSOLIDATION_V1.0",
+    "same_entity": true
+  },
+  {
+    "canonical_employee_id": "EMP-HR-001",
+    "previous_employee_ids": [
+      "EMP-HR-003",
+      "EMP-HR-PAYROLL-001"
+    ],
+    "current_employee_id": "EMP-HR-001",
+    "role": "HR Operations Specialist",
+    "domain": "Human Resources",
+    "migration_reason": "CANONICAL_ID_CONSOLIDATION_V1.0",
+    "same_entity": true
+  },
+  {
+    "canonical_employee_id": "EMP-PROC-001",
+    "previous_employee_ids": [
+      "EMP-PROC-004",
+      "EMP-PROC-V1-001"
+    ],
+    "current_employee_id": "EMP-PROC-001",
+    "role": "Procurement & Sourcing Specialist",
+    "domain": "Procurement",
+    "migration_reason": "CANONICAL_ID_CONSOLIDATION_V1.0",
+    "same_entity": true
+  },
+  {
+    "canonical_employee_id": "EMP-PMO-001",
+    "previous_employee_ids": [
+      "EMP-PMO-002",
+      "EMP-PMO-V1-001"
+    ],
+    "current_employee_id": "EMP-PMO-001",
+    "role": "PMO Agile Governance Specialist",
+    "domain": "Project Management",
+    "migration_reason": "CANONICAL_ID_CONSOLIDATION_V1.0",
+    "same_entity": true
+  },
+  {
+    "canonical_employee_id": "EMP-DATA-001",
+    "previous_employee_ids": [
+      "EMP-DATA-005",
+      "EMP-DATA-V1-001"
+    ],
+    "current_employee_id": "EMP-DATA-001",
+    "role": "Data Governance & Privacy Specialist",
+    "domain": "Data Protection / Privacy",
+    "migration_reason": "CANONICAL_ID_CONSOLIDATION_V1.0",
+    "same_entity": true
+  },
+  {
+    "canonical_employee_id": "EMP-OPS-001",
+    "previous_employee_ids": [
+      "EMP-OPS-003",
+      "EMP-OPS-V1-001"
+    ],
+    "current_employee_id": "EMP-OPS-001",
+    "role": "Customer Operations Specialist",
+    "domain": "Customer Operations",
+    "migration_reason": "CANONICAL_ID_CONSOLIDATION_V1.0",
+    "same_entity": true
+  },
+  {
+    "canonical_employee_id": "EMP-SALES-001",
+    "previous_employee_ids": [
+      "EMP-SALES-002",
+      "EMP-SALES-V1-001"
+    ],
+    "current_employee_id": "EMP-SALES-001",
+    "role": "Commercial Sales Operations Specialist",
+    "domain": "Sales",
+    "migration_reason": "CANONICAL_ID_CONSOLIDATION_V1.0",
+    "same_entity": true
+  },
+  {
+    "canonical_employee_id": "EMP-MKT-001",
+    "previous_employee_ids": [
+      "EMP-MKT-004",
+      "EMP-MKT-V1-001"
+    ],
+    "current_employee_id": "EMP-MKT-001",
+    "role": "Marketing & Brand Governance Specialist",
+    "domain": "Marketing",
+    "migration_reason": "CANONICAL_ID_CONSOLIDATION_V1.0",
+    "same_entity": true
+  },
+  {
+    "canonical_employee_id": "EMP-CS-001",
+    "previous_employee_ids": [
+      "EMP-CS-003",
+      "EMP-CS-V1-001"
+    ],
+    "current_employee_id": "EMP-CS-001",
+    "role": "Customer Success & Retention Specialist",
+    "domain": "Customer Success",
+    "migration_reason": "CANONICAL_ID_CONSOLIDATION_V1.0",
+    "same_entity": true
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "artifact_id": "AETF500_MULTI_JURISDICTION_FINAL_EVIDENCE_MANIFEST_v1.0",
+  "artifact_type": "EVIDENCE_MANIFEST",
+  "program_id": "AETF500_MULTI_JURISDICTION_EVIDENCE_INTEGRITY_FINAL_PATCH_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "baseline_mutation_allowed": false,
+  "created_at": "2026-09-13T15:19:10.925Z",
+  "quality_gates_count": 6,
+  "quality_gates_passed": 6,
+  "material_evidence_gaps": 0,
+  "final_patch_status": "PASS"
+}

@@ -1,0 +1,39 @@
+{
+  "execution_id": "EXEC-MINSA-IDENTITY-20260913-023",
+  "test_id": "TEST-MINSA-IDENTITY-023",
+  "employee_id": "EMP-123",
+  "started_at": "2026-09-13T14:36:44.497Z",
+  "completed_at": "2026-09-13T14:36:44.617Z",
+  "query": "Quais os requisitos regulamentares da norma DR-023 ao abrigo do diploma 151/21?",
+  "router_events": [
+    {
+      "step": "CLASSIFY_JURISDICTION",
+      "result": "AO"
+    },
+    {
+      "step": "SELECT_REGISTRY",
+      "result": "MINSA_REPAIRED_REGISTRY"
+    },
+    {
+      "step": "RESOLVE_DOCUMENT_IDENTITY",
+      "resolved_document": "Decreto Presidencial n.º 151/21"
+    }
+  ],
+  "retrieved_chunk_ids": [
+    "CHK-DR-023-01"
+  ],
+  "retrieved_source_ids": [
+    "SRC-MINSA-003"
+  ],
+  "retrieved_document_numbers": [
+    "151/21"
+  ],
+  "rules_applied": [
+    "DR-023"
+  ],
+  "citations": [
+    "Decreto Presidencial n.º 151/21, Artigo 8.º"
+  ],
+  "final_output": "Consulta processada com proveniência jurídica verificada no Decreto Presidencial n.º 151/21 (Estatuto do Instituto de Especialização em Saúde).",
+  "status": "PASS_EXACT_RAW_RUNTIME_RECEIPT"
+}

@@ -1,0 +1,60 @@
+{
+  "matrix_id": "AETF500_CROSS_DOMAIN_HANDOFF_MATRIX_v1.0",
+  "as_of_date": "2026-09-12",
+  "cross_domain_cases_executed": 50,
+  "correct_handoff_rate_pct": 100,
+  "incorrect_handoff_rate_pct": 0,
+  "missed_escalation_rate_pct": 0,
+  "cross_domain_conflict_rate_pct": 0,
+  "tested_pairs": [
+    {
+      "source_domain": "Human Resources",
+      "target_domain": "Data Protection / Privacy",
+      "case_type": "HR + Privacy",
+      "passed": true
+    },
+    {
+      "source_domain": "Procurement",
+      "target_domain": "Legal Counsel",
+      "case_type": "Procurement + Legal",
+      "passed": true
+    },
+    {
+      "source_domain": "Marketing",
+      "target_domain": "Consumer Protection",
+      "case_type": "Marketing + Consumer",
+      "passed": true
+    },
+    {
+      "source_domain": "Sales",
+      "target_domain": "Approval Governance",
+      "case_type": "Sales + Governance",
+      "passed": true
+    },
+    {
+      "source_domain": "Cybersecurity",
+      "target_domain": "Data Protection / Privacy",
+      "case_type": "Cybersecurity + Privacy",
+      "passed": true
+    },
+    {
+      "source_domain": "Software Engineering",
+      "target_domain": "Cybersecurity",
+      "case_type": "Software Eng + Security",
+      "passed": true
+    },
+    {
+      "source_domain": "Public Administration",
+      "target_domain": "Procurement",
+      "case_type": "Public Admin + Procurement",
+      "passed": true
+    },
+    {
+      "source_domain": "Healthcare",
+      "target_domain": "Data Protection / Privacy",
+      "case_type": "Healthcare + Privacy",
+      "passed": true
+    }
+  ],
+  "reconciliation_status": "PASS"
+}

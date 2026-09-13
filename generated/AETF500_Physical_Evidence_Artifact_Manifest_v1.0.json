@@ -1,0 +1,61 @@
+{
+  "package_id": "AETF500_PHYSICAL_EVIDENCE_ARTIFACT_PACKAGE_v1.0",
+  "program_id": "AETF500_PHYSICAL_EVIDENCE_ARTIFACT_DELIVERY_INDEPENDENT_VERIFICATION_PACKAGE_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "baseline_mutation_allowed": false,
+  "execution_timestamp": "2026-09-13T15:19:10.959Z",
+  "artifacts": [
+    {
+      "artifact_id": "SRC-ACC-PGC-001",
+      "file_name": "AETF500_SRC_ACC_PGC_001_Decreto_82_01.pdf",
+      "file_size_bytes": 5188378,
+      "sha256": "4b2d92fc7cc13ed25bf7650f885639af0beea53b51dc2161dde51268e422d702",
+      "sha512": "faa4eff7744bc6983265994fd042120931f91f5d3a3de48b983e54f6837bd64710607c63a371d53e24ce7834c491a9bcba0ed2e4a30dc2089c13efa5a306e096",
+      "artifact_type": "PRIMARY_LEGAL_DOCUMENT",
+      "jurisdiction": "AO",
+      "document_identity": {
+        "title": "Plano Geral de Contabilidade de Angola",
+        "diploma_number": "Decreto n.º 82/01",
+        "publication": "Diário da República",
+        "issuer": "Conselho de Ministros",
+        "jurisdiction": "AO"
+      },
+      "byte_identity_with_forensic_source": true
+    },
+    {
+      "artifact_id": "SRC-VAT-AO-001",
+      "file_name": "AETF500_SRC_VAT_AO_001_DP_180_19.pdf",
+      "file_size_bytes": 1571244,
+      "sha256": "131702c8a9e42b5eccd2a41dda75e27ba2fa15d9b0ed89a3f9ac79b3991f9f1c",
+      "sha512": "02e2780f9dcb849e5edca5f9b0656be29f9259bf3b3629be15ec99be1f2aae867b8d5432e49c58f20e1d713a5acb22340c62e02326fe237ddd91e5100faa532f",
+      "artifact_type": "PRIMARY_LEGAL_DOCUMENT",
+      "jurisdiction": "AO",
+      "document_identity": {
+        "title": "Regulamento do Código do Imposto sobre o Valor Acrescentado (IVA)",
+        "diploma_number": "Decreto Presidencial n.º 180/19",
+        "publication": "Diário da República",
+        "issuer": "Presidente da República",
+        "jurisdiction": "AO"
+      },
+      "byte_identity_with_forensic_source": true
+    },
+    {
+      "artifact_id": "IMP-PGC-001",
+      "file_name": "AETF500_IMP_PGC_001_PGCAccountingEngineV114.ts",
+      "file_size_bytes": 284126,
+      "sha256": "b853bca00239a5b06b1981e8d23315d1e74cfcac3c9c88bb9bbff25fd4335f88",
+      "sha512": "949c509589a59c921615250f9226f73e9d5e6f927df5af0e6b71fb7b65134e0157594d7546fb822ac90f8d666d730b977ff3ebbb0fd07b7c058e60cbaef1b46a",
+      "artifact_type": "SOFTWARE_IMPLEMENTATION",
+      "jurisdiction": "AO",
+      "implementation_identity": {
+        "repository": "victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES",
+        "relative_path": "packages/runtime/src/commerce/PGCAccountingEngineV114.ts",
+        "component": "PGCAccountingEngineV114",
+        "language": "TypeScript",
+        "git_commit": "5f8868b6202d334e01f78beaf9247d0ccec8d8ad",
+        "git_blob_id": "d6cd8879585e9af2a7003ad19f34bc6e3bdf8a8c"
+      },
+      "byte_identity_with_forensic_source": true
+    }
+  ]
+}

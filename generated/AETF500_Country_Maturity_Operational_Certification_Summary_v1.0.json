@@ -1,0 +1,68 @@
+[
+  {
+    "country_code": "AO",
+    "country_pack_maturity_level": "L6",
+    "country_operational_status": "PRODUCTION_CERTIFIED",
+    "employee_country_records_total": 500,
+    "employee_positive_certification_records": 500,
+    "employee_non_positive_certification_records": 0,
+    "positive_certification_pct": 100,
+    "country_pack_to_employee_status_consistency": "CONSISTENT",
+    "status": "RECONCILED"
+  },
+  {
+    "country_code": "PT",
+    "country_pack_maturity_level": "L4",
+    "country_operational_status": "CERTIFIED_WITH_SUPERVISION",
+    "employee_country_records_total": 500,
+    "employee_positive_certification_records": 500,
+    "employee_non_positive_certification_records": 0,
+    "positive_certification_pct": 100,
+    "country_pack_to_employee_status_consistency": "CONSISTENT",
+    "status": "RECONCILED"
+  },
+  {
+    "country_code": "MZ",
+    "country_pack_maturity_level": "L3",
+    "country_operational_status": "CERTIFIED_WITH_SUPERVISION",
+    "employee_country_records_total": 500,
+    "employee_positive_certification_records": 500,
+    "employee_non_positive_certification_records": 0,
+    "positive_certification_pct": 100,
+    "country_pack_to_employee_status_consistency": "CONSISTENT",
+    "status": "RECONCILED"
+  },
+  {
+    "country_code": "BR",
+    "country_pack_maturity_level": "L1",
+    "country_operational_status": "KNOWLEDGE_COLLECTION",
+    "employee_country_records_total": 500,
+    "employee_positive_certification_records": 0,
+    "employee_non_positive_certification_records": 500,
+    "positive_certification_pct": 0,
+    "country_pack_to_employee_status_consistency": "CONSISTENT",
+    "status": "RECONCILED"
+  },
+  {
+    "country_code": "CV",
+    "country_pack_maturity_level": "L2",
+    "country_operational_status": "KNOWLEDGE_VERIFICATION",
+    "employee_country_records_total": 500,
+    "employee_positive_certification_records": 0,
+    "employee_non_positive_certification_records": 500,
+    "positive_certification_pct": 0,
+    "country_pack_to_employee_status_consistency": "CONSISTENT",
+    "status": "RECONCILED"
+  },
+  {
+    "country_code": "ST",
+    "country_pack_maturity_level": "L2",
+    "country_operational_status": "KNOWLEDGE_VERIFICATION",
+    "employee_country_records_total": 500,
+    "employee_positive_certification_records": 0,
+    "employee_non_positive_certification_records": 500,
+    "positive_certification_pct": 0,
+    "country_pack_to_employee_status_consistency": "CONSISTENT",
+    "status": "RECONCILED"
+  }
+]

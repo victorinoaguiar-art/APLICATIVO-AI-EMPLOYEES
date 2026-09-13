@@ -1,0 +1,6 @@
+{
+  "decoupling_rule": "Account names must express legal nature (e.g., Operações gerais), not fixed tax rate percentages.",
+  "vat_general_account": "34.5.3.1",
+  "decoupled_rate": "14%",
+  "status": "DECOUPLED"
+}

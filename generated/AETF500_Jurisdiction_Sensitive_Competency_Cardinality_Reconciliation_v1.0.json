@@ -1,0 +1,9 @@
+{
+  "program_id": "AETF500_MULTI_JURISDICTION_METRIC_SEMANTICS_CARDINALITY_RECONCILIATION_MICRO_PATCH_v1.0",
+  "unique_jurisdiction_sensitive_competencies": 170,
+  "employee_competency_assignments_jurisdiction_sensitive": 850,
+  "average_assignments_per_unique_competency": 5,
+  "duplicate_assignments_found": 0,
+  "orphan_competencies_found": 0,
+  "cardinality_reconciliation_status": "PASS"
+}

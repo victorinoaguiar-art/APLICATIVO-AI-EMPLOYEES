@@ -1,0 +1,116 @@
+{
+  "manifest_id": "AETF500_MINSA_CRYPTOGRAPHIC_MANIFEST_V3",
+  "patch_id": "AETF500_MINSA_5_OF_5_PHYSICAL_SOURCE_RECONCILIATION_AND_LEGAL_IDENTITY_REPAIR_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "baseline_mutation_allowed": false,
+  "items": [
+    {
+      "item_type": "ROOT_PHYSICAL_PDF",
+      "source_id": "SRC-MINSA-001",
+      "filename": "src-minsa-001.pdf",
+      "physical_bytes": 507454,
+      "sha256": "86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea"
+    },
+    {
+      "item_type": "ROOT_PHYSICAL_PDF",
+      "source_id": "SRC-MINSA-002",
+      "filename": "src-minsa-002.pdf",
+      "physical_bytes": 1016469,
+      "sha256": "025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3"
+    },
+    {
+      "item_type": "ROOT_PHYSICAL_PDF",
+      "source_id": "SRC-MINSA-003",
+      "filename": "src-minsa-003.pdf",
+      "physical_bytes": 995714,
+      "sha256": "cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d"
+    },
+    {
+      "item_type": "ROOT_PHYSICAL_PDF",
+      "source_id": "SRC-MINSA-004",
+      "filename": "src-minsa-004.pdf",
+      "physical_bytes": 345904,
+      "sha256": "484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632"
+    },
+    {
+      "item_type": "ROOT_PHYSICAL_PDF",
+      "source_id": "SRC-MINSA-005",
+      "filename": "src-minsa-005.pdf",
+      "physical_bytes": 2145588,
+      "sha256": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b"
+    },
+    {
+      "item_type": "PATCH_DELIVERABLE",
+      "filename": "01_MINSA_5_OF_5_Physical_Reconciliation.json",
+      "physical_bytes": 2201,
+      "sha256": "5d32587d4d6581b0f7ee698bceffabbf1c24d5667ea43425c5157346cf604fac"
+    },
+    {
+      "item_type": "PATCH_DELIVERABLE",
+      "filename": "02_MINSA_Legal_Identity_Repair_Matrix.csv",
+      "physical_bytes": 1122,
+      "sha256": "a058d3dfb5065982c629944fdac200feeaaa2d96c9fe549055e307349ca8f405"
+    },
+    {
+      "item_type": "PATCH_DELIVERABLE",
+      "filename": "03_MINSA_Source_Registry_Repaired.json",
+      "physical_bytes": 5796,
+      "sha256": "e4ecd521e191f8a1a836fdbcb1645bf54afd845293b521e5d7f16c986e6597d0"
+    },
+    {
+      "item_type": "PATCH_DELIVERABLE",
+      "filename": "04_MINSA_Source_Identity_Impact_Map.json",
+      "physical_bytes": 3076,
+      "sha256": "36f8818ceb899468cfb811b0168b59bd6fcdfa36146eceda322d95a27f522f44"
+    },
+    {
+      "item_type": "PATCH_DELIVERABLE",
+      "filename": "05_MINSA_Legal_Text_Reconciliation.json",
+      "physical_bytes": 4689,
+      "sha256": "54e1cf7201966b331f23314fc04be60fcd7c8f88b8279f3097bf1d999030cf59"
+    },
+    {
+      "item_type": "PATCH_DELIVERABLE",
+      "filename": "06_MINSA_DR_Reconciliation.json",
+      "physical_bytes": 54805,
+      "sha256": "a5b40cb638dcb91efccd13c7f5414bd6270c7549556622f17c8a1a52389beca5"
+    },
+    {
+      "item_type": "PATCH_DELIVERABLE",
+      "filename": "07_MINSA_Article_Provenance_Reconciled.csv",
+      "physical_bytes": 6346,
+      "sha256": "4bd2c19d56c84436487b01764291a3772b9cdf19d8529ebbfba5c2c0a9839f47"
+    },
+    {
+      "item_type": "PATCH_DELIVERABLE",
+      "filename": "08_MINSA_Selective_Index_Repair.json",
+      "physical_bytes": 26563,
+      "sha256": "16c5fff5f88e4133f19899fe14849e03fde0bdc40367bbbb1705e66df32e27ed"
+    },
+    {
+      "item_type": "PATCH_DELIVERABLE",
+      "filename": "09_MINSA_Affected_Employee_Map.json",
+      "physical_bytes": 10203,
+      "sha256": "4bc6ac16e2093bd3e951a49cf35c4be4bcb71ba54f75644c38847bc1ad45db6b"
+    },
+    {
+      "item_type": "PATCH_DELIVERABLE",
+      "filename": "10_MINSA_Employee_Retest_Results.json",
+      "physical_bytes": 21967,
+      "sha256": "68ffe073c55f5a4a1213b0dd3acf1efc860e1fc8cffa666388c8251d37da0e6f"
+    },
+    {
+      "item_type": "PATCH_DELIVERABLE",
+      "filename": "12_MINSA_Retrieval_Truth_Tests.json",
+      "physical_bytes": 1918,
+      "sha256": "84f10e49573e6d3e4d9bfb96f91b1504ba920a6af54a9aaecca00134487a3ba9"
+    },
+    {
+      "item_type": "PATCH_DELIVERABLE",
+      "filename": "13_MINSA_Citation_Truth_Tests.json",
+      "physical_bytes": 732,
+      "sha256": "bd8d04bfa0bdcd3fc93c0c82e4e6b2e1c5502a4bf11fbd38c155cd8f5b046804"
+    }
+  ],
+  "manifest_sha256": "4582fdadd6d98dc891626882495bdc733cea296f842d7b685f376db90cdb4462"
+}

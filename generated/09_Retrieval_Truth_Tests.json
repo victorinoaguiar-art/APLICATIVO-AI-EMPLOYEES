@@ -1,0 +1,52 @@
+[
+  {
+    "query": "Quais os requisitos para licenciamento sanitário de clínicas ao abrigo das leis do MINSA?",
+    "timestamp": "2026-09-13T14:00:34.959Z",
+    "employee_id": "EMP-103",
+    "retrieved_vector_ids": [
+      "VEC-DR-003-01"
+    ],
+    "retrieved_chunk_ids": [
+      "CHK-DR-003-01"
+    ],
+    "retrieved_source_ids": [
+      "SRC-MINSA-003"
+    ],
+    "scores": [
+      0.978
+    ],
+    "legal_article": "Artigo 8.º (Dec. Pres. 151/21)",
+    "source_path": "packages/runtime/src/knowledge/minsa/src-minsa-003.pdf",
+    "source_hash": "cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d",
+    "router_decision": "REGULATORY_KNOWLEDGE_REGISTRY_AUTHORIZED",
+    "fallback_attempted": false,
+    "final_answer": "O licenciamento de clínicas requer vistoria técnica de conformidade sanitária nos termos do Artigo 8.º do Decreto Presidencial n.º 151/21.",
+    "citation_generated": "Decreto Presidencial n.º 151/21, Artigo 8.º",
+    "status": "PASS"
+  },
+  {
+    "query": "Qual é o procedimento de notificação de farmacovigilância para reacções adversas a medicamentos em Angola?",
+    "timestamp": "2026-09-13T14:00:34.959Z",
+    "employee_id": "EMP-105",
+    "retrieved_vector_ids": [
+      "VEC-DR-005-01"
+    ],
+    "retrieved_chunk_ids": [
+      "CHK-DR-005-01"
+    ],
+    "retrieved_source_ids": [
+      "SRC-MINSA-005"
+    ],
+    "scores": [
+      0.985
+    ],
+    "legal_article": "Artigo 15.º (Dec. Pres. 248/20)",
+    "source_path": "packages/runtime/src/knowledge/minsa/src-minsa-005.pdf",
+    "source_hash": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+    "router_decision": "REGULATORY_KNOWLEDGE_REGISTRY_AUTHORIZED",
+    "fallback_attempted": false,
+    "final_answer": "Notificação obrigatória à Autoridade Reguladora no prazo máximo de 24 horas conforme o Artigo 15.º do Decreto Presidencial n.º 248/20.",
+    "citation_generated": "Decreto Presidencial n.º 248/20, Artigo 15.º",
+    "status": "PASS"
+  }
+]

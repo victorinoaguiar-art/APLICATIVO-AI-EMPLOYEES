@@ -1,0 +1,90 @@
+[
+  {
+    "object_id": "EXT-SRC-MINSA-004-ART12",
+    "object_type": "Legal Text Extraction",
+    "source_id": "SRC-MINSA-004",
+    "old_document_identity": "Decreto Presidencial n.º 260/23",
+    "new_document_identity": "Decreto Presidencial n.º 260/10",
+    "impact_type": "DOCUMENT_NUMBER_UPDATE",
+    "requires_rebuild": true,
+    "requires_retest": true,
+    "status": "RECONCILED"
+  },
+  {
+    "object_id": "EXT-SRC-MINSA-005-ART15",
+    "object_type": "Legal Text Extraction",
+    "source_id": "SRC-MINSA-005",
+    "old_document_identity": "Decreto Presidencial n.º 248/20",
+    "new_document_identity": "Decreto Presidencial n.º 277/20",
+    "impact_type": "DOCUMENT_NUMBER_UPDATE",
+    "requires_rebuild": true,
+    "requires_retest": true,
+    "status": "RECONCILED"
+  },
+  {
+    "object_id": "DR-004",
+    "object_type": "Decision Rule",
+    "source_id": "SRC-MINSA-004",
+    "old_document_identity": "Decreto Presidencial n.º 260/23",
+    "new_document_identity": "Decreto Presidencial n.º 260/10",
+    "impact_type": "NORM_PROPOSITION_REPAIR",
+    "requires_rebuild": true,
+    "requires_retest": true,
+    "status": "RECONCILED"
+  },
+  {
+    "object_id": "DR-005",
+    "object_type": "Decision Rule",
+    "source_id": "SRC-MINSA-005",
+    "old_document_identity": "Decreto Presidencial n.º 248/20",
+    "new_document_identity": "Decreto Presidencial n.º 277/20",
+    "impact_type": "NORM_PROPOSITION_REPAIR",
+    "requires_rebuild": true,
+    "requires_retest": true,
+    "status": "RECONCILED"
+  },
+  {
+    "object_id": "CHK-DR-004-01",
+    "object_type": "Vector Chunk Index",
+    "source_id": "SRC-MINSA-004",
+    "old_document_identity": "Decreto Presidencial n.º 260/23",
+    "new_document_identity": "Decreto Presidencial n.º 260/10",
+    "impact_type": "METADATA_AND_EMBEDDING_UPDATE",
+    "requires_rebuild": true,
+    "requires_retest": true,
+    "status": "RECONCILED"
+  },
+  {
+    "object_id": "CHK-DR-005-01",
+    "object_type": "Vector Chunk Index",
+    "source_id": "SRC-MINSA-005",
+    "old_document_identity": "Decreto Presidencial n.º 248/20",
+    "new_document_identity": "Decreto Presidencial n.º 277/20",
+    "impact_type": "METADATA_AND_EMBEDDING_UPDATE",
+    "requires_rebuild": true,
+    "requires_retest": true,
+    "status": "RECONCILED"
+  },
+  {
+    "object_id": "EMP-104",
+    "object_type": "AI Employee Knowledge Dependency",
+    "source_id": "SRC-MINSA-004",
+    "old_document_identity": "Decreto Presidencial n.º 260/23",
+    "new_document_identity": "Decreto Presidencial n.º 260/10",
+    "impact_type": "KNOWLEDGE_MAP_RE-ALIGNMENT",
+    "requires_rebuild": true,
+    "requires_retest": true,
+    "status": "RECONCILED"
+  },
+  {
+    "object_id": "EMP-105",
+    "object_type": "AI Employee Knowledge Dependency",
+    "source_id": "SRC-MINSA-005",
+    "old_document_identity": "Decreto Presidencial n.º 248/20",
+    "new_document_identity": "Decreto Presidencial n.º 277/20",
+    "impact_type": "KNOWLEDGE_MAP_RE-ALIGNMENT",
+    "requires_rebuild": true,
+    "requires_retest": true,
+    "status": "RECONCILED"
+  }
+]

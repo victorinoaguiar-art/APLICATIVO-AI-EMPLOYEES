@@ -1,0 +1,34 @@
+{
+  "protocol_version": "CONTROLLED-PILOT-LIVE-2026.09.11",
+  "total_eligible_employees": 140,
+  "active_pilot_companies": 3,
+  "employees_in_active_pilot": 140,
+  "execution_mode_distribution": {
+    "DRY_RUN": 0,
+    "SHADOW": 39,
+    "ASSISTED_PILOT": 18,
+    "CONTROLLED_AUTONOMOUS": 83,
+    "FULL_AUTONOMOUS": 0
+  },
+  "live_evidence_events_logged": 1,
+  "unsafe_actions_prevented": 0,
+  "rollbacks_executed": 1,
+  "kill_switch_state": "GLOBAL_ARMED_DISENGAGED",
+  "launch_checklist": {
+    "cert_l2_passport_verified": true,
+    "tenant_isolation_enforced": true,
+    "workflow_whitelist_active": true,
+    "permission_matrix_evaluated": true,
+    "financial_zero_authority_checked": true,
+    "hitl_supervisors_assigned": true,
+    "dual_approval_gateway_configured": true,
+    "kill_switch_functional": true,
+    "rollback_plan_tested": true,
+    "live_evidence_stream_active": true,
+    "emergency_contacts_ready": true,
+    "compliance_legal_signoff": true,
+    "all_gates_passed": true
+  },
+  "decision": "APROVADO_PARA_PILOTO_REAL_CONTROLADO",
+  "generated_at": "2026-09-12T22:02:30.822Z"
+}

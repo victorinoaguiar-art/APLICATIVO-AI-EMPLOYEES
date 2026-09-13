@@ -1,0 +1,32 @@
+[
+  {
+    "source_id": "SRC-MINSA-001",
+    "title": "Decreto Presidencial n.º 260/23 — Regulamento das Carreiras Médicas",
+    "authority": "MINISTÉRIO_DA_SAÚDE_MINSA",
+    "legal_status": "IN_FORCE"
+  },
+  {
+    "source_id": "SRC-MINSA-002",
+    "title": "Decreto Presidencial n.º 261/23 — Regulamento das Carreiras de Enfermagem",
+    "authority": "MINISTÉRIO_DA_SAÚDE_MINSA",
+    "legal_status": "IN_FORCE"
+  },
+  {
+    "source_id": "SRC-MINSA-003",
+    "title": "Decreto Executivo n.º 12/21 — Regulamento do Licenciamento Sanitário de Estabelecimentos de Saúde",
+    "authority": "MINISTÉRIO_DA_SAÚDE_MINSA",
+    "legal_status": "IN_FORCE"
+  },
+  {
+    "source_id": "SRC-MINSA-004",
+    "title": "Decreto Presidencial n.º 180/10 — Regulamento da Inspecção Geral da Saúde",
+    "authority": "MINISTÉRIO_DA_SAÚDE_MINSA",
+    "legal_status": "IN_FORCE"
+  },
+  {
+    "source_id": "SRC-MINSA-005",
+    "title": "Diploma Regulamentar de Farmacovigilância e Controlo de Medicamentos — ANVISA / MINSA Angola",
+    "authority": "MINISTÉRIO_DA_SAÚDE_MINSA",
+    "legal_status": "IN_FORCE"
+  }
+]

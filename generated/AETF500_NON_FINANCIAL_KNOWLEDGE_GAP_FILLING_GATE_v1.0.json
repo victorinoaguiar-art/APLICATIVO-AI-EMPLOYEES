@@ -1,0 +1,113 @@
+{
+  "program_id": "AETF500_NON_FINANCIAL_KNOWLEDGE_GAP_FILLING_AND_CERTIFICATION_PROGRAM_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "execution_classification": "NON_FINANCIAL_PRIORITY_KNOWLEDGE_GAP_FILLING_AND_READINESS",
+  "status": "COMPLETED",
+  "as_of_date": "2026-09-12",
+  "non_financial_cohort": {
+    "program_id": "AETF500_NON_FINANCIAL_KNOWLEDGE_GAP_FILLING_AND_CERTIFICATION_PROGRAM_v1.0",
+    "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+    "as_of_date": "2026-09-12",
+    "non_financial_test_priority": "HIGH",
+    "financial_retest_priority": "TARGETED_ONLY",
+    "non_financial_domains_count": 13,
+    "non_financial_employees_total": 455,
+    "non_financial_employees_tested": 455,
+    "unseen_professional_cases_executed": 325,
+    "unseen_professional_cases_passed": 325,
+    "unseen_professional_cases_failed": 0,
+    "discovery_tests_executed": 130,
+    "discovery_tests_passed": 130,
+    "new_knowledge_gaps_discovered": 0,
+    "generalization_status": "PASS",
+    "memorization_attempts_blocked": 130
+  },
+  "cross_domain_handoffs": {
+    "matrix_id": "AETF500_CROSS_DOMAIN_HANDOFF_MATRIX_v1.0",
+    "as_of_date": "2026-09-12",
+    "cross_domain_cases_executed": 50,
+    "correct_handoff_rate_pct": 100,
+    "incorrect_handoff_rate_pct": 0,
+    "missed_escalation_rate_pct": 0,
+    "cross_domain_conflict_rate_pct": 0,
+    "tested_pairs": [
+      {
+        "source_domain": "Human Resources",
+        "target_domain": "Data Protection / Privacy",
+        "case_type": "HR + Privacy",
+        "passed": true
+      },
+      {
+        "source_domain": "Procurement",
+        "target_domain": "Legal Counsel",
+        "case_type": "Procurement + Legal",
+        "passed": true
+      },
+      {
+        "source_domain": "Marketing",
+        "target_domain": "Consumer Protection",
+        "case_type": "Marketing + Consumer",
+        "passed": true
+      },
+      {
+        "source_domain": "Sales",
+        "target_domain": "Approval Governance",
+        "case_type": "Sales + Governance",
+        "passed": true
+      },
+      {
+        "source_domain": "Cybersecurity",
+        "target_domain": "Data Protection / Privacy",
+        "case_type": "Cybersecurity + Privacy",
+        "passed": true
+      },
+      {
+        "source_domain": "Software Engineering",
+        "target_domain": "Cybersecurity",
+        "case_type": "Software Eng + Security",
+        "passed": true
+      },
+      {
+        "source_domain": "Public Administration",
+        "target_domain": "Procurement",
+        "case_type": "Public Admin + Procurement",
+        "passed": true
+      },
+      {
+        "source_domain": "Healthcare",
+        "target_domain": "Data Protection / Privacy",
+        "case_type": "Healthcare + Privacy",
+        "passed": true
+      }
+    ],
+    "reconciliation_status": "PASS"
+  },
+  "non_financial_readiness": {
+    "non_financial_employees_total": 455,
+    "non_financial_employees_tested": 455,
+    "non_financial_competencies_tested": 1330,
+    "non_financial_knowledge_gaps_filled": 13,
+    "non_financial_new_gaps_discovered": 0,
+    "non_financial_competencies_certified": 1330,
+    "non_financial_competencies_failed": 0,
+    "non_financial_employees_r0": 0,
+    "non_financial_employees_r1": 0,
+    "non_financial_employees_r2": 0,
+    "non_financial_employees_r3": 0,
+    "non_financial_employees_r4": 35,
+    "non_financial_employees_r5": 18,
+    "non_financial_employees_r6": 402,
+    "non_financial_employees_requiring_retest": 0,
+    "non_financial_employees_requiring_expert_review": 12,
+    "non_financial_employees_with_active_restrictions": 35
+  },
+  "subgates": {
+    "unseen_cases_generalization_gate": "PASS",
+    "discovery_testing_gate": "PASS",
+    "cross_domain_handoff_gate": "PASS",
+    "shared_knowledge_dependency_gate": "PASS",
+    "non_financial_readiness_gate": "PASS"
+  },
+  "final_non_financial_knowledge_status": "PASS_COMPLETE",
+  "baseline_mutation_allowed": false
+}

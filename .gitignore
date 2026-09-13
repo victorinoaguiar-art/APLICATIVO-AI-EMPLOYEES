@@ -26,3 +26,8 @@ Thumbs.db
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Temporary staging & scratch folders
+scratch/p0_zip_staging/
+scratch/zip_test_extract/
+

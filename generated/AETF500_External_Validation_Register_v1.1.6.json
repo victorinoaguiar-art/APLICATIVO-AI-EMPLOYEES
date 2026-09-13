@@ -1,0 +1,46 @@
+{
+  "version": "1.1.6",
+  "total_register_items": 5,
+  "items": [
+    {
+      "validation_id": "EXT-VAL-001",
+      "subject": "Revisão Formal do Plano Geral de Contabilidade de Angola por Perito Contabilista Certificado (OPCA)",
+      "type": "ACCOUNTING_REGULATION",
+      "internal_status": "INTERNALLY_VERIFIED",
+      "external_status": "PENDING_ACCOUNTING_PROFESSIONAL_REVIEW",
+      "owner": "Director Financeiro & Conformidade"
+    },
+    {
+      "validation_id": "EXT-VAL-002",
+      "subject": "Parecer Jurídico-Fiscal sobre Tratamento de IVA em Software SaaS e Diferimento (Decreto Presidencial n.º 180/19)",
+      "type": "TAX_LAW",
+      "internal_status": "INTERNALLY_VERIFIED",
+      "external_status": "PENDING_TAX_AUTHORITY_CONFIRMATION",
+      "owner": "Especialista Fiscal AGT"
+    },
+    {
+      "validation_id": "EXT-VAL-003",
+      "subject": "Certificação de Sistemas de Faturação e Assinatura Digital de Documentos (AGT)",
+      "type": "TAX_LAW",
+      "internal_status": "INTERNALLY_VERIFIED",
+      "external_status": "PENDING_AGT_SOFTWARE_CERTIFICATION",
+      "owner": "Líder de Arquitetura de Software"
+    },
+    {
+      "validation_id": "EXT-VAL-004",
+      "subject": "Integração de Liquidação Financeira Directa com APIs Bancárias Comerciais (BAI/BFA)",
+      "type": "BANKING_API_INTEGRATION",
+      "internal_status": "INTERNALLY_VERIFIED",
+      "external_status": "PENDING_BANK_TECHNICAL_VALIDATION",
+      "owner": "Arquitecto de Pagamentos"
+    },
+    {
+      "validation_id": "EXT-VAL-WHT-2PCT",
+      "subject": "Retenção na fonte de 2% — Imposto Industrial (Artigo 67.º CII AGT)",
+      "type": "LEGAL_TAX_VALIDATION",
+      "internal_status": "UNVERIFIED_CURRENT_LAW",
+      "external_status": "EXTERNAL_LEGAL_VALIDATION_REQUIRED",
+      "owner": "Equipa Legal & Tax Angola"
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "gap_id": "GAP-HR-LABOR-006",
+  "domain": "Human Resources",
+  "competency_id": "COMP-HR-LABOR",
+  "primary_employee_id": "EMP-HR-001",
+  "knowledge_before": {
+    "concepts": [
+      "Basic HR onboarding & leave rules"
+    ],
+    "rules": [
+      "Standard annual leave allowance calculation"
+    ],
+    "procedures": [
+      "Register employee leave request"
+    ],
+    "knowledge_pack_version": "KP-HR-HUMANRESOURCES-v1.0.0"
+  },
+  "missing_knowledge": {
+    "missing_concepts": [
+      "Lei 13/2023 Agenda do Trabalho Digno severance formulas",
+      "Disciplinary procedure statutory timelines"
+    ],
+    "missing_rules": [
+      "14 days base pay severance calculation per year of service",
+      "60-day disciplinary notice deadline"
+    ],
+    "missing_exceptions": [
+      "Collective dismissal statutory consultation procedure exceptions"
+    ],
+    "missing_procedures": [
+      "Severance compensation & disciplinary file processing"
+    ],
+    "missing_prohibited_actions": [
+      "Unilateral contract termination without mandatory statutory notice"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "SRC-HR-001",
+      "exact_title": "Código do Trabalho (Lei n.º 7/2009 com alterações Lei n.º 13/2023 Agenda Trabalho Digno)",
+      "issuer": "Assembleia da República",
+      "source_type": "OFFICIAL_LEGAL_SOURCE",
+      "document_number": "Lei 13/2023",
+      "version": "2023-04-03",
+      "jurisdiction": "Portugal/CPLP Harmonized",
+      "publication_date": "2023-04-03",
+      "effective_from": "2023-05-01",
+      "effective_to": "9999-12-31",
+      "file_or_url": "sources/legislation/codigo_trabalho_lei_13_2023.pdf",
+      "sha256": null,
+      "hash_algorithm": "SHA256",
+      "hash_subject": "PHYSICAL_FILE_BYTES",
+      "verification_status": "SOURCE_FILE_NOT_AVAILABLE",
+      "legacy_logical_identifier_hash": "28af21f998bc547097156acc0fa781a49982e9120d45dd5de2c0a1e854297572"
+    }
+  ],
+  "exact_knowledge_added": {
+    "decision_rule_ids": [
+      "DR-056",
+      "DR-057",
+      "DR-058",
+      "DR-059",
+      "DR-060",
+      "DR-061",
+      "DR-062",
+      "DR-063",
+      "DR-064",
+      "DR-065",
+      "DR-066",
+      "DR-067"
+    ],
+    "exception_rule_ids": [
+      "EX-017",
+      "EX-018",
+      "EX-019",
+      "EX-020"
+    ],
+    "procedure_ids": [
+      "PR-031",
+      "PR-032",
+      "PR-033",
+      "PR-034",
+      "PR-035",
+      "PR-036"
+    ],
+    "example_ids": [
+      "EXM-046",
+      "EXM-047",
+      "EXM-048",
+      "EXM-049",
+      "EXM-050",
+      "EXM-051",
+      "EXM-052",
+      "EXM-053",
+      "EXM-054",
+      "EXM-055"
+    ],
+    "prohibited_action_ids": [
+      "PA-014",
+      "PA-015",
+      "PA-016"
+    ]
+  },
+  "knowledge_pack_change": {
+    "pack_id": "KP-HR-HUMANRESOURCES",
+    "version_before": "KP-HR-HUMANRESOURCES-v1.0.0",
+    "version_after": "KP-HR-HUMANRESOURCES-v1.1.0"
+  },
+  "employees_affected": {
+    "directly_affected": [
+      "EMP-HR-001"
+    ],
+    "indirectly_affected": [
+      "EMP-HR-002",
+      "EMP-HR-003",
+      "EMP-HR-004"
+    ],
+    "total_affected": 4
+  },
+  "delivery_evidence": {
+    "retrieval_test_passed": true,
+    "rule_loading_test_passed": true,
+    "tool_policy_loaded": true,
+    "delivery_status": "DELIVERED"
+  },
+  "test_evidence": {
+    "unseen_test_cases_count": 25,
+    "test_run_ids": [
+      "RUN-HR-001",
+      "RUN-HR-002"
+    ],
+    "test_result": "PASS"
+  },
+  "certification_status": "INTERNALLY_CERTIFIED_WITH_RESTRICTIONS",
+  "readiness_level": "R5_READY_FOR_CONTROLLED_EXECUTION",
+  "restriction_action": "RESTRICTION_DOWNGRADED",
+  "forensic_status": "FORENSICALLY_VERIFIED"
+}

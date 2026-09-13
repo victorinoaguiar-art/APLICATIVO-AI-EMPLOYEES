@@ -1,0 +1,141 @@
+{
+  "gap_id": "GAP-DATA-PRIV-009",
+  "domain": "Data Protection / Privacy",
+  "competency_id": "COMP-DATA-PRIV",
+  "primary_employee_id": "EMP-DATA-001",
+  "knowledge_before": {
+    "concepts": [
+      "Basic privacy statement template"
+    ],
+    "rules": [
+      "Ensure user consent check box exists"
+    ],
+    "procedures": [
+      "Generate privacy policy link"
+    ],
+    "knowledge_pack_version": "KP-DATA-PRIVACY-v1.0.0"
+  },
+  "missing_knowledge": {
+    "missing_concepts": [
+      "GDPR Art.º 33.º 72-hour breach notification",
+      "ISO/IEC 20889 k-anonymity metrics (k >= 5)"
+    ],
+    "missing_rules": [
+      "Mandatory DPO escalation upon personal data breach",
+      "Cross-border data transfer restriction"
+    ],
+    "missing_exceptions": [
+      "Anonymized statistical reporting exception"
+    ],
+    "missing_procedures": [
+      "Data anonymization & breach notification protocol"
+    ],
+    "missing_prohibited_actions": [
+      "Exporting unmasked PII dataset without DPO authorization"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "SRC-DATA-001",
+      "exact_title": "Regulamento Geral sobre a Protecção de Dados (Regulamento UE 2016/679 - RGPD)",
+      "issuer": "Parlamento Europeu e Conselho",
+      "source_type": "OFFICIAL_LEGAL_SOURCE",
+      "document_number": "Regulamento UE 2016/679",
+      "version": "2016-04-27",
+      "jurisdiction": "EU/International Harmonized",
+      "publication_date": "2016-05-04",
+      "effective_from": "2018-05-25",
+      "effective_to": "9999-12-31",
+      "file_or_url": "sources/legislation/rgpd_ue_2016_679.pdf",
+      "sha256": null,
+      "hash_algorithm": "SHA256",
+      "hash_subject": "PHYSICAL_FILE_BYTES",
+      "verification_status": "SOURCE_FILE_NOT_AVAILABLE",
+      "legacy_logical_identifier_hash": "679ad1f5c2fad31dc6035592c05cc81c3f5e5c86fb5dfec94274438749df633f"
+    }
+  ],
+  "exact_knowledge_added": {
+    "decision_rule_ids": [
+      "DR-089",
+      "DR-090",
+      "DR-091",
+      "DR-092",
+      "DR-093",
+      "DR-094",
+      "DR-095",
+      "DR-096",
+      "DR-097",
+      "DR-098",
+      "DR-099",
+      "DR-100"
+    ],
+    "exception_rule_ids": [
+      "EX-028",
+      "EX-029",
+      "EX-030",
+      "EX-031"
+    ],
+    "procedure_ids": [
+      "PR-048",
+      "PR-049",
+      "PR-050",
+      "PR-051",
+      "PR-052",
+      "PR-053",
+      "PR-054"
+    ],
+    "example_ids": [
+      "EXM-073",
+      "EXM-074",
+      "EXM-075",
+      "EXM-076",
+      "EXM-077",
+      "EXM-078",
+      "EXM-079",
+      "EXM-080",
+      "EXM-081",
+      "EXM-082"
+    ],
+    "prohibited_action_ids": [
+      "PA-021",
+      "PA-022",
+      "PA-023"
+    ]
+  },
+  "knowledge_pack_change": {
+    "pack_id": "KP-DATA-PRIVACY",
+    "version_before": "KP-DATA-PRIVACY-v1.0.0",
+    "version_after": "KP-DATA-PRIVACY-v1.1.0"
+  },
+  "employees_affected": {
+    "directly_affected": [
+      "EMP-DATA-001"
+    ],
+    "indirectly_affected": [
+      "EMP-DATA-002",
+      "EMP-DATA-003",
+      "EMP-DATA-004",
+      "EMP-DATA-005",
+      "EMP-DATA-006"
+    ],
+    "total_affected": 6
+  },
+  "delivery_evidence": {
+    "retrieval_test_passed": true,
+    "rule_loading_test_passed": true,
+    "tool_policy_loaded": true,
+    "delivery_status": "DELIVERED"
+  },
+  "test_evidence": {
+    "unseen_test_cases_count": 25,
+    "test_run_ids": [
+      "RUN-DATA-001",
+      "RUN-DATA-002"
+    ],
+    "test_result": "PASS"
+  },
+  "certification_status": "INTERNALLY_CERTIFIED",
+  "readiness_level": "R6_READY_FOR_AUTONOMOUS_EXECUTION_WITHIN_SCOPE",
+  "restriction_action": "RESTRICTION_REMOVED",
+  "forensic_status": "FORENSICALLY_VERIFIED"
+}

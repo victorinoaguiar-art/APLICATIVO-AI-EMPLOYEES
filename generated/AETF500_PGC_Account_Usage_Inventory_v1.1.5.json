@@ -1,0 +1,57 @@
+[
+  {
+    "account_code": "31.1.2.1",
+    "account_name": "Clientes Correntes Não Grupo Nacionais",
+    "usage_role": "PRIMARY_DEBIT_ON_INVOICE_ISSUANCE",
+    "remediation_applied": "Corrige uso indevido de 31.1.1 (Grupo) para clientes correntes não grupo nacionais.",
+    "status": "ACTIVE_PRECISION"
+  },
+  {
+    "account_code": "31.1.1",
+    "account_name": "Clientes Correntes — Grupo",
+    "usage_role": "RESERVED_FOR_GROUP_CLIENTS",
+    "remediation_applied": "Restrito exclusivamente a partes relacionadas e empresas do grupo.",
+    "status": "RESERVED_GROUP"
+  },
+  {
+    "account_code": "62.1.1",
+    "account_name": "Serviços principais — Mercado nacional",
+    "usage_role": "PRIMARY_CREDIT_ON_REVENUE_RECOGNITION",
+    "analytic_dimensions": {
+      "service_family": "SaaS",
+      "commercial_model": "B2B"
+    },
+    "remediation_applied": "Preserva designação oficial do PGC Decreto 82/01 com desacoplamento analítico SaaS B2B.",
+    "status": "ACTIVE_PRECISION"
+  },
+  {
+    "account_code": "34.5.3",
+    "account_name": "Imposto sobre o Valor Acrescentado (IVA) - Liquidado",
+    "usage_role": "PRIMARY_CREDIT_ON_VAT_LIQUIDATION",
+    "remediation_applied": "Utilização da subconta 34.5.3 nos termos do Decreto Presidencial n.º 180/19.",
+    "status": "ACTIVE_STRICT"
+  },
+  {
+    "account_code": "43.1",
+    "account_name": "Depósitos à Ordem - Bancos Nacionais (BFA/BAI)",
+    "usage_role": "PRIMARY_DEBIT_ON_PAYMENT_COLLECTION",
+    "remediation_applied": "Remediação do erro 43.1 / 71.1 legacy; 43.1 passa a ser creditada por liquidação de 31.1.2.1.",
+    "status": "ACTIVE_REMEDIATED"
+  },
+  {
+    "account_code": "49.1",
+    "account_name": "Proveitos com Diferimento - Subscrições SaaS de AI Employees",
+    "usage_role": "PRIMARY_CREDIT_ON_UNEARNED_REVENUE",
+    "remediation_applied": "ReconhecimentoDiferidoMensal (1/12 avos) sob regime de acréscimo.",
+    "status": "ACTIVE_STRICT"
+  },
+  {
+    "account_code": "99.9",
+    "account_name": "Conta Genérica Não Mapeada (Apenas para Testes de Validação)",
+    "usage_role": "TEST_FIXTURE_REJECTION",
+    "production_count": 0,
+    "test_case_count": 1,
+    "remediation_applied": "Isolado como fixture de teste; 0 ocorrências em produção.",
+    "status": "FIXTURE_ONLY"
+  }
+]

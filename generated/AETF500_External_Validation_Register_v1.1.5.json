@@ -1,0 +1,46 @@
+[
+  {
+    "validation_id": "EXT-VAL-001",
+    "subject": "Revisão Formal do Plano Geral de Contabilidade de Angola por Perito Contabilista Certificado (OPCA)",
+    "type": "ACCOUNTING_FIRM_OPINION",
+    "reason": "Confirmação independente da legalidade fiscal e enquadramento PGC das Contas 31.1.2.1, 62.1.1, 49.1 e 34.5.",
+    "internal_status": "INTERNALLY_VERIFIED",
+    "external_status": "PENDING_OFFICIAL_DIARIO_REVIEW",
+    "required_source": "Perito Contabilista / Audit Firma Inscrita na OPCA",
+    "owner": "Director Financeiro & Conformidade",
+    "blocking": false
+  },
+  {
+    "validation_id": "EXT-VAL-002",
+    "subject": "Parecer Jurídico-Fiscal sobre Tratamento de IVA em Software SaaS e Diferimento (Decreto Presidencial n.º 180/19)",
+    "type": "TAX_AUTHORITY_RULING",
+    "reason": "Validação de isenções/retenções específicas e homologação dos critérios de apuramento do IVA 34.5.",
+    "internal_status": "INTERNALLY_VERIFIED",
+    "external_status": "PENDING_OFFICIAL_DIARIO_REVIEW",
+    "required_source": "Administração Geral Tributária (AGT) / Consultoria Fiscal Certificada",
+    "owner": "Especialista Fiscal AGT",
+    "blocking": false
+  },
+  {
+    "validation_id": "EXT-VAL-003",
+    "subject": "Certificação de Sistemas de Faturação e Assinatura Digital de Documentos (AGT)",
+    "type": "SOFTWARE_CERTIFICATION",
+    "reason": "Obtenção do certificado de software de faturação emitido pela AGT com chave RSA privada.",
+    "internal_status": "INTERNALLY_VERIFIED",
+    "external_status": "PENDING_OFFICIAL_DIARIO_REVIEW",
+    "required_source": "Direção de Serviços de Tecnologias de Informação AGT",
+    "owner": "Líder de Arquitetura de Software",
+    "blocking": false
+  },
+  {
+    "validation_id": "EXT-VAL-004",
+    "subject": "Integração de Liquidação Financeira Directa com APIs Bancárias Comerciais (BAI/BFA)",
+    "type": "BANKING_API_INTEGRATION",
+    "reason": "Homologação de comunicação de webhooks e estornos automáticos de pagamentos bancários.",
+    "internal_status": "INTERNALLY_VERIFIED",
+    "external_status": "PENDING_OFFICIAL_DIARIO_REVIEW",
+    "required_source": "Equipa de Engenharia de Pagamentos BAI / BFA",
+    "owner": "Arquitecto de Pagamentos",
+    "blocking": false
+  }
+]

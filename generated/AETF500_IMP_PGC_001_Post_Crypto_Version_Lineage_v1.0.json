@@ -1,0 +1,33 @@
+{
+  "implementation_id": "IMP-PGC-001",
+  "file_name": "AETF500_IMP_PGC_001_PGCAccountingEngineV114.ts",
+  "repository_path": "packages/runtime/src/commerce/PGCAccountingEngineV114.ts",
+  "versions": [
+    {
+      "version_id": "PRE_CRYPTO_REMEDIATION",
+      "size_bytes": 284126,
+      "sha256": "b853bca00239a5b06b1981e8d23315d1e74cfcac3c9c88bb9bbff25fd4335f88",
+      "git_blob": "d6cd8879585e9af2a7003ad19f34bc6e3bdf8a8c",
+      "status": "HISTORICAL_VERIFIED_PRE_PATCH_VERSION"
+    },
+    {
+      "version_id": "POST_CRYPTO_REMEDIATION_V1",
+      "reported_size_bytes": 294180,
+      "reported_sha256": "0568aebae65f1de3f13aae4d88aa933b83c05eb276e2631f18b0250d862d09fb",
+      "reported_git_blob": "a639fe5b01bf0357f8cb51504921a120ea96468c",
+      "physical_artifact_found": false,
+      "status": "INTERMEDIATE_TRANSITORY_POST_CRYPTO_VERSION"
+    },
+    {
+      "version_id": "POST_CRYPTO_REMEDIATION_V2_CURRENT",
+      "size_bytes": 453606,
+      "sha256": "24bc67db4c3765fb0d3a7fca405e09edae1560d4bedb08471d4dd2d34976ba77",
+      "sha512": "35a32ae3c489e8047e8390f7f0c9ea1bd31dce99962c0e0dc6390480b44000a68d1ecf33d02a6f2f6ab16e697bacf8ba2f83751f9ecba9fa2e728623b01f9a70",
+      "git_blob": "42c96fd60c83f5946b8af871e5039543c9afed20",
+      "git_head": "5f8868b6202d334e01f78beaf9247d0ccec8d8ad",
+      "worktree_modified": true,
+      "committed": false,
+      "status": "CURRENT_CANONICAL_IMPLEMENTATION"
+    }
+  ]
+}

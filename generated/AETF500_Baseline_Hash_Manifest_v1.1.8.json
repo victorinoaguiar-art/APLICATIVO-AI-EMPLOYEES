@@ -1,0 +1,26 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "addendum_id": "AETF500_v1.1.8_EVIDENCE_CLOSURE_ADDENDUM_2",
+  "created_at": "2026-09-13T15:19:10.725Z",
+  "document_generation_status": "SYSTEM_GENERATED",
+  "integrity_protection": "SHA256_INTEGRITY_VERIFICATION",
+  "digital_signature_status": "NOT_IMPLEMENTED",
+  "file_count": 15,
+  "files": {
+    "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8.md": "9c14d408ef87729c8359d2e62ab7d1c0ae90ce8aeb49f639e080156ce9927e63",
+    "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8.json": "6895f989ab809eea8320f26f84a541d7e4d870892650f037e6d0fddbee6a8352",
+    "AETF500_PGC_Master_Account_Registry_v1.1.8.json": "869c8b300ea30c39a39e342f0dad9b202fd77753cf7284236e3bd1d54b25c189",
+    "AETF500_VAT_Official_Subaccount_Registry_v1.1.8.json": "083deb0cb2905fc106620dfc6eb47344db64219afbc186f949e5a8f678935162",
+    "AETF500_VAT_Accounting_Rules_v1.1.8.json": "eec24d925f77cd02d72718368e210dc73a84c9d888ef9b1b3cf48d8f3f93639f",
+    "AETF500_Tax_Rule_Version_Registry_v1.1.8.json": "be7e248a4c8e123ec77714e8c42273b7df3cb84139d18f88544831c0f1edf2e9",
+    "AETF500_Accounting_Event_to_PGC_Mapping_v1.1.8.json": "109705bac0d3ced1361cbb3cf42331f9868c948b62373d051f3216551166dbe0",
+    "AETF500_External_Validation_Register_v1.1.8.json": "30e271f09f05271d1cf3fb22a60866e1a1f00cdf1a47a9dc53595115521cebe2",
+    "AETF500_Accounting_Test_Run_Manifest_v1.1.8.json": "97c23185c26f5b4761115cab1ea451ed660c54f6cecf092d371a028ae270845f",
+    "AETF500_Accounting_Evidence_Registry_v1.1.8.json": "13c5c4dfd56caf2c3d34c08187d25517152e34c1d1c6a73770c91555a6cc62e9",
+    "AETF500_Accounting_Material_Corrections_Register_v1.1.8.json": "598985271db8e436a59f173d1aae72dd95ddaf08ecfd411077a3b658052157bf",
+    "AETF500_Baseline_Artifact_Inventory_v1.1.8.json": "b99c9a9c31e2ba84fec8584dfc6ae08046ae8158148a79fbdaede5180203fd9a",
+    "AETF500_Final_Evidence_Closure_Register_v1.1.8.json": "25ffbdd672bfcb08ce5ec5be21df6872618b42f2646e4034a1282d77976afffb",
+    "AETF500_Final_Evidence_Closure_Gate_v1.1.8.json": "f68c122b3d9fc6cadf264a7b7a85a62133e134613cb5b6bf6ef11b529e757e93",
+    "AETF500_Final_Evidence_Closure_Addendum_v1.1.8.md": "636395d5818e37bb0d0a3092404e457552e133b8884eafab75036536417c295e"
+  }
+}

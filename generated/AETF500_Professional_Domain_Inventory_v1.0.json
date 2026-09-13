@@ -1,0 +1,118 @@
+{
+  "program_id": "AETF500_PROFESSIONAL_KNOWLEDGE_COMPETENCY_ASSURANCE_PROGRAM_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "as_of_date": "2026-09-12",
+  "employees_total": 500,
+  "employees_mapped": 500,
+  "domains_total": 18,
+  "domains": [
+    {
+      "domain_id": "DOM-01",
+      "name": "Strategy & Executive Alignment",
+      "employees_count": 28,
+      "risk_level": "PKA_2_TECHNICAL"
+    },
+    {
+      "domain_id": "DOM-02",
+      "name": "Financial Accounting & Reporting",
+      "employees_count": 45,
+      "risk_level": "PKA_3_REGULATED"
+    },
+    {
+      "domain_id": "DOM-03",
+      "name": "Taxation & Statutory Compliance",
+      "employees_count": 32,
+      "risk_level": "PKA_3_REGULATED"
+    },
+    {
+      "domain_id": "DOM-04",
+      "name": "Banking, Treasury & Foreign Exchange",
+      "employees_count": 30,
+      "risk_level": "PKA_4_CRITICAL"
+    },
+    {
+      "domain_id": "DOM-05",
+      "name": "Legal Counsel & Regulatory Compliance",
+      "employees_count": 35,
+      "risk_level": "PKA_3_REGULATED"
+    },
+    {
+      "domain_id": "DOM-06",
+      "name": "Human Resources & Payroll Compliance",
+      "employees_count": 38,
+      "risk_level": "PKA_3_REGULATED"
+    },
+    {
+      "domain_id": "DOM-07",
+      "name": "Cybersecurity & Information Security",
+      "employees_count": 32,
+      "risk_level": "PKA_4_CRITICAL"
+    },
+    {
+      "domain_id": "DOM-08",
+      "name": "Software Engineering & Architecture",
+      "employees_count": 40,
+      "risk_level": "PKA_2_TECHNICAL"
+    },
+    {
+      "domain_id": "DOM-09",
+      "name": "Data Science & AI/ML Analytics",
+      "employees_count": 25,
+      "risk_level": "PKA_2_TECHNICAL"
+    },
+    {
+      "domain_id": "DOM-10",
+      "name": "Procurement & Supply Chain Management",
+      "employees_count": 28,
+      "risk_level": "PKA_2_TECHNICAL"
+    },
+    {
+      "domain_id": "DOM-11",
+      "name": "Sales & Commercial Operations",
+      "employees_count": 34,
+      "risk_level": "PKA_1_LOW"
+    },
+    {
+      "domain_id": "DOM-12",
+      "name": "Marketing & Growth Communications",
+      "employees_count": 30,
+      "risk_level": "PKA_1_LOW"
+    },
+    {
+      "domain_id": "DOM-13",
+      "name": "Customer Success & Support",
+      "employees_count": 32,
+      "risk_level": "PKA_1_LOW"
+    },
+    {
+      "domain_id": "DOM-14",
+      "name": "Project Management & PMO",
+      "employees_count": 22,
+      "risk_level": "PKA_2_TECHNICAL"
+    },
+    {
+      "domain_id": "DOM-15",
+      "name": "Quality Assurance & Internal Audit",
+      "employees_count": 20,
+      "risk_level": "PKA_3_REGULATED"
+    },
+    {
+      "domain_id": "DOM-16",
+      "name": "Public Administration & Regulatory Affairs",
+      "employees_count": 15,
+      "risk_level": "PKA_3_REGULATED"
+    },
+    {
+      "domain_id": "DOM-17",
+      "name": "Healthcare & Occupational Compliance",
+      "employees_count": 8,
+      "risk_level": "PKA_4_CRITICAL"
+    },
+    {
+      "domain_id": "DOM-18",
+      "name": "Cross-Functional & Operational Operations",
+      "employees_count": 6,
+      "risk_level": "PKA_1_LOW"
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.7_FROZEN",
+  "accounts": [
+    {
+      "account_code": "34",
+      "account_name": "Estado e outros entes públicos",
+      "class_code": "3",
+      "standard": "PGC_ANGOLA_DECRETO_82_01",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "34.5",
+      "account_name": "Imposto sobre o Valor Acrescentado (IVA)",
+      "class_code": "3",
+      "standard": "PGC_ANGOLA_DECRETO_82_01",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "34.5.1",
+      "account_name": "IVA - Suportado",
+      "class_code": "3",
+      "standard": "DECRETO_PRESIDENCIAL_180_19_ART22",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "34.5.2",
+      "account_name": "IVA - Dedutível",
+      "class_code": "3",
+      "standard": "DECRETO_PRESIDENCIAL_180_19_ART22",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "34.5.3",
+      "account_name": "IVA - Liquidado",
+      "class_code": "3",
+      "standard": "DECRETO_PRESIDENCIAL_180_19_ART22",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "34.5.3.1",
+      "account_name": "Operações gerais",
+      "class_code": "3",
+      "standard": "DECRETO_PRESIDENCIAL_180_19_ART22",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "34.5.4",
+      "account_name": "IVA - Regularizações",
+      "class_code": "3",
+      "standard": "DECRETO_PRESIDENCIAL_180_19_ART22",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "34.5.5",
+      "account_name": "IVA - Apuramento",
+      "class_code": "3",
+      "standard": "DECRETO_PRESIDENCIAL_180_19_ART22",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "34.5.6",
+      "account_name": "IVA - A pagar",
+      "class_code": "3",
+      "standard": "DECRETO_PRESIDENCIAL_180_19_ART22",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "34.5.7",
+      "account_name": "IVA - A recuperar",
+      "class_code": "3",
+      "standard": "DECRETO_PRESIDENCIAL_180_19_ART22",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "34.5.8",
+      "account_name": "IVA - Reembolsos pedidos",
+      "class_code": "3",
+      "standard": "DECRETO_PRESIDENCIAL_180_19_ART22",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "34.5.9",
+      "account_name": "IVA - Liquidações oficiosas",
+      "class_code": "3",
+      "standard": "DECRETO_PRESIDENCIAL_180_19_ART22",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "37",
+      "account_name": "Outros valores a receber e a pagar",
+      "class_code": "3",
+      "standard": "PGC_ANGOLA_DECRETO_82_01",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "37.6",
+      "account_name": "Proveitos a repartir por períodos futuros",
+      "class_code": "3",
+      "standard": "PGC_ANGOLA_DECRETO_82_01",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "49",
+      "account_name": "Provisões para aplicações de tesouraria",
+      "class_code": "4",
+      "standard": "PGC_ANGOLA_DECRETO_82_01",
+      "status": "OFFICIAL_STATUTORY"
+    },
+    {
+      "account_code": "49.1",
+      "account_name": "Títulos negociáveis",
+      "class_code": "4",
+      "standard": "PGC_ANGOLA_DECRETO_82_01",
+      "status": "OFFICIAL_STATUTORY"
+    }
+  ]
+}

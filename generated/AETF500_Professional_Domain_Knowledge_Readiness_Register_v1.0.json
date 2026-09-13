@@ -1,0 +1,67 @@
+[
+  {
+    "domain": "Finance & Accounting",
+    "employees": 100,
+    "competencies": 350,
+    "knowledge_objects": 200,
+    "coverage_pct": 98.5,
+    "gaps": 8,
+    "material_gaps": 0,
+    "critical_gaps": 0,
+    "evidence_maturity": "E5",
+    "validation_status": "VALIDATED_WITH_RESTRICTIONS",
+    "remediation_status": "VERIFIED"
+  },
+  {
+    "domain": "Legal & Regulatory",
+    "employees": 100,
+    "competencies": 300,
+    "knowledge_objects": 180,
+    "coverage_pct": 97.8,
+    "gaps": 10,
+    "material_gaps": 0,
+    "critical_gaps": 0,
+    "evidence_maturity": "E5",
+    "validation_status": "VALIDATED_WITH_RESTRICTIONS",
+    "remediation_status": "VERIFIED"
+  },
+  {
+    "domain": "Human Resources & Talent",
+    "employees": 100,
+    "competencies": 280,
+    "knowledge_objects": 160,
+    "coverage_pct": 99,
+    "gaps": 5,
+    "material_gaps": 0,
+    "critical_gaps": 0,
+    "evidence_maturity": "E5",
+    "validation_status": "INTERNALLY_VALIDATED",
+    "remediation_status": "VERIFIED"
+  },
+  {
+    "domain": "Engineering & Technology",
+    "employees": 100,
+    "competencies": 320,
+    "knowledge_objects": 190,
+    "coverage_pct": 98.2,
+    "gaps": 12,
+    "material_gaps": 0,
+    "critical_gaps": 0,
+    "evidence_maturity": "E5",
+    "validation_status": "INTERNALLY_VALIDATED",
+    "remediation_status": "VERIFIED"
+  },
+  {
+    "domain": "Operations & Administration",
+    "employees": 100,
+    "competencies": 200,
+    "knowledge_objects": 120,
+    "coverage_pct": 99.5,
+    "gaps": 10,
+    "material_gaps": 0,
+    "critical_gaps": 0,
+    "evidence_maturity": "E5",
+    "validation_status": "INTERNALLY_VALIDATED",
+    "remediation_status": "VERIFIED"
+  }
+]

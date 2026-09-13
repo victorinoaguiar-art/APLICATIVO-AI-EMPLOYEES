@@ -1,0 +1,69 @@
+{
+  "policy_id": "POL-CERT-CEILING-001",
+  "program_id": "AETF500_COUNTRY_PACK_MATURITY_EMPLOYEE_CERTIFICATION_CEILING_MICRO_GATE_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "version": "1.0",
+  "policy_status": "NEWLY_FORMALIZED_GOVERNANCE_POLICY",
+  "effective_from": "2026-09-12",
+  "governance_rule": "COUNTRY PACK MATURITY SETS DEFAULT CERTIFICATION CEILING",
+  "maturity_levels": [
+    "L0_EMPTY",
+    "L1_SOURCES_COLLECTED",
+    "L2_KNOWLEDGE_STRUCTURED",
+    "L3_INTERNALLY_VERIFIED",
+    "L4_PROFESSIONALLY_TESTED",
+    "L5_CERTIFIED_WITH_SUPERVISION",
+    "L6_PRODUCTION_CERTIFIED"
+  ],
+  "certification_status_rank": {
+    "NOT_SUPPORTED": 0,
+    "KNOWLEDGE_COLLECTION": 1,
+    "KNOWLEDGE_VERIFICATION": 2,
+    "INTERNALLY_VERIFIED": 3,
+    "PROFESSIONALLY_TESTED": 4,
+    "CERTIFIED_WITH_SUPERVISION": 5,
+    "PRODUCTION_CERTIFIED": 6
+  },
+  "ceiling_by_maturity": [
+    {
+      "maturity_level": "L0_EMPTY",
+      "maximum_employee_certification_status": "NOT_SUPPORTED",
+      "max_rank": 0
+    },
+    {
+      "maturity_level": "L1_SOURCES_COLLECTED",
+      "maximum_employee_certification_status": "KNOWLEDGE_COLLECTION",
+      "max_rank": 1
+    },
+    {
+      "maturity_level": "L2_KNOWLEDGE_STRUCTURED",
+      "maximum_employee_certification_status": "KNOWLEDGE_VERIFICATION",
+      "max_rank": 2
+    },
+    {
+      "maturity_level": "L3_INTERNALLY_VERIFIED",
+      "maximum_employee_certification_status": "INTERNALLY_VERIFIED",
+      "max_rank": 3
+    },
+    {
+      "maturity_level": "L4_PROFESSIONALLY_TESTED",
+      "maximum_employee_certification_status": "PROFESSIONALLY_TESTED",
+      "max_rank": 4
+    },
+    {
+      "maturity_level": "L5_CERTIFIED_WITH_SUPERVISION",
+      "maximum_employee_certification_status": "CERTIFIED_WITH_SUPERVISION",
+      "max_rank": 5
+    },
+    {
+      "maturity_level": "L6_PRODUCTION_CERTIFIED",
+      "maximum_employee_certification_status": "PRODUCTION_CERTIFIED",
+      "max_rank": 6
+    }
+  ],
+  "exception_policy": "EMPLOYEE CERTIFICATION MAY NOT EXCEED CEILING WITHOUT EXPLICIT EVIDENCE-BACKED EXCEPTION",
+  "mass_exception_rule": "EXCEPTIONS > 20% REQUIRE STRUCTURAL POLICY REVIEW AND FORMAL LEGAL BOARD APPROVAL",
+  "fail_closed_rule": "FAIL_CLOSED_FOR_CERTIFICATION_ESCALATION",
+  "approved_by": "Global Jurisdiction Governance Board & Legal Standards Committee",
+  "status": "ACTIVE"
+}

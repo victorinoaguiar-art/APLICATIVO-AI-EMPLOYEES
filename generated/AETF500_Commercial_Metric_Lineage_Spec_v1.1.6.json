@@ -1,0 +1,9 @@
+{
+  "spec_version": "1.1.6",
+  "mrr_formula": "SUM(Monthly Contract Value for Active Subscriptions)",
+  "arpu_formula": "MRR / Active Customer Count",
+  "arpe_formula": "MRR / Active AI Employees Count",
+  "cac_formula": "Total Sales & Marketing Pool / Qualified Acquired Customers",
+  "ltv_formula": "ARPU * Gross Margin % / Churn Rate",
+  "provenance_status": "VERIFIED_STRICT_LINEAGE"
+}

@@ -1,0 +1,21 @@
+{
+  "previous_active_knowledge_objects": 610,
+  "previous_retained_active": 585,
+  "previous_retired": 5,
+  "previous_reclassified_only": 40,
+  "pre_existing_out_of_scope_added": 25,
+  "newly_created_professional_objects": 215,
+  "split_parent_objects": 10,
+  "split_child_objects": 20,
+  "net_split_cardinality_delta": 10,
+  "merge_parent_objects": 10,
+  "merge_result_objects": 5,
+  "net_merge_cardinality_delta": -5,
+  "current_active_knowledge_objects": 850,
+  "reclassification_double_count": 0,
+  "retired_counted_as_retained": 0,
+  "duplicate_current_object_ids": 0,
+  "unclassified_current_object_ids": 0,
+  "unresolved_object_lineage": 0,
+  "current_active_object_set_equality": true
+}

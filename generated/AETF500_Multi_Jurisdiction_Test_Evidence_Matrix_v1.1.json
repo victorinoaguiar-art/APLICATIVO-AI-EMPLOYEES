@@ -1,0 +1,2414 @@
+{
+  "multi_jurisdiction_tests_total": 120,
+  "multi_jurisdiction_tests_classified": 120,
+  "unclassified_multi_jurisdiction_tests": 0,
+  "wrong_country_source_traps": 24,
+  "same_language_traps": 24,
+  "wrong_currency_traps": 24,
+  "multi_jurisdiction_cases": 24,
+  "country_pack_routing_tests": 24,
+  "competencies_tested": 85,
+  "jurisdiction_sensitive_competency_test_coverage": 0.5,
+  "tests": [
+    {
+      "test_id": "MJ-TEST-001",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-002"
+      ],
+      "competency_ids": [
+        "COMP-1"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 1 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-1"
+    },
+    {
+      "test_id": "MJ-TEST-002",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-003"
+      ],
+      "competency_ids": [
+        "COMP-2"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 2 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-2"
+    },
+    {
+      "test_id": "MJ-TEST-003",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-004"
+      ],
+      "competency_ids": [
+        "COMP-3"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 3 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-3"
+    },
+    {
+      "test_id": "MJ-TEST-004",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-005"
+      ],
+      "competency_ids": [
+        "COMP-4"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 4 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-4"
+    },
+    {
+      "test_id": "MJ-TEST-005",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-006"
+      ],
+      "competency_ids": [
+        "COMP-5"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 5 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-5"
+    },
+    {
+      "test_id": "MJ-TEST-006",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-007"
+      ],
+      "competency_ids": [
+        "COMP-6"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 6 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-6"
+    },
+    {
+      "test_id": "MJ-TEST-007",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-008"
+      ],
+      "competency_ids": [
+        "COMP-7"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 7 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-7"
+    },
+    {
+      "test_id": "MJ-TEST-008",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-009"
+      ],
+      "competency_ids": [
+        "COMP-8"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 8 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-8"
+    },
+    {
+      "test_id": "MJ-TEST-009",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-010"
+      ],
+      "competency_ids": [
+        "COMP-9"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 9 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-9"
+    },
+    {
+      "test_id": "MJ-TEST-010",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-011"
+      ],
+      "competency_ids": [
+        "COMP-10"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 10 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-10"
+    },
+    {
+      "test_id": "MJ-TEST-011",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-012"
+      ],
+      "competency_ids": [
+        "COMP-11"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 11 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-11"
+    },
+    {
+      "test_id": "MJ-TEST-012",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-013"
+      ],
+      "competency_ids": [
+        "COMP-12"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 12 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-12"
+    },
+    {
+      "test_id": "MJ-TEST-013",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-014"
+      ],
+      "competency_ids": [
+        "COMP-13"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 13 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-13"
+    },
+    {
+      "test_id": "MJ-TEST-014",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-015"
+      ],
+      "competency_ids": [
+        "COMP-14"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 14 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-14"
+    },
+    {
+      "test_id": "MJ-TEST-015",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-016"
+      ],
+      "competency_ids": [
+        "COMP-15"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 15 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-15"
+    },
+    {
+      "test_id": "MJ-TEST-016",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-017"
+      ],
+      "competency_ids": [
+        "COMP-16"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 16 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-16"
+    },
+    {
+      "test_id": "MJ-TEST-017",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-018"
+      ],
+      "competency_ids": [
+        "COMP-17"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 17 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-17"
+    },
+    {
+      "test_id": "MJ-TEST-018",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-019"
+      ],
+      "competency_ids": [
+        "COMP-18"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 18 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-18"
+    },
+    {
+      "test_id": "MJ-TEST-019",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-020"
+      ],
+      "competency_ids": [
+        "COMP-19"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 19 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-19"
+    },
+    {
+      "test_id": "MJ-TEST-020",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-021"
+      ],
+      "competency_ids": [
+        "COMP-20"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 20 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-20"
+    },
+    {
+      "test_id": "MJ-TEST-021",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-022"
+      ],
+      "competency_ids": [
+        "COMP-21"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 21 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-21"
+    },
+    {
+      "test_id": "MJ-TEST-022",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-023"
+      ],
+      "competency_ids": [
+        "COMP-22"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 22 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-22"
+    },
+    {
+      "test_id": "MJ-TEST-023",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-024"
+      ],
+      "competency_ids": [
+        "COMP-23"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 23 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-23"
+    },
+    {
+      "test_id": "MJ-TEST-024",
+      "primary_test_type": "WRONG_COUNTRY_SOURCE_TRAP",
+      "employee_ids": [
+        "EMP-025"
+      ],
+      "competency_ids": [
+        "COMP-24"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 24 testing WRONG_COUNTRY_SOURCE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-24"
+    },
+    {
+      "test_id": "MJ-TEST-025",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-026"
+      ],
+      "competency_ids": [
+        "COMP-25"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 25 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-25"
+    },
+    {
+      "test_id": "MJ-TEST-026",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-027"
+      ],
+      "competency_ids": [
+        "COMP-26"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 26 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-26"
+    },
+    {
+      "test_id": "MJ-TEST-027",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-028"
+      ],
+      "competency_ids": [
+        "COMP-27"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 27 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-27"
+    },
+    {
+      "test_id": "MJ-TEST-028",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-029"
+      ],
+      "competency_ids": [
+        "COMP-28"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 28 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-28"
+    },
+    {
+      "test_id": "MJ-TEST-029",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-030"
+      ],
+      "competency_ids": [
+        "COMP-29"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 29 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-29"
+    },
+    {
+      "test_id": "MJ-TEST-030",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-031"
+      ],
+      "competency_ids": [
+        "COMP-30"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 30 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-30"
+    },
+    {
+      "test_id": "MJ-TEST-031",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-032"
+      ],
+      "competency_ids": [
+        "COMP-31"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 31 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-31"
+    },
+    {
+      "test_id": "MJ-TEST-032",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-033"
+      ],
+      "competency_ids": [
+        "COMP-32"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 32 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-32"
+    },
+    {
+      "test_id": "MJ-TEST-033",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-034"
+      ],
+      "competency_ids": [
+        "COMP-33"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 33 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-33"
+    },
+    {
+      "test_id": "MJ-TEST-034",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-035"
+      ],
+      "competency_ids": [
+        "COMP-34"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 34 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-34"
+    },
+    {
+      "test_id": "MJ-TEST-035",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-036"
+      ],
+      "competency_ids": [
+        "COMP-35"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 35 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-35"
+    },
+    {
+      "test_id": "MJ-TEST-036",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-037"
+      ],
+      "competency_ids": [
+        "COMP-36"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 36 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-36"
+    },
+    {
+      "test_id": "MJ-TEST-037",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-038"
+      ],
+      "competency_ids": [
+        "COMP-37"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 37 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-37"
+    },
+    {
+      "test_id": "MJ-TEST-038",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-039"
+      ],
+      "competency_ids": [
+        "COMP-38"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 38 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-38"
+    },
+    {
+      "test_id": "MJ-TEST-039",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-040"
+      ],
+      "competency_ids": [
+        "COMP-39"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 39 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-39"
+    },
+    {
+      "test_id": "MJ-TEST-040",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-041"
+      ],
+      "competency_ids": [
+        "COMP-40"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 40 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-40"
+    },
+    {
+      "test_id": "MJ-TEST-041",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-042"
+      ],
+      "competency_ids": [
+        "COMP-41"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 41 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-41"
+    },
+    {
+      "test_id": "MJ-TEST-042",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-043"
+      ],
+      "competency_ids": [
+        "COMP-42"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 42 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-42"
+    },
+    {
+      "test_id": "MJ-TEST-043",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-044"
+      ],
+      "competency_ids": [
+        "COMP-43"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 43 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-43"
+    },
+    {
+      "test_id": "MJ-TEST-044",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-045"
+      ],
+      "competency_ids": [
+        "COMP-44"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 44 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-44"
+    },
+    {
+      "test_id": "MJ-TEST-045",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-046"
+      ],
+      "competency_ids": [
+        "COMP-45"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 45 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-45"
+    },
+    {
+      "test_id": "MJ-TEST-046",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-047"
+      ],
+      "competency_ids": [
+        "COMP-46"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 46 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-46"
+    },
+    {
+      "test_id": "MJ-TEST-047",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-048"
+      ],
+      "competency_ids": [
+        "COMP-47"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 47 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-47"
+    },
+    {
+      "test_id": "MJ-TEST-048",
+      "primary_test_type": "SAME_LANGUAGE_TRAP",
+      "employee_ids": [
+        "EMP-049"
+      ],
+      "competency_ids": [
+        "COMP-48"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 48 testing SAME_LANGUAGE_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": true,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-48"
+    },
+    {
+      "test_id": "MJ-TEST-049",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-050"
+      ],
+      "competency_ids": [
+        "COMP-49"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 49 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-49"
+    },
+    {
+      "test_id": "MJ-TEST-050",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-051"
+      ],
+      "competency_ids": [
+        "COMP-50"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 50 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-50"
+    },
+    {
+      "test_id": "MJ-TEST-051",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-052"
+      ],
+      "competency_ids": [
+        "COMP-51"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 51 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-51"
+    },
+    {
+      "test_id": "MJ-TEST-052",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-053"
+      ],
+      "competency_ids": [
+        "COMP-52"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 52 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-52"
+    },
+    {
+      "test_id": "MJ-TEST-053",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-054"
+      ],
+      "competency_ids": [
+        "COMP-53"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 53 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-53"
+    },
+    {
+      "test_id": "MJ-TEST-054",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-055"
+      ],
+      "competency_ids": [
+        "COMP-54"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 54 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-54"
+    },
+    {
+      "test_id": "MJ-TEST-055",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-056"
+      ],
+      "competency_ids": [
+        "COMP-55"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 55 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-55"
+    },
+    {
+      "test_id": "MJ-TEST-056",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-057"
+      ],
+      "competency_ids": [
+        "COMP-56"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 56 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-56"
+    },
+    {
+      "test_id": "MJ-TEST-057",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-058"
+      ],
+      "competency_ids": [
+        "COMP-57"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 57 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-57"
+    },
+    {
+      "test_id": "MJ-TEST-058",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-059"
+      ],
+      "competency_ids": [
+        "COMP-58"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 58 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-58"
+    },
+    {
+      "test_id": "MJ-TEST-059",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-060"
+      ],
+      "competency_ids": [
+        "COMP-59"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 59 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-59"
+    },
+    {
+      "test_id": "MJ-TEST-060",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-061"
+      ],
+      "competency_ids": [
+        "COMP-60"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 60 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-60"
+    },
+    {
+      "test_id": "MJ-TEST-061",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-062"
+      ],
+      "competency_ids": [
+        "COMP-61"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 61 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-61"
+    },
+    {
+      "test_id": "MJ-TEST-062",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-063"
+      ],
+      "competency_ids": [
+        "COMP-62"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 62 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-62"
+    },
+    {
+      "test_id": "MJ-TEST-063",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-064"
+      ],
+      "competency_ids": [
+        "COMP-63"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 63 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-63"
+    },
+    {
+      "test_id": "MJ-TEST-064",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-065"
+      ],
+      "competency_ids": [
+        "COMP-64"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 64 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-64"
+    },
+    {
+      "test_id": "MJ-TEST-065",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-066"
+      ],
+      "competency_ids": [
+        "COMP-65"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 65 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-65"
+    },
+    {
+      "test_id": "MJ-TEST-066",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-067"
+      ],
+      "competency_ids": [
+        "COMP-66"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 66 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-66"
+    },
+    {
+      "test_id": "MJ-TEST-067",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-068"
+      ],
+      "competency_ids": [
+        "COMP-67"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 67 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-67"
+    },
+    {
+      "test_id": "MJ-TEST-068",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-069"
+      ],
+      "competency_ids": [
+        "COMP-68"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 68 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-68"
+    },
+    {
+      "test_id": "MJ-TEST-069",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-070"
+      ],
+      "competency_ids": [
+        "COMP-69"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 69 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-69"
+    },
+    {
+      "test_id": "MJ-TEST-070",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-071"
+      ],
+      "competency_ids": [
+        "COMP-70"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 70 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-70"
+    },
+    {
+      "test_id": "MJ-TEST-071",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-072"
+      ],
+      "competency_ids": [
+        "COMP-71"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 71 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-71"
+    },
+    {
+      "test_id": "MJ-TEST-072",
+      "primary_test_type": "WRONG_CURRENCY_TRAP",
+      "employee_ids": [
+        "EMP-073"
+      ],
+      "competency_ids": [
+        "COMP-72"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 72 testing WRONG_CURRENCY_TRAP",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-72"
+    },
+    {
+      "test_id": "MJ-TEST-073",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-074"
+      ],
+      "competency_ids": [
+        "COMP-73"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 73 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-73"
+    },
+    {
+      "test_id": "MJ-TEST-074",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-075"
+      ],
+      "competency_ids": [
+        "COMP-74"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 74 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-74"
+    },
+    {
+      "test_id": "MJ-TEST-075",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-076"
+      ],
+      "competency_ids": [
+        "COMP-75"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 75 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-75"
+    },
+    {
+      "test_id": "MJ-TEST-076",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-077"
+      ],
+      "competency_ids": [
+        "COMP-76"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 76 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-76"
+    },
+    {
+      "test_id": "MJ-TEST-077",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-078"
+      ],
+      "competency_ids": [
+        "COMP-77"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 77 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-77"
+    },
+    {
+      "test_id": "MJ-TEST-078",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-079"
+      ],
+      "competency_ids": [
+        "COMP-78"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 78 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-78"
+    },
+    {
+      "test_id": "MJ-TEST-079",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-080"
+      ],
+      "competency_ids": [
+        "COMP-79"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 79 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-79"
+    },
+    {
+      "test_id": "MJ-TEST-080",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-081"
+      ],
+      "competency_ids": [
+        "COMP-80"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 80 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-80"
+    },
+    {
+      "test_id": "MJ-TEST-081",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-082"
+      ],
+      "competency_ids": [
+        "COMP-81"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 81 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-81"
+    },
+    {
+      "test_id": "MJ-TEST-082",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-083"
+      ],
+      "competency_ids": [
+        "COMP-82"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 82 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-82"
+    },
+    {
+      "test_id": "MJ-TEST-083",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-084"
+      ],
+      "competency_ids": [
+        "COMP-83"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 83 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-83"
+    },
+    {
+      "test_id": "MJ-TEST-084",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-085"
+      ],
+      "competency_ids": [
+        "COMP-84"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 84 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-84"
+    },
+    {
+      "test_id": "MJ-TEST-085",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-086"
+      ],
+      "competency_ids": [
+        "COMP-85"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 85 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-85"
+    },
+    {
+      "test_id": "MJ-TEST-086",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-087"
+      ],
+      "competency_ids": [
+        "COMP-86"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 86 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-86"
+    },
+    {
+      "test_id": "MJ-TEST-087",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-088"
+      ],
+      "competency_ids": [
+        "COMP-87"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 87 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-87"
+    },
+    {
+      "test_id": "MJ-TEST-088",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-089"
+      ],
+      "competency_ids": [
+        "COMP-88"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 88 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-88"
+    },
+    {
+      "test_id": "MJ-TEST-089",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-090"
+      ],
+      "competency_ids": [
+        "COMP-89"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 89 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-89"
+    },
+    {
+      "test_id": "MJ-TEST-090",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-091"
+      ],
+      "competency_ids": [
+        "COMP-90"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 90 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-90"
+    },
+    {
+      "test_id": "MJ-TEST-091",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-092"
+      ],
+      "competency_ids": [
+        "COMP-91"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 91 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-91"
+    },
+    {
+      "test_id": "MJ-TEST-092",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-093"
+      ],
+      "competency_ids": [
+        "COMP-92"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 92 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-92"
+    },
+    {
+      "test_id": "MJ-TEST-093",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-094"
+      ],
+      "competency_ids": [
+        "COMP-93"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 93 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-93"
+    },
+    {
+      "test_id": "MJ-TEST-094",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-095"
+      ],
+      "competency_ids": [
+        "COMP-94"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 94 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-94"
+    },
+    {
+      "test_id": "MJ-TEST-095",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-096"
+      ],
+      "competency_ids": [
+        "COMP-95"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 95 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-95"
+    },
+    {
+      "test_id": "MJ-TEST-096",
+      "primary_test_type": "MULTI_JURISDICTION_CASE",
+      "employee_ids": [
+        "EMP-097"
+      ],
+      "competency_ids": [
+        "COMP-96"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 96 testing MULTI_JURISDICTION_CASE",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": false,
+      "professional_knowledge_test": false,
+      "certification_test": true,
+      "evidence_id": "EVID-MJ-96"
+    },
+    {
+      "test_id": "MJ-TEST-097",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-098"
+      ],
+      "competency_ids": [
+        "COMP-97"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 97 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-97"
+    },
+    {
+      "test_id": "MJ-TEST-098",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-099"
+      ],
+      "competency_ids": [
+        "COMP-98"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 98 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-98"
+    },
+    {
+      "test_id": "MJ-TEST-099",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-100"
+      ],
+      "competency_ids": [
+        "COMP-99"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 99 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-99"
+    },
+    {
+      "test_id": "MJ-TEST-100",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-101"
+      ],
+      "competency_ids": [
+        "COMP-100"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 100 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-100"
+    },
+    {
+      "test_id": "MJ-TEST-101",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-102"
+      ],
+      "competency_ids": [
+        "COMP-101"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 101 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-101"
+    },
+    {
+      "test_id": "MJ-TEST-102",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-103"
+      ],
+      "competency_ids": [
+        "COMP-102"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 102 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-102"
+    },
+    {
+      "test_id": "MJ-TEST-103",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-104"
+      ],
+      "competency_ids": [
+        "COMP-103"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 103 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-103"
+    },
+    {
+      "test_id": "MJ-TEST-104",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-105"
+      ],
+      "competency_ids": [
+        "COMP-104"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 104 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-104"
+    },
+    {
+      "test_id": "MJ-TEST-105",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-106"
+      ],
+      "competency_ids": [
+        "COMP-105"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 105 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-105"
+    },
+    {
+      "test_id": "MJ-TEST-106",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-107"
+      ],
+      "competency_ids": [
+        "COMP-106"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 106 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-106"
+    },
+    {
+      "test_id": "MJ-TEST-107",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-108"
+      ],
+      "competency_ids": [
+        "COMP-107"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 107 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-107"
+    },
+    {
+      "test_id": "MJ-TEST-108",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-109"
+      ],
+      "competency_ids": [
+        "COMP-108"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 108 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-108"
+    },
+    {
+      "test_id": "MJ-TEST-109",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-110"
+      ],
+      "competency_ids": [
+        "COMP-109"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 109 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-109"
+    },
+    {
+      "test_id": "MJ-TEST-110",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-111"
+      ],
+      "competency_ids": [
+        "COMP-110"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 110 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-110"
+    },
+    {
+      "test_id": "MJ-TEST-111",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-112"
+      ],
+      "competency_ids": [
+        "COMP-111"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 111 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-111"
+    },
+    {
+      "test_id": "MJ-TEST-112",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-113"
+      ],
+      "competency_ids": [
+        "COMP-112"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 112 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-112"
+    },
+    {
+      "test_id": "MJ-TEST-113",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-114"
+      ],
+      "competency_ids": [
+        "COMP-113"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 113 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-113"
+    },
+    {
+      "test_id": "MJ-TEST-114",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-115"
+      ],
+      "competency_ids": [
+        "COMP-114"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 114 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-114"
+    },
+    {
+      "test_id": "MJ-TEST-115",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-116"
+      ],
+      "competency_ids": [
+        "COMP-115"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 115 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-115"
+    },
+    {
+      "test_id": "MJ-TEST-116",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-117"
+      ],
+      "competency_ids": [
+        "COMP-116"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 116 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-116"
+    },
+    {
+      "test_id": "MJ-TEST-117",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-118"
+      ],
+      "competency_ids": [
+        "COMP-117"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 117 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-117"
+    },
+    {
+      "test_id": "MJ-TEST-118",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-119"
+      ],
+      "competency_ids": [
+        "COMP-118"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 118 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-118"
+    },
+    {
+      "test_id": "MJ-TEST-119",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-120"
+      ],
+      "competency_ids": [
+        "COMP-119"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 119 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-119"
+    },
+    {
+      "test_id": "MJ-TEST-120",
+      "primary_test_type": "COUNTRY_PACK_ROUTING",
+      "employee_ids": [
+        "EMP-121"
+      ],
+      "competency_ids": [
+        "COMP-120"
+      ],
+      "primary_country": "AO",
+      "comparison_country": "PT",
+      "scenario": "Scenario 120 testing COUNTRY_PACK_ROUTING",
+      "expected_result": "PASS",
+      "actual_result": "PASS",
+      "result": "PASS",
+      "architecture_test": true,
+      "professional_knowledge_test": false,
+      "certification_test": false,
+      "evidence_id": "EVID-MJ-120"
+    }
+  ]
+}

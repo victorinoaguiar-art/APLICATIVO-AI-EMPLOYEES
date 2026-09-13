@@ -1,0 +1,10 @@
+{
+  "policy": "POLICY_A_SIDECAR_DIGEST_IS_INTEGRITY_METADATA",
+  "manifest_filename": "AETF500_Baseline_Hash_Manifest_v1.1.7.json",
+  "sidecar_filename": "AETF500_Baseline_Hash_Manifest_v1.1.7.json.digest",
+  "sidecar_content_rule": "Sidecar file textually contains the 64-character SHA-256 hex digest of the manifest file.",
+  "circular_dependency_prevention": "PASSED_NO_CIRCULAR_SELF_REFERENCE",
+  "document_generation_status": "SYSTEM_GENERATED",
+  "integrity_protection": "SHA256_HASHED",
+  "digital_signature_status": "NOT_IMPLEMENTED"
+}

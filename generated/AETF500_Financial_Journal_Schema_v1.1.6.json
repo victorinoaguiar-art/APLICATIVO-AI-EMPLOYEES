@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.1.6",
+  "double_entry_enforced": true,
+  "immutability_enforced": true,
+  "invoice_journal_pattern": "Debit 31.1.2.1 (Non-Group Domestic) / Credit 62.1.1 (Domestic Market) / Credit 34.5.3 (VAT Output)",
+  "deferred_journal_pattern": "Debit 31.1.2.1 / Credit 37.6 (Deferred Revenue) / Credit 34.5.3 (VAT Output)",
+  "payment_journal_pattern": "Debit 43.1.1 (Bank BAI) / Credit 31.1.2.1 (Customer Settlement)"
+}

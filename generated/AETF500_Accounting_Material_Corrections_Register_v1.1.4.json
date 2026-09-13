@@ -1,0 +1,27 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.4_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "total_corrections": 2,
+  "corrections": [
+    {
+      "correction_id": "ACC-CORR-001",
+      "area": "Account Mapping / Clientes vs Depósitos à Ordem",
+      "problem_description": "Use of Account 43.1 incorrectly labeled as Clientes C/C",
+      "before_state": "Débito 43.1 (Clientes C/C)",
+      "after_state": "Débito 31.1.1 (Clientes Correntes Nacionais) under PGC Class 31",
+      "impact": "Eliminated material misclassification between accounts receivable and bank demand deposits",
+      "status": "MATERIAL_ERROR_CORRECTED",
+      "source_authority": "Decreto n.º 82/01, de 16 de Novembro"
+    },
+    {
+      "correction_id": "ACC-CORR-002",
+      "area": "Revenue Account Mapping / SaaS Revenue vs Cost of Goods Sold",
+      "problem_description": "Use of Account 71.1 incorrectly labeled as SaaS Service Revenue",
+      "before_state": "Crédito 71.1 (Prestação de Serviços SaaS)",
+      "after_state": "Crédito 62.1.1 (Prestações de Serviço SaaS B2B) under PGC Class 62. Account 71.1 strictly reserved for Cost of Goods Sold.",
+      "impact": "Eliminated material misclassification between service revenue and cost of sales",
+      "status": "MATERIAL_ERROR_CORRECTED",
+      "source_authority": "Decreto n.º 82/01, de 16 de Novembro"
+    }
+  ]
+}

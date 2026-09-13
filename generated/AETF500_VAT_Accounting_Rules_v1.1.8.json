@@ -1,0 +1,28 @@
+{
+  "rules": [
+    {
+      "rule_id": "RULE-VAT-34.5.3.1",
+      "name": "Operações gerais",
+      "account": "34.5.3.1",
+      "condition": "General SaaS & B2B sales under standard VAT rules"
+    },
+    {
+      "rule_id": "RULE-VAT-34.5.3.2",
+      "name": "Operações abrangidas pelo regime de IVA de caixa",
+      "account": "34.5.3.2",
+      "condition": "Cash VAT regime transactions"
+    },
+    {
+      "rule_id": "RULE-VAT-34.5.3.3",
+      "name": "Autoconsumo e operações gratuitas",
+      "account": "34.5.3.3",
+      "condition": "Self-consumption or promotional free operations"
+    },
+    {
+      "rule_id": "RULE-VAT-34.5.3.4",
+      "name": "Operações especiais",
+      "account": "34.5.3.4",
+      "condition": "Special margin or legal regime operations"
+    }
+  ]
+}

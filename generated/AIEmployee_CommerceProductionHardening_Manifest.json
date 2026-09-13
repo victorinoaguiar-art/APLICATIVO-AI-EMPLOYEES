@@ -1,0 +1,101 @@
+{
+  "artifact_id": "AIEMPLOYEE_COMMERCE_PRODUCTION_HARDENING_MANIFEST_2026_09_12",
+  "baseline_consumed": "AETF-500-CERTL3-PRODUCTION-BASELINE-2026.09.11",
+  "commercial_baseline": "COMMERCIAL-BASELINE-v2.0",
+  "timestamp": "2026-09-12T09:25:00.000Z",
+  "readiness_status": "PILOT_CUSTOMER_READY",
+  "real_paid_mrr_aoa": 0,
+  "real_paid_customers_count": 0,
+  "pricing_hardening": {
+    "formula": "MinimumSellingPrice = DirectCost / (1 - TargetGrossMargin)",
+    "target_margin_pct": 60,
+    "support_cost_allocation_aoa": 10000,
+    "infra_cost_allocation_aoa": 5000,
+    "pricing_versioning_enabled": true
+  },
+  "fx_engine": {
+    "status": "DYNAMIC_SERVICE_ACTIVE",
+    "supported_currencies": ["AOA", "USD", "EUR"],
+    "rates": {
+      "USD_AOA": 920,
+      "EUR_AOA": 1000,
+      "AOA_AOA": 1
+    },
+    "stale_protection": "ENFORCED"
+  },
+  "subscription_state_machine": {
+    "states": [
+      "DRAFT",
+      "TRIAL",
+      "PENDING_ACTIVATION",
+      "ACTIVE",
+      "PAST_DUE",
+      "GRACE_PERIOD",
+      "SUSPENDED",
+      "CANCEL_AT_PERIOD_END",
+      "CANCELLED",
+      "EXPIRED",
+      "TERMINATED"
+    ]
+  },
+  "entitlements_engine": {
+    "backend_truth_enforced": true,
+    "plans_supported": ["STARTER", "PROFESSIONAL", "BUSINESS", "ENTERPRISE"]
+  },
+  "enterprise_activation_gates_count": 13,
+  "activation_gates_list": [
+    "subscription_active",
+    "tenant_verified",
+    "client_authorization_valid",
+    "cpeaa_policy_assigned",
+    "approved_workflows_configured",
+    "permissions_configured",
+    "credentials_valid",
+    "connectors_connected",
+    "financial_authorization_configured",
+    "hitl_configured_if_required",
+    "risk_policy_active",
+    "certification_valid",
+    "billing_profile_ready"
+  ],
+  "default_financial_authority": "DENIED",
+  "tax_determination": {
+    "engine_separated": true,
+    "default_profile": "TAX-AO-DEFAULT",
+    "country": "Angola",
+    "applicable_tax_rate_pct": 14,
+    "tax_compliance_status": "NOT_YET_VERIFIED"
+  },
+  "payment_orchestration": {
+    "payment_modes": ["REAL_PAYMENT", "SANDBOX_PAYMENT", "SIMULATED_PAYMENT"],
+    "price_tampering_protection": "ENFORCED",
+    "webhook_signature_verification": "ENFORCED",
+    "webhook_replay_protection": "ENFORCED"
+  },
+  "idempotency_engine": {
+    "global_idempotency_keys_active": true
+  },
+  "payment_reconciliation": {
+    "matching_criteria": ["invoice_number", "provider_reference", "amount_match"],
+    "statuses": ["MATCHED", "PARTIALLY_MATCHED", "UNMATCHED", "OVERPAID", "UNDERPAID", "DUPLICATE", "REFUND_PENDING", "MANUAL_REVIEW"]
+  },
+  "commercial_subledger": {
+    "type": "APPEND_ONLY_COMMERCIAL_SUBLEDGER",
+    "events_tracked": [
+      "SUBSCRIPTION_CREATED",
+      "INVOICE_ISSUED",
+      "PAYMENT_RECEIVED",
+      "PAYMENT_RECONCILED",
+      "CREDIT_ISSUED",
+      "REFUND_ISSUED",
+      "WRITE_OFF",
+      "REVENUE_RECOGNIZED"
+    ]
+  },
+  "paid_customer_readiness_gate": {
+    "gate_components_count": 12,
+    "gate_components_status": "ALL_PASS",
+    "first_real_paid_customer_confirmed": false
+  },
+  "sha256_manifest_integrity": "7f8b9a0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8"
+}

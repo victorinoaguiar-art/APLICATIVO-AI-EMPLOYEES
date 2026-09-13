@@ -1,0 +1,8 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.7_FROZEN",
+  "deferred_revenue_account": "37.6",
+  "deferred_revenue_account_name": "Proveitos a repartir por períodos futuros",
+  "output_vat_account": "34.5.3.1",
+  "output_vat_account_name": "Operações gerais",
+  "remediation_status": "COMPLETE"
+}

@@ -1,0 +1,122 @@
+[
+  {
+    "correction_id": "M-01",
+    "section": "5. M-01 — 615 vs 610 KNOWLEDGE OBJECTS",
+    "historical_statement": "Total Knowledge Objects = 615 across 4 layers",
+    "problem_type": "REFERENCE_COUNT_VS_UNIQUE_OBJECT_COUNT_CONFLATION",
+    "canonical_statement": "Knowledge Object layer membership references = 615, cross-layer overlaps = 5, unique active multi-jurisdiction Knowledge Objects = 610",
+    "source_baseline": "AETF500_Knowledge_Object_610_to_850_Lineage_Bridge_v1.0",
+    "runtime_change_required": false,
+    "documentation_change_required": true,
+    "severity": "S2",
+    "status": "RECONCILED"
+  },
+  {
+    "correction_id": "M-02",
+    "section": "8. M-02 — 850 ASSIGNMENTS vs UNIQUE COMPETENCIES",
+    "historical_statement": "JURISDICTION_SENSITIVE_COMPETENCIES = 850",
+    "problem_type": "ASSIGNMENTS_MISLABELED_AS_UNIQUE_COMPETENCIES",
+    "canonical_statement": "Jurisdiction-sensitive unique competencies = 170 (historical scope) / 200 (current scope), employee-competency assignments = 850",
+    "source_baseline": "AETF500_Jurisdiction_Sensitive_Competency_Lineage_Bridge_v1.0",
+    "runtime_change_required": false,
+    "documentation_change_required": true,
+    "severity": "S2",
+    "status": "RECONCILED"
+  },
+  {
+    "correction_id": "M-03",
+    "section": "10. M-03 — 3000 RECORDS SEMANTICS",
+    "historical_statement": "3000 records = Employee x Competency x Jurisdiction x Version",
+    "problem_type": "ENTITY_CARDINALITY_GRAIN_MIXING",
+    "canonical_statement": "EMPLOYEE_COUNTRY_SUPPORT_RECORDS = 3000 (500 Employees x 6 Countries). Granular competency records maintained separately.",
+    "source_baseline": "AETF500_500_Employees_Country_Support_Matrix_v1.0",
+    "runtime_change_required": false,
+    "documentation_change_required": true,
+    "severity": "S2",
+    "status": "RECONCILED"
+  },
+  {
+    "correction_id": "M-04",
+    "section": "14. M-04 — ANGOLA 420/80",
+    "historical_statement": "AO: 420 PRODUCTION_CERTIFIED, 80 CERTIFIED_WITH_SUPERVISION",
+    "problem_type": "COUNTRY_CERTIFICATION_CONFLATED_WITH_READINESS",
+    "canonical_statement": "AO employee country records = 500 PRODUCTION_CERTIFIED. Global Knowledge Readiness = 420 READY, 80 READY_WITH_RESTRICTIONS.",
+    "source_baseline": "AETF500_All_Employees_Knowledge_Audit_v1.0",
+    "runtime_change_required": false,
+    "documentation_change_required": true,
+    "severity": "S3",
+    "status": "RECONCILED"
+  },
+  {
+    "correction_id": "M-05",
+    "section": "18. M-05 — PT/MZ ABOVE CEILING",
+    "historical_statement": "No employee exceeds country pack maturity ceiling in PT and MZ",
+    "problem_type": "EXCEPTION_CEILING_SEMANTICS_MISMATCH",
+    "canonical_statement": "PT (500) and MZ (500) operational status CERTIFIED_WITH_SUPERVISION backed by documented internal exceptions pending external OCC/OCAM verification.",
+    "source_baseline": "AETF500_Country_Pack_Certification_Ceiling_Gate_v1.0",
+    "runtime_change_required": false,
+    "documentation_change_required": true,
+    "severity": "S3",
+    "status": "RECONCILED"
+  },
+  {
+    "correction_id": "M-06",
+    "section": "21. M-06 — CANONICAL MATURITY VOCABULARY",
+    "historical_statement": "L1_DRAFT, L2_STRUCTURED, L3_TESTED, L4_VALIDATED, L6_PRODUCTION_READY",
+    "problem_type": "TERMINOLOGY_DIVERGENCE",
+    "canonical_statement": "Canonical 7-level maturity vocabulary active: L0_EMPTY, L1_SOURCES_COLLECTED, L2_KNOWLEDGE_STRUCTURED, L3_INTERNALLY_VERIFIED, L4_PROFESSIONALLY_TESTED, L5_CERTIFIED_WITH_SUPERVISION, L6_PRODUCTION_CERTIFIED.",
+    "source_baseline": "AETF500_Country_Maturity_Vocabulary_v1.0",
+    "runtime_change_required": false,
+    "documentation_change_required": true,
+    "severity": "S1",
+    "status": "RECONCILED"
+  },
+  {
+    "correction_id": "M-07",
+    "section": "24. M-07 — UNSAFE NORMATIVE PRECEDENCE",
+    "historical_statement": "JURISDICTION_OVERRIDE > CLIENT_POLICY_PACK > SECTOR_PACK > COUNTRY_PACK_TAX",
+    "problem_type": "UNSAFE_NORMATIVE_PRECEDENCE_RULE",
+    "canonical_statement": "Mandatory law strictly overrides client policy (CLIENT_POLICY_CAN_OVERRIDE_MANDATORY_LAW = false).",
+    "source_baseline": "AETF500_Normative_Precedence_Safety_Policy_v1.0",
+    "runtime_change_required": true,
+    "documentation_change_required": true,
+    "severity": "S4",
+    "status": "RECONCILED"
+  },
+  {
+    "correction_id": "M-08",
+    "section": "29. M-08 — UNSAFE DEFAULT TO AO",
+    "historical_statement": "country_pack.default = AO when jurisdiction is unresolved",
+    "problem_type": "UNSAFE_LEGAL_FALLBACK_RULE",
+    "canonical_statement": "Unresolved high-risk jurisdiction tasks fail closed (UNKNOWN_HIGH_RISK_JURISDICTION_FAILS_CLOSED = true). Product default separated from legal jurisdiction.",
+    "source_baseline": "AETF500_Jurisdiction_Resolution_Safety_Policy_v1.0",
+    "runtime_change_required": true,
+    "documentation_change_required": true,
+    "severity": "S4",
+    "status": "RECONCILED"
+  },
+  {
+    "correction_id": "M-09",
+    "section": "35. M-09 — ANGOLA EXTERNAL OVERCLAIM",
+    "historical_statement": "Angola has total verified legislative sovereignty",
+    "problem_type": "EXTERNAL_REGULATORY_ASSURANCE_OVERCLAIM",
+    "canonical_statement": "AO internal maturity is L6_PRODUCTION_CERTIFIED. External regulatory assurance open workstreams (AGT, BNA, PGC, VAT, WHT 2%) preserved.",
+    "source_baseline": "AETF500_External_Validation_Register_v1.1.8",
+    "runtime_change_required": false,
+    "documentation_change_required": true,
+    "severity": "S3",
+    "status": "RECONCILED"
+  },
+  {
+    "correction_id": "M-10",
+    "section": "38. M-10 — GLOBAL READINESS OVERCLAIM",
+    "historical_statement": "Prepared for global operation with total legal, tax and regulatory rigor",
+    "problem_type": "GLOBAL_PRODUCTION_READINESS_OVERCLAIM",
+    "canonical_statement": "Global Multi-Jurisdiction Architecture = COMPLETE. Country Pack maturity varies by jurisdiction. Global Production Readiness = NOT_CLAIMED.",
+    "source_baseline": "AETF500_Global_Multi_Jurisdiction_Architecture_Gate_v1.0",
+    "runtime_change_required": false,
+    "documentation_change_required": true,
+    "severity": "S3",
+    "status": "RECONCILED"
+  }
+]

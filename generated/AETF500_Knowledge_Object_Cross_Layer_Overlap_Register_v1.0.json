@@ -1,0 +1,82 @@
+[
+  {
+    "knowledge_object_id": "KO-GLOBAL-IFRS-001",
+    "object_name": "IFRS General Presentation & Accounting Principles",
+    "layers": [
+      "GLOBAL_STANDARDS",
+      "COUNTRY_PACK_AO"
+    ],
+    "primary_layer": "GLOBAL_STANDARDS",
+    "secondary_layers": [
+      "COUNTRY_PACK_AO"
+    ],
+    "reference_count": 2,
+    "unique_object_count_contribution": 1,
+    "overlap_reference_count": 1,
+    "status": "VALID_CROSS_LAYER_OVERLAP"
+  },
+  {
+    "knowledge_object_id": "KO-GLOBAL-ISO27001-002",
+    "object_name": "ISO 27001 Security Management & Controls",
+    "layers": [
+      "GLOBAL_STANDARDS",
+      "COUNTRY_PACK_PT"
+    ],
+    "primary_layer": "GLOBAL_STANDARDS",
+    "secondary_layers": [
+      "COUNTRY_PACK_PT"
+    ],
+    "reference_count": 2,
+    "unique_object_count_contribution": 1,
+    "overlap_reference_count": 1,
+    "status": "VALID_CROSS_LAYER_OVERLAP"
+  },
+  {
+    "knowledge_object_id": "KO-GLOBAL-OWASP-003",
+    "object_name": "OWASP Security Verification & Input Sanitization",
+    "layers": [
+      "GLOBAL_STANDARDS",
+      "CLIENT_POLICY_PACK"
+    ],
+    "primary_layer": "GLOBAL_STANDARDS",
+    "secondary_layers": [
+      "CLIENT_POLICY_PACK"
+    ],
+    "reference_count": 2,
+    "unique_object_count_contribution": 1,
+    "overlap_reference_count": 1,
+    "status": "VALID_CROSS_LAYER_OVERLAP"
+  },
+  {
+    "knowledge_object_id": "KO-GLOBAL-ISA-004",
+    "object_name": "ISA International Standards on Auditing",
+    "layers": [
+      "GLOBAL_STANDARDS",
+      "COUNTRY_PACK_MZ"
+    ],
+    "primary_layer": "GLOBAL_STANDARDS",
+    "secondary_layers": [
+      "COUNTRY_PACK_MZ"
+    ],
+    "reference_count": 2,
+    "unique_object_count_contribution": 1,
+    "overlap_reference_count": 1,
+    "status": "VALID_CROSS_LAYER_OVERLAP"
+  },
+  {
+    "knowledge_object_id": "KO-GLOBAL-CORE-005",
+    "object_name": "Universal Double-Entry Accounting Logic",
+    "layers": [
+      "GLOBAL_CORE",
+      "COUNTRY_PACK_AO"
+    ],
+    "primary_layer": "GLOBAL_CORE",
+    "secondary_layers": [
+      "COUNTRY_PACK_AO"
+    ],
+    "reference_count": 2,
+    "unique_object_count_contribution": 1,
+    "overlap_reference_count": 1,
+    "status": "VALID_CROSS_LAYER_OVERLAP"
+  }
+]

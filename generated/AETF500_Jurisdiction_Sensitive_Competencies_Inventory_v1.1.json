@@ -1,0 +1,3920 @@
+{
+  "unique_competencies_total": 240,
+  "unique_jurisdiction_sensitive_competencies": 170,
+  "global_or_non_jurisdiction_sensitive_competencies": 70,
+  "jurisdiction_sensitive_employee_competency_assignments": 850,
+  "previously_reported_as_competencies": 850,
+  "correct_interpretation": "EMPLOYEE_COMPETENCY_ASSIGNMENTS",
+  "items": [
+    {
+      "competency_id": "COMP-SENSITIVE-001",
+      "competency_name": "Jurisdiction Sensitive Competency 1 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-002",
+        "EMP-003",
+        "EMP-004",
+        "EMP-005",
+        "EMP-006"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-002",
+      "competency_name": "Jurisdiction Sensitive Competency 2 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-003",
+        "EMP-005",
+        "EMP-007",
+        "EMP-009",
+        "EMP-011"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-003",
+      "competency_name": "Jurisdiction Sensitive Competency 3 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-004",
+        "EMP-007",
+        "EMP-010",
+        "EMP-013",
+        "EMP-016"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-004",
+      "competency_name": "Jurisdiction Sensitive Competency 4 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-005",
+        "EMP-009",
+        "EMP-013",
+        "EMP-017",
+        "EMP-021"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-005",
+      "competency_name": "Jurisdiction Sensitive Competency 5 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-006",
+        "EMP-011",
+        "EMP-016",
+        "EMP-021",
+        "EMP-026"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-006",
+      "competency_name": "Jurisdiction Sensitive Competency 6 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-007",
+        "EMP-013",
+        "EMP-019",
+        "EMP-025",
+        "EMP-031"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-007",
+      "competency_name": "Jurisdiction Sensitive Competency 7 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-008",
+        "EMP-015",
+        "EMP-022",
+        "EMP-029",
+        "EMP-036"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-008",
+      "competency_name": "Jurisdiction Sensitive Competency 8 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-009",
+        "EMP-017",
+        "EMP-025",
+        "EMP-033",
+        "EMP-041"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-009",
+      "competency_name": "Jurisdiction Sensitive Competency 9 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-010",
+        "EMP-019",
+        "EMP-028",
+        "EMP-037",
+        "EMP-046"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-010",
+      "competency_name": "Jurisdiction Sensitive Competency 10 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-011",
+        "EMP-021",
+        "EMP-031",
+        "EMP-041",
+        "EMP-051"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-011",
+      "competency_name": "Jurisdiction Sensitive Competency 11 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-012",
+        "EMP-023",
+        "EMP-034",
+        "EMP-045",
+        "EMP-056"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-012",
+      "competency_name": "Jurisdiction Sensitive Competency 12 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-013",
+        "EMP-025",
+        "EMP-037",
+        "EMP-049",
+        "EMP-061"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-013",
+      "competency_name": "Jurisdiction Sensitive Competency 13 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-014",
+        "EMP-027",
+        "EMP-040",
+        "EMP-053",
+        "EMP-066"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-014",
+      "competency_name": "Jurisdiction Sensitive Competency 14 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-015",
+        "EMP-029",
+        "EMP-043",
+        "EMP-057",
+        "EMP-071"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-015",
+      "competency_name": "Jurisdiction Sensitive Competency 15 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-016",
+        "EMP-031",
+        "EMP-046",
+        "EMP-061",
+        "EMP-076"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-016",
+      "competency_name": "Jurisdiction Sensitive Competency 16 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-017",
+        "EMP-033",
+        "EMP-049",
+        "EMP-065",
+        "EMP-081"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-017",
+      "competency_name": "Jurisdiction Sensitive Competency 17 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-018",
+        "EMP-035",
+        "EMP-052",
+        "EMP-069",
+        "EMP-086"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-018",
+      "competency_name": "Jurisdiction Sensitive Competency 18 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-019",
+        "EMP-037",
+        "EMP-055",
+        "EMP-073",
+        "EMP-091"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-019",
+      "competency_name": "Jurisdiction Sensitive Competency 19 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-020",
+        "EMP-039",
+        "EMP-058",
+        "EMP-077",
+        "EMP-096"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-020",
+      "competency_name": "Jurisdiction Sensitive Competency 20 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-021",
+        "EMP-041",
+        "EMP-061",
+        "EMP-081",
+        "EMP-101"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-021",
+      "competency_name": "Jurisdiction Sensitive Competency 21 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-022",
+        "EMP-043",
+        "EMP-064",
+        "EMP-085",
+        "EMP-106"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-022",
+      "competency_name": "Jurisdiction Sensitive Competency 22 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-023",
+        "EMP-045",
+        "EMP-067",
+        "EMP-089",
+        "EMP-111"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-023",
+      "competency_name": "Jurisdiction Sensitive Competency 23 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-024",
+        "EMP-047",
+        "EMP-070",
+        "EMP-093",
+        "EMP-116"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-024",
+      "competency_name": "Jurisdiction Sensitive Competency 24 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-025",
+        "EMP-049",
+        "EMP-073",
+        "EMP-097",
+        "EMP-121"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-025",
+      "competency_name": "Jurisdiction Sensitive Competency 25 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-026",
+        "EMP-051",
+        "EMP-076",
+        "EMP-101",
+        "EMP-126"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-026",
+      "competency_name": "Jurisdiction Sensitive Competency 26 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-027",
+        "EMP-053",
+        "EMP-079",
+        "EMP-105",
+        "EMP-131"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-027",
+      "competency_name": "Jurisdiction Sensitive Competency 27 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-028",
+        "EMP-055",
+        "EMP-082",
+        "EMP-109",
+        "EMP-136"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-028",
+      "competency_name": "Jurisdiction Sensitive Competency 28 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-029",
+        "EMP-057",
+        "EMP-085",
+        "EMP-113",
+        "EMP-141"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-029",
+      "competency_name": "Jurisdiction Sensitive Competency 29 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-030",
+        "EMP-059",
+        "EMP-088",
+        "EMP-117",
+        "EMP-146"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-030",
+      "competency_name": "Jurisdiction Sensitive Competency 30 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-031",
+        "EMP-061",
+        "EMP-091",
+        "EMP-121",
+        "EMP-151"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-031",
+      "competency_name": "Jurisdiction Sensitive Competency 31 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-032",
+        "EMP-063",
+        "EMP-094",
+        "EMP-125",
+        "EMP-156"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-032",
+      "competency_name": "Jurisdiction Sensitive Competency 32 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-033",
+        "EMP-065",
+        "EMP-097",
+        "EMP-129",
+        "EMP-161"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-033",
+      "competency_name": "Jurisdiction Sensitive Competency 33 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-034",
+        "EMP-067",
+        "EMP-100",
+        "EMP-133",
+        "EMP-166"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-034",
+      "competency_name": "Jurisdiction Sensitive Competency 34 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-035",
+        "EMP-069",
+        "EMP-103",
+        "EMP-137",
+        "EMP-171"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-035",
+      "competency_name": "Jurisdiction Sensitive Competency 35 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-036",
+        "EMP-071",
+        "EMP-106",
+        "EMP-141",
+        "EMP-176"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-036",
+      "competency_name": "Jurisdiction Sensitive Competency 36 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-037",
+        "EMP-073",
+        "EMP-109",
+        "EMP-145",
+        "EMP-181"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-037",
+      "competency_name": "Jurisdiction Sensitive Competency 37 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-038",
+        "EMP-075",
+        "EMP-112",
+        "EMP-149",
+        "EMP-186"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-038",
+      "competency_name": "Jurisdiction Sensitive Competency 38 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-039",
+        "EMP-077",
+        "EMP-115",
+        "EMP-153",
+        "EMP-191"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-039",
+      "competency_name": "Jurisdiction Sensitive Competency 39 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-040",
+        "EMP-079",
+        "EMP-118",
+        "EMP-157",
+        "EMP-196"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-040",
+      "competency_name": "Jurisdiction Sensitive Competency 40 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-041",
+        "EMP-081",
+        "EMP-121",
+        "EMP-161",
+        "EMP-201"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-041",
+      "competency_name": "Jurisdiction Sensitive Competency 41 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-042",
+        "EMP-083",
+        "EMP-124",
+        "EMP-165",
+        "EMP-206"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-042",
+      "competency_name": "Jurisdiction Sensitive Competency 42 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-043",
+        "EMP-085",
+        "EMP-127",
+        "EMP-169",
+        "EMP-211"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-043",
+      "competency_name": "Jurisdiction Sensitive Competency 43 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-044",
+        "EMP-087",
+        "EMP-130",
+        "EMP-173",
+        "EMP-216"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-044",
+      "competency_name": "Jurisdiction Sensitive Competency 44 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-045",
+        "EMP-089",
+        "EMP-133",
+        "EMP-177",
+        "EMP-221"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-045",
+      "competency_name": "Jurisdiction Sensitive Competency 45 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-046",
+        "EMP-091",
+        "EMP-136",
+        "EMP-181",
+        "EMP-226"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-046",
+      "competency_name": "Jurisdiction Sensitive Competency 46 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-047",
+        "EMP-093",
+        "EMP-139",
+        "EMP-185",
+        "EMP-231"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-047",
+      "competency_name": "Jurisdiction Sensitive Competency 47 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-048",
+        "EMP-095",
+        "EMP-142",
+        "EMP-189",
+        "EMP-236"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-048",
+      "competency_name": "Jurisdiction Sensitive Competency 48 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-049",
+        "EMP-097",
+        "EMP-145",
+        "EMP-193",
+        "EMP-241"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-049",
+      "competency_name": "Jurisdiction Sensitive Competency 49 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-050",
+        "EMP-099",
+        "EMP-148",
+        "EMP-197",
+        "EMP-246"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-050",
+      "competency_name": "Jurisdiction Sensitive Competency 50 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-051",
+        "EMP-101",
+        "EMP-151",
+        "EMP-201",
+        "EMP-251"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-051",
+      "competency_name": "Jurisdiction Sensitive Competency 51 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-052",
+        "EMP-103",
+        "EMP-154",
+        "EMP-205",
+        "EMP-256"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-052",
+      "competency_name": "Jurisdiction Sensitive Competency 52 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-053",
+        "EMP-105",
+        "EMP-157",
+        "EMP-209",
+        "EMP-261"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-053",
+      "competency_name": "Jurisdiction Sensitive Competency 53 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-054",
+        "EMP-107",
+        "EMP-160",
+        "EMP-213",
+        "EMP-266"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-054",
+      "competency_name": "Jurisdiction Sensitive Competency 54 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-055",
+        "EMP-109",
+        "EMP-163",
+        "EMP-217",
+        "EMP-271"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-055",
+      "competency_name": "Jurisdiction Sensitive Competency 55 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-056",
+        "EMP-111",
+        "EMP-166",
+        "EMP-221",
+        "EMP-276"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-056",
+      "competency_name": "Jurisdiction Sensitive Competency 56 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-057",
+        "EMP-113",
+        "EMP-169",
+        "EMP-225",
+        "EMP-281"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-057",
+      "competency_name": "Jurisdiction Sensitive Competency 57 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-058",
+        "EMP-115",
+        "EMP-172",
+        "EMP-229",
+        "EMP-286"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-058",
+      "competency_name": "Jurisdiction Sensitive Competency 58 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-059",
+        "EMP-117",
+        "EMP-175",
+        "EMP-233",
+        "EMP-291"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-059",
+      "competency_name": "Jurisdiction Sensitive Competency 59 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-060",
+        "EMP-119",
+        "EMP-178",
+        "EMP-237",
+        "EMP-296"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-060",
+      "competency_name": "Jurisdiction Sensitive Competency 60 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-061",
+        "EMP-121",
+        "EMP-181",
+        "EMP-241",
+        "EMP-301"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-061",
+      "competency_name": "Jurisdiction Sensitive Competency 61 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-062",
+        "EMP-123",
+        "EMP-184",
+        "EMP-245",
+        "EMP-306"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-062",
+      "competency_name": "Jurisdiction Sensitive Competency 62 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-063",
+        "EMP-125",
+        "EMP-187",
+        "EMP-249",
+        "EMP-311"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-063",
+      "competency_name": "Jurisdiction Sensitive Competency 63 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-064",
+        "EMP-127",
+        "EMP-190",
+        "EMP-253",
+        "EMP-316"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-064",
+      "competency_name": "Jurisdiction Sensitive Competency 64 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-065",
+        "EMP-129",
+        "EMP-193",
+        "EMP-257",
+        "EMP-321"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-065",
+      "competency_name": "Jurisdiction Sensitive Competency 65 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-066",
+        "EMP-131",
+        "EMP-196",
+        "EMP-261",
+        "EMP-326"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-066",
+      "competency_name": "Jurisdiction Sensitive Competency 66 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-067",
+        "EMP-133",
+        "EMP-199",
+        "EMP-265",
+        "EMP-331"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-067",
+      "competency_name": "Jurisdiction Sensitive Competency 67 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-068",
+        "EMP-135",
+        "EMP-202",
+        "EMP-269",
+        "EMP-336"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-068",
+      "competency_name": "Jurisdiction Sensitive Competency 68 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-069",
+        "EMP-137",
+        "EMP-205",
+        "EMP-273",
+        "EMP-341"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-069",
+      "competency_name": "Jurisdiction Sensitive Competency 69 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-070",
+        "EMP-139",
+        "EMP-208",
+        "EMP-277",
+        "EMP-346"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-070",
+      "competency_name": "Jurisdiction Sensitive Competency 70 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-071",
+        "EMP-141",
+        "EMP-211",
+        "EMP-281",
+        "EMP-351"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-071",
+      "competency_name": "Jurisdiction Sensitive Competency 71 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-072",
+        "EMP-143",
+        "EMP-214",
+        "EMP-285",
+        "EMP-356"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-072",
+      "competency_name": "Jurisdiction Sensitive Competency 72 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-073",
+        "EMP-145",
+        "EMP-217",
+        "EMP-289",
+        "EMP-361"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-073",
+      "competency_name": "Jurisdiction Sensitive Competency 73 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-074",
+        "EMP-147",
+        "EMP-220",
+        "EMP-293",
+        "EMP-366"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-074",
+      "competency_name": "Jurisdiction Sensitive Competency 74 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-075",
+        "EMP-149",
+        "EMP-223",
+        "EMP-297",
+        "EMP-371"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-075",
+      "competency_name": "Jurisdiction Sensitive Competency 75 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-076",
+        "EMP-151",
+        "EMP-226",
+        "EMP-301",
+        "EMP-376"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-076",
+      "competency_name": "Jurisdiction Sensitive Competency 76 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-077",
+        "EMP-153",
+        "EMP-229",
+        "EMP-305",
+        "EMP-381"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-077",
+      "competency_name": "Jurisdiction Sensitive Competency 77 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-078",
+        "EMP-155",
+        "EMP-232",
+        "EMP-309",
+        "EMP-386"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-078",
+      "competency_name": "Jurisdiction Sensitive Competency 78 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-079",
+        "EMP-157",
+        "EMP-235",
+        "EMP-313",
+        "EMP-391"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-079",
+      "competency_name": "Jurisdiction Sensitive Competency 79 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-080",
+        "EMP-159",
+        "EMP-238",
+        "EMP-317",
+        "EMP-396"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-080",
+      "competency_name": "Jurisdiction Sensitive Competency 80 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-081",
+        "EMP-161",
+        "EMP-241",
+        "EMP-321",
+        "EMP-401"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-081",
+      "competency_name": "Jurisdiction Sensitive Competency 81 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-082",
+        "EMP-163",
+        "EMP-244",
+        "EMP-325",
+        "EMP-406"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-082",
+      "competency_name": "Jurisdiction Sensitive Competency 82 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-083",
+        "EMP-165",
+        "EMP-247",
+        "EMP-329",
+        "EMP-411"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-083",
+      "competency_name": "Jurisdiction Sensitive Competency 83 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-084",
+        "EMP-167",
+        "EMP-250",
+        "EMP-333",
+        "EMP-416"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-084",
+      "competency_name": "Jurisdiction Sensitive Competency 84 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-085",
+        "EMP-169",
+        "EMP-253",
+        "EMP-337",
+        "EMP-421"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-085",
+      "competency_name": "Jurisdiction Sensitive Competency 85 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-086",
+        "EMP-171",
+        "EMP-256",
+        "EMP-341",
+        "EMP-426"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-086",
+      "competency_name": "Jurisdiction Sensitive Competency 86 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-087",
+        "EMP-173",
+        "EMP-259",
+        "EMP-345",
+        "EMP-431"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-087",
+      "competency_name": "Jurisdiction Sensitive Competency 87 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-088",
+        "EMP-175",
+        "EMP-262",
+        "EMP-349",
+        "EMP-436"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-088",
+      "competency_name": "Jurisdiction Sensitive Competency 88 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-089",
+        "EMP-177",
+        "EMP-265",
+        "EMP-353",
+        "EMP-441"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-089",
+      "competency_name": "Jurisdiction Sensitive Competency 89 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-090",
+        "EMP-179",
+        "EMP-268",
+        "EMP-357",
+        "EMP-446"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-090",
+      "competency_name": "Jurisdiction Sensitive Competency 90 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-091",
+        "EMP-181",
+        "EMP-271",
+        "EMP-361",
+        "EMP-451"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-091",
+      "competency_name": "Jurisdiction Sensitive Competency 91 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-092",
+        "EMP-183",
+        "EMP-274",
+        "EMP-365",
+        "EMP-456"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-092",
+      "competency_name": "Jurisdiction Sensitive Competency 92 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-093",
+        "EMP-185",
+        "EMP-277",
+        "EMP-369",
+        "EMP-461"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-093",
+      "competency_name": "Jurisdiction Sensitive Competency 93 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-094",
+        "EMP-187",
+        "EMP-280",
+        "EMP-373",
+        "EMP-466"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-094",
+      "competency_name": "Jurisdiction Sensitive Competency 94 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-095",
+        "EMP-189",
+        "EMP-283",
+        "EMP-377",
+        "EMP-471"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-095",
+      "competency_name": "Jurisdiction Sensitive Competency 95 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-096",
+        "EMP-191",
+        "EMP-286",
+        "EMP-381",
+        "EMP-476"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-096",
+      "competency_name": "Jurisdiction Sensitive Competency 96 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-097",
+        "EMP-193",
+        "EMP-289",
+        "EMP-385",
+        "EMP-481"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-097",
+      "competency_name": "Jurisdiction Sensitive Competency 97 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-098",
+        "EMP-195",
+        "EMP-292",
+        "EMP-389",
+        "EMP-486"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-098",
+      "competency_name": "Jurisdiction Sensitive Competency 98 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-099",
+        "EMP-197",
+        "EMP-295",
+        "EMP-393",
+        "EMP-491"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-099",
+      "competency_name": "Jurisdiction Sensitive Competency 99 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-100",
+        "EMP-199",
+        "EMP-298",
+        "EMP-397",
+        "EMP-496"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-100",
+      "competency_name": "Jurisdiction Sensitive Competency 100 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-101",
+        "EMP-201",
+        "EMP-301",
+        "EMP-401",
+        "EMP-001"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-101",
+      "competency_name": "Jurisdiction Sensitive Competency 101 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-102",
+        "EMP-203",
+        "EMP-304",
+        "EMP-405",
+        "EMP-006"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-102",
+      "competency_name": "Jurisdiction Sensitive Competency 102 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-103",
+        "EMP-205",
+        "EMP-307",
+        "EMP-409",
+        "EMP-011"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-103",
+      "competency_name": "Jurisdiction Sensitive Competency 103 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-104",
+        "EMP-207",
+        "EMP-310",
+        "EMP-413",
+        "EMP-016"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-104",
+      "competency_name": "Jurisdiction Sensitive Competency 104 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-105",
+        "EMP-209",
+        "EMP-313",
+        "EMP-417",
+        "EMP-021"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-105",
+      "competency_name": "Jurisdiction Sensitive Competency 105 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-106",
+        "EMP-211",
+        "EMP-316",
+        "EMP-421",
+        "EMP-026"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-106",
+      "competency_name": "Jurisdiction Sensitive Competency 106 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-107",
+        "EMP-213",
+        "EMP-319",
+        "EMP-425",
+        "EMP-031"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-107",
+      "competency_name": "Jurisdiction Sensitive Competency 107 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-108",
+        "EMP-215",
+        "EMP-322",
+        "EMP-429",
+        "EMP-036"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-108",
+      "competency_name": "Jurisdiction Sensitive Competency 108 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-109",
+        "EMP-217",
+        "EMP-325",
+        "EMP-433",
+        "EMP-041"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-109",
+      "competency_name": "Jurisdiction Sensitive Competency 109 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-110",
+        "EMP-219",
+        "EMP-328",
+        "EMP-437",
+        "EMP-046"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-110",
+      "competency_name": "Jurisdiction Sensitive Competency 110 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-111",
+        "EMP-221",
+        "EMP-331",
+        "EMP-441",
+        "EMP-051"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-111",
+      "competency_name": "Jurisdiction Sensitive Competency 111 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-112",
+        "EMP-223",
+        "EMP-334",
+        "EMP-445",
+        "EMP-056"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-112",
+      "competency_name": "Jurisdiction Sensitive Competency 112 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-113",
+        "EMP-225",
+        "EMP-337",
+        "EMP-449",
+        "EMP-061"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-113",
+      "competency_name": "Jurisdiction Sensitive Competency 113 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-114",
+        "EMP-227",
+        "EMP-340",
+        "EMP-453",
+        "EMP-066"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-114",
+      "competency_name": "Jurisdiction Sensitive Competency 114 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-115",
+        "EMP-229",
+        "EMP-343",
+        "EMP-457",
+        "EMP-071"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-115",
+      "competency_name": "Jurisdiction Sensitive Competency 115 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-116",
+        "EMP-231",
+        "EMP-346",
+        "EMP-461",
+        "EMP-076"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-116",
+      "competency_name": "Jurisdiction Sensitive Competency 116 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-117",
+        "EMP-233",
+        "EMP-349",
+        "EMP-465",
+        "EMP-081"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-117",
+      "competency_name": "Jurisdiction Sensitive Competency 117 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-118",
+        "EMP-235",
+        "EMP-352",
+        "EMP-469",
+        "EMP-086"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-118",
+      "competency_name": "Jurisdiction Sensitive Competency 118 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-119",
+        "EMP-237",
+        "EMP-355",
+        "EMP-473",
+        "EMP-091"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-119",
+      "competency_name": "Jurisdiction Sensitive Competency 119 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-120",
+        "EMP-239",
+        "EMP-358",
+        "EMP-477",
+        "EMP-096"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-120",
+      "competency_name": "Jurisdiction Sensitive Competency 120 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-121",
+        "EMP-241",
+        "EMP-361",
+        "EMP-481",
+        "EMP-101"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-121",
+      "competency_name": "Jurisdiction Sensitive Competency 121 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-122",
+        "EMP-243",
+        "EMP-364",
+        "EMP-485",
+        "EMP-106"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-122",
+      "competency_name": "Jurisdiction Sensitive Competency 122 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-123",
+        "EMP-245",
+        "EMP-367",
+        "EMP-489",
+        "EMP-111"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-123",
+      "competency_name": "Jurisdiction Sensitive Competency 123 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-124",
+        "EMP-247",
+        "EMP-370",
+        "EMP-493",
+        "EMP-116"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-124",
+      "competency_name": "Jurisdiction Sensitive Competency 124 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-125",
+        "EMP-249",
+        "EMP-373",
+        "EMP-497",
+        "EMP-121"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-125",
+      "competency_name": "Jurisdiction Sensitive Competency 125 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-126",
+        "EMP-251",
+        "EMP-376",
+        "EMP-001",
+        "EMP-126"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-126",
+      "competency_name": "Jurisdiction Sensitive Competency 126 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-127",
+        "EMP-253",
+        "EMP-379",
+        "EMP-005",
+        "EMP-131"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-127",
+      "competency_name": "Jurisdiction Sensitive Competency 127 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-128",
+        "EMP-255",
+        "EMP-382",
+        "EMP-009",
+        "EMP-136"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-128",
+      "competency_name": "Jurisdiction Sensitive Competency 128 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-129",
+        "EMP-257",
+        "EMP-385",
+        "EMP-013",
+        "EMP-141"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-129",
+      "competency_name": "Jurisdiction Sensitive Competency 129 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-130",
+        "EMP-259",
+        "EMP-388",
+        "EMP-017",
+        "EMP-146"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-130",
+      "competency_name": "Jurisdiction Sensitive Competency 130 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-131",
+        "EMP-261",
+        "EMP-391",
+        "EMP-021",
+        "EMP-151"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-131",
+      "competency_name": "Jurisdiction Sensitive Competency 131 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-132",
+        "EMP-263",
+        "EMP-394",
+        "EMP-025",
+        "EMP-156"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-132",
+      "competency_name": "Jurisdiction Sensitive Competency 132 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-133",
+        "EMP-265",
+        "EMP-397",
+        "EMP-029",
+        "EMP-161"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-133",
+      "competency_name": "Jurisdiction Sensitive Competency 133 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-134",
+        "EMP-267",
+        "EMP-400",
+        "EMP-033",
+        "EMP-166"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-134",
+      "competency_name": "Jurisdiction Sensitive Competency 134 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-135",
+        "EMP-269",
+        "EMP-403",
+        "EMP-037",
+        "EMP-171"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-135",
+      "competency_name": "Jurisdiction Sensitive Competency 135 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-136",
+        "EMP-271",
+        "EMP-406",
+        "EMP-041",
+        "EMP-176"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-136",
+      "competency_name": "Jurisdiction Sensitive Competency 136 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-137",
+        "EMP-273",
+        "EMP-409",
+        "EMP-045",
+        "EMP-181"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-137",
+      "competency_name": "Jurisdiction Sensitive Competency 137 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-138",
+        "EMP-275",
+        "EMP-412",
+        "EMP-049",
+        "EMP-186"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-138",
+      "competency_name": "Jurisdiction Sensitive Competency 138 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-139",
+        "EMP-277",
+        "EMP-415",
+        "EMP-053",
+        "EMP-191"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-139",
+      "competency_name": "Jurisdiction Sensitive Competency 139 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-140",
+        "EMP-279",
+        "EMP-418",
+        "EMP-057",
+        "EMP-196"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-140",
+      "competency_name": "Jurisdiction Sensitive Competency 140 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-141",
+        "EMP-281",
+        "EMP-421",
+        "EMP-061",
+        "EMP-201"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-141",
+      "competency_name": "Jurisdiction Sensitive Competency 141 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-142",
+        "EMP-283",
+        "EMP-424",
+        "EMP-065",
+        "EMP-206"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-142",
+      "competency_name": "Jurisdiction Sensitive Competency 142 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-143",
+        "EMP-285",
+        "EMP-427",
+        "EMP-069",
+        "EMP-211"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-143",
+      "competency_name": "Jurisdiction Sensitive Competency 143 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-144",
+        "EMP-287",
+        "EMP-430",
+        "EMP-073",
+        "EMP-216"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-144",
+      "competency_name": "Jurisdiction Sensitive Competency 144 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-145",
+        "EMP-289",
+        "EMP-433",
+        "EMP-077",
+        "EMP-221"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-145",
+      "competency_name": "Jurisdiction Sensitive Competency 145 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-146",
+        "EMP-291",
+        "EMP-436",
+        "EMP-081",
+        "EMP-226"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-146",
+      "competency_name": "Jurisdiction Sensitive Competency 146 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-147",
+        "EMP-293",
+        "EMP-439",
+        "EMP-085",
+        "EMP-231"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-147",
+      "competency_name": "Jurisdiction Sensitive Competency 147 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-148",
+        "EMP-295",
+        "EMP-442",
+        "EMP-089",
+        "EMP-236"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-148",
+      "competency_name": "Jurisdiction Sensitive Competency 148 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-149",
+        "EMP-297",
+        "EMP-445",
+        "EMP-093",
+        "EMP-241"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-149",
+      "competency_name": "Jurisdiction Sensitive Competency 149 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-150",
+        "EMP-299",
+        "EMP-448",
+        "EMP-097",
+        "EMP-246"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-150",
+      "competency_name": "Jurisdiction Sensitive Competency 150 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-151",
+        "EMP-301",
+        "EMP-451",
+        "EMP-101",
+        "EMP-251"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-151",
+      "competency_name": "Jurisdiction Sensitive Competency 151 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-152",
+        "EMP-303",
+        "EMP-454",
+        "EMP-105",
+        "EMP-256"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-152",
+      "competency_name": "Jurisdiction Sensitive Competency 152 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-153",
+        "EMP-305",
+        "EMP-457",
+        "EMP-109",
+        "EMP-261"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-153",
+      "competency_name": "Jurisdiction Sensitive Competency 153 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-154",
+        "EMP-307",
+        "EMP-460",
+        "EMP-113",
+        "EMP-266"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-154",
+      "competency_name": "Jurisdiction Sensitive Competency 154 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-155",
+        "EMP-309",
+        "EMP-463",
+        "EMP-117",
+        "EMP-271"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-155",
+      "competency_name": "Jurisdiction Sensitive Competency 155 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-156",
+        "EMP-311",
+        "EMP-466",
+        "EMP-121",
+        "EMP-276"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-156",
+      "competency_name": "Jurisdiction Sensitive Competency 156 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-157",
+        "EMP-313",
+        "EMP-469",
+        "EMP-125",
+        "EMP-281"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-157",
+      "competency_name": "Jurisdiction Sensitive Competency 157 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-158",
+        "EMP-315",
+        "EMP-472",
+        "EMP-129",
+        "EMP-286"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-158",
+      "competency_name": "Jurisdiction Sensitive Competency 158 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-159",
+        "EMP-317",
+        "EMP-475",
+        "EMP-133",
+        "EMP-291"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-159",
+      "competency_name": "Jurisdiction Sensitive Competency 159 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-160",
+        "EMP-319",
+        "EMP-478",
+        "EMP-137",
+        "EMP-296"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-160",
+      "competency_name": "Jurisdiction Sensitive Competency 160 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-161",
+        "EMP-321",
+        "EMP-481",
+        "EMP-141",
+        "EMP-301"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-161",
+      "competency_name": "Jurisdiction Sensitive Competency 161 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-162",
+        "EMP-323",
+        "EMP-484",
+        "EMP-145",
+        "EMP-306"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-162",
+      "competency_name": "Jurisdiction Sensitive Competency 162 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-163",
+        "EMP-325",
+        "EMP-487",
+        "EMP-149",
+        "EMP-311"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-163",
+      "competency_name": "Jurisdiction Sensitive Competency 163 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-164",
+        "EMP-327",
+        "EMP-490",
+        "EMP-153",
+        "EMP-316"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-164",
+      "competency_name": "Jurisdiction Sensitive Competency 164 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-165",
+        "EMP-329",
+        "EMP-493",
+        "EMP-157",
+        "EMP-321"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-165",
+      "competency_name": "Jurisdiction Sensitive Competency 165 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-166",
+        "EMP-331",
+        "EMP-496",
+        "EMP-161",
+        "EMP-326"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-166",
+      "competency_name": "Jurisdiction Sensitive Competency 166 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-167",
+        "EMP-333",
+        "EMP-499",
+        "EMP-165",
+        "EMP-331"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-167",
+      "competency_name": "Jurisdiction Sensitive Competency 167 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-168",
+        "EMP-335",
+        "EMP-002",
+        "EMP-169",
+        "EMP-336"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-168",
+      "competency_name": "Jurisdiction Sensitive Competency 168 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-169",
+        "EMP-337",
+        "EMP-005",
+        "EMP-173",
+        "EMP-341"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-169",
+      "competency_name": "Jurisdiction Sensitive Competency 169 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-170",
+        "EMP-339",
+        "EMP-008",
+        "EMP-177",
+        "EMP-346"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-170",
+      "competency_name": "Jurisdiction Sensitive Competency 170 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "employee_assignment_count": 5,
+      "employee_ids": [
+        "EMP-171",
+        "EMP-341",
+        "EMP-011",
+        "EMP-181",
+        "EMP-351"
+      ],
+      "country_requirements": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ]
+    }
+  ]
+}

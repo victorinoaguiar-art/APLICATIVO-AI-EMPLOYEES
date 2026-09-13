@@ -1,0 +1,127 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.6_FROZEN",
+  "hash_algorithm": "SHA-256",
+  "generated_at": "2026-09-12T13:30:00.000Z",
+  "artifacts": [
+    {
+      "artifact_id": "ART-V116-01",
+      "filename": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.6.json",
+      "relative_path": "generated/AETF500_SAAS_METRICS_DICTIONARY_v1.1.6.json",
+      "version": "1.1.6",
+      "size_bytes": 1857,
+      "sha256": "4c77e7befaa6f67aa392594500219cbfc4c0994de1bde26659ab9aa68329ca4b",
+      "integrity_status": "VERIFIED_NON_EMPTY",
+      "evidence_id": "EVID-V116-DICT-JSON"
+    },
+    {
+      "artifact_id": "ART-V116-02",
+      "filename": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.6.md",
+      "relative_path": "generated/AETF500_SAAS_METRICS_DICTIONARY_v1.1.6.md",
+      "version": "1.1.6",
+      "size_bytes": 3281,
+      "sha256": "54f4b3b2305badcef777eb62aa8c70c6570e3fb707ca551205c0d32eda5ee1ce",
+      "integrity_status": "VERIFIED_NON_EMPTY",
+      "evidence_id": "EVID-V116-DICT-MD"
+    },
+    {
+      "artifact_id": "ART-V116-03",
+      "filename": "AETF500_PGC_Master_Account_Registry_v1.1.6.json",
+      "relative_path": "generated/AETF500_PGC_Master_Account_Registry_v1.1.6.json",
+      "version": "1.1.6",
+      "size_bytes": 3577,
+      "sha256": "bf2ab6d0c1037cd6708589ec6feb217d152f3cf7b0296fc59cfae0b9418aa249",
+      "integrity_status": "VERIFIED_NON_EMPTY",
+      "evidence_id": "EVID-V116-PGC-REGISTRY"
+    },
+    {
+      "artifact_id": "ART-V116-04",
+      "filename": "AETF500_PGC_Account_Usage_Inventory_v1.1.6.json",
+      "relative_path": "generated/AETF500_PGC_Account_Usage_Inventory_v1.1.6.json",
+      "version": "1.1.6",
+      "size_bytes": 923,
+      "sha256": "b8cf46d44b951f3fb9dd1d754f2aaf91763501a4c55b3851c8d0bb68b0be3195",
+      "integrity_status": "VERIFIED_NON_EMPTY",
+      "evidence_id": "EVID-V116-USAGE-INVENTORY"
+    },
+    {
+      "artifact_id": "ART-V116-05",
+      "filename": "AETF500_VAT_Official_Subaccount_Registry_v1.1.6.json",
+      "relative_path": "generated/AETF500_VAT_Official_Subaccount_Registry_v1.1.6.json",
+      "version": "1.1.6",
+      "size_bytes": 1823,
+      "sha256": "38020539d0209d5025fe704108c97ae4fce193c5b8b355d0ddd1575864f8ce5a",
+      "integrity_status": "VERIFIED_NON_EMPTY",
+      "evidence_id": "EVID-V116-VAT-SUBACCOUNTS"
+    },
+    {
+      "artifact_id": "ART-V116-06",
+      "filename": "AETF500_External_Validation_Register_v1.1.6.json",
+      "relative_path": "generated/AETF500_External_Validation_Register_v1.1.6.json",
+      "version": "1.1.6",
+      "size_bytes": 1849,
+      "sha256": "2b54228c65d68fa04f9cb9617e5396bb914904507d657fb3057396ea4a4f18c7",
+      "integrity_status": "VERIFIED_NON_EMPTY",
+      "evidence_id": "EVID-V116-EXT-VALIDATION"
+    },
+    {
+      "artifact_id": "ART-V116-07",
+      "filename": "AETF500_Deferred_Revenue_Schedule_Spec_v1.1.6.json",
+      "relative_path": "generated/AETF500_Deferred_Revenue_Schedule_Spec_v1.1.6.json",
+      "version": "1.1.6",
+      "size_bytes": 423,
+      "sha256": "c7413b0dbe724b59e29ed6239a17461a83398ce13b9d9481d8e5b821d7c6fee0",
+      "integrity_status": "VERIFIED_NON_EMPTY",
+      "evidence_id": "EVID-V116-DEFERRED-SPEC"
+    },
+    {
+      "artifact_id": "ART-V116-08",
+      "filename": "AETF500_Tax_Determination_Matrix_v1.1.6.json",
+      "relative_path": "generated/AETF500_Tax_Determination_Matrix_v1.1.6.json",
+      "version": "1.1.6",
+      "size_bytes": 320,
+      "sha256": "446bda6bd7be882fdf628721635fbd862d2c80952c22e82934603402a1ffb687",
+      "integrity_status": "VERIFIED_NON_EMPTY",
+      "evidence_id": "EVID-V116-TAX-MATRIX"
+    },
+    {
+      "artifact_id": "ART-V116-09",
+      "filename": "AETF500_Financial_Journal_Schema_v1.1.6.json",
+      "relative_path": "generated/AETF500_Financial_Journal_Schema_v1.1.6.json",
+      "version": "1.1.6",
+      "size_bytes": 435,
+      "sha256": "10fcd02e0b883d943bc4b8e657a0cffc7eff4486dd159ddc0c2c049003fc077d",
+      "integrity_status": "VERIFIED_NON_EMPTY",
+      "evidence_id": "EVID-V116-JOURNAL-SCHEMA"
+    },
+    {
+      "artifact_id": "ART-V116-10",
+      "filename": "AETF500_Commercial_Metric_Lineage_Spec_v1.1.6.json",
+      "relative_path": "generated/AETF500_Commercial_Metric_Lineage_Spec_v1.1.6.json",
+      "version": "1.1.6",
+      "size_bytes": 390,
+      "sha256": "b805164272ed212739756b39f81d0d78eb2beac99517a467243661d5f9137f9c",
+      "integrity_status": "VERIFIED_NON_EMPTY",
+      "evidence_id": "EVID-V116-METRIC-LINEAGE"
+    },
+    {
+      "artifact_id": "ART-V116-11",
+      "filename": "AETF500_Evidence_Coherence_Matrix_v1.1.6.json",
+      "relative_path": "generated/AETF500_Evidence_Coherence_Matrix_v1.1.6.json",
+      "version": "1.1.6",
+      "size_bytes": 432,
+      "sha256": "597cdb206ff14f955ba2c85cc8e5df531936cbe73f79e19b252c1dfc0127cf56",
+      "integrity_status": "VERIFIED_NON_EMPTY",
+      "evidence_id": "EVID-V116-COHERENCE-MATRIX"
+    },
+    {
+      "artifact_id": "ART-V116-12",
+      "filename": "AETF500_Final_Accounting_Integrity_Gate_v1.1.6.json",
+      "relative_path": "generated/AETF500_Final_Accounting_Integrity_Gate_v1.1.6.json",
+      "version": "1.1.6",
+      "size_bytes": 1488,
+      "sha256": "21ee84ff9812409eb7f42766086ad7374421e867e9127a2307c98cec1edb1f47",
+      "integrity_status": "VERIFIED_NON_EMPTY",
+      "evidence_id": "EVID-V116-INTEGRITY-GATE"
+    }
+  ]
+}

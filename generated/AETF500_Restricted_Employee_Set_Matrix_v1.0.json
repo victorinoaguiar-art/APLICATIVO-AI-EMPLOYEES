@@ -1,0 +1,875 @@
+{
+  "unique_restricted_employees": 58,
+  "matrix": [
+    {
+      "employee_id": "EMP-001",
+      "P": true,
+      "K": false,
+      "R": false,
+      "J": false,
+      "E": false,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-001"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 1
+    },
+    {
+      "employee_id": "EMP-002",
+      "P": true,
+      "K": false,
+      "R": false,
+      "J": false,
+      "E": false,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-002"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 1
+    },
+    {
+      "employee_id": "EMP-003",
+      "P": true,
+      "K": false,
+      "R": false,
+      "J": false,
+      "E": false,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-003"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 1
+    },
+    {
+      "employee_id": "EMP-004",
+      "P": true,
+      "K": false,
+      "R": false,
+      "J": false,
+      "E": false,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-004"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 1
+    },
+    {
+      "employee_id": "EMP-005",
+      "P": true,
+      "K": false,
+      "R": false,
+      "J": false,
+      "E": false,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-005"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 1
+    },
+    {
+      "employee_id": "EMP-006",
+      "P": true,
+      "K": false,
+      "R": false,
+      "J": false,
+      "E": false,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-006"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 1
+    },
+    {
+      "employee_id": "EMP-007",
+      "P": true,
+      "K": false,
+      "R": false,
+      "J": false,
+      "E": false,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-007"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 1
+    },
+    {
+      "employee_id": "EMP-008",
+      "P": true,
+      "K": false,
+      "R": false,
+      "J": false,
+      "E": false,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-008"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 1
+    },
+    {
+      "employee_id": "EMP-009",
+      "P": true,
+      "K": false,
+      "R": false,
+      "J": false,
+      "E": false,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-009"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 1
+    },
+    {
+      "employee_id": "EMP-010",
+      "P": true,
+      "K": false,
+      "R": false,
+      "J": false,
+      "E": false,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-010"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 1
+    },
+    {
+      "employee_id": "EMP-011",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-011"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-012",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-012"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-013",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-013"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-014",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-014"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-015",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-015"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-016",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-016"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-017",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-017"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-018",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-018"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-019",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-019"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-020",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-020"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-021",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-021"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-022",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-022"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-023",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-023"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-024",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-024"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-025",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-025"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-026",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-026"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-027",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-027"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-028",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-028"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-029",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-029"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-030",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-030"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-031",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-031"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-032",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-032"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-033",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-033"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-034",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-034"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-035",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-035"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-036",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-036"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-037",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-037"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-038",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-038"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-039",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-039"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-040",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-040"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-041",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-041"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-042",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-042"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-043",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-043"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-044",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-044"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-045",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-045"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-046",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-046"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-047",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-047"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-048",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-048"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-049",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-049"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-050",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-050"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-051",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-051"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-052",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-052"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-053",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-053"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-054",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-054"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-055",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-055"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-056",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-056"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-057",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-057"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    },
+    {
+      "employee_id": "EMP-058",
+      "P": false,
+      "K": true,
+      "R": true,
+      "J": true,
+      "E": true,
+      "C": false,
+      "S": false,
+      "active_restriction_ids": [
+        "REST-REC-058"
+      ],
+      "active_restriction_count": 1,
+      "class_memberships_count": 4
+    }
+  ]
+}

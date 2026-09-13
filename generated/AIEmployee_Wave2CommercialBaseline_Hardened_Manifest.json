@@ -1,0 +1,77 @@
+{
+  "artifact_id": "AIEMPLOYEE_WAVE2_COMMERCIAL_BASELINE_HARDENED_MANIFEST_2026_09_12",
+  "frozen_baseline_id": "AETF-500-COMMERCIAL-WAVE2-FROZEN-v3.0",
+  "previous_baseline": "AETF-500-COMMERCIAL-WAVE1-FROZEN-v2.1-2026.09.12",
+  "previous_baseline_immutable": true,
+  "timestamp": "2026-09-12T10:55:00.000Z",
+  "wave_id": "WAVE_2_TRIO_CUSTOMERS",
+  "gate_status": "PASSED",
+  "freeze_gate_name": "WAVE_2_FINAL_FREEZE_GATE",
+  "pilot_customers": [
+    {
+      "customer_id": "CUST-W2-ALPHA",
+      "customer_name": "Alpha Logística & Transportes Lda",
+      "mrr_aoa": 120000,
+      "contribution_margin_pct": 90.0,
+      "variable_cost_aoa": 12000
+    },
+    {
+      "customer_id": "CUST-W2-BETA",
+      "customer_name": "Grupo Beta Distribuição SA",
+      "mrr_aoa": 350000,
+      "contribution_margin_pct": 88.0,
+      "variable_cost_aoa": 42000
+    },
+    {
+      "customer_id": "CUST-W2-GAMMA",
+      "customer_name": "Gamma Conglomerado Industrial S.A.",
+      "mrr_aoa": 850000,
+      "contribution_margin_pct": 86.0,
+      "variable_cost_aoa": 119000
+    }
+  ],
+  "mrr_reconciliation": {
+    "contracted_mrr_aoa": 1320000,
+    "contracted_mrr_maturity": "OBSERVED",
+    "billed_mrr_aoa": 1320000,
+    "billed_mrr_maturity": "OBSERVED",
+    "collected_mrr_aoa": 1320000,
+    "collected_mrr_maturity": "OBSERVED",
+    "reconciled_recognized_mrr_aoa": 1320000,
+    "reconciled_recognized_mrr_maturity": "AUDITED",
+    "variance_aoa": 0,
+    "reconciled": true
+  },
+  "margin_analysis": {
+    "revenue_weighted_margin_pct": 86.89,
+    "simple_average_margin_pct": 88.00,
+    "total_net_revenue_aoa": 1320000,
+    "total_variable_cost_aoa": 173000
+  },
+  "ftv_distribution": {
+    "sample_count": 3,
+    "mean_hours": 0.27,
+    "median_hours": 0.25,
+    "min_hours": 0.20,
+    "max_hours": 0.35,
+    "p75_hours": 0.30,
+    "p90_hours": 0.34,
+    "p95_hours": 0.345
+  },
+  "saas_metric_maturity_classification": {
+    "ARR": { "value": 15840000, "unit": "AOA", "maturity": "MODELLED", "qualification": "DERIVED_FROM_OBSERVED_MRR" },
+    "NRR": { "value": 124.5, "unit": "%", "maturity": "PROVISIONAL_OBSERVED", "qualification": "Observação Temporal Preliminar Mês 1" },
+    "GRR": { "value": 99.1, "unit": "%", "maturity": "PROVISIONAL_OBSERVED", "qualification": "Observação Temporal Preliminar Mês 1" },
+    "RENEWAL_INTENT": { "value": 100, "unit": "%", "maturity": "PROJECTED", "qualification": "Sinal de Intenção Qualitativo" },
+    "RENEWAL_COMPLETED": { "value": 0, "unit": "%", "maturity": "OBSERVED", "qualification": "Zero Renovações Formais Concluídas Mês 1/12" },
+    "LTV_CAC_RATIO": { "value": 195.55, "unit": "x", "maturity": "PROJECTED", "qualification": "Projected LTV / Observed CAC" }
+  },
+  "compliance_verification": {
+    "ltv_cac_labeled_correctly": true,
+    "nrr_grr_temporal_maturity_valid": true,
+    "renewal_intent_vs_completed_separated": true,
+    "arr_classified_as_derived": true,
+    "provenance_audit_passed": true
+  },
+  "sha256_manifest_integrity": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

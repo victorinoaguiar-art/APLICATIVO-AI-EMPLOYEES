@@ -1,0 +1,19 @@
+{
+  "gate_id": "AETF500_SAAS_METRICS_DICTIONARY_v1_1_7_FINAL_PRECISION_GATE",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.7_FROZEN",
+  "executed_at": "2026-09-12T13:03:54.181Z",
+  "pgc_49_1_official_name": "Títulos negociáveis",
+  "pgc_37_official_name": "Outros valores a receber e a pagar",
+  "pgc_37_6_official_name": "Proveitos a repartir por períodos futuros",
+  "pgc_37_6_mapping_status": "SUPPORTED_BY_PROVIDED_PGC",
+  "saas_deferred_revenue_policy": "SAAS_DEFERRED_REVENUE_POLICY = INTERNALLY_MODELLED_PENDING_ACCOUNTING_POLICY_APPROVAL",
+  "vat_statutory_subaccount_coverage": "25/25",
+  "vat_34_5_9_1_invalidated": true,
+  "manifest_sidecar_format": "TEXTUAL_SHA256_STRING",
+  "manifest_sidecar_value_semantics": "INTEGRITY_METADATA",
+  "integrity_protection": "SHA256_HASHED",
+  "digital_signature_status": "NOT_IMPLEMENTED",
+  "final_accounting_status": "ACCOUNTING_INTERNAL_REMEDIATION = COMPLETE",
+  "final_baseline_status": "BASELINE_CONFIRMED_WITH_EXTERNAL_VALIDATIONS_PENDING",
+  "status": "PASSED"
+}

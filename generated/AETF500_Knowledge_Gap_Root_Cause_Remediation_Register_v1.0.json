@@ -1,0 +1,302 @@
+[
+  {
+    "gap_cluster_id": "CLUSTER-01",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-1",
+    "affected_competencies": [
+      "COMP-KP1-01",
+      "COMP-KP1-02"
+    ],
+    "affected_employees_count": 26,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G3",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  },
+  {
+    "gap_cluster_id": "CLUSTER-02",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-2",
+    "affected_competencies": [
+      "COMP-KP2-01",
+      "COMP-KP2-02"
+    ],
+    "affected_employees_count": 27,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G3",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  },
+  {
+    "gap_cluster_id": "CLUSTER-03",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-3",
+    "affected_competencies": [
+      "COMP-KP3-01",
+      "COMP-KP3-02"
+    ],
+    "affected_employees_count": 28,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G3",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  },
+  {
+    "gap_cluster_id": "CLUSTER-04",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-4",
+    "affected_competencies": [
+      "COMP-KP4-01",
+      "COMP-KP4-02"
+    ],
+    "affected_employees_count": 29,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G3",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  },
+  {
+    "gap_cluster_id": "CLUSTER-05",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-5",
+    "affected_competencies": [
+      "COMP-KP5-01",
+      "COMP-KP5-02"
+    ],
+    "affected_employees_count": 30,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G3",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  },
+  {
+    "gap_cluster_id": "CLUSTER-06",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-6",
+    "affected_competencies": [
+      "COMP-KP6-01",
+      "COMP-KP6-02"
+    ],
+    "affected_employees_count": 31,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G3",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  },
+  {
+    "gap_cluster_id": "CLUSTER-07",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-7",
+    "affected_competencies": [
+      "COMP-KP7-01",
+      "COMP-KP7-02"
+    ],
+    "affected_employees_count": 32,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G3",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  },
+  {
+    "gap_cluster_id": "CLUSTER-08",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-8",
+    "affected_competencies": [
+      "COMP-KP8-01",
+      "COMP-KP8-02"
+    ],
+    "affected_employees_count": 33,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G3",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  },
+  {
+    "gap_cluster_id": "CLUSTER-09",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-9",
+    "affected_competencies": [
+      "COMP-KP9-01",
+      "COMP-KP9-02"
+    ],
+    "affected_employees_count": 34,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G3",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  },
+  {
+    "gap_cluster_id": "CLUSTER-10",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-10",
+    "affected_competencies": [
+      "COMP-KP10-01",
+      "COMP-KP10-02"
+    ],
+    "affected_employees_count": 35,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G3",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  },
+  {
+    "gap_cluster_id": "CLUSTER-11",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-11",
+    "affected_competencies": [
+      "COMP-KP11-01",
+      "COMP-KP11-02"
+    ],
+    "affected_employees_count": 36,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G4",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  },
+  {
+    "gap_cluster_id": "CLUSTER-12",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-12",
+    "affected_competencies": [
+      "COMP-KP12-01",
+      "COMP-KP12-02"
+    ],
+    "affected_employees_count": 37,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G4",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  },
+  {
+    "gap_cluster_id": "CLUSTER-13",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-13",
+    "affected_competencies": [
+      "COMP-KP13-01",
+      "COMP-KP13-02"
+    ],
+    "affected_employees_count": 38,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G4",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  },
+  {
+    "gap_cluster_id": "CLUSTER-14",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-14",
+    "affected_competencies": [
+      "COMP-KP14-01",
+      "COMP-KP14-02"
+    ],
+    "affected_employees_count": 39,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G4",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  },
+  {
+    "gap_cluster_id": "CLUSTER-15",
+    "root_cause": "KNOWLEDGE_PACK_OUTDATED_REFERENCE",
+    "affected_knowledge_pack": "KP-SHARED-15",
+    "affected_competencies": [
+      "COMP-KP15-01",
+      "COMP-KP15-02"
+    ],
+    "affected_employees_count": 40,
+    "affected_jurisdictions": [
+      "AO",
+      "PT",
+      "MZ"
+    ],
+    "severity": "G4",
+    "remediation_action": "UPDATE_CANONICAL_KNOWLEDGE_OBJECT",
+    "propagation_scope": "PROPAGATE_TO_ALL_DEPENDENT",
+    "verification_required": true,
+    "status": "VERIFIED"
+  }
+]

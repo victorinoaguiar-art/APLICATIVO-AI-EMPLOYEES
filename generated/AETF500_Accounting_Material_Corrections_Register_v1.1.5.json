@@ -1,0 +1,30 @@
+[
+  {
+    "finding_id": "FIND-001",
+    "category": "LEGACY_MATERIAL_ERROR",
+    "title": "Utilização Incorreta da Conta 43.1 (Depósitos à Ordem) e 71.1 (Custos das Existências Sold/Vendidas)",
+    "remediation": "Substituído por Faturação com Débito na Conta 31.1.2.1 (Clientes Correntes Não Grupo Nacionais) e Crédito na Conta 49.1 (Proveitos com Diferimento) / 34.5.3 (IVA Liquidado). Erro material erradicado 100%.",
+    "status": "REMEDIATED"
+  },
+  {
+    "finding_id": "FIND-002",
+    "category": "LEGACY_MATERIAL_ERROR",
+    "title": "Falta de Subcontas Específicas do IVA (Decreto Presidencial n.º 180/19)",
+    "remediation": "Criada a árvore completa de 9 subcontas de topo (34.5.1 a 34.5.9). Liquidado passa a ser exclusivamente 34.5.3.",
+    "status": "REMEDIATED"
+  },
+  {
+    "finding_id": "FIND-003",
+    "category": "ADDITIONAL_ACCOUNTING_FINDING",
+    "title": "Precisão do Código de Conta 31.1.1 (Grupo) vs 31.1.2.1 (Não Grupo Nacionais)",
+    "remediation": "Classificação correta de clientes correntes nacionais não grupo na subconta 31.1.2.1 nos termos do PGC Decreto n.º 82/01, reservando 31.1.1 para partes relacionadas do grupo.",
+    "status": "REMEDIATED"
+  },
+  {
+    "finding_id": "FIND-004",
+    "category": "ADDITIONAL_ACCOUNTING_FINDING",
+    "title": "Designação Oficial da Conta 62.1.1 vs Dimensões Analíticas SaaS",
+    "remediation": "Preservação da designação oficial PGC 'Serviços principais — Mercado nacional' na conta 62.1.1, desacoplando a qualificação SaaS B2B para o objeto AnalyticDimensionsV115.",
+    "status": "REMEDIATED"
+  }
+]

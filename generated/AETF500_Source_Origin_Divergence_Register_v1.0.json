@@ -1,0 +1,28 @@
+{
+  "register_id": "AETF500_SOURCE_ORIGIN_DIVERGENCE_REGISTER_v1.0",
+  "program_id": "AETF500_SOURCE_REGISTRY_KNOWLEDGE_CONTENT_RUNTIME_PROVENANCE_FORENSIC_AUDIT_v1.0",
+  "divergences": [
+    {
+      "anomaly_id": "ANOM-ORIGIN-001",
+      "classification": "OVER_AGGREGATED_SOURCE",
+      "affected_domain": "HEALTHCARE",
+      "declared_origin": "MINSA Healthcare Regulations",
+      "actual_origin": "MAPTSS Labor Law (Lei n.º 12/23)",
+      "system_perceived_origin": "SRC-LAB-001",
+      "storage_location": "/legal/sources/AO_SRC_LAB_001_LEI_GERAL_TRABALHO.pdf",
+      "semantics_failure": true,
+      "root_cause": "Traceability matrix generator mapped all unassigned domains to SRC-LAB-001 as a default fallback, confusing Labor Law with MINSA Healthcare Law."
+    },
+    {
+      "anomaly_id": "ANOM-ORIGIN-002",
+      "classification": "STORAGE_LOCATION_CONFUSED_WITH_AUTHORITY",
+      "affected_domain": "HEALTHCARE",
+      "declared_origin": "Diário da República / MINSA",
+      "actual_origin": "Local C:\\ / OneDrive folder",
+      "system_perceived_origin": "OneDrive / C:\\",
+      "storage_location": "C:\\Users\\...\\OneDrive\\...",
+      "semantics_failure": true,
+      "root_cause": "Runtime retrieval router searched local storage locations when canonical vector index failed to return MINSA healthcare rules."
+    }
+  ]
+}

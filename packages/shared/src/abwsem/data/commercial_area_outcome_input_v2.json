@@ -1,0 +1,106 @@
+[
+  {
+    "outcome_id": "out-a08-01",
+    "commercial_area_code": "A08",
+    "desired_outcome": "Campanha de Marketing Digital Multicanal (Redes Sociais & Ads)",
+    "primary_rolepack_id": 25,
+    "primary_rolepack_title": "Marketing Planner Employee",
+    "required_inputs": [
+      {
+        "input_key": "brand_guidelines",
+        "description": "Manual de Identidade Visual e Tom de Voz da Marca",
+        "classification": "REQUIRED",
+        "example": "Manual_de_Marca_2026.pdf"
+      },
+      {
+        "input_key": "target_audience",
+        "description": "Definição do Público-Alvo e Persona",
+        "classification": "REQUIRED",
+        "example": "Empresas B2B em Angola com +20 funcionários"
+      },
+      {
+        "input_key": "campaign_budget_kwz",
+        "description": "Orçamento de Media para Anúncios (KWZ)",
+        "classification": "REQUIRED",
+        "example": "500,000 KWZ"
+      }
+    ],
+    "recommended_connections": ["Meta Ads API", "Google Ads API", "LinkedIn Marketing API"],
+    "expected_deliverable": "Plano de Campanha, Calendário Editorial e Anúncios Prontos para Veiculação"
+  },
+  {
+    "outcome_id": "out-a03-01",
+    "commercial_area_code": "A03",
+    "desired_outcome": "Reconciliação Bancária Mensal Automatizada",
+    "primary_rolepack_id": 41,
+    "primary_rolepack_title": "Bank Reconciliation Employee",
+    "required_inputs": [
+      {
+        "input_key": "bank_statement_pdf",
+        "description": "Extracto Bancário Oficial do Banco (BAI/BFA/BPC)",
+        "classification": "REQUIRED",
+        "example": "Extracto_BAI_Marco_2026.pdf"
+      },
+      {
+        "input_key": "general_ledger_extract",
+        "description": "Extrato de Razão Contabilístico da Conta 43",
+        "classification": "REQUIRED",
+        "example": "Razao_Conta_431_Primavera.xlsx"
+      },
+      {
+        "input_key": "reconciliation_period",
+        "description": "Mês e Ano de Referência",
+        "classification": "REQUIRED",
+        "example": "2026-03"
+      }
+    ],
+    "recommended_connections": ["Banco BAI API Direct", "Primavera ERP Connector"],
+    "expected_deliverable": "Mapa de Reconciliação Bancária com Identificação de Pendentes"
+  },
+  {
+    "outcome_id": "out-a05-01",
+    "commercial_area_code": "A05",
+    "desired_outcome": "Validação e Submissão do Ficheiro SAFT-AO e Declaração de IVA",
+    "primary_rolepack_id": 61,
+    "primary_rolepack_title": "Tax Compliance Employee",
+    "required_inputs": [
+      {
+        "input_key": "saft_xml_file",
+        "description": "Ficheiro SAFT-AO exportado do ERP certificado",
+        "classification": "REQUIRED",
+        "example": "SAFT_AO_2026_03.xml"
+      },
+      {
+        "input_key": "vat_period",
+        "description": "Período Fiscal do IVA",
+        "classification": "REQUIRED",
+        "example": "2026-03"
+      }
+    ],
+    "recommended_connections": ["Portal AGT Angola API", "Primavera ERP SAFT Exporter"],
+    "expected_deliverable": "Relatório de Pré-Validação AGT e Guia de Liquidação de IVA"
+  },
+  {
+    "outcome_id": "out-a11-01",
+    "commercial_area_code": "A11",
+    "desired_outcome": "Processamento da Folha de Pagamento Salarial e Guias IRT/INSS",
+    "primary_rolepack_id": 95,
+    "primary_rolepack_title": "Payroll Specialist Employee",
+    "required_inputs": [
+      {
+        "input_key": "attendance_records",
+        "description": "Mapa de Faltas, Horas Extra e Subsídios do Mês",
+        "classification": "REQUIRED",
+        "example": "Faltas_e_HorasExtra_Marco_2026.xlsx"
+      },
+      {
+        "input_key": "employee_salary_master",
+        "description": "Ficha de Colaboradores e Vencimentos Base",
+        "classification": "REQUIRED",
+        "example": "Master_Salarios_2026.xlsx"
+      }
+    ],
+    "recommended_connections": ["Primavera HR Module", "Portal INSS Angola"],
+    "expected_deliverable": "Recibos de Vencimento, Mapa de Transferências Bancárias PS2 e Modelo 2 IRT"
+  }
+]

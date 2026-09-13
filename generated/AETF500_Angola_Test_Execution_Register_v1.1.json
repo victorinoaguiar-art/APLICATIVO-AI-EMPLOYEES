@@ -1,0 +1,23 @@
+{
+  "angola_test_assignments": 505,
+  "angola_test_executions": 450,
+  "assignment_execution_delta": 55,
+  "delta_explained": true,
+  "explanation_breakdown": {
+    "cross_domain_shared_executions": 25,
+    "cross_domain_delta_contribution": 25,
+    "discovery_shared_executions": 15,
+    "discovery_delta_contribution": 30,
+    "total_delta_explained": 55
+  },
+  "all_assignments_have_execution": true,
+  "all_executions_have_assignment": true,
+  "secondary_overlap_references": [
+    "KP-SEC-001",
+    "KP-SEC-002",
+    "KP-SEC-003",
+    "KP-SEC-004",
+    "KP-SEC-005"
+  ],
+  "post_migration_active_unique_objects": 610
+}

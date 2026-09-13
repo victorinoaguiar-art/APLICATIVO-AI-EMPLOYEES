@@ -10,6 +10,7 @@ import {
   APCATOSUserRole,
   APCATOSOffboardingReason
 } from '@ai-employee/shared';
+import { RolePackRegistry } from '@ai-employee/rolepack';
 
 export class APCATOSEngine {
   private static instance: APCATOSEngine;
@@ -204,7 +205,7 @@ export class APCATOSEngine {
     // Provision instances synchronously for simulation
     const createdInstanceIds: string[] = [];
     for (const empId of requestedEmployeeIds) {
-      const inst = this.provisionEmployeeInstance(tenantId, empId, `role_emp_${empId}`, 'Operações Digitais', adminUserId);
+      const inst = this.provisionEmployeeInstance(tenantId, empId, undefined, undefined, adminUserId, organizationName);
       createdInstanceIds.push(inst.instanceId);
     }
 
@@ -212,30 +213,45 @@ export class APCATOSEngine {
     job.state = 'COMPLETED';
     job.progressPercentage = 100;
     job.completedAt = new Date().toISOString();
-    job.logs.push(`[${new Date().toISOString()}] Provisionamento concluído com sucesso. ${createdInstanceIds.length} instâncias ativas.`);
+    job.logs.push(`[${new Date().toISOString()}] Provisionamento concluído com sucesso. ${createdInstanceIds.length} instâncias ativas para ${organizationName}.`);
 
     this.runOrganizationReadinessCheck(tenantId);
     return job;
   }
 
+  private getTenantOrgName(tenantId: string): string | undefined {
+    for (const inst of this.employeeInstances.values()) {
+      if (inst.tenantId === tenantId) {
+        return inst.organizationName;
+      }
+    }
+    return undefined;
+  }
+
   public provisionEmployeeInstance(
     tenantId: string,
     employeeId: number,
-    roleKey: string,
-    department: string,
-    adminUserId: string = 'usr_admin_01'
+    roleKey?: string,
+    department?: string,
+    adminUserId: string = 'usr_admin_01',
+    organizationName?: string
   ): APCATOSInstance {
+    const rolePack = RolePackRegistry.getInstance().getById(employeeId);
+    const resolvedRoleKey = roleKey || rolePack?.role_key || `role_emp_${employeeId}`;
+    const resolvedDept = department || rolePack?.department || 'Operações Digitais';
+    const customName = rolePack ? rolePack.display_name : `Colaborador IA #${employeeId}`;
+    const orgName = organizationName || this.getTenantOrgName(tenantId) || 'Organização Registada';
+
     const instanceId = `inst_${tenantId}_emp_${employeeId}`;
-    const customName = `Colaborador IA #${employeeId} (${roleKey})`;
 
     const instance: APCATOSInstance = {
       instanceId,
       tenantId,
       organizationId: `org_${tenantId}`,
-      organizationName: 'Organização Registada',
+      organizationName: orgName,
       employeeId,
-      roleKey,
-      department,
+      roleKey: resolvedRoleKey,
+      department: resolvedDept,
       customName,
       lifecycleState: 'PROVISIONED',
       allocatedResources: {

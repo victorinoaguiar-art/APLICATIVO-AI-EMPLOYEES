@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AETF500_Metric_Definition_Schema_v1.1",
+  "type": "object",
+  "required": [
+    "metric_id",
+    "display_label",
+    "dimensions_4d",
+    "provenance_v11"
+  ],
+  "properties": {
+    "metric_id": {
+      "type": "string",
+      "enum": [
+        "SUBSCRIPTION_MRR",
+        "CONTRACTED_RECURRING_VALUE",
+        "RECURRING_AMOUNT_BILLED",
+        "CASH_COLLECTED",
+        "CASH_SETTLED",
+        "CASH_RECONCILED",
+        "REVENUE_RECOGNIZED",
+        "ANNUAL_RUN_RATE",
+        "NET_REVENUE_RETENTION",
+        "GROSS_REVENUE_RETENTION",
+        "RENEWAL_INTENT",
+        "RENEWAL_COMPLETED",
+        "REVENUE_LTV",
+        "CONTRIBUTION_MARGIN_LTV",
+        "OBSERVED_SALES_ASSISTED_CAC",
+        "LTV_CAC_QUALIFIED_RATIO"
+      ]
+    },
+    "display_label": {
+      "type": "string"
+    },
+    "dimensions_4d": {
+      "type": "object",
+      "required": [
+        "data_source",
+        "calculation_type",
+        "temporal_maturity",
+        "assurance_level"
+      ],
+      "properties": {
+        "data_source": {
+          "type": "string",
+          "enum": ["SIMULATED", "CONTROLLED_TEST", "STAGING", "REAL_PRODUCTION", "EXTERNAL_VERIFIED_SOURCE"]
+        },
+        "calculation_type": {
+          "type": "string",
+          "enum": ["DIRECT_OBSERVATION", "DERIVED", "MODELLED", "PROJECTED", "FORECAST"]
+        },
+        "temporal_maturity": {
+          "type": "string",
+          "enum": ["POINT_IN_TIME", "PROVISIONAL", "PERIOD_OBSERVED", "MULTI_PERIOD_OBSERVED", "LONGITUDINAL"]
+        },
+        "assurance_level": {
+          "type": "string",
+          "enum": ["UNVERIFIED", "SYSTEM_VERIFIED", "INTERNALLY_RECONCILED", "INTERNALLY_AUDITED", "EXTERNALLY_VERIFIED", "EXTERNALLY_AUDITED"]
+        }
+      }
+    },
+    "provenance_v11": {
+      "type": "object",
+      "required": [
+        "provenance_id",
+        "source_environment",
+        "hash_sha256"
+      ],
+      "properties": {
+        "provenance_id": { "type": "string" },
+        "source_environment": { "type": "string" },
+        "source_entity": { "type": "string" },
+        "source_record_id": { "type": "string" },
+        "hash_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    }
+  }
+}

@@ -1,0 +1,106 @@
+[
+  {
+    "canonical_pack_id": "KP-HC-HEALTHCARE",
+    "previous_pack_id": "PKP-HC-OCCUPATIONAL-v1.0",
+    "current_pack_id": "KP-HC-HEALTHCARE-v1.1.0",
+    "version_before": "KP-HC-HEALTHCARE-v1.0.0",
+    "version_after": "KP-HC-HEALTHCARE-v1.1.0",
+    "same_knowledge_family": true
+  },
+  {
+    "canonical_pack_id": "KP-PA-PUBLICADMIN",
+    "previous_pack_id": "PKP-PA-PROCUREMENT-v1.0",
+    "current_pack_id": "KP-PA-PUBLICADMIN-v1.1.0",
+    "version_before": "KP-PA-PUBLICADMIN-v1.0.0",
+    "version_after": "KP-PA-PUBLICADMIN-v1.1.0",
+    "same_knowledge_family": true
+  },
+  {
+    "canonical_pack_id": "KP-SEC-CYBERSECURITY",
+    "previous_pack_id": "PKP-SEC-NIST-v1.0",
+    "current_pack_id": "KP-SEC-CYBERSECURITY-v1.1.0",
+    "version_before": "KP-SEC-CYBERSECURITY-v1.0.0",
+    "version_after": "KP-SEC-CYBERSECURITY-v1.1.0",
+    "same_knowledge_family": true
+  },
+  {
+    "canonical_pack_id": "KP-ENG-SOFTWARE",
+    "previous_pack_id": "PKP-ENG-OWASP-v1.0",
+    "current_pack_id": "KP-ENG-SOFTWARE-v1.1.0",
+    "version_before": "KP-ENG-SOFTWARE-v1.0.0",
+    "version_after": "KP-ENG-SOFTWARE-v1.1.0",
+    "same_knowledge_family": true
+  },
+  {
+    "canonical_pack_id": "KP-LEG-LEGAL",
+    "previous_pack_id": "PKP-LEG-CORPORATE-v1.0",
+    "current_pack_id": "KP-LEG-LEGAL-v1.1.0",
+    "version_before": "KP-LEG-LEGAL-v1.0.0",
+    "version_after": "KP-LEG-LEGAL-v1.1.0",
+    "same_knowledge_family": true
+  },
+  {
+    "canonical_pack_id": "KP-HR-HUMANRESOURCES",
+    "previous_pack_id": "PKP-HR-PAYROLL-v2.0_UPDATED",
+    "current_pack_id": "KP-HR-HUMANRESOURCES-v1.1.0",
+    "version_before": "KP-HR-HUMANRESOURCES-v1.0.0",
+    "version_after": "KP-HR-HUMANRESOURCES-v1.1.0",
+    "same_knowledge_family": true
+  },
+  {
+    "canonical_pack_id": "KP-PROC-PROCUREMENT",
+    "previous_pack_id": "PKP-PROC-INCOTERMS-v1.0",
+    "current_pack_id": "KP-PROC-PROCUREMENT-v1.1.0",
+    "version_before": "KP-PROC-PROCUREMENT-v1.0.0",
+    "version_after": "KP-PROC-PROCUREMENT-v1.1.0",
+    "same_knowledge_family": true
+  },
+  {
+    "canonical_pack_id": "KP-PMO-PROJECTMGMT",
+    "previous_pack_id": "PKP-PMO-AGILE-v1.0",
+    "current_pack_id": "KP-PMO-PROJECTMGMT-v1.1.0",
+    "version_before": "KP-PMO-PROJECTMGMT-v1.0.0",
+    "version_after": "KP-PMO-PROJECTMGMT-v1.1.0",
+    "same_knowledge_family": true
+  },
+  {
+    "canonical_pack_id": "KP-DATA-PRIVACY",
+    "previous_pack_id": "PKP-DATA-GDPR-v1.0",
+    "current_pack_id": "KP-DATA-PRIVACY-v1.1.0",
+    "version_before": "KP-DATA-PRIVACY-v1.0.0",
+    "version_after": "KP-DATA-PRIVACY-v1.1.0",
+    "same_knowledge_family": true
+  },
+  {
+    "canonical_pack_id": "KP-OPS-OPERATIONS",
+    "previous_pack_id": "PKP-OPS-ITIL-v1.0",
+    "current_pack_id": "KP-OPS-OPERATIONS-v1.1.0",
+    "version_before": "KP-OPS-OPERATIONS-v1.0.0",
+    "version_after": "KP-OPS-OPERATIONS-v1.1.0",
+    "same_knowledge_family": true
+  },
+  {
+    "canonical_pack_id": "KP-SALES-COMMERCIAL",
+    "previous_pack_id": "PKP-SALES-DISCOUNTS-v1.0",
+    "current_pack_id": "KP-SALES-COMMERCIAL-v1.1.0",
+    "version_before": "KP-SALES-COMMERCIAL-v1.0.0",
+    "version_after": "KP-SALES-COMMERCIAL-v1.1.0",
+    "same_knowledge_family": true
+  },
+  {
+    "canonical_pack_id": "KP-MKT-MARKETING",
+    "previous_pack_id": "PKP-MKT-ADVERTISING-v1.0",
+    "current_pack_id": "KP-MKT-MARKETING-v1.1.0",
+    "version_before": "KP-MKT-MARKETING-v1.0.0",
+    "version_after": "KP-MKT-MARKETING-v1.1.0",
+    "same_knowledge_family": true
+  },
+  {
+    "canonical_pack_id": "KP-CS-CUSTOMERSUCCESS",
+    "previous_pack_id": "PKP-CS-HEALTH-v1.0",
+    "current_pack_id": "KP-CS-CUSTOMERSUCCESS-v1.1.0",
+    "version_before": "KP-CS-CUSTOMERSUCCESS-v1.0.0",
+    "version_after": "KP-CS-CUSTOMERSUCCESS-v1.1.0",
+    "same_knowledge_family": true
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "baseline_name": "AETF500_PROFESSIONAL_KNOWLEDGE_READINESS_BASELINE_v1.0",
+  "baseline_status": "FROZEN",
+  "baseline_dictionary_ref": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "baseline_mutation_allowed": false,
+  "multi_jurisdiction_baseline_ref": "AETF500_MULTI_JURISDICTION_INTERNAL_GOVERNANCE_FROZEN",
+  "assessment_scope": "500_OF_500_EMPLOYEES",
+  "total_passports_generated": 500,
+  "employees_ready": 420,
+  "employees_ready_with_restrictions": 80,
+  "employees_remediation_required": 0,
+  "material_uncontrolled_gaps": 0,
+  "africa_expansion_precondition_status": "READY"
+}

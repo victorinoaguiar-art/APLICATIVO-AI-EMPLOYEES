@@ -1,0 +1,48 @@
+[
+  {
+    "event_type": "INVOICE_ISSUANCE",
+    "description": "Emissão de Fatura Comercial para Cliente Nacional Não Grupo",
+    "debit_account": "31.1.2.1",
+    "debit_account_name": "Clientes Correntes Não Grupo Nacionais",
+    "credit_account_1": "49.1",
+    "credit_account_1_name": "Proveitos com Diferimento - Subscrições SaaS de AI Employees",
+    "credit_account_2": "34.5.3",
+    "credit_account_2_name": "Imposto sobre o Valor Acrescentado (IVA) - Liquidado",
+    "amount_formula": {
+      "debit_31_1_2_1": "GrossAmount = BaseAmount * (1 + VATRate)",
+      "credit_49_1": "BaseAmount",
+      "credit_34_5_3": "VATAmount = BaseAmount * VATRate (14%)"
+    },
+    "version": "1.1.5"
+  },
+  {
+    "event_type": "MONTHLY_REVENUE_RECOGNITION",
+    "description": "Reconhecimento Mensal Pro-Rata de Receita SaaS Diferida",
+    "debit_account": "49.1",
+    "debit_account_name": "Proveitos com Diferimento - Subscrições SaaS de AI Employees",
+    "credit_account": "62.1.1",
+    "credit_account_name": "Serviços principais — Mercado nacional",
+    "analytic_dimensions": {
+      "service_family": "SaaS",
+      "commercial_model": "B2B"
+    },
+    "amount_formula": {
+      "debit_49_1": "MonthlyRate = BaseAmount / SubscriptionMonths",
+      "credit_62_1_1": "MonthlyRate = BaseAmount / SubscriptionMonths"
+    },
+    "version": "1.1.5"
+  },
+  {
+    "event_type": "PAYMENT_COLLECTION",
+    "description": "Recebimento de Pagamento por Transferência Bancária (BFA/BAI)",
+    "debit_account": "43.1",
+    "debit_account_name": "Depósitos à Ordem - Bancos Nacionais (BFA/BAI)",
+    "credit_account": "31.1.2.1",
+    "credit_account_name": "Clientes Correntes Não Grupo Nacionais",
+    "amount_formula": {
+      "debit_43_1": "CollectedAmount",
+      "credit_31_1_2_1": "CollectedAmount"
+    },
+    "version": "1.1.5"
+  }
+]

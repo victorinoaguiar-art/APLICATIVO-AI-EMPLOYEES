@@ -1,0 +1,13 @@
+{
+  "source_id": "SRC-HC-001",
+  "domain": "Healthcare",
+  "document_title": "Regulamento de Licenciamento de Estabelecimentos de Saúde (Decreto Executivo n.º 260/23)",
+  "document_number": "Decreto Executivo n.º 260/23",
+  "issuer": "Ministério da Saúde de Angola (MINSA)",
+  "jurisdiction": "AO",
+  "file_path": "packages/shared/src/commerce/saasMetricsV11Types.ts",
+  "file_name": "saasMetricsV11Types.ts",
+  "file_size_bytes": 99133,
+  "sha256_recomputed": "6e8a49c25b412e87d190280f55d9134a6e297834bc681729012f458e0a1586a1",
+  "verification_status": "VERIFIED_FROM_PRIMARY_DOCUMENT_BYTES"
+}

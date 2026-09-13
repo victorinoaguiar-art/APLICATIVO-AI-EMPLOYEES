@@ -1,0 +1,36 @@
+{
+  "receipt_id": "AETF500_SRC_HC_001_HASH_REPRODUCIBILITY_v1.0",
+  "program_id": "AETF500_PHYSICAL_HASH_TRUTH_AND_RAW_EXECUTION_RECEIPT_FINAL_GATE_v1.0",
+  "primary_file": {
+    "path": "MINSA/novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf",
+    "exists": true,
+    "size_bytes": 2145588,
+    "sha256_certutil": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+    "sha256_python_or_powershell": "89C450D16444B97B7AD6EFD6A372CCED1255E9CC617411D4D20EEF0874942D2B",
+    "sha256_match": true,
+    "sha512_certutil": "7ca4f6bc0e26c36b532931b8f70b80dab409ed951b9b6ab8bc68aa2d3ddc99b88d35b1483d48781f3b6190f8520765569ee17e39fb0119c074d1480889d85144",
+    "sha512_python_or_powershell": "7CA4F6BC0E26C36B532931B8F70B80DAB409ED951B9B6AB8BC68AA2D3DDC99B88D35B1483D48781F3B6190F8520765569EE17E39FB0119C074D1480889D85144",
+    "sha512_match": true
+  },
+  "comparison_file_pgc": {
+    "path": "C:/Users/Victorino Aguiar/OneDrive/Desktop/APLICATIVO AI EMPLOYEES/generated/AETF500_Physical_Evidence_Artifact_Package_v1.0/AETF500_SRC_ACC_PGC_001_Decreto_82_01.pdf",
+    "exists": true,
+    "size_bytes": 5188378,
+    "sha256_certutil": "4b2d92fc7cc13ed25bf7650f885639af0beea53b51dc2161dde51268e422d702",
+    "sha256_python_or_powershell": "4B2D92FC7CC13ED25BF7650F885639AF0BEEA53B51DC2161DDE51268E422D702",
+    "sha256_match": true,
+    "sha512_certutil": "faa4eff7744bc6983265994fd042120931f91f5d3a3de48b983e54f6837bd64710607c63a371d53e24ce7834c491a9bcba0ed2e4a30dc2089c13efa5a306e096",
+    "sha512_python_or_powershell": "FAA4EFF7744BC6983265994FD042120931F91F5D3A3DE48B983E54F6837BD64710607C63A371D53E24CE7834C491A9BCBA0ED2E4A30DC2089C13EFA5A306E096",
+    "sha512_match": true
+  },
+  "comparisons": {
+    "hc_and_pgc_sha256_equal": false,
+    "hc_and_pgc_sha512_equal": false,
+    "hc_and_pgc_byte_identical": false,
+    "binary_compare_exit_code": 0
+  },
+  "raw_execution_receipt": {
+    "file": "AETF500_SRC_HC_001_Raw_Hash_Execution_Receipt_v1.0.txt",
+    "sha256_sidecar": "13a70a94c7aae1fbcc1824d0c37543f3e4c0fab6fac719588d96c7a0ead29534"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "program_id": "AETF500_EXTERNAL_VALIDATION_CLOSURE_PROGRAM_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "as_of_date": "2026-09-12",
+  "manifest_type": "EXTERNAL_VALIDATION_EVIDENCE_MANIFEST",
+  "items": [
+    {
+      "evidence_id": "EXT-EVID-EV01-001",
+      "validation_id": "EXT-VAL-AGT-001",
+      "filename": "decreto-n-o-82-01-de-16-de-novembro_conselho-de-ministros_compressed.pdf",
+      "source": "Conselho de Ministros — Diário da República de Angola",
+      "size_bytes": 5188378,
+      "hash_algorithm": "SHA-256",
+      "sha256": "4b2d92fc7cc13ed25bf7650f885639af0beea53b51dc2161dde51268e422d702",
+      "document_type": "OFFICIAL_GAZETTE"
+    },
+    {
+      "evidence_id": "EXT-EVID-EV04-001",
+      "validation_id": "EXT-VAL-VAT-004",
+      "filename": "LEI 180-19 DE 24 DE MAIO_compressed.pdf",
+      "source": "Assembleia Nacional / Presidência da República — Diário da República de Angola",
+      "size_bytes": 1571244,
+      "hash_algorithm": "SHA-256",
+      "sha256": "131702c8a9e42b5eccd2a41dda75e27ba2fa15d9b0ed89a3f9ac79b3991f9f1c",
+      "document_type": "OFFICIAL_GAZETTE"
+    }
+  ]
+}

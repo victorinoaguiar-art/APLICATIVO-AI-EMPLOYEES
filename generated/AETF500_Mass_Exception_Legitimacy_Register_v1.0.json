@@ -1,0 +1,89 @@
+{
+  "program_id": "AETF500_MASS_EXCEPTION_LEGITIMACY_EXTERNAL_EVIDENCE_AUTHENTICITY_MICRO_GATE_v1.0",
+  "records": [
+    {
+      "country_code": "AO",
+      "employee_records_total": 500,
+      "above_ceiling_exception_records": 0,
+      "exception_rate_pct": 0,
+      "mass_exception_triggered": false,
+      "exception_model_type": "INDIVIDUAL",
+      "common_evidence_basis": "NONE_REQUIRED_AT_CEILING",
+      "structural_policy_indicator": false,
+      "external_evidence_status": "EXTERNALLY_VERIFIED",
+      "restriction_enforcement_status": "NOT_APPLICABLE",
+      "recommended_governance_action": "MAINTAIN_PRODUCTION_CERTIFIED_AT_CEILING",
+      "final_status": "RECONCILED"
+    },
+    {
+      "country_code": "PT",
+      "employee_records_total": 500,
+      "above_ceiling_exception_records": 500,
+      "exception_rate_pct": 100,
+      "mass_exception_triggered": true,
+      "exception_model_type": "STRUCTURAL_POLICY",
+      "common_evidence_basis": "Ordem dos Contabilistas Certificados (OCC) Supervised Pilot Framework",
+      "structural_policy_indicator": true,
+      "external_evidence_status": "PENDING_EXTERNAL_VERIFICATION",
+      "restriction_enforcement_status": "MANDATORY_HUMAN_SUPERVISION_ENFORCED",
+      "recommended_governance_action": "FORMAL_STRUCTURAL_POLICY_REVIEW_AND_COUNTRY_PACK_L5_ESCALATION_PLAN_Q1_2027",
+      "final_status": "RECONCILED_WITH_VALID_STRUCTURAL_EXCEPTIONS"
+    },
+    {
+      "country_code": "MZ",
+      "employee_records_total": 500,
+      "above_ceiling_exception_records": 500,
+      "exception_rate_pct": 100,
+      "mass_exception_triggered": true,
+      "exception_model_type": "STRUCTURAL_POLICY",
+      "common_evidence_basis": "Ordem dos Contabilistas e Auditores de Moçambique (OCAM) Supervised Pilot Framework",
+      "structural_policy_indicator": true,
+      "external_evidence_status": "PENDING_EXTERNAL_VERIFICATION",
+      "restriction_enforcement_status": "MANDATORY_HUMAN_SUPERVISION_ENFORCED",
+      "recommended_governance_action": "FORMAL_STRUCTURAL_POLICY_REVIEW_AND_COUNTRY_PACK_L5_ESCALATION_PLAN_Q2_2027",
+      "final_status": "RECONCILED_WITH_VALID_STRUCTURAL_EXCEPTIONS"
+    },
+    {
+      "country_code": "BR",
+      "employee_records_total": 500,
+      "above_ceiling_exception_records": 0,
+      "exception_rate_pct": 0,
+      "mass_exception_triggered": false,
+      "exception_model_type": "INDIVIDUAL",
+      "common_evidence_basis": "NONE_REQUIRED_AT_CEILING",
+      "structural_policy_indicator": false,
+      "external_evidence_status": "NOT_APPLICABLE",
+      "restriction_enforcement_status": "NOT_APPLICABLE",
+      "recommended_governance_action": "MAINTAIN_AT_CEILING",
+      "final_status": "RECONCILED"
+    },
+    {
+      "country_code": "CV",
+      "employee_records_total": 500,
+      "above_ceiling_exception_records": 0,
+      "exception_rate_pct": 0,
+      "mass_exception_triggered": false,
+      "exception_model_type": "INDIVIDUAL",
+      "common_evidence_basis": "NONE_REQUIRED_AT_CEILING",
+      "structural_policy_indicator": false,
+      "external_evidence_status": "NOT_APPLICABLE",
+      "restriction_enforcement_status": "NOT_APPLICABLE",
+      "recommended_governance_action": "MAINTAIN_AT_CEILING",
+      "final_status": "RECONCILED"
+    },
+    {
+      "country_code": "ST",
+      "employee_records_total": 500,
+      "above_ceiling_exception_records": 0,
+      "exception_rate_pct": 0,
+      "mass_exception_triggered": false,
+      "exception_model_type": "INDIVIDUAL",
+      "common_evidence_basis": "NONE_REQUIRED_AT_CEILING",
+      "structural_policy_indicator": false,
+      "external_evidence_status": "NOT_APPLICABLE",
+      "restriction_enforcement_status": "NOT_APPLICABLE",
+      "recommended_governance_action": "MAINTAIN_AT_CEILING",
+      "final_status": "RECONCILED"
+    }
+  ]
+}

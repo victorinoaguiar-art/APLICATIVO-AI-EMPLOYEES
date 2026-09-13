@@ -1,0 +1,79 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.4_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "inventory_count": 6,
+  "usage_inventory": [
+    {
+      "account_code": "43.1",
+      "used_in": "SaaSMetricsHardeningV11Engine & Billing API",
+      "event_type": "SERVICE_INVOICE_ISSUED",
+      "rule_id": "ERR-MAPPING-001",
+      "current_description": "Incorrectly labeled as Clientes C/C",
+      "current_mapping": "Débito 43.1 / Crédito 71.1",
+      "expected_mapping": "Débito 31.1.1 (Clientes Correntes) / Crédito 62.1.1 (Prestações de Serviço SaaS) / Crédito 34.5.3 (IVA Liquidado)",
+      "source": "Legacy v1.1.3 Baseline Code",
+      "status": "MATERIAL_ERROR_CORRECTED",
+      "correction_required": true
+    },
+    {
+      "account_code": "71.1",
+      "used_in": "PEIPIntegrationEngine & Journal Generators",
+      "event_type": "SERVICE_INVOICE_ISSUED",
+      "rule_id": "ERR-MAPPING-002",
+      "current_description": "Incorrectly labeled as Prestação de Serviços SaaS Revenue",
+      "current_mapping": "Crédito 71.1",
+      "expected_mapping": "Crédito 62.1.1 (Prestações de Serviço SaaS B2B Nacional)",
+      "source": "Legacy v1.1.3 Baseline Code",
+      "status": "MATERIAL_ERROR_CORRECTED",
+      "correction_required": true
+    },
+    {
+      "account_code": "31.1.1",
+      "used_in": "PGCAccountingEngineV114",
+      "event_type": "SERVICE_INVOICE_ISSUED",
+      "rule_id": "RULE-31.1.1-CORRECT",
+      "current_description": "Clientes Correntes Nacionais",
+      "current_mapping": "Débito 31.1.1",
+      "expected_mapping": "Débito 31.1.1",
+      "source": "Decreto n.º 82/01",
+      "status": "VERIFIED_CORRECT",
+      "correction_required": false
+    },
+    {
+      "account_code": "34.5.3",
+      "used_in": "VATAccountingEngine",
+      "event_type": "VAT_OUTPUT_POSTED",
+      "rule_id": "RULE-VAT-34.5.3-CORRECT",
+      "current_description": "IVA Liquidado 14%",
+      "current_mapping": "Crédito 34.5.3",
+      "expected_mapping": "Crédito 34.5.3",
+      "source": "Decreto Presidencial n.º 180/19",
+      "status": "VERIFIED_CORRECT",
+      "correction_required": false
+    },
+    {
+      "account_code": "43.1.1",
+      "used_in": "BankAccountMappingPolicy",
+      "event_type": "CUSTOMER_PAYMENT_RECEIVED",
+      "rule_id": "RULE-BANK-43.1.1-CORRECT",
+      "current_description": "Banco BAI - Depósito à Ordem AOA",
+      "current_mapping": "Débito 43.1.1 / Crédito 31.1.1",
+      "expected_mapping": "Débito 43.1.1 / Crédito 31.1.1",
+      "source": "Decreto n.º 82/01",
+      "status": "VERIFIED_CORRECT",
+      "correction_required": false
+    },
+    {
+      "account_code": "99.9",
+      "used_in": "Legacy Sandbox Test Scripts",
+      "event_type": "UNKNOWN_TEST_EVENT",
+      "rule_id": "ERR-UNKNOWN-001",
+      "current_description": "Invented Account Code",
+      "current_mapping": "Débito 99.9",
+      "expected_mapping": "UNKNOWN_ACCOUNT_BLOCKED",
+      "source": "Sandbox Test File",
+      "status": "UNKNOWN_ACCOUNT_BLOCKED",
+      "correction_required": true
+    }
+  ]
+}

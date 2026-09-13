@@ -1,0 +1,20 @@
+{
+  "versions": [
+    {
+      "tax_rule_id": "TAX-RULE-VAT-GENERAL-14",
+      "tax_type": "VAT",
+      "rate": "14%",
+      "effective_from": "2019-10-01",
+      "legal_source": "Decreto Presidencial n.º 180/19 / Lei n.º 7/19",
+      "status": "DECOUPLED"
+    },
+    {
+      "tax_rule_id": "TAX-RULE-II-WHT-SERVICES-2",
+      "tax_type": "INDUSTRIAL_TAX",
+      "rate": "2%",
+      "effective_from": "2020-01-01",
+      "legal_source": "Código do Imposto Industrial, Artigo 67.º",
+      "status": "EXTERNAL_LEGAL_VALIDATION_REQUIRED"
+    }
+  ]
+}

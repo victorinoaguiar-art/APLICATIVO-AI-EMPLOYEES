@@ -1,0 +1,27 @@
+{
+  "program_id": "AETF500_PHYSICAL_SOURCE_AUTHENTICITY_REMEDIATION_GATE_V2.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "baseline_mutation_allowed": false,
+  "execution_timestamp": "2026-09-13T14:00:35.004Z",
+  "individual_gates": {
+    "GATE_01_PHYSICAL_SOURCE_EXISTENCE": "PASS",
+    "GATE_02_FILE_FORMAT_AUTHENTICITY": "PASS",
+    "GATE_03_SOURCE_ORIGIN": "PASS",
+    "GATE_04_LEGAL_IDENTITY": "PASS",
+    "GATE_05_LEGAL_CURRENTNESS": "PASS",
+    "GATE_06_LEGAL_TEXT_EXTRACTION": "PASS",
+    "GATE_07_RULE_PROVENANCE": "PASS",
+    "GATE_08_INDEX_RECONSTRUCTION": "PASS",
+    "GATE_09_RETRIEVAL_TRUTH": "PASS",
+    "GATE_10_ROUTER_POLICY": "PASS",
+    "GATE_11_EMPLOYEE_DEPENDENCY": "PASS",
+    "GATE_12_EMPLOYEE_RETEST": "PASS",
+    "GATE_13_RAW_RUNTIME_PROOF": "PASS",
+    "GATE_14_CRYPTOGRAPHIC_MANIFEST": "PASS",
+    "GATE_15_REQUIREMENT_TEST_EVIDENCE": "PASS"
+  },
+  "minsa_knowledge_status": "TRUSTED",
+  "employee_certification_status": "RECERTIFIED",
+  "authoritative_output_allowed": true,
+  "master_gate": "PASS"
+}

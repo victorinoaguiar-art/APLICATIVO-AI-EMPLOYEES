@@ -1,0 +1,16 @@
+{
+  "spec_version": "1.1.6",
+  "deferred_account_code": "37.6",
+  "deferred_account_name": "Proveitos a repartir por períodos futuros",
+  "invalidated_account_code": "49.1",
+  "recognition_method": "RATABLE_MONTHLY",
+  "analytic_dimensions_required": [
+    "contract_id",
+    "subscription_id",
+    "customer_id",
+    "product_line_code",
+    "market_segment",
+    "tax_regime"
+  ],
+  "status": "VALIDATED_OFFICIAL_PGC"
+}

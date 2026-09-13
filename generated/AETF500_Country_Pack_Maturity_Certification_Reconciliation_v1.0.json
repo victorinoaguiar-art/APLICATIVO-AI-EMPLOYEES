@@ -1,0 +1,50 @@
+[
+  {
+    "country_code": "AO",
+    "country_pack_id": "AETF-COUNTRY-AO",
+    "maturity_level": "L6_PRODUCTION_CERTIFIED",
+    "support_status": "PRODUCTION_CERTIFIED",
+    "readiness_ceiling": "R6",
+    "autonomy_ceiling": "A6"
+  },
+  {
+    "country_code": "PT",
+    "country_pack_id": "AETF-COUNTRY-PT",
+    "maturity_level": "L4_PROFESSIONALLY_TESTED",
+    "support_status": "PROFESSIONALLY_TESTED",
+    "readiness_ceiling": "R4",
+    "autonomy_ceiling": "A4"
+  },
+  {
+    "country_code": "MZ",
+    "country_pack_id": "AETF-COUNTRY-MZ",
+    "maturity_level": "L3_INTERNALLY_VERIFIED",
+    "support_status": "INTERNALLY_VERIFIED",
+    "readiness_ceiling": "R3",
+    "autonomy_ceiling": "A3"
+  },
+  {
+    "country_code": "BR",
+    "country_pack_id": "AETF-COUNTRY-BR",
+    "maturity_level": "L1_SOURCES_COLLECTED",
+    "support_status": "KNOWLEDGE_COLLECTION",
+    "readiness_ceiling": "R1",
+    "autonomy_ceiling": "A1"
+  },
+  {
+    "country_code": "CV",
+    "country_pack_id": "AETF-COUNTRY-CV",
+    "maturity_level": "L2_KNOWLEDGE_STRUCTURED",
+    "support_status": "KNOWLEDGE_VERIFICATION",
+    "readiness_ceiling": "R2",
+    "autonomy_ceiling": "A2"
+  },
+  {
+    "country_code": "ST",
+    "country_pack_id": "AETF-COUNTRY-ST",
+    "maturity_level": "L2_KNOWLEDGE_STRUCTURED",
+    "support_status": "KNOWLEDGE_VERIFICATION",
+    "readiness_ceiling": "R2",
+    "autonomy_ceiling": "A2"
+  }
+]

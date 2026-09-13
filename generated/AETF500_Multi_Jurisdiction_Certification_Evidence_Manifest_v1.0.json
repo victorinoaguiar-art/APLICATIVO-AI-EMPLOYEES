@@ -1,0 +1,20 @@
+{
+  "artifact_id": "AETF500_MULTI_JURISDICTION_CERTIFICATION_EVIDENCE_MANIFEST_v1.0",
+  "artifact_type": "EVIDENCE_MANIFEST",
+  "program_id": "AETF500_MULTI_JURISDICTION_CERTIFICATION_COUNTRY_PACK_EVIDENCE_PATCH_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "baseline_mutation_allowed": false,
+  "execution_timestamp": "2026-09-13T15:19:10.888Z",
+  "country_codes": [
+    "AO",
+    "PT",
+    "MZ",
+    "BR",
+    "CV",
+    "ST"
+  ],
+  "employees_total": 500,
+  "reconciled_gates": 6,
+  "subgates_passed": 6,
+  "final_patch_status": "PASS"
+}

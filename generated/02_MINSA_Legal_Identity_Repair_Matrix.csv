@@ -1,0 +1,6 @@
+source_id,filename,sha256,previous_incorrect_identity,repaired_legal_identity,gazette_reference,repair_status
+SRC-MINSA-001,src-minsa-001.pdf,86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea,"NONE","Lei n.º 21-B/92 (1992-08-28)","Diário da República N.º 35",PRESERVED
+SRC-MINSA-002,src-minsa-002.pdf,025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3,"NONE","Decreto Presidencial n.º 187/18 (2018-08-06)","Diário da República N.º 116",PRESERVED
+SRC-MINSA-003,src-minsa-003.pdf,cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d,"NONE","Decreto Presidencial n.º 151/21 (2021-06-09)","Diário da República N.º 106",PRESERVED
+SRC-MINSA-004,src-minsa-004.pdf,484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632,"Decreto Presidencial n.º 260/23","Decreto Presidencial n.º 260/10 (2010-11-19)","Diário da República N.º 219",REPAIRED
+SRC-MINSA-005,src-minsa-005.pdf,89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b,"Decreto Presidencial n.º 248/20","Decreto Presidencial n.º 277/20 (2020-10-26)","Diário da República N.º 171",REPAIRED

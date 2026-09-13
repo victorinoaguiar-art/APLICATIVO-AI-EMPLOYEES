@@ -1,0 +1,116 @@
+{
+  "version": "1.1.6",
+  "source_documents": [
+    "Decreto n.º 82/01 de 16 de Novembro — Plano Geral de Contabilidade de Angola",
+    "Decreto Presidencial n.º 180/19 de 24 de Maio — Código do Imposto sobre o Valor Acrescentado"
+  ],
+  "accounts": [
+    {
+      "account_code": "31.1.1",
+      "account_name": "Clientes Correntes — Grupo",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "source_document": "Decreto n.º 82/01"
+    },
+    {
+      "account_code": "31.1.2.1",
+      "account_name": "Clientes Correntes Não Grupo Nacionais",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "source_document": "Decreto n.º 82/01"
+    },
+    {
+      "account_code": "31.1.2.2",
+      "account_name": "Clientes Correntes Não Grupo Estrangeiros",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "source_document": "Decreto n.º 82/01"
+    },
+    {
+      "account_code": "34.5.1",
+      "account_name": "IVA Suportado",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "source_document": "Decreto Presidencial n.º 180/19"
+    },
+    {
+      "account_code": "34.5.2",
+      "account_name": "IVA Dedutível",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "source_document": "Decreto Presidencial n.º 180/19"
+    },
+    {
+      "account_code": "34.5.3",
+      "account_name": "IVA Liquidado",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "source_document": "Decreto Presidencial n.º 180/19"
+    },
+    {
+      "account_code": "34.5.4",
+      "account_name": "IVA Regularizações",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "source_document": "Decreto Presidencial n.º 180/19"
+    },
+    {
+      "account_code": "34.5.5",
+      "account_name": "IVA Apuramento",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "source_document": "Decreto Presidencial n.º 180/19"
+    },
+    {
+      "account_code": "34.5.6",
+      "account_name": "IVA a Pagar",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "source_document": "Decreto Presidencial n.º 180/19"
+    },
+    {
+      "account_code": "34.5.7",
+      "account_name": "IVA a Recuperar",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "source_document": "Decreto Presidencial n.º 180/19"
+    },
+    {
+      "account_code": "34.5.8",
+      "account_name": "IVA Reembolsos Pedidos",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "source_document": "Decreto Presidencial n.º 180/19"
+    },
+    {
+      "account_code": "34.5.9",
+      "account_name": "IVA liquidações oficiosas",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "source_document": "Decreto Presidencial n.º 180/19",
+      "corrected_in_v116": true
+    },
+    {
+      "account_code": "37.6",
+      "account_name": "Proveitos a repartir por períodos futuros",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "source_document": "Decreto n.º 82/01",
+      "reconciled_in_v116": true
+    },
+    {
+      "account_code": "43.1.1",
+      "account_name": "Banco BAI - Depósito à Ordem AOA",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "source_document": "Decreto n.º 82/01"
+    },
+    {
+      "account_code": "62.1.1",
+      "account_name": "Serviços principais — Mercado nacional",
+      "account_type": "REVENUE",
+      "normal_balance": "CREDIT",
+      "source_document": "Decreto n.º 82/01"
+    }
+  ]
+}

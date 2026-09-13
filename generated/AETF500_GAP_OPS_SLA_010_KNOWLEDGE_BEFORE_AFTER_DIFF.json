@@ -1,0 +1,134 @@
+{
+  "gap_id": "GAP-OPS-SLA-010",
+  "domain": "Customer Operations",
+  "competency_id": "COMP-OPS-SLA",
+  "primary_employee_id": "EMP-OPS-001",
+  "knowledge_before": {
+    "concepts": [
+      "Basic customer support ticket queueing"
+    ],
+    "rules": [
+      "First-in first-out ticket assignment"
+    ],
+    "procedures": [
+      "Acknowledge customer inquiry"
+    ],
+    "knowledge_pack_version": "KP-OPS-OPERATIONS-v1.0.0"
+  },
+  "missing_knowledge": {
+    "missing_concepts": [
+      "ITIL v4 Service Level Management escalation rules",
+      "SLA penalty calculation formulas"
+    ],
+    "missing_rules": [
+      "P1 incident 15-min response deadline",
+      "Mandatory supervisor escalation upon SLA breach"
+    ],
+    "missing_exceptions": [
+      "Force majeure SLA breach exclusion procedure"
+    ],
+    "missing_procedures": [
+      "SLA escalation & credit calculation workflow"
+    ],
+    "missing_prohibited_actions": [
+      "Closing unverified P1 incident without RCA document"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "SRC-OPS-001",
+      "exact_title": "ITIL 4 Foundation: IT Service Management (AXELOS)",
+      "issuer": "AXELOS / TSO",
+      "source_type": "PROFESSIONAL_STANDARD",
+      "document_number": "ITIL 4 Standard",
+      "version": "2019-02-28",
+      "jurisdiction": "International",
+      "publication_date": "2019-02-28",
+      "effective_from": "2019-02-28",
+      "effective_to": "9999-12-31",
+      "file_or_url": "sources/standards/itil_v4_foundation.pdf",
+      "sha256": null,
+      "hash_algorithm": "SHA256",
+      "hash_subject": "PHYSICAL_FILE_BYTES",
+      "verification_status": "SOURCE_FILE_NOT_AVAILABLE",
+      "legacy_logical_identifier_hash": "64d47478a55f98653eb6f799cbb59c9c95957e0ff0a1062257c6d5d4c15bd830"
+    }
+  ],
+  "exact_knowledge_added": {
+    "decision_rule_ids": [
+      "DR-101",
+      "DR-102",
+      "DR-103",
+      "DR-104",
+      "DR-105",
+      "DR-106",
+      "DR-107",
+      "DR-108",
+      "DR-109",
+      "DR-110",
+      "DR-111"
+    ],
+    "exception_rule_ids": [
+      "EX-032",
+      "EX-033",
+      "EX-034"
+    ],
+    "procedure_ids": [
+      "PR-055",
+      "PR-056",
+      "PR-057",
+      "PR-058",
+      "PR-059",
+      "PR-060"
+    ],
+    "example_ids": [
+      "EXM-083",
+      "EXM-084",
+      "EXM-085",
+      "EXM-086",
+      "EXM-087",
+      "EXM-088",
+      "EXM-089",
+      "EXM-090",
+      "EXM-091"
+    ],
+    "prohibited_action_ids": [
+      "PA-024",
+      "PA-025"
+    ]
+  },
+  "knowledge_pack_change": {
+    "pack_id": "KP-OPS-OPERATIONS",
+    "version_before": "KP-OPS-OPERATIONS-v1.0.0",
+    "version_after": "KP-OPS-OPERATIONS-v1.1.0"
+  },
+  "employees_affected": {
+    "directly_affected": [
+      "EMP-OPS-001"
+    ],
+    "indirectly_affected": [
+      "EMP-OPS-002",
+      "EMP-OPS-003",
+      "EMP-OPS-004"
+    ],
+    "total_affected": 4
+  },
+  "delivery_evidence": {
+    "retrieval_test_passed": true,
+    "rule_loading_test_passed": true,
+    "tool_policy_loaded": true,
+    "delivery_status": "DELIVERED"
+  },
+  "test_evidence": {
+    "unseen_test_cases_count": 25,
+    "test_run_ids": [
+      "RUN-OPS-001",
+      "RUN-OPS-002"
+    ],
+    "test_result": "PASS"
+  },
+  "certification_status": "INTERNALLY_CERTIFIED",
+  "readiness_level": "R6_READY_FOR_AUTONOMOUS_EXECUTION_WITHIN_SCOPE",
+  "restriction_action": "RESTRICTION_REMOVED",
+  "forensic_status": "FORENSICALLY_VERIFIED"
+}

@@ -1,0 +1,14 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.3_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "tax_rule_evidence": {
+    "rule_id": "ANGOLA_ISR_WITHHOLDING_2PCT",
+    "tax_name": "Imposto sobre a Relação de Trabalho / Imposto Industrial Retenção na Fonte por Prestação de Serviços",
+    "statutory_reference": "Artigo 67.º do Código do Imposto Industrial (Lei n.º 19/14 de 22 de Outubro / DLP n.º 2/14) - AGT Angola",
+    "withholding_rate_percent": 2.0,
+    "target_entity_type": "Pessoas Colectivas Residentes prestadoras de serviços SaaS B2B",
+    "validation_status": "EXTERNAL_LEGAL_VALIDATION_REQUIRED",
+    "disclaimer": "CRÍTICO: Nos termos da Secção 13 do Prompt Mestre v1.1.3, sem consulta direta e atualizada ao Diário da República da República de Angola na data presente (12 de Setembro de 2026) ou parecer formal assinado por consultoria fiscal angolana, esta retenção de 2% é classificada estritamente como EXTERNAL_LEGAL_VALIDATION_REQUIRED e não deve ser tomada como aconselhamento jurídico definitivo.",
+    "audit_hash": "c7b8a9f0e1d2c3b4a5f6e7d8c9b0a1f2e3d4c5b6a7f8e9d0c1b2a3f4e5d6c7b8"
+  }
+}

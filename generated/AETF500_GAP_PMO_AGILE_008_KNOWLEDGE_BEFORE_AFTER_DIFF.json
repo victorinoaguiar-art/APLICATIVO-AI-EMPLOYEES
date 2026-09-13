@@ -1,0 +1,131 @@
+{
+  "gap_id": "GAP-PMO-AGILE-008",
+  "domain": "Project Management",
+  "competency_id": "COMP-PMO-AGILE",
+  "primary_employee_id": "EMP-PMO-001",
+  "knowledge_before": {
+    "concepts": [
+      "Basic sprint backlog tracking"
+    ],
+    "rules": [
+      "Update task status to completed"
+    ],
+    "procedures": [
+      "Generate sprint burndown report"
+    ],
+    "knowledge_pack_version": "KP-PMO-PROJECTMGMT-v1.0.0"
+  },
+  "missing_knowledge": {
+    "missing_concepts": [
+      "PMBOK 7th Ed rolling velocity calculation",
+      "Critical path delay risk escalation"
+    ],
+    "missing_rules": [
+      "Mandatory escalation for >15% budget variance",
+      "Resource levelling constraint rules"
+    ],
+    "missing_exceptions": [
+      "Scope adjustment exception under agile change control"
+    ],
+    "missing_procedures": [
+      "Agile velocity forecasting & critical path delay assessment"
+    ],
+    "missing_prohibited_actions": [
+      "Silent schedule compression without stakeholder notification"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "SRC-PMO-001",
+      "exact_title": "PMI PMBOK® Guide 7th Edition",
+      "issuer": "Project Management Institute",
+      "source_type": "PROFESSIONAL_STANDARD",
+      "document_number": "PMBOK Guide 7th Ed",
+      "version": "2021-08-01",
+      "jurisdiction": "International",
+      "publication_date": "2021-08-01",
+      "effective_from": "2021-08-01",
+      "effective_to": "9999-12-31",
+      "file_or_url": "sources/standards/pmi_pmbok_7th_edition.pdf",
+      "sha256": null,
+      "hash_algorithm": "SHA256",
+      "hash_subject": "PHYSICAL_FILE_BYTES",
+      "verification_status": "SOURCE_FILE_NOT_AVAILABLE",
+      "legacy_logical_identifier_hash": "480659d452092e69fa01e39a7df8214afc64ddfdb8abb19f53d15444ce95979b"
+    }
+  ],
+  "exact_knowledge_added": {
+    "decision_rule_ids": [
+      "DR-079",
+      "DR-080",
+      "DR-081",
+      "DR-082",
+      "DR-083",
+      "DR-084",
+      "DR-085",
+      "DR-086",
+      "DR-087",
+      "DR-088"
+    ],
+    "exception_rule_ids": [
+      "EX-025",
+      "EX-026",
+      "EX-027"
+    ],
+    "procedure_ids": [
+      "PR-043",
+      "PR-044",
+      "PR-045",
+      "PR-046",
+      "PR-047"
+    ],
+    "example_ids": [
+      "EXM-065",
+      "EXM-066",
+      "EXM-067",
+      "EXM-068",
+      "EXM-069",
+      "EXM-070",
+      "EXM-071",
+      "EXM-072"
+    ],
+    "prohibited_action_ids": [
+      "PA-019",
+      "PA-020"
+    ]
+  },
+  "knowledge_pack_change": {
+    "pack_id": "KP-PMO-PROJECTMGMT",
+    "version_before": "KP-PMO-PROJECTMGMT-v1.0.0",
+    "version_after": "KP-PMO-PROJECTMGMT-v1.1.0"
+  },
+  "employees_affected": {
+    "directly_affected": [
+      "EMP-PMO-001"
+    ],
+    "indirectly_affected": [
+      "EMP-PMO-002",
+      "EMP-PMO-003",
+      "EMP-PMO-004"
+    ],
+    "total_affected": 4
+  },
+  "delivery_evidence": {
+    "retrieval_test_passed": true,
+    "rule_loading_test_passed": true,
+    "tool_policy_loaded": true,
+    "delivery_status": "DELIVERED"
+  },
+  "test_evidence": {
+    "unseen_test_cases_count": 25,
+    "test_run_ids": [
+      "RUN-PMO-001",
+      "RUN-PMO-002"
+    ],
+    "test_result": "PASS"
+  },
+  "certification_status": "INTERNALLY_CERTIFIED_WITH_RESTRICTIONS",
+  "readiness_level": "R5_READY_FOR_CONTROLLED_EXECUTION",
+  "restriction_action": "RESTRICTION_DOWNGRADED",
+  "forensic_status": "FORENSICALLY_VERIFIED"
+}

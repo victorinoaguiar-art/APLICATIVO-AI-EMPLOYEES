@@ -1,0 +1,30 @@
+{
+  "program_id": "AETF500_ANGOLA_SOURCE_HASH_LEGAL_EVIDENCE_TEST_CARDINALITY_FINAL_CORRECTION_v1.0",
+  "total_test_assignments": 505,
+  "unseen_case_assignments": 325,
+  "discovery_assignments": 130,
+  "cross_domain_assignments": 50,
+  "one_to_one_assignments": 425,
+  "assignments_covered_by_shared_executions": 80,
+  "shared_physical_executions": 40,
+  "executions_saved_by_sharing": 40,
+  "total_physical_executions_recomputed": 465,
+  "orphan_test_assignments": 0,
+  "orphan_test_executions": 0,
+  "test_cardinality_equation_recomputes": true,
+  "cardinality_equation": "TOTAL_PHYSICAL_EXECUTIONS (465) = TOTAL_TEST_ASSIGNMENTS (505) - EXECUTIONS_SAVED_BY_SHARING (40)",
+  "shared_execution_breakdown": {
+    "cross_domain_sharing": {
+      "assignments_count": 50,
+      "physical_executions_count": 25,
+      "sharing_ratio": "2:1",
+      "executions_saved": 25
+    },
+    "discovery_sharing": {
+      "assignments_count": 30,
+      "physical_executions_count": 15,
+      "sharing_ratio": "2:1",
+      "executions_saved": 15
+    }
+  }
+}

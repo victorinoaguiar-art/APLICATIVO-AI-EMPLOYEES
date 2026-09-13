@@ -12,8 +12,18 @@ export class PromptSanitizer {
     /override\s+safety\s+guidelines/i,
     /you\s+are\s+now\s+in\s+developer\s+mode/i,
     /bypass\s+permission\s+check/i,
+    /bypass\s+(dual\s+)?approval/i,
     /act\s+as\s+root/i,
     /system:\s*role\s*=\s*admin/i,
+    /system\s+override/i,
+    /reveal\s+(system\s+prompt|secret|api\s+key)/i,
+    /process\.env\./i,
+    /set\s+irt\s+tax\s+rate\s+to\s+0%/i,
+    /delete\s+audit\s+trail/i,
+    /169\.254\.169\.254/i,
+    /drop\s+table/i,
+    /\.\.[\/\\]\.\.[\/\\]/i,
+    /etc[\/\\]passwd/i,
     /eval\(.*\)/i,
     /<script\b[^>]*>([\s\S]*?)<\/script>/i
   ];
@@ -37,12 +47,10 @@ export class PromptSanitizer {
     }
 
     let threatLevel: ScanResult['threatLevel'] = 'LOW';
-    if (detectedVectors.length >= 3) {
+    if (detectedVectors.length >= 2) {
       threatLevel = 'CRITICAL';
-    } else if (detectedVectors.length === 2) {
-      threatLevel = 'HIGH';
     } else if (detectedVectors.length === 1) {
-      threatLevel = 'MEDIUM';
+      threatLevel = 'HIGH';
     }
 
     // Basic sanitization: strip script tags and aggressive control chars

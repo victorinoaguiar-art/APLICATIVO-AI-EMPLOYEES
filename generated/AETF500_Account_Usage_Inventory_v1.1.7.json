@@ -1,0 +1,35 @@
+{
+  "inventory_count": 5,
+  "usage": [
+    {
+      "account_code": "49.1",
+      "official_name": "Títulos negociáveis",
+      "system_usage": "UNMAPPED_FOR_SAAS",
+      "policy": "INVALIDATED_FOR_DEFERRED_REVENUE"
+    },
+    {
+      "account_code": "37.6",
+      "official_name": "Proveitos a repartir por períodos futuros",
+      "system_usage": "SAAS_DEFERRED_REVENUE",
+      "policy": "SAAS_DEFERRED_REVENUE_POLICY = INTERNALLY_MODELLED_PENDING_ACCOUNTING_POLICY_APPROVAL"
+    },
+    {
+      "account_code": "34.5.3.1",
+      "official_name": "Operações gerais",
+      "system_usage": "SAAS_OUTPUT_VAT",
+      "policy": "MAPPED_FOR_GENERAL_SALES_VAT"
+    },
+    {
+      "account_code": "34.5.9",
+      "official_name": "IVA - Liquidações oficiosas",
+      "system_usage": "OFFICIAL_VAT_ASSESSMENT",
+      "policy": "OFFICIAL_STATUTORY_FAMILY_WITHOUT_4TH_LEVEL"
+    },
+    {
+      "account_code": "34.5.9.1",
+      "official_name": "INVALID_SUBACCOUNT",
+      "system_usage": "PROHIBITED",
+      "policy": "NOT_IN_ARTIGO_22_DECRETO_PRESIDENCIAL_180_19"
+    }
+  ]
+}

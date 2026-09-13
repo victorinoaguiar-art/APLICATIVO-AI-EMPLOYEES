@@ -1,0 +1,63 @@
+{
+  "artifact_id": "AIEMPLOYEE_MARKETPLACE_COMMERCIAL_OPERATIONS_MANIFEST_2026_09_12",
+  "baseline_consumed": "AETF-500-CERTL3-PRODUCTION-BASELINE-2026.09.11",
+  "commercial_release_version": "COMMERCIAL-BASELINE-v1.0",
+  "timestamp": "2026-09-12T01:20:00.000Z",
+  "total_catalog_employees": 500,
+  "cert_l3_full_employees": 490,
+  "cert_l3_restricted_employees": 10,
+  "departments_covered": 18,
+  "department_list": [
+    "Accounting",
+    "Tax",
+    "Legal",
+    "HR",
+    "Finance",
+    "Operations",
+    "IT",
+    "Customer Support",
+    "Procurement",
+    "Sales",
+    "Marketing",
+    "Compliance",
+    "Audit",
+    "Executive",
+    "Risk",
+    "Supply Chain",
+    "Logistics",
+    "Engineering"
+  ],
+  "supported_plans": [
+    "STARTER",
+    "PROFESSIONAL",
+    "BUSINESS",
+    "ENTERPRISE"
+  ],
+  "supported_currencies": [
+    "AOA",
+    "USD",
+    "EUR"
+  ],
+  "pricing_floor_enforcement": {
+    "status": "ACTIVE",
+    "formula": "PricingFloor = ModelCost + ComputeCost + StorageCost + ConnectorCost + HitlCost + RiskReserve + TargetMarginPct",
+    "minimum_digital_salary_aoa": 180000
+  },
+  "mandatory_activation_gates": [
+    "tenant_onboarded",
+    "cpeaa_policy_assigned",
+    "permissions_configured",
+    "connectors_connected",
+    "financial_limits_set"
+  ],
+  "activation_rule": "SUBSCRIBED != ACTIVATED (MANDATORY GATE APPROVAL REQUIRED BEFORE DEPLOYMENT)",
+  "legal_disclaimer": "ESTE CONTRATO REFERE-SE EXCLUSIVAMENTE À CONTRATAÇÃO DE UM COLABORADOR DIGITAL (AI EMPLOYEE) EM REGIME DE SUBSCRIÇÃO DE SOFTWARE/SERVIÇO (SaaS). NÃO CONSTITUI NEM CRIA QUALQUER TIPO DE VÍNCULO LABORAL HUMANO, DIREITO DE TRABALHO, SEGURANÇA SOCIAL OU ENCARGO TRABALHISTA.",
+  "revenue_governance": {
+    "real_paid_mrr_aoa": 0,
+    "demo_simulated_mrr_aoa": 147500000,
+    "demo_tagging_enforced": true,
+    "payment_status_default": "DEMO_TEST",
+    "audit_compliance": "PASS"
+  },
+  "sha256_manifest_integrity": "8e3c54d19bf24097f48a12e104b209d8417c4e2098234ab1c890123ef56789ab"
+}

@@ -1,0 +1,5109 @@
+{
+  "unique_competencies_total": 240,
+  "unique_jurisdiction_sensitive_competencies": 170,
+  "jurisdiction_sensitive_employee_assignments": 850,
+  "global_competencies": 70,
+  "unclassified_competencies": 0,
+  "items": [
+    {
+      "competency_id": "COMP-SENSITIVE-001",
+      "competency_name": "Jurisdiction Sensitive Competency 1 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-002"
+      ],
+      "global_core_dependency": "GC-DEP-1",
+      "international_standard_dependency": "INT-DEP-1",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-002",
+      "competency_name": "Jurisdiction Sensitive Competency 2 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-003"
+      ],
+      "global_core_dependency": "GC-DEP-2",
+      "international_standard_dependency": "INT-DEP-2",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-003",
+      "competency_name": "Jurisdiction Sensitive Competency 3 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-004"
+      ],
+      "global_core_dependency": "GC-DEP-3",
+      "international_standard_dependency": "INT-DEP-3",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-004",
+      "competency_name": "Jurisdiction Sensitive Competency 4 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-005"
+      ],
+      "global_core_dependency": "GC-DEP-4",
+      "international_standard_dependency": "INT-DEP-4",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-005",
+      "competency_name": "Jurisdiction Sensitive Competency 5 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-006"
+      ],
+      "global_core_dependency": "GC-DEP-5",
+      "international_standard_dependency": "INT-DEP-5",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-006",
+      "competency_name": "Jurisdiction Sensitive Competency 6 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-007"
+      ],
+      "global_core_dependency": "GC-DEP-6",
+      "international_standard_dependency": "INT-DEP-6",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-007",
+      "competency_name": "Jurisdiction Sensitive Competency 7 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-008"
+      ],
+      "global_core_dependency": "GC-DEP-7",
+      "international_standard_dependency": "INT-DEP-7",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-008",
+      "competency_name": "Jurisdiction Sensitive Competency 8 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-009"
+      ],
+      "global_core_dependency": "GC-DEP-8",
+      "international_standard_dependency": "INT-DEP-8",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-009",
+      "competency_name": "Jurisdiction Sensitive Competency 9 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-010"
+      ],
+      "global_core_dependency": "GC-DEP-9",
+      "international_standard_dependency": "INT-DEP-9",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-010",
+      "competency_name": "Jurisdiction Sensitive Competency 10 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-011"
+      ],
+      "global_core_dependency": "GC-DEP-10",
+      "international_standard_dependency": "INT-DEP-10",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-011",
+      "competency_name": "Jurisdiction Sensitive Competency 11 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-012"
+      ],
+      "global_core_dependency": "GC-DEP-11",
+      "international_standard_dependency": "INT-DEP-11",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-012",
+      "competency_name": "Jurisdiction Sensitive Competency 12 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-013"
+      ],
+      "global_core_dependency": "GC-DEP-12",
+      "international_standard_dependency": "INT-DEP-12",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-013",
+      "competency_name": "Jurisdiction Sensitive Competency 13 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-014"
+      ],
+      "global_core_dependency": "GC-DEP-13",
+      "international_standard_dependency": "INT-DEP-13",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-014",
+      "competency_name": "Jurisdiction Sensitive Competency 14 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-015"
+      ],
+      "global_core_dependency": "GC-DEP-14",
+      "international_standard_dependency": "INT-DEP-14",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-015",
+      "competency_name": "Jurisdiction Sensitive Competency 15 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-016"
+      ],
+      "global_core_dependency": "GC-DEP-15",
+      "international_standard_dependency": "INT-DEP-15",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-016",
+      "competency_name": "Jurisdiction Sensitive Competency 16 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-017"
+      ],
+      "global_core_dependency": "GC-DEP-16",
+      "international_standard_dependency": "INT-DEP-16",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-017",
+      "competency_name": "Jurisdiction Sensitive Competency 17 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-018"
+      ],
+      "global_core_dependency": "GC-DEP-17",
+      "international_standard_dependency": "INT-DEP-17",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-018",
+      "competency_name": "Jurisdiction Sensitive Competency 18 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-019"
+      ],
+      "global_core_dependency": "GC-DEP-18",
+      "international_standard_dependency": "INT-DEP-18",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-019",
+      "competency_name": "Jurisdiction Sensitive Competency 19 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-020"
+      ],
+      "global_core_dependency": "GC-DEP-19",
+      "international_standard_dependency": "INT-DEP-19",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-020",
+      "competency_name": "Jurisdiction Sensitive Competency 20 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-021"
+      ],
+      "global_core_dependency": "GC-DEP-20",
+      "international_standard_dependency": "INT-DEP-20",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-021",
+      "competency_name": "Jurisdiction Sensitive Competency 21 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-022"
+      ],
+      "global_core_dependency": "GC-DEP-21",
+      "international_standard_dependency": "INT-DEP-21",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-022",
+      "competency_name": "Jurisdiction Sensitive Competency 22 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-023"
+      ],
+      "global_core_dependency": "GC-DEP-22",
+      "international_standard_dependency": "INT-DEP-22",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-023",
+      "competency_name": "Jurisdiction Sensitive Competency 23 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-024"
+      ],
+      "global_core_dependency": "GC-DEP-23",
+      "international_standard_dependency": "INT-DEP-23",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-024",
+      "competency_name": "Jurisdiction Sensitive Competency 24 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-025"
+      ],
+      "global_core_dependency": "GC-DEP-24",
+      "international_standard_dependency": "INT-DEP-24",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-025",
+      "competency_name": "Jurisdiction Sensitive Competency 25 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-026"
+      ],
+      "global_core_dependency": "GC-DEP-25",
+      "international_standard_dependency": "INT-DEP-25",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-026",
+      "competency_name": "Jurisdiction Sensitive Competency 26 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-027"
+      ],
+      "global_core_dependency": "GC-DEP-26",
+      "international_standard_dependency": "INT-DEP-26",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-027",
+      "competency_name": "Jurisdiction Sensitive Competency 27 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-028"
+      ],
+      "global_core_dependency": "GC-DEP-27",
+      "international_standard_dependency": "INT-DEP-27",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-028",
+      "competency_name": "Jurisdiction Sensitive Competency 28 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-029"
+      ],
+      "global_core_dependency": "GC-DEP-28",
+      "international_standard_dependency": "INT-DEP-28",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-029",
+      "competency_name": "Jurisdiction Sensitive Competency 29 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-030"
+      ],
+      "global_core_dependency": "GC-DEP-29",
+      "international_standard_dependency": "INT-DEP-29",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-030",
+      "competency_name": "Jurisdiction Sensitive Competency 30 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-031"
+      ],
+      "global_core_dependency": "GC-DEP-30",
+      "international_standard_dependency": "INT-DEP-30",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-031",
+      "competency_name": "Jurisdiction Sensitive Competency 31 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-032"
+      ],
+      "global_core_dependency": "GC-DEP-31",
+      "international_standard_dependency": "INT-DEP-31",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-032",
+      "competency_name": "Jurisdiction Sensitive Competency 32 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-033"
+      ],
+      "global_core_dependency": "GC-DEP-32",
+      "international_standard_dependency": "INT-DEP-32",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-033",
+      "competency_name": "Jurisdiction Sensitive Competency 33 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-034"
+      ],
+      "global_core_dependency": "GC-DEP-33",
+      "international_standard_dependency": "INT-DEP-33",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-034",
+      "competency_name": "Jurisdiction Sensitive Competency 34 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-035"
+      ],
+      "global_core_dependency": "GC-DEP-34",
+      "international_standard_dependency": "INT-DEP-34",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-035",
+      "competency_name": "Jurisdiction Sensitive Competency 35 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-036"
+      ],
+      "global_core_dependency": "GC-DEP-35",
+      "international_standard_dependency": "INT-DEP-35",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-036",
+      "competency_name": "Jurisdiction Sensitive Competency 36 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-037"
+      ],
+      "global_core_dependency": "GC-DEP-36",
+      "international_standard_dependency": "INT-DEP-36",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-037",
+      "competency_name": "Jurisdiction Sensitive Competency 37 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-038"
+      ],
+      "global_core_dependency": "GC-DEP-37",
+      "international_standard_dependency": "INT-DEP-37",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-038",
+      "competency_name": "Jurisdiction Sensitive Competency 38 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-039"
+      ],
+      "global_core_dependency": "GC-DEP-38",
+      "international_standard_dependency": "INT-DEP-38",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-039",
+      "competency_name": "Jurisdiction Sensitive Competency 39 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-040"
+      ],
+      "global_core_dependency": "GC-DEP-39",
+      "international_standard_dependency": "INT-DEP-39",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-040",
+      "competency_name": "Jurisdiction Sensitive Competency 40 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-041"
+      ],
+      "global_core_dependency": "GC-DEP-40",
+      "international_standard_dependency": "INT-DEP-40",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-041",
+      "competency_name": "Jurisdiction Sensitive Competency 41 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-042"
+      ],
+      "global_core_dependency": "GC-DEP-41",
+      "international_standard_dependency": "INT-DEP-41",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-042",
+      "competency_name": "Jurisdiction Sensitive Competency 42 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-043"
+      ],
+      "global_core_dependency": "GC-DEP-42",
+      "international_standard_dependency": "INT-DEP-42",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-043",
+      "competency_name": "Jurisdiction Sensitive Competency 43 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-044"
+      ],
+      "global_core_dependency": "GC-DEP-43",
+      "international_standard_dependency": "INT-DEP-43",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-044",
+      "competency_name": "Jurisdiction Sensitive Competency 44 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-045"
+      ],
+      "global_core_dependency": "GC-DEP-44",
+      "international_standard_dependency": "INT-DEP-44",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-045",
+      "competency_name": "Jurisdiction Sensitive Competency 45 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-046"
+      ],
+      "global_core_dependency": "GC-DEP-45",
+      "international_standard_dependency": "INT-DEP-45",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-046",
+      "competency_name": "Jurisdiction Sensitive Competency 46 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-047"
+      ],
+      "global_core_dependency": "GC-DEP-46",
+      "international_standard_dependency": "INT-DEP-46",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-047",
+      "competency_name": "Jurisdiction Sensitive Competency 47 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-048"
+      ],
+      "global_core_dependency": "GC-DEP-47",
+      "international_standard_dependency": "INT-DEP-47",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-048",
+      "competency_name": "Jurisdiction Sensitive Competency 48 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-049"
+      ],
+      "global_core_dependency": "GC-DEP-48",
+      "international_standard_dependency": "INT-DEP-48",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-049",
+      "competency_name": "Jurisdiction Sensitive Competency 49 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-050"
+      ],
+      "global_core_dependency": "GC-DEP-49",
+      "international_standard_dependency": "INT-DEP-49",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-050",
+      "competency_name": "Jurisdiction Sensitive Competency 50 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-051"
+      ],
+      "global_core_dependency": "GC-DEP-50",
+      "international_standard_dependency": "INT-DEP-50",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-051",
+      "competency_name": "Jurisdiction Sensitive Competency 51 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-052"
+      ],
+      "global_core_dependency": "GC-DEP-51",
+      "international_standard_dependency": "INT-DEP-51",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-052",
+      "competency_name": "Jurisdiction Sensitive Competency 52 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-053"
+      ],
+      "global_core_dependency": "GC-DEP-52",
+      "international_standard_dependency": "INT-DEP-52",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-053",
+      "competency_name": "Jurisdiction Sensitive Competency 53 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-054"
+      ],
+      "global_core_dependency": "GC-DEP-53",
+      "international_standard_dependency": "INT-DEP-53",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-054",
+      "competency_name": "Jurisdiction Sensitive Competency 54 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-055"
+      ],
+      "global_core_dependency": "GC-DEP-54",
+      "international_standard_dependency": "INT-DEP-54",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-055",
+      "competency_name": "Jurisdiction Sensitive Competency 55 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-056"
+      ],
+      "global_core_dependency": "GC-DEP-55",
+      "international_standard_dependency": "INT-DEP-55",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-056",
+      "competency_name": "Jurisdiction Sensitive Competency 56 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-057"
+      ],
+      "global_core_dependency": "GC-DEP-56",
+      "international_standard_dependency": "INT-DEP-56",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-057",
+      "competency_name": "Jurisdiction Sensitive Competency 57 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-058"
+      ],
+      "global_core_dependency": "GC-DEP-57",
+      "international_standard_dependency": "INT-DEP-57",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-058",
+      "competency_name": "Jurisdiction Sensitive Competency 58 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-059"
+      ],
+      "global_core_dependency": "GC-DEP-58",
+      "international_standard_dependency": "INT-DEP-58",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-059",
+      "competency_name": "Jurisdiction Sensitive Competency 59 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-060"
+      ],
+      "global_core_dependency": "GC-DEP-59",
+      "international_standard_dependency": "INT-DEP-59",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-060",
+      "competency_name": "Jurisdiction Sensitive Competency 60 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-061"
+      ],
+      "global_core_dependency": "GC-DEP-60",
+      "international_standard_dependency": "INT-DEP-60",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-061",
+      "competency_name": "Jurisdiction Sensitive Competency 61 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-062"
+      ],
+      "global_core_dependency": "GC-DEP-61",
+      "international_standard_dependency": "INT-DEP-61",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-062",
+      "competency_name": "Jurisdiction Sensitive Competency 62 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-063"
+      ],
+      "global_core_dependency": "GC-DEP-62",
+      "international_standard_dependency": "INT-DEP-62",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-063",
+      "competency_name": "Jurisdiction Sensitive Competency 63 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-064"
+      ],
+      "global_core_dependency": "GC-DEP-63",
+      "international_standard_dependency": "INT-DEP-63",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-064",
+      "competency_name": "Jurisdiction Sensitive Competency 64 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-065"
+      ],
+      "global_core_dependency": "GC-DEP-64",
+      "international_standard_dependency": "INT-DEP-64",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-065",
+      "competency_name": "Jurisdiction Sensitive Competency 65 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-066"
+      ],
+      "global_core_dependency": "GC-DEP-65",
+      "international_standard_dependency": "INT-DEP-65",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-066",
+      "competency_name": "Jurisdiction Sensitive Competency 66 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-067"
+      ],
+      "global_core_dependency": "GC-DEP-66",
+      "international_standard_dependency": "INT-DEP-66",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-067",
+      "competency_name": "Jurisdiction Sensitive Competency 67 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-068"
+      ],
+      "global_core_dependency": "GC-DEP-67",
+      "international_standard_dependency": "INT-DEP-67",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-068",
+      "competency_name": "Jurisdiction Sensitive Competency 68 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-069"
+      ],
+      "global_core_dependency": "GC-DEP-68",
+      "international_standard_dependency": "INT-DEP-68",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-069",
+      "competency_name": "Jurisdiction Sensitive Competency 69 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-070"
+      ],
+      "global_core_dependency": "GC-DEP-69",
+      "international_standard_dependency": "INT-DEP-69",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-070",
+      "competency_name": "Jurisdiction Sensitive Competency 70 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-071"
+      ],
+      "global_core_dependency": "GC-DEP-70",
+      "international_standard_dependency": "INT-DEP-70",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-071",
+      "competency_name": "Jurisdiction Sensitive Competency 71 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-072"
+      ],
+      "global_core_dependency": "GC-DEP-71",
+      "international_standard_dependency": "INT-DEP-71",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-072",
+      "competency_name": "Jurisdiction Sensitive Competency 72 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-073"
+      ],
+      "global_core_dependency": "GC-DEP-72",
+      "international_standard_dependency": "INT-DEP-72",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-073",
+      "competency_name": "Jurisdiction Sensitive Competency 73 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-074"
+      ],
+      "global_core_dependency": "GC-DEP-73",
+      "international_standard_dependency": "INT-DEP-73",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-074",
+      "competency_name": "Jurisdiction Sensitive Competency 74 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-075"
+      ],
+      "global_core_dependency": "GC-DEP-74",
+      "international_standard_dependency": "INT-DEP-74",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-075",
+      "competency_name": "Jurisdiction Sensitive Competency 75 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-076"
+      ],
+      "global_core_dependency": "GC-DEP-75",
+      "international_standard_dependency": "INT-DEP-75",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-076",
+      "competency_name": "Jurisdiction Sensitive Competency 76 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-077"
+      ],
+      "global_core_dependency": "GC-DEP-76",
+      "international_standard_dependency": "INT-DEP-76",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-077",
+      "competency_name": "Jurisdiction Sensitive Competency 77 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-078"
+      ],
+      "global_core_dependency": "GC-DEP-77",
+      "international_standard_dependency": "INT-DEP-77",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-078",
+      "competency_name": "Jurisdiction Sensitive Competency 78 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-079"
+      ],
+      "global_core_dependency": "GC-DEP-78",
+      "international_standard_dependency": "INT-DEP-78",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-079",
+      "competency_name": "Jurisdiction Sensitive Competency 79 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-080"
+      ],
+      "global_core_dependency": "GC-DEP-79",
+      "international_standard_dependency": "INT-DEP-79",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-080",
+      "competency_name": "Jurisdiction Sensitive Competency 80 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-081"
+      ],
+      "global_core_dependency": "GC-DEP-80",
+      "international_standard_dependency": "INT-DEP-80",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-081",
+      "competency_name": "Jurisdiction Sensitive Competency 81 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-082"
+      ],
+      "global_core_dependency": "GC-DEP-81",
+      "international_standard_dependency": "INT-DEP-81",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-082",
+      "competency_name": "Jurisdiction Sensitive Competency 82 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-083"
+      ],
+      "global_core_dependency": "GC-DEP-82",
+      "international_standard_dependency": "INT-DEP-82",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-083",
+      "competency_name": "Jurisdiction Sensitive Competency 83 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-084"
+      ],
+      "global_core_dependency": "GC-DEP-83",
+      "international_standard_dependency": "INT-DEP-83",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-084",
+      "competency_name": "Jurisdiction Sensitive Competency 84 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-085"
+      ],
+      "global_core_dependency": "GC-DEP-84",
+      "international_standard_dependency": "INT-DEP-84",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-085",
+      "competency_name": "Jurisdiction Sensitive Competency 85 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-086"
+      ],
+      "global_core_dependency": "GC-DEP-85",
+      "international_standard_dependency": "INT-DEP-85",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-086",
+      "competency_name": "Jurisdiction Sensitive Competency 86 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-087"
+      ],
+      "global_core_dependency": "GC-DEP-86",
+      "international_standard_dependency": "INT-DEP-86",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-087",
+      "competency_name": "Jurisdiction Sensitive Competency 87 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-088"
+      ],
+      "global_core_dependency": "GC-DEP-87",
+      "international_standard_dependency": "INT-DEP-87",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-088",
+      "competency_name": "Jurisdiction Sensitive Competency 88 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-089"
+      ],
+      "global_core_dependency": "GC-DEP-88",
+      "international_standard_dependency": "INT-DEP-88",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-089",
+      "competency_name": "Jurisdiction Sensitive Competency 89 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-090"
+      ],
+      "global_core_dependency": "GC-DEP-89",
+      "international_standard_dependency": "INT-DEP-89",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-090",
+      "competency_name": "Jurisdiction Sensitive Competency 90 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-091"
+      ],
+      "global_core_dependency": "GC-DEP-90",
+      "international_standard_dependency": "INT-DEP-90",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-091",
+      "competency_name": "Jurisdiction Sensitive Competency 91 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-092"
+      ],
+      "global_core_dependency": "GC-DEP-91",
+      "international_standard_dependency": "INT-DEP-91",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-092",
+      "competency_name": "Jurisdiction Sensitive Competency 92 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-093"
+      ],
+      "global_core_dependency": "GC-DEP-92",
+      "international_standard_dependency": "INT-DEP-92",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-093",
+      "competency_name": "Jurisdiction Sensitive Competency 93 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-094"
+      ],
+      "global_core_dependency": "GC-DEP-93",
+      "international_standard_dependency": "INT-DEP-93",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-094",
+      "competency_name": "Jurisdiction Sensitive Competency 94 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-095"
+      ],
+      "global_core_dependency": "GC-DEP-94",
+      "international_standard_dependency": "INT-DEP-94",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-095",
+      "competency_name": "Jurisdiction Sensitive Competency 95 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-096"
+      ],
+      "global_core_dependency": "GC-DEP-95",
+      "international_standard_dependency": "INT-DEP-95",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-096",
+      "competency_name": "Jurisdiction Sensitive Competency 96 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-097"
+      ],
+      "global_core_dependency": "GC-DEP-96",
+      "international_standard_dependency": "INT-DEP-96",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-097",
+      "competency_name": "Jurisdiction Sensitive Competency 97 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-098"
+      ],
+      "global_core_dependency": "GC-DEP-97",
+      "international_standard_dependency": "INT-DEP-97",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-098",
+      "competency_name": "Jurisdiction Sensitive Competency 98 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-099"
+      ],
+      "global_core_dependency": "GC-DEP-98",
+      "international_standard_dependency": "INT-DEP-98",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-099",
+      "competency_name": "Jurisdiction Sensitive Competency 99 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-100"
+      ],
+      "global_core_dependency": "GC-DEP-99",
+      "international_standard_dependency": "INT-DEP-99",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-100",
+      "competency_name": "Jurisdiction Sensitive Competency 100 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-101"
+      ],
+      "global_core_dependency": "GC-DEP-100",
+      "international_standard_dependency": "INT-DEP-100",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-101",
+      "competency_name": "Jurisdiction Sensitive Competency 101 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-102"
+      ],
+      "global_core_dependency": "GC-DEP-101",
+      "international_standard_dependency": "INT-DEP-101",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-102",
+      "competency_name": "Jurisdiction Sensitive Competency 102 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-103"
+      ],
+      "global_core_dependency": "GC-DEP-102",
+      "international_standard_dependency": "INT-DEP-102",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-103",
+      "competency_name": "Jurisdiction Sensitive Competency 103 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-104"
+      ],
+      "global_core_dependency": "GC-DEP-103",
+      "international_standard_dependency": "INT-DEP-103",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-104",
+      "competency_name": "Jurisdiction Sensitive Competency 104 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-105"
+      ],
+      "global_core_dependency": "GC-DEP-104",
+      "international_standard_dependency": "INT-DEP-104",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-105",
+      "competency_name": "Jurisdiction Sensitive Competency 105 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-106"
+      ],
+      "global_core_dependency": "GC-DEP-105",
+      "international_standard_dependency": "INT-DEP-105",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-106",
+      "competency_name": "Jurisdiction Sensitive Competency 106 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-107"
+      ],
+      "global_core_dependency": "GC-DEP-106",
+      "international_standard_dependency": "INT-DEP-106",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-107",
+      "competency_name": "Jurisdiction Sensitive Competency 107 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-108"
+      ],
+      "global_core_dependency": "GC-DEP-107",
+      "international_standard_dependency": "INT-DEP-107",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-108",
+      "competency_name": "Jurisdiction Sensitive Competency 108 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-109"
+      ],
+      "global_core_dependency": "GC-DEP-108",
+      "international_standard_dependency": "INT-DEP-108",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-109",
+      "competency_name": "Jurisdiction Sensitive Competency 109 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-110"
+      ],
+      "global_core_dependency": "GC-DEP-109",
+      "international_standard_dependency": "INT-DEP-109",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-110",
+      "competency_name": "Jurisdiction Sensitive Competency 110 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-111"
+      ],
+      "global_core_dependency": "GC-DEP-110",
+      "international_standard_dependency": "INT-DEP-110",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-111",
+      "competency_name": "Jurisdiction Sensitive Competency 111 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-112"
+      ],
+      "global_core_dependency": "GC-DEP-111",
+      "international_standard_dependency": "INT-DEP-111",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-112",
+      "competency_name": "Jurisdiction Sensitive Competency 112 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-113"
+      ],
+      "global_core_dependency": "GC-DEP-112",
+      "international_standard_dependency": "INT-DEP-112",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-113",
+      "competency_name": "Jurisdiction Sensitive Competency 113 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-114"
+      ],
+      "global_core_dependency": "GC-DEP-113",
+      "international_standard_dependency": "INT-DEP-113",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-114",
+      "competency_name": "Jurisdiction Sensitive Competency 114 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-115"
+      ],
+      "global_core_dependency": "GC-DEP-114",
+      "international_standard_dependency": "INT-DEP-114",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-115",
+      "competency_name": "Jurisdiction Sensitive Competency 115 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-116"
+      ],
+      "global_core_dependency": "GC-DEP-115",
+      "international_standard_dependency": "INT-DEP-115",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-116",
+      "competency_name": "Jurisdiction Sensitive Competency 116 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-117"
+      ],
+      "global_core_dependency": "GC-DEP-116",
+      "international_standard_dependency": "INT-DEP-116",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-117",
+      "competency_name": "Jurisdiction Sensitive Competency 117 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-118"
+      ],
+      "global_core_dependency": "GC-DEP-117",
+      "international_standard_dependency": "INT-DEP-117",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-118",
+      "competency_name": "Jurisdiction Sensitive Competency 118 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-119"
+      ],
+      "global_core_dependency": "GC-DEP-118",
+      "international_standard_dependency": "INT-DEP-118",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-119",
+      "competency_name": "Jurisdiction Sensitive Competency 119 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-120"
+      ],
+      "global_core_dependency": "GC-DEP-119",
+      "international_standard_dependency": "INT-DEP-119",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-120",
+      "competency_name": "Jurisdiction Sensitive Competency 120 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-121"
+      ],
+      "global_core_dependency": "GC-DEP-120",
+      "international_standard_dependency": "INT-DEP-120",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-121",
+      "competency_name": "Jurisdiction Sensitive Competency 121 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-122"
+      ],
+      "global_core_dependency": "GC-DEP-121",
+      "international_standard_dependency": "INT-DEP-121",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-122",
+      "competency_name": "Jurisdiction Sensitive Competency 122 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-123"
+      ],
+      "global_core_dependency": "GC-DEP-122",
+      "international_standard_dependency": "INT-DEP-122",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-123",
+      "competency_name": "Jurisdiction Sensitive Competency 123 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-124"
+      ],
+      "global_core_dependency": "GC-DEP-123",
+      "international_standard_dependency": "INT-DEP-123",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-124",
+      "competency_name": "Jurisdiction Sensitive Competency 124 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-125"
+      ],
+      "global_core_dependency": "GC-DEP-124",
+      "international_standard_dependency": "INT-DEP-124",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-125",
+      "competency_name": "Jurisdiction Sensitive Competency 125 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-126"
+      ],
+      "global_core_dependency": "GC-DEP-125",
+      "international_standard_dependency": "INT-DEP-125",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-126",
+      "competency_name": "Jurisdiction Sensitive Competency 126 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-127"
+      ],
+      "global_core_dependency": "GC-DEP-126",
+      "international_standard_dependency": "INT-DEP-126",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-127",
+      "competency_name": "Jurisdiction Sensitive Competency 127 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-128"
+      ],
+      "global_core_dependency": "GC-DEP-127",
+      "international_standard_dependency": "INT-DEP-127",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-128",
+      "competency_name": "Jurisdiction Sensitive Competency 128 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-129"
+      ],
+      "global_core_dependency": "GC-DEP-128",
+      "international_standard_dependency": "INT-DEP-128",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-129",
+      "competency_name": "Jurisdiction Sensitive Competency 129 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-130"
+      ],
+      "global_core_dependency": "GC-DEP-129",
+      "international_standard_dependency": "INT-DEP-129",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-130",
+      "competency_name": "Jurisdiction Sensitive Competency 130 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-131"
+      ],
+      "global_core_dependency": "GC-DEP-130",
+      "international_standard_dependency": "INT-DEP-130",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-131",
+      "competency_name": "Jurisdiction Sensitive Competency 131 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-132"
+      ],
+      "global_core_dependency": "GC-DEP-131",
+      "international_standard_dependency": "INT-DEP-131",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-132",
+      "competency_name": "Jurisdiction Sensitive Competency 132 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-133"
+      ],
+      "global_core_dependency": "GC-DEP-132",
+      "international_standard_dependency": "INT-DEP-132",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-133",
+      "competency_name": "Jurisdiction Sensitive Competency 133 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-134"
+      ],
+      "global_core_dependency": "GC-DEP-133",
+      "international_standard_dependency": "INT-DEP-133",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-134",
+      "competency_name": "Jurisdiction Sensitive Competency 134 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-135"
+      ],
+      "global_core_dependency": "GC-DEP-134",
+      "international_standard_dependency": "INT-DEP-134",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-135",
+      "competency_name": "Jurisdiction Sensitive Competency 135 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-136"
+      ],
+      "global_core_dependency": "GC-DEP-135",
+      "international_standard_dependency": "INT-DEP-135",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-136",
+      "competency_name": "Jurisdiction Sensitive Competency 136 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-137"
+      ],
+      "global_core_dependency": "GC-DEP-136",
+      "international_standard_dependency": "INT-DEP-136",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-137",
+      "competency_name": "Jurisdiction Sensitive Competency 137 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-138"
+      ],
+      "global_core_dependency": "GC-DEP-137",
+      "international_standard_dependency": "INT-DEP-137",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-138",
+      "competency_name": "Jurisdiction Sensitive Competency 138 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-139"
+      ],
+      "global_core_dependency": "GC-DEP-138",
+      "international_standard_dependency": "INT-DEP-138",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-139",
+      "competency_name": "Jurisdiction Sensitive Competency 139 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-140"
+      ],
+      "global_core_dependency": "GC-DEP-139",
+      "international_standard_dependency": "INT-DEP-139",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-140",
+      "competency_name": "Jurisdiction Sensitive Competency 140 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-141"
+      ],
+      "global_core_dependency": "GC-DEP-140",
+      "international_standard_dependency": "INT-DEP-140",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-141",
+      "competency_name": "Jurisdiction Sensitive Competency 141 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-142"
+      ],
+      "global_core_dependency": "GC-DEP-141",
+      "international_standard_dependency": "INT-DEP-141",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-142",
+      "competency_name": "Jurisdiction Sensitive Competency 142 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-143"
+      ],
+      "global_core_dependency": "GC-DEP-142",
+      "international_standard_dependency": "INT-DEP-142",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-143",
+      "competency_name": "Jurisdiction Sensitive Competency 143 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-144"
+      ],
+      "global_core_dependency": "GC-DEP-143",
+      "international_standard_dependency": "INT-DEP-143",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-144",
+      "competency_name": "Jurisdiction Sensitive Competency 144 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-145"
+      ],
+      "global_core_dependency": "GC-DEP-144",
+      "international_standard_dependency": "INT-DEP-144",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-145",
+      "competency_name": "Jurisdiction Sensitive Competency 145 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-146"
+      ],
+      "global_core_dependency": "GC-DEP-145",
+      "international_standard_dependency": "INT-DEP-145",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-146",
+      "competency_name": "Jurisdiction Sensitive Competency 146 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-147"
+      ],
+      "global_core_dependency": "GC-DEP-146",
+      "international_standard_dependency": "INT-DEP-146",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-147",
+      "competency_name": "Jurisdiction Sensitive Competency 147 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-148"
+      ],
+      "global_core_dependency": "GC-DEP-147",
+      "international_standard_dependency": "INT-DEP-147",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-148",
+      "competency_name": "Jurisdiction Sensitive Competency 148 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-149"
+      ],
+      "global_core_dependency": "GC-DEP-148",
+      "international_standard_dependency": "INT-DEP-148",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-149",
+      "competency_name": "Jurisdiction Sensitive Competency 149 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-150"
+      ],
+      "global_core_dependency": "GC-DEP-149",
+      "international_standard_dependency": "INT-DEP-149",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-150",
+      "competency_name": "Jurisdiction Sensitive Competency 150 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-151"
+      ],
+      "global_core_dependency": "GC-DEP-150",
+      "international_standard_dependency": "INT-DEP-150",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-151",
+      "competency_name": "Jurisdiction Sensitive Competency 151 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-152"
+      ],
+      "global_core_dependency": "GC-DEP-151",
+      "international_standard_dependency": "INT-DEP-151",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-152",
+      "competency_name": "Jurisdiction Sensitive Competency 152 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-153"
+      ],
+      "global_core_dependency": "GC-DEP-152",
+      "international_standard_dependency": "INT-DEP-152",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-153",
+      "competency_name": "Jurisdiction Sensitive Competency 153 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-154"
+      ],
+      "global_core_dependency": "GC-DEP-153",
+      "international_standard_dependency": "INT-DEP-153",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-154",
+      "competency_name": "Jurisdiction Sensitive Competency 154 (TAX)",
+      "domain": "Domain TAX",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "TAX",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-155"
+      ],
+      "global_core_dependency": "GC-DEP-154",
+      "international_standard_dependency": "INT-DEP-154",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-155",
+      "competency_name": "Jurisdiction Sensitive Competency 155 (ACCOUNTING)",
+      "domain": "Domain ACCOUNTING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ACCOUNTING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-156"
+      ],
+      "global_core_dependency": "GC-DEP-155",
+      "international_standard_dependency": "INT-DEP-155",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-156",
+      "competency_name": "Jurisdiction Sensitive Competency 156 (LABOUR)",
+      "domain": "Domain LABOUR",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LABOUR",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-157"
+      ],
+      "global_core_dependency": "GC-DEP-156",
+      "international_standard_dependency": "INT-DEP-156",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-157",
+      "competency_name": "Jurisdiction Sensitive Competency 157 (CORPORATE)",
+      "domain": "Domain CORPORATE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CORPORATE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-158"
+      ],
+      "global_core_dependency": "GC-DEP-157",
+      "international_standard_dependency": "INT-DEP-157",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-158",
+      "competency_name": "Jurisdiction Sensitive Competency 158 (BANKING)",
+      "domain": "Domain BANKING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "BANKING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-159"
+      ],
+      "global_core_dependency": "GC-DEP-158",
+      "international_standard_dependency": "INT-DEP-158",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-159",
+      "competency_name": "Jurisdiction Sensitive Competency 159 (CUSTOMS)",
+      "domain": "Domain CUSTOMS",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CUSTOMS",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-160"
+      ],
+      "global_core_dependency": "GC-DEP-159",
+      "international_standard_dependency": "INT-DEP-159",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-160",
+      "competency_name": "Jurisdiction Sensitive Competency 160 (PROCUREMENT)",
+      "domain": "Domain PROCUREMENT",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PROCUREMENT",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-161"
+      ],
+      "global_core_dependency": "GC-DEP-160",
+      "international_standard_dependency": "INT-DEP-160",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-161",
+      "competency_name": "Jurisdiction Sensitive Competency 161 (PRIVACY)",
+      "domain": "Domain PRIVACY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PRIVACY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-162"
+      ],
+      "global_core_dependency": "GC-DEP-161",
+      "international_standard_dependency": "INT-DEP-161",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-162",
+      "competency_name": "Jurisdiction Sensitive Competency 162 (CONSUMER)",
+      "domain": "Domain CONSUMER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONSUMER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-163"
+      ],
+      "global_core_dependency": "GC-DEP-162",
+      "international_standard_dependency": "INT-DEP-162",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-163",
+      "competency_name": "Jurisdiction Sensitive Competency 163 (ADVERTISING)",
+      "domain": "Domain ADVERTISING",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "ADVERTISING",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-164"
+      ],
+      "global_core_dependency": "GC-DEP-163",
+      "international_standard_dependency": "INT-DEP-163",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-164",
+      "competency_name": "Jurisdiction Sensitive Competency 164 (HEALTHCARE)",
+      "domain": "Domain HEALTHCARE",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "HEALTHCARE",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-165"
+      ],
+      "global_core_dependency": "GC-DEP-164",
+      "international_standard_dependency": "INT-DEP-164",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-165",
+      "competency_name": "Jurisdiction Sensitive Competency 165 (REGULATORY)",
+      "domain": "Domain REGULATORY",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "REGULATORY",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-166"
+      ],
+      "global_core_dependency": "GC-DEP-165",
+      "international_standard_dependency": "INT-DEP-165",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-166",
+      "competency_name": "Jurisdiction Sensitive Competency 166 (PUBLIC_ADMINISTRATION)",
+      "domain": "Domain PUBLIC_ADMINISTRATION",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "PUBLIC_ADMINISTRATION",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-167"
+      ],
+      "global_core_dependency": "GC-DEP-166",
+      "international_standard_dependency": "INT-DEP-166",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-167",
+      "competency_name": "Jurisdiction Sensitive Competency 167 (CONTRACTUAL)",
+      "domain": "Domain CONTRACTUAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "CONTRACTUAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-168"
+      ],
+      "global_core_dependency": "GC-DEP-167",
+      "international_standard_dependency": "INT-DEP-167",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-168",
+      "competency_name": "Jurisdiction Sensitive Competency 168 (SECTOR_REGULATED)",
+      "domain": "Domain SECTOR_REGULATED",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "SECTOR_REGULATED",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-169"
+      ],
+      "global_core_dependency": "GC-DEP-168",
+      "international_standard_dependency": "INT-DEP-168",
+      "country_specific_rule_required": true,
+      "risk_level": "HIGH"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-169",
+      "competency_name": "Jurisdiction Sensitive Competency 169 (OTHER)",
+      "domain": "Domain OTHER",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "OTHER",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-170"
+      ],
+      "global_core_dependency": "GC-DEP-169",
+      "international_standard_dependency": "INT-DEP-169",
+      "country_specific_rule_required": true,
+      "risk_level": "MEDIUM"
+    },
+    {
+      "competency_id": "COMP-SENSITIVE-170",
+      "competency_name": "Jurisdiction Sensitive Competency 170 (LEGAL)",
+      "domain": "Domain LEGAL",
+      "jurisdiction_sensitive": true,
+      "sensitivity_type": "LEGAL",
+      "applicable_country_codes": [
+        "AO",
+        "PT",
+        "MZ",
+        "BR",
+        "CV",
+        "ST"
+      ],
+      "required_country_pack": "MANDATORY",
+      "required_source_types": [
+        "STATUTE",
+        "REGULATION"
+      ],
+      "minimum_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "minimum_certification_level": "CERTIFIED_WITH_SUPERVISION",
+      "minimum_readiness_for_execution": "R4",
+      "employee_ids": [
+        "EMP-171"
+      ],
+      "global_core_dependency": "GC-DEP-170",
+      "international_standard_dependency": "INT-DEP-170",
+      "country_specific_rule_required": true,
+      "risk_level": "CRITICAL"
+    }
+  ]
+}

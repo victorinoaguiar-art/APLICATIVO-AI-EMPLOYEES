@@ -1,0 +1,46 @@
+[
+  {
+    "test_id": "RETRIEVAL-TRUTH-SRC004-01",
+    "query": "Quais os requisitos de inspecção sanitária e auditoria hospitalar em Angola?",
+    "expected_document_number": "260/10",
+    "unexpected_document_number": "260/23",
+    "retrieved_source_id": "SRC-MINSA-004",
+    "retrieved_document_number": "260/10",
+    "negative_test_pass": true,
+    "reasoning": "SRC-MINSA-004 recuperado correctamente como Decreto Presidencial n.º 260/10. Nenhuma menção a 260/23.",
+    "status": "PASS"
+  },
+  {
+    "test_id": "RETRIEVAL-TRUTH-SRC005-01",
+    "query": "Qual é o procedimento e prazo de notificação de farmacovigilância no MINSA?",
+    "expected_document_number": "277/20",
+    "unexpected_document_number": "248/20",
+    "retrieved_source_id": "SRC-MINSA-005",
+    "retrieved_document_number": "277/20",
+    "negative_test_pass": true,
+    "reasoning": "SRC-MINSA-005 recuperado correctamente como Decreto Presidencial n.º 277/20. Nenhuma menção a 248/20.",
+    "status": "PASS"
+  },
+  {
+    "test_id": "RETRIEVAL-TRUTH-NEGATIVE-260-23",
+    "query": "Obter regras do Decreto Presidencial n.º 260/23",
+    "expected_document_number": null,
+    "unexpected_document_number": "260/23",
+    "retrieved_source_id": null,
+    "retrieved_document_number": null,
+    "negative_test_pass": true,
+    "reasoning": "A consulta por Decreto Presidencial 260/23 não identificou erradamente o ficheiro SRC-MINSA-004 (260/10).",
+    "status": "PASS"
+  },
+  {
+    "test_id": "RETRIEVAL-TRUTH-NEGATIVE-248-20",
+    "query": "Obter regras do Decreto Presidencial n.º 248/20",
+    "expected_document_number": null,
+    "unexpected_document_number": "248/20",
+    "retrieved_source_id": null,
+    "retrieved_document_number": null,
+    "negative_test_pass": true,
+    "reasoning": "A consulta por Decreto Presidencial 248/20 não identificou erradamente o ficheiro SRC-MINSA-005 (277/20).",
+    "status": "PASS"
+  }
+]

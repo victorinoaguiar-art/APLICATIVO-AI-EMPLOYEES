@@ -1,0 +1,57 @@
+[
+  {
+    "source_id": "SRC-MINSA-001",
+    "official_title": "Decreto Presidencial n.º 260/23 — Aprova o Regulamento das Carreiras Médicas do Serviço Nacional de Saúde",
+    "issuing_authority": "Presidente da República",
+    "responsible_ministry": "Ministério da Saúde (MINSA)",
+    "official_publisher": "Imprensa Nacional - Diário da República de Angola",
+    "regulatory_owner": "MINSA_ANGOLA",
+    "repository": "OFFICIAL_GAZETTE_ANGOLA_REPOSITORY",
+    "legal_status": "IN_FORCE",
+    "in_force_verified": true
+  },
+  {
+    "source_id": "SRC-MINSA-002",
+    "official_title": "Decreto Presidencial n.º 261/23 — Aprova o Regulamento da Carreira de Enfermagem do Serviço Nacional de Saúde",
+    "issuing_authority": "Presidente da República",
+    "responsible_ministry": "Ministério da Saúde (MINSA)",
+    "official_publisher": "Imprensa Nacional - Diário da República de Angola",
+    "regulatory_owner": "MINSA_ANGOLA",
+    "repository": "OFFICIAL_GAZETTE_ANGOLA_REPOSITORY",
+    "legal_status": "IN_FORCE",
+    "in_force_verified": true
+  },
+  {
+    "source_id": "SRC-MINSA-003",
+    "official_title": "Decreto Executivo n.º 12/21 — Regulamento sobre o Licenciamento Sanitário dos Estabelecimentos Prestadores de Cuidados de Saúde",
+    "issuing_authority": "Ministra da Saúde",
+    "responsible_ministry": "Ministério da Saúde (MINSA)",
+    "official_publisher": "Imprensa Nacional - Diário da República de Angola",
+    "regulatory_owner": "MINSA_ANGOLA",
+    "repository": "OFFICIAL_GAZETTE_ANGOLA_REPOSITORY",
+    "legal_status": "IN_FORCE",
+    "in_force_verified": true
+  },
+  {
+    "source_id": "SRC-MINSA-004",
+    "official_title": "Decreto Presidencial n.º 180/10 — Aprova o Regulamento da Inspecção Geral da Saúde",
+    "issuing_authority": "Presidente da República",
+    "responsible_ministry": "Ministério da Saúde (MINSA)",
+    "official_publisher": "Imprensa Nacional - Diário da República de Angola",
+    "regulatory_owner": "MINSA_ANGOLA",
+    "repository": "OFFICIAL_GAZETTE_ANGOLA_REPOSITORY",
+    "legal_status": "IN_FORCE",
+    "in_force_verified": true
+  },
+  {
+    "source_id": "SRC-MINSA-005",
+    "official_title": "Decreto Presidencial n.º 248/20 — Regulamento de Farmacovigilância e Controlo da Qualidade de Medicamentos",
+    "issuing_authority": "Presidente da República",
+    "responsible_ministry": "Ministério da Saúde (MINSA)",
+    "official_publisher": "Imprensa Nacional - Diário da República de Angola",
+    "regulatory_owner": "MINSA_ANGOLA",
+    "repository": "OFFICIAL_GAZETTE_ANGOLA_REPOSITORY",
+    "legal_status": "IN_FORCE",
+    "in_force_verified": true
+  }
+]

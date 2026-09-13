@@ -1,0 +1,23 @@
+{
+  "account_37_official_name": "Outros valores a receber e a pagar",
+  "account_37_6_official_name": "Proveitos a repartir por períodos futuros",
+  "statutory_subaccounts": [
+    {
+      "code": "37.6.1",
+      "name": "Prémios de emissão de obrigações"
+    },
+    {
+      "code": "37.6.2",
+      "name": "Prémios de emissão de títulos de participação"
+    },
+    {
+      "code": "37.6.3",
+      "name": "Subsídios para investimento"
+    }
+  ],
+  "saas_deferred_revenue_policy": "SAAS_DEFERRED_REVENUE_POLICY = INTERNALLY_MODELLED_PENDING_ACCOUNTING_POLICY_APPROVAL",
+  "analytic_extension_metadata": {
+    "account_origin": "INTERNAL_ANALYTIC_EXTENSION",
+    "governance_status": "PENDING_EXTERNAL_AUDIT_APPROVAL"
+  }
+}

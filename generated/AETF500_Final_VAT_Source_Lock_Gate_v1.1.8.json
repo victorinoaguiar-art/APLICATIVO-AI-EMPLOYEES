@@ -1,0 +1,18 @@
+{
+  "gate_name": "SAAS_METRICS_DICTIONARY_v1_1_8_VAT_SOURCE_LOCK_FINAL_GATE",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "execution_classification": "OFFICIAL_VAT_NOMENCLATURE_SOURCE_LOCK_PATCH",
+  "status": "PASS",
+  "passed": true,
+  "vat_top_level_accounts_total": 9,
+  "vat_official_fourth_level_total": 25,
+  "vat_official_fourth_level_implemented": 25,
+  "vat_code_name_parent_matches": 25,
+  "vat_official_name_mismatches": 0,
+  "vat_invalid_official_subaccounts": 0,
+  "vat_3459_1_official_status": "INVALIDATED_NOT_IN_ARTIGO_22",
+  "vat_source_lock_status": "OFFICIAL_STATUTORY_SOURCE_LOCKED",
+  "vat_official_account_tree_status": "INTERNALLY_VERIFIED_AGAINST_PROVIDED_OFFICIAL_SOURCE",
+  "final_accounting_status": "ACCOUNTING_INTERNAL_REMEDIATION = COMPLETE",
+  "final_baseline_status": "BASELINE_CONFIRMED_WITH_EXTERNAL_VALIDATIONS_PENDING"
+}

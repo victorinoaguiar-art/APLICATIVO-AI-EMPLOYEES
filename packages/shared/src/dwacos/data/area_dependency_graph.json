@@ -1,0 +1,38 @@
+[
+  {
+    "edge_id": "dep-mkt-sales",
+    "source_area_code": "A08",
+    "target_area_code": "A07",
+    "dependency_type": "SUPPLIES_DATA_TO",
+    "description": "Marketing (A08) gera e qualifica Leads que são transferidas para Vendas (A07).",
+    "data_payload_example": "MQL_Lead_Payload (Nome, Contacto, Score, Interesse)",
+    "is_mandatory": false
+  },
+  {
+    "edge_id": "dep-sales-fin",
+    "source_area_code": "A07",
+    "target_area_code": "A03",
+    "dependency_type": "TRIGGERS",
+    "description": "Vendas (A07) fecham negócios que geram Contas a Receber em Finanças (A03).",
+    "data_payload_example": "Closed_Deal_Payload (Cliente, Valor, Vencimento)",
+    "is_mandatory": false
+  },
+  {
+    "edge_id": "dep-fin-acc",
+    "source_area_code": "A03",
+    "target_area_code": "A04",
+    "dependency_type": "SUPPLIES_DATA_TO",
+    "description": "Finanças (A03) envia movimentos de caixa reconciliados para Contabilidade (A04).",
+    "data_payload_example": "Bank_Movement_Payload (Data, Valor, Conta 43)",
+    "is_mandatory": false
+  },
+  {
+    "edge_id": "dep-acc-tax",
+    "source_area_code": "A04",
+    "target_area_code": "A05",
+    "dependency_type": "SUPPLIES_DATA_TO",
+    "description": "Contabilidade (A04) fornece os lançamentos PGC para a Fiscalidade (A05) apurar o IVA e gerar SAFT-AO.",
+    "data_payload_example": "General_Ledger_SAFT_Payload (Lançamentos PGC)",
+    "is_mandatory": false
+  }
+]

@@ -1,0 +1,89 @@
+{
+  "program_id": "AETF500_COUNTRY_PACK_MATURITY_EMPLOYEE_CERTIFICATION_CEILING_MICRO_GATE_v1.0",
+  "summaries": [
+    {
+      "country_code": "AO",
+      "country_pack_maturity_level": "L6_PRODUCTION_CERTIFIED",
+      "maximum_certification_allowed": "PRODUCTION_CERTIFIED",
+      "employee_records_total": 500,
+      "below_ceiling": 0,
+      "at_ceiling": 500,
+      "above_ceiling_with_valid_exception": 0,
+      "above_ceiling_with_invalid_exception": 0,
+      "above_ceiling_without_exception": 0,
+      "policy_unresolved": 0,
+      "mass_exception_detected": false,
+      "status": "RECONCILED"
+    },
+    {
+      "country_code": "PT",
+      "country_pack_maturity_level": "L4_PROFESSIONALLY_TESTED",
+      "maximum_certification_allowed": "PROFESSIONALLY_TESTED",
+      "employee_records_total": 500,
+      "below_ceiling": 0,
+      "at_ceiling": 0,
+      "above_ceiling_with_valid_exception": 500,
+      "above_ceiling_with_invalid_exception": 0,
+      "above_ceiling_without_exception": 0,
+      "policy_unresolved": 0,
+      "mass_exception_detected": false,
+      "status": "RECONCILED"
+    },
+    {
+      "country_code": "MZ",
+      "country_pack_maturity_level": "L3_INTERNALLY_VERIFIED",
+      "maximum_certification_allowed": "INTERNALLY_VERIFIED",
+      "employee_records_total": 500,
+      "below_ceiling": 0,
+      "at_ceiling": 0,
+      "above_ceiling_with_valid_exception": 500,
+      "above_ceiling_with_invalid_exception": 0,
+      "above_ceiling_without_exception": 0,
+      "policy_unresolved": 0,
+      "mass_exception_detected": false,
+      "status": "RECONCILED"
+    },
+    {
+      "country_code": "BR",
+      "country_pack_maturity_level": "L1_SOURCES_COLLECTED",
+      "maximum_certification_allowed": "KNOWLEDGE_COLLECTION",
+      "employee_records_total": 500,
+      "below_ceiling": 0,
+      "at_ceiling": 500,
+      "above_ceiling_with_valid_exception": 0,
+      "above_ceiling_with_invalid_exception": 0,
+      "above_ceiling_without_exception": 0,
+      "policy_unresolved": 0,
+      "mass_exception_detected": false,
+      "status": "RECONCILED"
+    },
+    {
+      "country_code": "CV",
+      "country_pack_maturity_level": "L2_KNOWLEDGE_STRUCTURED",
+      "maximum_certification_allowed": "KNOWLEDGE_VERIFICATION",
+      "employee_records_total": 500,
+      "below_ceiling": 0,
+      "at_ceiling": 500,
+      "above_ceiling_with_valid_exception": 0,
+      "above_ceiling_with_invalid_exception": 0,
+      "above_ceiling_without_exception": 0,
+      "policy_unresolved": 0,
+      "mass_exception_detected": false,
+      "status": "RECONCILED"
+    },
+    {
+      "country_code": "ST",
+      "country_pack_maturity_level": "L2_KNOWLEDGE_STRUCTURED",
+      "maximum_certification_allowed": "KNOWLEDGE_VERIFICATION",
+      "employee_records_total": 500,
+      "below_ceiling": 0,
+      "at_ceiling": 500,
+      "above_ceiling_with_valid_exception": 0,
+      "above_ceiling_with_invalid_exception": 0,
+      "above_ceiling_without_exception": 0,
+      "policy_unresolved": 0,
+      "mass_exception_detected": false,
+      "status": "RECONCILED"
+    }
+  ]
+}

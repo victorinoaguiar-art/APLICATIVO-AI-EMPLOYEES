@@ -1,0 +1,14 @@
+{
+  "inventory_id": "AETF500_STRUCTURED_KNOWLEDGE_CONTENT_INVENTORY_v1.0",
+  "program_id": "AETF500_SOURCE_REGISTRY_KNOWLEDGE_CONTENT_RUNTIME_PROVENANCE_FORENSIC_AUDIT_v1.0",
+  "audited_objects_count": 415,
+  "structured_objects_with_real_content_count": 383,
+  "structured_objects_identifier_only_count": 32,
+  "identifier_only_breakdown": {
+    "healthcare_dr_001_to_dr_032": {
+      "count": 32,
+      "status": "IDENTIFIER_ONLY_OBJECT",
+      "description": "Structured objects DR-001 to DR-032 for HEALTHCARE exist as ID references in the matrix without full text body payloads of MINSA decrees."
+    }
+  }
+}

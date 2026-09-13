@@ -1,0 +1,72 @@
+[
+  {
+    "knowledge_item_id": "KI-LAB-001",
+    "domain": "LABOR_LAW",
+    "current_mapping": "SRC-LAB-001",
+    "mapping_valid": true,
+    "status": "VALID"
+  },
+  {
+    "knowledge_item_id": "KI-001",
+    "domain": "HEALTHCARE",
+    "current_mapping": "SRC-LAB-001",
+    "mapping_valid": false,
+    "replacement_required": true,
+    "replacement_source_id": "SRC-MINSA-003",
+    "status": "INVALID"
+  },
+  {
+    "knowledge_item_id": "KI-002",
+    "domain": "HEALTHCARE",
+    "current_mapping": "SRC-LAB-001",
+    "mapping_valid": false,
+    "replacement_required": true,
+    "replacement_source_id": "SRC-MINSA-001",
+    "status": "INVALID"
+  },
+  {
+    "knowledge_item_id": "KI-003",
+    "domain": "HEALTHCARE",
+    "current_mapping": "SRC-LAB-001",
+    "mapping_valid": false,
+    "replacement_required": true,
+    "replacement_source_id": "SRC-MINSA-002",
+    "status": "INVALID"
+  },
+  {
+    "knowledge_item_id": "KI-004",
+    "domain": "HEALTHCARE",
+    "current_mapping": "SRC-LAB-001",
+    "mapping_valid": false,
+    "replacement_required": true,
+    "replacement_source_id": "SRC-MINSA-004",
+    "status": "INVALID"
+  },
+  {
+    "knowledge_item_id": "KI-005",
+    "domain": "HEALTHCARE",
+    "current_mapping": "SRC-LAB-001",
+    "mapping_valid": false,
+    "replacement_required": true,
+    "replacement_source_id": "SRC-MINSA-005",
+    "status": "INVALID"
+  },
+  {
+    "knowledge_item_id": "KI-006",
+    "domain": "HEALTHCARE",
+    "current_mapping": "SRC-LAB-001",
+    "mapping_valid": false,
+    "replacement_required": true,
+    "replacement_source_id": "SRC-MINSA-005",
+    "status": "INVALID"
+  },
+  {
+    "knowledge_item_id": "KI-007",
+    "domain": "HEALTHCARE",
+    "current_mapping": "SRC-LAB-001",
+    "mapping_valid": false,
+    "replacement_required": true,
+    "replacement_source_id": "SRC-MINSA-004",
+    "status": "INVALID"
+  }
+]

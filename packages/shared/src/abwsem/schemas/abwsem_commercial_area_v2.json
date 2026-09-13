@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ABWSEM Commercial Area v2.0 Schema",
+  "type": "object",
+  "properties": {
+    "commercial_area_id": { "type": "string" },
+    "code": { "type": "string", "pattern": "^(A[0-2][0-8]|S[0-2][0-9]|P01)$" },
+    "name": { "type": "string" },
+    "type": { "type": "string", "enum": ["FUNCTIONAL_AREA", "SECTOR_AREA", "PLATFORM_LAYER"] },
+    "description": { "type": "string" },
+    "target_buyer": { "type": "string" },
+    "typical_kpis": { "type": "array", "items": { "type": "string" } },
+    "key_outcomes": { "type": "array", "items": { "type": "string" } },
+    "status": { "type": "string", "enum": ["ACTIVE", "INACTIVE", "BETA"] },
+    "display_order": { "type": "integer" },
+    "home_roles_count": { "type": "integer" },
+    "independence_test": {
+      "type": "object",
+      "properties": {
+        "buyer_budget_owner": { "type": "boolean" },
+        "business_outcome": { "type": "boolean" },
+        "kpis": { "type": "boolean" },
+        "data_tools": { "type": "boolean" },
+        "process_ownership": { "type": "boolean" },
+        "standalone_value": { "type": "boolean" },
+        "commercial_clarity": { "type": "boolean" },
+        "passed": { "type": "boolean" }
+      },
+      "required": ["buyer_budget_owner", "business_outcome", "kpis", "process_ownership", "standalone_value", "passed"]
+    }
+  },
+  "required": ["commercial_area_id", "code", "name", "type", "target_buyer", "status", "independence_test"]
+}

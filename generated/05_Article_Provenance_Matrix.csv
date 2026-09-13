@@ -1,0 +1,6 @@
+source_id,document_number,article_number,page_number,verbatim_snippet,source_sha256,text_sha256,provenance_status
+SRC-MINSA-001,21-B/92,Artigo 1.º,2,"Objecto do Sistema Nacional de Saúde",86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea,c8e11606d38c666418c6e3d8f2f92a5c87e1743948e8393e3c6a14ef3a3beac5,PROVEN
+SRC-MINSA-002,187/18,Artigo 4.º,5,"Estrutura da Carreira de Enfermagem",025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3,a57816130d883ea345f7740752a3d0081480f97e9ea9351715034c15a905beaa,PROVEN
+SRC-MINSA-003,151/21,Artigo 8.º,8,"Especialização e Licenciamento das Unidades de Saúde",cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d,ebc26521b531074608fee2e05fd235cc5e07a70c8cde02e51fd21d013cc1c656,PROVEN
+SRC-MINSA-004,260/23,Artigo 12.º,6,"Inspecção Sanitária e Auditoria Hospitalar",484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632,4f0bfae37d946619f65ad2ce141235cc97d0e25d54cbdde0e3886ca4ffda7e37,PROVEN
+SRC-MINSA-005,248/20,Artigo 15.º,14,"Farmacovigilância e Notificação Obrigatória",89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b,7e4a89dddcc08e1e888826a913f1eeffcab14801b55f776718be1a4d9755dffc,PROVEN

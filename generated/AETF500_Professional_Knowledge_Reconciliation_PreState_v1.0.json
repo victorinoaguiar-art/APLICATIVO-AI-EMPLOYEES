@@ -1,0 +1,17 @@
+{
+  "program_id": "AETF500_PROFESSIONAL_KNOWLEDGE_COMPETENCY_ASSURANCE_PROGRAM_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "as_of_date": "2026-09-12",
+  "pre_reconciliation_state": {
+    "reported_competencies_total": 1450,
+    "domain_rows_competencies_sum": 1495,
+    "competency_discrepancy": 45,
+    "reported_critical_competencies_total": 285,
+    "domain_rows_critical_competencies_sum": 305,
+    "criticality_discrepancy": 20,
+    "reported_open_gaps_total": 18,
+    "domain_rows_open_gaps_sum": 17,
+    "gap_discrepancy": 1
+  },
+  "reconciliation_explanation": "Historical discrepancies between aggregate reported values and domain-level row sums preserved and reconciled mathematically without altering reported baseline."
+}

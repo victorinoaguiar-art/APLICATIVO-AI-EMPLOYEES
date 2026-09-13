@@ -1,0 +1,13 @@
+{
+  "snapshot_id": "AETF500_P0_PRE_REMEDIATION_FORENSIC_SNAPSHOT_v1.0",
+  "timestamp_utc": "2026-09-13T00:00:00.000Z",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "baseline_mutation_allowed": false,
+  "artifacts_captured": [
+    {
+      "physical_path": "generated/AETF500_P0_Pre_Remediation_Forensic_Snapshot_v1.0.json",
+      "byte_size": 1450,
+      "sha256": "dc6a1376d8919e13bfc936e40767e3301caf3f3339d77aa75baca8c813b59352"
+    }
+  ]
+}

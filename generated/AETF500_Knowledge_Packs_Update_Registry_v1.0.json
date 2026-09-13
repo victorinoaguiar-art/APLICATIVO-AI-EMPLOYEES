@@ -1,0 +1,120 @@
+{
+  "program_id": "AETF500_KNOWLEDGE_GAP_FILLING_COMPETENCY_CERTIFICATION_READINESS_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "as_of_date": "2026-09-12",
+  "knowledge_packs_updated_total": 16,
+  "updates": [
+    {
+      "pack_id": "PKP-HEALTHCARE-ANGOLA",
+      "version_before": "v1.0",
+      "version_after": "v2.0_UPDATED",
+      "knowledge_added_count": 5,
+      "status": "DELIVERED"
+    },
+    {
+      "pack_id": "PKP-PUBLIC-ADMIN-ANGOLA",
+      "version_before": "v1.0",
+      "version_after": "v2.0_UPDATED",
+      "knowledge_added_count": 4,
+      "status": "DELIVERED"
+    },
+    {
+      "pack_id": "PKP-CYBERSECURITY",
+      "version_before": "v1.0",
+      "version_after": "v2.0_UPDATED",
+      "knowledge_added_count": 6,
+      "status": "DELIVERED"
+    },
+    {
+      "pack_id": "PKP-SOFTWARE-ENGINEERING",
+      "version_before": "v1.0",
+      "version_after": "v2.0_UPDATED",
+      "knowledge_added_count": 4,
+      "status": "DELIVERED"
+    },
+    {
+      "pack_id": "PKP-LEGAL-COMPLIANCE",
+      "version_before": "v1.0",
+      "version_after": "v2.0_UPDATED",
+      "knowledge_added_count": 4,
+      "status": "DELIVERED"
+    },
+    {
+      "pack_id": "PKP-HR-PAYROLL",
+      "version_before": "v1.0",
+      "version_after": "v2.0_UPDATED",
+      "knowledge_added_count": 5,
+      "status": "DELIVERED"
+    },
+    {
+      "pack_id": "PKP-PROCUREMENT",
+      "version_before": "v1.0",
+      "version_after": "v2.0_UPDATED",
+      "knowledge_added_count": 4,
+      "status": "DELIVERED"
+    },
+    {
+      "pack_id": "PKP-PROJECT-MGMT",
+      "version_before": "v1.0",
+      "version_after": "v2.0_UPDATED",
+      "knowledge_added_count": 3,
+      "status": "DELIVERED"
+    },
+    {
+      "pack_id": "PKP-DATA-PRIVACY",
+      "version_before": "v1.0",
+      "version_after": "v2.0_UPDATED",
+      "knowledge_added_count": 4,
+      "status": "DELIVERED"
+    },
+    {
+      "pack_id": "PKP-CUSTOMER-OPS",
+      "version_before": "v1.0",
+      "version_after": "v2.0_UPDATED",
+      "knowledge_added_count": 3,
+      "status": "DELIVERED"
+    },
+    {
+      "pack_id": "PKP-SALES",
+      "version_before": "v1.0",
+      "version_after": "v2.0_UPDATED",
+      "knowledge_added_count": 4,
+      "status": "DELIVERED"
+    },
+    {
+      "pack_id": "PKP-MARKETING",
+      "version_before": "v1.0",
+      "version_after": "v2.0_UPDATED",
+      "knowledge_added_count": 3,
+      "status": "DELIVERED"
+    },
+    {
+      "pack_id": "PKP-CUSTOMER-SUCCESS",
+      "version_before": "v1.0",
+      "version_after": "v2.0_UPDATED",
+      "knowledge_added_count": 3,
+      "status": "DELIVERED"
+    },
+    {
+      "pack_id": "PKP-ACCOUNTING-ANGOLA",
+      "version_before": "v1.1.8",
+      "version_after": "v1.1.8_SOURCE_LOCKED",
+      "knowledge_added_count": 5,
+      "status": "DELIVERED_PENDING_EXTERNAL"
+    },
+    {
+      "pack_id": "PKP-VAT-ANGOLA",
+      "version_before": "v1.1.8",
+      "version_after": "v1.1.8_SOURCE_LOCKED",
+      "knowledge_added_count": 4,
+      "status": "DELIVERED_PENDING_EXTERNAL"
+    },
+    {
+      "pack_id": "PKP-BANKING-ANGOLA",
+      "version_before": "v1.0",
+      "version_after": "v1.1.8_CONTROLLED",
+      "knowledge_added_count": 4,
+      "status": "DELIVERED_PENDING_EXTERNAL"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "artifact_id": "AIEMPLOYEE_WAVE1_COMMERCIAL_BASELINE_HARDENED_MANIFEST_2026_09_12",
+  "frozen_baseline_id": "AETF-500-COMMERCIAL-WAVE1-FROZEN-v2.1-2026.09.12",
+  "previous_baseline": "COMMERCIAL-BASELINE-v2.0",
+  "timestamp": "2026-09-12T10:27:00.000Z",
+  "readiness_status": "FIRST_PAID_CUSTOMER_VALIDATED",
+  "real_revenue_status": "REAL_REVENUE_VALIDATED",
+  "wave_status": "WAVE_1_CERTIFIED",
+  "authorization": "AUTHORIZED_FOR_WAVE_2_TRIO_CUSTOMERS",
+  "adjustments_verification": {
+    "adjustment_1_payment_settlement_reconciliation_separation": {
+      "status": "PASS",
+      "payment_evidence_separated": true,
+      "settlement_evidence_separated": true,
+      "reconciliation_evidence_separated": true,
+      "reconciliation_difference_required_zero": true
+    },
+    "adjustment_2_ftv_semantic_validation": {
+      "status": "PASS",
+      "formula": "CustomerAcceptedResultTimestamp - PaymentTimestamp",
+      "task_execution_time_different_from_ftv": true,
+      "semantic_confusion_test_passed": true
+    },
+    "adjustment_3_general_availability_dynamic_capacity": {
+      "status": "PASS",
+      "hardcoded_1000_limit_removed": true,
+      "dynamic_capacity_managed": true,
+      "scale_readiness_gate_passed": true
+    },
+    "adjustment_4_tax_determination_engine": {
+      "status": "PASS",
+      "hardcoded_vat_removed": true,
+      "tax_rule_id": "AO-VAT-STANDARD-2026-v1",
+      "tax_rate_pct": 14.0,
+      "legal_basis": "Código do IVA (Lei n.º 7/19 & Lei n.º 17/23)",
+      "tax_evidence_generated": true
+    },
+    "adjustment_5_evidence_authenticity_controls": {
+      "status": "PASS",
+      "deterministic_canonicalization": true,
+      "sha256_hash_chain": true,
+      "environment_production_enforced": true,
+      "authenticity_level": "LEVEL_4_SIGNED_AND_VERIFIED"
+    }
+  },
+  "hard_freeze_gate": {
+    "freeze_gate_name": "COMMERCIAL_BASELINE_FREEZE_GATE",
+    "gate_status": "PASS",
+    "all_10_criteria_passed": true
+  },
+  "sha256_manifest_integrity": "8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a"
+}

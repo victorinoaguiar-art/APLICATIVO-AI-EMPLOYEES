@@ -1,0 +1,7 @@
+Requirement,Test,Evidence,Physical_Artifact,Hash,Status
+Fonte e PDF real,MIME + Magic %PDF- test,Physical File,src-minsa-001.pdf,86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea,PASS
+Artigo existe,Article extraction test,Verbatim text,04_Legal_Text_Extraction.json,493a3c577999db25ab4b7dea081960c869effb82a13845cc6a5a4abe976cb2a6,PASS
+Rule deriva da lei,Rule provenance test,DR record,06_Decision_Rule_Reconstruction.json,83a52ca235232c5d2e8c8491b30eeb5908455fc74c9ceb000da362547ece6459,PASS
+Índice contém texto real,Retrieval truth test,Chunk & Vector trace,08_Vector_Index_Rebuild.json,8a6cf291e153c958b23e282e4a87f7b59c2a4d2aefcc72a14951f0597d86be52,PASS
+Employee usa fonte correcta,Runtime retest,Raw receipt trace,12_Employee_Retest_Results.json,079f230e84119b11e8557eb76735560b583ec290db5d6c2b5a5a03b88b282bb4,PASS
+OneDrive não foi usado,Router policy test,Router event log,10_Router_Raw_Trace.json,859597402a2bd3a26104f6e30cbc80fdf7847ec94725be70a5536b2e7937b507,PASS

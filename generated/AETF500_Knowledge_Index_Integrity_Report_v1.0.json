@@ -1,0 +1,10 @@
+{
+  "report_id": "AETF500_KNOWLEDGE_INDEX_INTEGRITY_REPORT_v1.0",
+  "index_drift_detected": true,
+  "drift_details": {
+    "domain": "HEALTHCARE",
+    "expected_vectors": "MINSA Healthcare Decrees & Regulations",
+    "actual_vectors": "MAPTSS Labor Law (SRC-LAB-001)",
+    "drift_classification": "INDEX_DRIFT"
+  }
+}

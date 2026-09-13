@@ -1,0 +1,46 @@
+{
+  "registry_version": "v1.1",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1_FROZEN",
+  "formulas": [
+    {
+      "formula_id": "FORMULA-MRR-SUB-v1.1",
+      "metric_code": "SUBSCRIPTION_MRR",
+      "expression": "SUM(active_recurring_subscriptions_net_tax)",
+      "calculation_type": "DIRECT_OBSERVATION",
+      "temporal_maturity": "PERIOD_OBSERVED",
+      "reconciliation_rule": "MUST_MATCH_BANK_COLLECTION_AND_AGT_INVOICE"
+    },
+    {
+      "formula_id": "FORMULA-ARR-DERIVED-v1.1",
+      "metric_code": "ANNUAL_RUN_RATE",
+      "expression": "SUBSCRIPTION_MRR * 12",
+      "calculation_type": "DERIVED",
+      "temporal_maturity": "MULTI_PERIOD_OBSERVED",
+      "label": "DERIVED_FROM_OBSERVED_MRR"
+    },
+    {
+      "formula_id": "FORMULA-NRR-RECONCILED-v1.1",
+      "metric_code": "NET_REVENUE_RETENTION",
+      "expression": "((Opening_MRR + Expansion_MRR - Contraction_MRR - Churn_MRR) / Opening_MRR) * 100",
+      "calculation_type": "DERIVED",
+      "expected_value_percentage": 124.5,
+      "reconciliation_rule": "MUST_EXACTLY_MATCH_CLOSING_MRR"
+    },
+    {
+      "formula_id": "FORMULA-GRR-RECONCILED-v1.1",
+      "metric_code": "GROSS_REVENUE_RETENTION",
+      "expression": "((Opening_MRR - Contraction_MRR - Churn_MRR) / Opening_MRR) * 100",
+      "calculation_type": "DERIVED",
+      "expected_value_percentage": 99.1,
+      "reconciliation_rule": "MUST_EXCLUDE_EXPANSION"
+    },
+    {
+      "formula_id": "FORMULA-CM-LTV-v1.1",
+      "metric_code": "CONTRIBUTION_MARGIN_LTV",
+      "expression": "(ARPU_Monthly / Monthly_Churn_Decimal) * Gross_Margin_Decimal",
+      "calculation_type": "MODELLED",
+      "temporal_maturity": "PROJECTED",
+      "label": "Projected Contribution Margin LTV / Observed Sales-Assisted CAC"
+    }
+  ]
+}

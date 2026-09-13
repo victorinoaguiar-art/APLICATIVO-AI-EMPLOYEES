@@ -1,0 +1,12 @@
+{
+  "unique_critical_competency_definitions": 285,
+  "domain_critical_competency_assignments": 305,
+  "cross_domain_shared_critical_competencies": 20,
+  "breakdown_by_risk_tier": {
+    "pka4_critical_unique": 145,
+    "pka3_regulated_critical_unique": 140,
+    "total_unique_critical": 285
+  },
+  "reconciliation_formula": "305 domain critical assignments - 20 cross-domain shared critical competencies = 285 unique critical competencies",
+  "reconciliation_status": "RECONCILED_MATHEMATICALLY"
+}

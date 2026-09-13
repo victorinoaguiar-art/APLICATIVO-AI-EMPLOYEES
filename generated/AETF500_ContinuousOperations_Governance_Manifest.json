@@ -1,0 +1,263 @@
+{
+  "manifest_id": "AETF500_CONTINUOUS_OPERATIONS_GOVERNANCE_2026",
+  "baseline_id": "AETF-500-CERTL3-PRODUCTION-BASELINE-2026.09.11",
+  "baseline_status": "FROZEN_AND_VERSIONED",
+  "initial_certification_status": "COMPLETE",
+  "continuous_operations_status": "ACTIVE",
+  "continuous_governance_status": "ACTIVE",
+  "targeted_recertification_status": "ACTIVE",
+  "commercial_operations_status": "ACTIVE",
+  "total_employees": 500,
+  "cert_l3_full_count": 490,
+  "cert_l3_restricted_count": 10,
+  "wave_breakdown": {
+    "wave_a": {
+      "total": 100,
+      "full": 100,
+      "restricted": 0
+    },
+    "wave_b": {
+      "total": 150,
+      "full": 150,
+      "restricted": 0
+    },
+    "wave_c": {
+      "total": 150,
+      "full": 150,
+      "restricted": 0
+    },
+    "wave_d": {
+      "total": 100,
+      "full": 90,
+      "restricted": 10
+    }
+  },
+  "canonical_restricted_list": [
+    {
+      "employee_id": "491",
+      "employee_name": "Multi-site Performance Employee",
+      "restriction": "PRIMAVERA_WRITE = BLOCKED",
+      "affected_workflows": [
+        "primavera_direct_write",
+        "saft_batch_import",
+        "erp_ledger_mutation"
+      ],
+      "allowed_workflows": [
+        "document_analysis",
+        "excel_processing",
+        "pdf_report_generation",
+        "read_only_data_access",
+        "non_primavera_workflows"
+      ],
+      "reason": "Modulo de escrita direta em base de dados de produção do ERP Primavera v10.5 pendente de conector nativo certificado.",
+      "external_dependency": "ERP_PRIMAVERA_V10.5_NATIVE_CONNECTOR",
+      "cert_l3_status": "CERT_L3_WITH_RESTRICTIONS",
+      "hitl_override_allowed": false
+    },
+    {
+      "employee_id": "492",
+      "employee_name": "Store Opening Coordinator Employee",
+      "restriction": "PRIMAVERA_WRITE = BLOCKED",
+      "affected_workflows": [
+        "primavera_direct_write",
+        "saft_batch_import",
+        "erp_ledger_mutation"
+      ],
+      "allowed_workflows": [
+        "document_analysis",
+        "excel_processing",
+        "pdf_report_generation",
+        "read_only_data_access",
+        "non_primavera_workflows"
+      ],
+      "reason": "Modulo de escrita direta em base de dados de produção do ERP Primavera v10.5 pendente de conector nativo certificado.",
+      "external_dependency": "ERP_PRIMAVERA_V10.5_NATIVE_CONNECTOR",
+      "cert_l3_status": "CERT_L3_WITH_RESTRICTIONS",
+      "hitl_override_allowed": false
+    },
+    {
+      "employee_id": "493",
+      "employee_name": "Franchise Royalty Administration Employee",
+      "restriction": "PRIMAVERA_WRITE = BLOCKED",
+      "affected_workflows": [
+        "primavera_direct_write",
+        "saft_batch_import",
+        "erp_ledger_mutation"
+      ],
+      "allowed_workflows": [
+        "document_analysis",
+        "excel_processing",
+        "pdf_report_generation",
+        "read_only_data_access",
+        "non_primavera_workflows"
+      ],
+      "reason": "Modulo de escrita direta em base de dados de produção do ERP Primavera v10.5 pendente de conector nativo certificado.",
+      "external_dependency": "ERP_PRIMAVERA_V10.5_NATIVE_CONNECTOR",
+      "cert_l3_status": "CERT_L3_WITH_RESTRICTIONS",
+      "hitl_override_allowed": false
+    },
+    {
+      "employee_id": "494",
+      "employee_name": "Multi-site Standards Audit Employee",
+      "restriction": "PRIMAVERA_WRITE = BLOCKED",
+      "affected_workflows": [
+        "primavera_direct_write",
+        "saft_batch_import",
+        "erp_ledger_mutation"
+      ],
+      "allowed_workflows": [
+        "document_analysis",
+        "excel_processing",
+        "pdf_report_generation",
+        "read_only_data_access",
+        "non_primavera_workflows"
+      ],
+      "reason": "Modulo de escrita direta em base de dados de produção do ERP Primavera v10.5 pendente de conector nativo certificado.",
+      "external_dependency": "ERP_PRIMAVERA_V10.5_NATIVE_CONNECTOR",
+      "cert_l3_status": "CERT_L3_WITH_RESTRICTIONS",
+      "hitl_override_allowed": false
+    },
+    {
+      "employee_id": "495",
+      "employee_name": "Data Quality Employee",
+      "restriction": "PRIMAVERA_WRITE = BLOCKED",
+      "affected_workflows": [
+        "primavera_direct_write",
+        "saft_batch_import",
+        "erp_ledger_mutation"
+      ],
+      "allowed_workflows": [
+        "document_analysis",
+        "excel_processing",
+        "pdf_report_generation",
+        "read_only_data_access",
+        "non_primavera_workflows"
+      ],
+      "reason": "Modulo de escrita direta em base de dados de produção do ERP Primavera v10.5 pendente de conector nativo certificado.",
+      "external_dependency": "ERP_PRIMAVERA_V10.5_NATIVE_CONNECTOR",
+      "cert_l3_status": "CERT_L3_WITH_RESTRICTIONS",
+      "hitl_override_allowed": false
+    },
+    {
+      "employee_id": "496",
+      "employee_name": "Data Governance Employee",
+      "restriction": "PRIMAVERA_WRITE = BLOCKED",
+      "affected_workflows": [
+        "primavera_direct_write",
+        "saft_batch_import",
+        "erp_ledger_mutation"
+      ],
+      "allowed_workflows": [
+        "document_analysis",
+        "excel_processing",
+        "pdf_report_generation",
+        "read_only_data_access",
+        "non_primavera_workflows"
+      ],
+      "reason": "Modulo de escrita direta em base de dados de produção do ERP Primavera v10.5 pendente de conector nativo certificado.",
+      "external_dependency": "ERP_PRIMAVERA_V10.5_NATIVE_CONNECTOR",
+      "cert_l3_status": "CERT_L3_WITH_RESTRICTIONS",
+      "hitl_override_allowed": false
+    },
+    {
+      "employee_id": "497",
+      "employee_name": "Data Catalog Employee",
+      "restriction": "PRIMAVERA_WRITE = BLOCKED",
+      "affected_workflows": [
+        "primavera_direct_write",
+        "saft_batch_import",
+        "erp_ledger_mutation"
+      ],
+      "allowed_workflows": [
+        "document_analysis",
+        "excel_processing",
+        "pdf_report_generation",
+        "read_only_data_access",
+        "non_primavera_workflows"
+      ],
+      "reason": "Modulo de escrita direta em base de dados de produção do ERP Primavera v10.5 pendente de conector nativo certificado.",
+      "external_dependency": "ERP_PRIMAVERA_V10.5_NATIVE_CONNECTOR",
+      "cert_l3_status": "CERT_L3_WITH_RESTRICTIONS",
+      "hitl_override_allowed": false
+    },
+    {
+      "employee_id": "498",
+      "employee_name": "AI Model Operations Employee",
+      "restriction": "PRIMAVERA_WRITE = BLOCKED",
+      "affected_workflows": [
+        "primavera_direct_write",
+        "saft_batch_import",
+        "erp_ledger_mutation"
+      ],
+      "allowed_workflows": [
+        "document_analysis",
+        "excel_processing",
+        "pdf_report_generation",
+        "read_only_data_access",
+        "non_primavera_workflows"
+      ],
+      "reason": "Modulo de escrita direta em base de dados de produção do ERP Primavera v10.5 pendente de conector nativo certificado.",
+      "external_dependency": "ERP_PRIMAVERA_V10.5_NATIVE_CONNECTOR",
+      "cert_l3_status": "CERT_L3_WITH_RESTRICTIONS",
+      "hitl_override_allowed": false
+    },
+    {
+      "employee_id": "499",
+      "employee_name": "AI Incident Triage Employee",
+      "restriction": "PRIMAVERA_WRITE = BLOCKED",
+      "affected_workflows": [
+        "primavera_direct_write",
+        "saft_batch_import",
+        "erp_ledger_mutation"
+      ],
+      "allowed_workflows": [
+        "document_analysis",
+        "excel_processing",
+        "pdf_report_generation",
+        "read_only_data_access",
+        "non_primavera_workflows"
+      ],
+      "reason": "Modulo de escrita direta em base de dados de produção do ERP Primavera v10.5 pendente de conector nativo certificado.",
+      "external_dependency": "ERP_PRIMAVERA_V10.5_NATIVE_CONNECTOR",
+      "cert_l3_status": "CERT_L3_WITH_RESTRICTIONS",
+      "hitl_override_allowed": false
+    },
+    {
+      "employee_id": "500",
+      "employee_name": "AI Cost & Usage Employee",
+      "restriction": "PRIMAVERA_WRITE = BLOCKED",
+      "affected_workflows": [
+        "primavera_direct_write",
+        "saft_batch_import",
+        "erp_ledger_mutation"
+      ],
+      "allowed_workflows": [
+        "document_analysis",
+        "excel_processing",
+        "pdf_report_generation",
+        "read_only_data_access",
+        "non_primavera_workflows"
+      ],
+      "reason": "Modulo de escrita direta em base de dados de produção do ERP Primavera v10.5 pendente de conector nativo certificado.",
+      "external_dependency": "ERP_PRIMAVERA_V10.5_NATIVE_CONNECTOR",
+      "cert_l3_status": "CERT_L3_WITH_RESTRICTIONS",
+      "hitl_override_allowed": false
+    }
+  ],
+  "active_tenants_count": 3,
+  "recertification_triggers": [
+    "model_change",
+    "prompt_change",
+    "knowledge_change",
+    "regulatory_change",
+    "policy_change",
+    "tool_change",
+    "connector_change",
+    "critical_incident",
+    "security_finding",
+    "authorization_expiry",
+    "PRIMAVERA_REAL_INTEGRATION_AVAILABLE"
+  ],
+  "integrity_hash": "35a3b3c3efba30ff25e67cc425a230c3efba30ff35a3b3c325a230c325e67cc4",
+  "timestamp": "2026-09-11T23:00:00Z"
+}

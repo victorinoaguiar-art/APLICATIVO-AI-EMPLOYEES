@@ -1,0 +1,174 @@
+{
+  "program_id": "AETF500_PROFESSIONAL_KNOWLEDGE_COMPETENCY_ASSURANCE_PROGRAM_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "as_of_date": "2026-09-12",
+  "total_gaps": 18,
+  "financial_critical_gaps_total": 5,
+  "non_financial_gaps_total": 13,
+  "gaps_closed": 13,
+  "gaps_controlled_open": 5,
+  "gaps": [
+    {
+      "gap_id": "GAP-FIN-AGT-001",
+      "domain": "Accounting & Tax",
+      "gap_type": "EXTERNAL_VALIDATION",
+      "description": "AGT Invoicing System Certification Mechanism",
+      "severity": "CRITICAL",
+      "status": "CONTROLLED_OPEN",
+      "restriction": "HUMAN_APPROVAL_REQUIRED"
+    },
+    {
+      "gap_id": "GAP-FIN-BNA-002",
+      "domain": "Banking & Treasury",
+      "gap_type": "EXTERNAL_VALIDATION",
+      "description": "BNA Foreign Exchange Regulation & SaaS Repatriation",
+      "severity": "CRITICAL",
+      "status": "CONTROLLED_OPEN",
+      "restriction": "HUMAN_APPROVAL_REQUIRED"
+    },
+    {
+      "gap_id": "GAP-FIN-PGC-003",
+      "domain": "Accounting & Tax",
+      "gap_type": "EXTERNAL_VALIDATION",
+      "description": "PGC Account 37.6 SaaS Deferred Revenue Classification",
+      "severity": "CRITICAL",
+      "status": "CONTROLLED_OPEN",
+      "restriction": "DRAFT_ONLY"
+    },
+    {
+      "gap_id": "GAP-FIN-VAT-004",
+      "domain": "Accounting & Tax",
+      "gap_type": "EXTERNAL_VALIDATION",
+      "description": "SAF-T AO File & VAT Reporting Rules",
+      "severity": "CRITICAL",
+      "status": "CONTROLLED_OPEN",
+      "restriction": "DRAFT_ONLY"
+    },
+    {
+      "gap_id": "GAP-FIN-WHT-005",
+      "domain": "Accounting & Tax",
+      "gap_type": "EXTERNAL_VALIDATION",
+      "description": "Industrial Tax 2% Withholding Application to SaaS",
+      "severity": "CRITICAL",
+      "status": "CONTROLLED_OPEN",
+      "restriction": "HUMAN_APPROVAL_REQUIRED"
+    },
+    {
+      "gap_id": "GAP-HC-REG-001",
+      "domain": "Healthcare",
+      "gap_type": "SOURCE_UPDATE_AND_TEST",
+      "description": "MINSA Statutory Gazette Decree 2026 update & scope boundaries",
+      "severity": "HIGH",
+      "status": "CLOSED",
+      "restriction": "HUMAN_APPROVAL_REQUIRED"
+    },
+    {
+      "gap_id": "GAP-PA-PROC-002",
+      "domain": "Public Administration",
+      "gap_type": "SOURCE_UPDATE_AND_TEST",
+      "description": "Public Procurement Law 2026 guidelines & approval limits",
+      "severity": "MEDIUM",
+      "status": "CLOSED",
+      "restriction": "DRAFT_ONLY"
+    },
+    {
+      "gap_id": "GAP-SEC-NIST-003",
+      "domain": "Cybersecurity",
+      "gap_type": "SOURCE_UPDATE_AND_TEST",
+      "description": "NIST/OWASP 2026 secure coding & secrets management playbook",
+      "severity": "HIGH",
+      "status": "CLOSED",
+      "restriction": "HUMAN_APPROVAL_REQUIRED"
+    },
+    {
+      "gap_id": "GAP-ENG-OWASP-004",
+      "domain": "Software Engineering",
+      "gap_type": "SOURCE_UPDATE_AND_TEST",
+      "description": "OWASP API Top 10 2026 ruleset & dependency security",
+      "severity": "MEDIUM",
+      "status": "CLOSED",
+      "restriction": "READ_ONLY"
+    },
+    {
+      "gap_id": "GAP-LEG-CORP-005",
+      "domain": "Legal Counsel",
+      "gap_type": "SOURCE_UPDATE_AND_TEST",
+      "description": "Commercial Code Revision 2026 corporate governance boundaries",
+      "severity": "HIGH",
+      "status": "CLOSED",
+      "restriction": "DRAFT_ONLY"
+    },
+    {
+      "gap_id": "GAP-HR-LABOR-006",
+      "domain": "Human Resources",
+      "gap_type": "SOURCE_UPDATE_AND_TEST",
+      "description": "Labor Code Revision 2026 IRT/payroll/contract severance",
+      "severity": "MEDIUM",
+      "status": "CLOSED",
+      "restriction": "RECOMMEND_ONLY"
+    },
+    {
+      "gap_id": "GAP-PROC-INCO-007",
+      "domain": "Procurement",
+      "gap_type": "SOURCE_UPDATE_AND_TEST",
+      "description": "Incoterms 2026/tender procedures & Angolan Tariff Schedule",
+      "severity": "MEDIUM",
+      "status": "CLOSED",
+      "restriction": "DRAFT_ONLY"
+    },
+    {
+      "gap_id": "GAP-PMO-AGILE-008",
+      "domain": "Project Management",
+      "gap_type": "SOURCE_UPDATE_AND_TEST",
+      "description": "PMO Agile Frameworks 2026 / governance taxonomy v2.1",
+      "severity": "LOW",
+      "status": "CLOSED",
+      "restriction": "RECOMMEND_ONLY"
+    },
+    {
+      "gap_id": "GAP-DATA-PRIV-009",
+      "domain": "Data Science",
+      "gap_type": "SOURCE_UPDATE_AND_TEST",
+      "description": "APD Guidelines 2026 / personal data protection registration",
+      "severity": "HIGH",
+      "status": "CLOSED",
+      "restriction": "HUMAN_APPROVAL_REQUIRED"
+    },
+    {
+      "gap_id": "GAP-OPS-SLA-010",
+      "domain": "Customer Operations",
+      "gap_type": "SOURCE_UPDATE_AND_TEST",
+      "description": "SLA Matrix for SaaS Tier 1 Accounts & incident response",
+      "severity": "LOW",
+      "status": "CLOSED",
+      "restriction": "RECOMMEND_ONLY"
+    },
+    {
+      "gap_id": "GAP-SALES-COMM-011",
+      "domain": "Sales",
+      "gap_type": "SOURCE_UPDATE_AND_TEST",
+      "description": "Sales Approval Matrix v3.0 & custom pricing boundaries",
+      "severity": "LOW",
+      "status": "CLOSED",
+      "restriction": "HUMAN_APPROVAL_REQUIRED"
+    },
+    {
+      "gap_id": "GAP-MKT-CONSUMER-012",
+      "domain": "Marketing",
+      "gap_type": "SOURCE_UPDATE_AND_TEST",
+      "description": "Consumer Rights Act Angola Guidelines & ad claims compliance",
+      "severity": "LOW",
+      "status": "CLOSED",
+      "restriction": "DRAFT_ONLY"
+    },
+    {
+      "gap_id": "GAP-CS-SUPPORT-013",
+      "domain": "Customer Success",
+      "gap_type": "SOURCE_UPDATE_AND_TEST",
+      "description": "Health Score Model v2.4 & churn risk escalation protocols",
+      "severity": "LOW",
+      "status": "CLOSED",
+      "restriction": "RECOMMEND_ONLY"
+    }
+  ]
+}

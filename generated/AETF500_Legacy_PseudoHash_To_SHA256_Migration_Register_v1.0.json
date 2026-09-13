@@ -1,0 +1,9 @@
+{
+  "program_id": "AETF500_CRYPTOGRAPHIC_SHA256_REMEDIATION_DEPENDENT_HASH_RECALCULATION_v1.0",
+  "old_algorithm": "AETF_CUSTOM_NON_CRYPTOGRAPHIC_DIGEST_V1",
+  "new_algorithm": "SHA-256",
+  "migration_date": "2026-09-13T15:19:10.962Z",
+  "records_migrated": 9,
+  "records_pending_physical_source_bytes": 14,
+  "audit_retention": true
+}

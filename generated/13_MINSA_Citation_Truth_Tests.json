@@ -1,0 +1,22 @@
+[
+  {
+    "test_id": "CITATION-TRUTH-SRC004",
+    "employee_id": "EMP-104",
+    "query": "Cite a norma sobre inspecção sanitária hospitalar.",
+    "generated_citation": "Decreto Presidencial n.º 260/10, Artigo 12.º",
+    "cited_document_number": "260/10",
+    "physical_document_number": "260/10",
+    "citation_truth_verified": true,
+    "status": "PASS"
+  },
+  {
+    "test_id": "CITATION-TRUTH-SRC005",
+    "employee_id": "EMP-105",
+    "query": "Cite a norma sobre notificação de farmacovigilância.",
+    "generated_citation": "Decreto Presidencial n.º 277/20, Artigo 15.º",
+    "cited_document_number": "277/20",
+    "physical_document_number": "277/20",
+    "citation_truth_verified": true,
+    "status": "PASS"
+  }
+]

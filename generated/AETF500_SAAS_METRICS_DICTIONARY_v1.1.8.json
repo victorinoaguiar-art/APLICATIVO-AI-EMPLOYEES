@@ -1,0 +1,14 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "addendum_id": "AETF500_v1.1.8_EVIDENCE_CLOSURE_ADDENDUM_2",
+  "version": "1.1.8",
+  "execution_classification": "FINAL_EVIDENCE_CORRECTION_MICRO_PATCH",
+  "vat_official_account_tree_status": "INTERNALLY_VERIFIED_AGAINST_PROVIDED_OFFICIAL_SOURCE",
+  "baseline_internal_status": "INTERNALLY_FROZEN_AND_AUDITED",
+  "accounting_internal_remediation": "COMPLETE",
+  "accounting_external_validation": "PENDING",
+  "baseline_status": "BASELINE_CONFIRMED_WITH_EXTERNAL_VALIDATIONS_PENDING",
+  "top_level_vat_families_total": 9,
+  "statutory_fourth_level_subaccounts_total": 25,
+  "manifest_policy": "POLICY_A_SIDECAR_TEXTUAL_SHA256"
+}

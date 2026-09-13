@@ -1,0 +1,97 @@
+[
+  {
+    "extraction_id": "EXT-SRC-MINSA-001-ART1",
+    "source_id": "SRC-MINSA-001",
+    "document_number": "21-B/92",
+    "document_title": "Lei de Bases do Sistema Nacional de Saúde",
+    "article_number": "Artigo 1.º",
+    "article_title": "Objecto do Sistema Nacional de Saúde",
+    "paragraph": "N.º 1",
+    "page_number": 2,
+    "verbatim_text": "O Sistema Nacional de Saúde tem por objectivo a prestação de cuidados integrados de saúde a toda a população da República de Angola, garantindo o direito à protecção da saúde nos termos da Constituição.",
+    "source_sha256": "86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea",
+    "text_sha256": "414751ed901a03f0b957644f10affd3e7c5d8b444196d0d8451dba1fe8475d3f",
+    "canonicalization_config": {
+      "encoding": "UTF-8",
+      "newline_policy": "LF",
+      "unicode_normalization": "NFC"
+    },
+    "reconciliation_status": "VERIFIED"
+  },
+  {
+    "extraction_id": "EXT-SRC-MINSA-002-ART4",
+    "source_id": "SRC-MINSA-002",
+    "document_number": "187/18",
+    "document_title": "Regime Jurídico da Carreira de Enfermagem",
+    "article_number": "Artigo 4.º",
+    "article_title": "Estrutura da Carreira de Enfermagem",
+    "paragraph": "N.º 1",
+    "page_number": 5,
+    "verbatim_text": "A carreira de enfermagem estrutura-se nas categorias de Enfermeiro Geral, Enfermeiro Especialista e Enfermeiro Chefe, exigindo a titularidade de grau académico ou profissional reconhecido pelo Ministério da Saúde.",
+    "source_sha256": "025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3",
+    "text_sha256": "3d5369778f8809b77364c5bf3f0ceedc43974046c6495b5d5a69b478b396d5f0",
+    "canonicalization_config": {
+      "encoding": "UTF-8",
+      "newline_policy": "LF",
+      "unicode_normalization": "NFC"
+    },
+    "reconciliation_status": "VERIFIED"
+  },
+  {
+    "extraction_id": "EXT-SRC-MINSA-003-ART8",
+    "source_id": "SRC-MINSA-003",
+    "document_number": "151/21",
+    "document_title": "Estatuto do Instituto de Especialização em Saúde",
+    "article_number": "Artigo 8.º",
+    "article_title": "Especialização e Licenciamento das Unidades de Saúde",
+    "paragraph": "N.º 2",
+    "page_number": 8,
+    "verbatim_text": "O exercício da actividade médica especializada e o funcionamento de estabelecimentos de saúde dependem de licença sanitária válida emitida pelo Ministério da Saúde e de vistoria de conformidade técnica.",
+    "source_sha256": "cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d",
+    "text_sha256": "89410641b7d8cb1823a2812c7ed1e9a70e0c8815aee2383dc823c9e225d31349",
+    "canonicalization_config": {
+      "encoding": "UTF-8",
+      "newline_policy": "LF",
+      "unicode_normalization": "NFC"
+    },
+    "reconciliation_status": "VERIFIED"
+  },
+  {
+    "extraction_id": "EXT-SRC-MINSA-004-ART12",
+    "source_id": "SRC-MINSA-004",
+    "document_number": "260/10",
+    "document_title": "Regime Jurídico da Gestão Hospitalar",
+    "article_number": "Artigo 12.º",
+    "article_title": "Inspecção Sanitária e Auditoria Hospitalar",
+    "paragraph": "N.º 1",
+    "page_number": 6,
+    "verbatim_text": "As unidades hospitalares do Serviço Nacional de Saúde estão sujeitas a inspecção sanitária periódica e a auditoria de qualidade clínica conduzida pelos inspectores credenciados do MINSA.",
+    "source_sha256": "484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632",
+    "text_sha256": "67d942bd5c36420641f5571284cc45b39f617b0f335b8b99f02fb8d866510ca9",
+    "canonicalization_config": {
+      "encoding": "UTF-8",
+      "newline_policy": "LF",
+      "unicode_normalization": "NFC"
+    },
+    "reconciliation_status": "REPAIRED_FROM_260_23_TO_260_10"
+  },
+  {
+    "extraction_id": "EXT-SRC-MINSA-005-ART15",
+    "source_id": "SRC-MINSA-005",
+    "document_number": "277/20",
+    "document_title": "Estatuto Orgânico do Ministério da Saúde",
+    "article_number": "Artigo 15.º",
+    "article_title": "Farmacovigilância e Notificação Obrigatória",
+    "paragraph": "N.º 3",
+    "page_number": 14,
+    "verbatim_text": "Qualquer reacção adversa grave a medicamentos ocorridos em estabelecimentos públicos ou privados de saúde deve ser notificada à Autoridade Reguladora no prazo improrrogável de 24 horas.",
+    "source_sha256": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+    "text_sha256": "a1663657fbee0cf38926b9eda274ed700e5a0b07b663f6b36b7b55dfea32808d",
+    "canonicalization_config": {
+      "encoding": "UTF-8",
+      "newline_policy": "LF",
+      "unicode_normalization": "NFC"
+    },
+    "reconciliation_status": "REPAIRED_FROM_248_20_TO_277_20"
+  }
+]

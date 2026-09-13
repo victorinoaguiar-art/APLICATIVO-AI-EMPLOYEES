@@ -1,0 +1,17 @@
+{
+  "mappings": [
+    {
+      "event": "SAAS_INVOICE_ISSUED",
+      "debit": "31.1.2.1",
+      "credit_revenue": "62.1.1",
+      "credit_vat": "34.5.3.1",
+      "vat_rate_rule": "TAX-RULE-VAT-GENERAL-14"
+    },
+    {
+      "event": "SAAS_DEFERRED_REVENUE_RECOGNIZED",
+      "debit": "37.6",
+      "credit_revenue": "62.1.1",
+      "policy": "SAAS_DEFERRED_REVENUE_POLICY = INTERNALLY_MODELLED_PENDING_ACCOUNTING_POLICY_APPROVAL"
+    }
+  ]
+}

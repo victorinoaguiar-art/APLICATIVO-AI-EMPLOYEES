@@ -1,0 +1,50 @@
+{
+  "gap_id": "GAP-LEG-CORP-005",
+  "domain": "Legal Counsel",
+  "affected_employee_ids": [
+    "EMP-LEG-005"
+  ],
+  "affected_competency_ids": [
+    "COMP-LEG-003",
+    "COMP-LEG-009"
+  ],
+  "original_problem": "Commercial Code Revision 2026 corporate governance boundaries missing",
+  "original_root_cause": "Outdated Angolan Commercial Code reference",
+  "original_risk_level": "PKA_3_REGULATED",
+  "source_before": "Código Comercial 1888 (Angola)",
+  "source_after": "Lei das Sociedades Comerciais & Revisão Código Comercial 2026",
+  "knowledge_pack_before": "PKP-LEGAL-v1.0",
+  "knowledge_pack_after": "PKP-LEGAL-v2.0_UPDATED",
+  "rule_before": "Draft-only contract generation without mandatory statutory clause validation",
+  "rule_after": "Automated clause validation with RECOMMEND_ONLY sign-off for corporate resolutions",
+  "restriction_before": {
+    "type": "DRAFT_ONLY",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A2"
+  },
+  "restriction_current": {
+    "type": "RECOMMEND_ONLY",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A3"
+  },
+  "remediation_actions": [
+    "Attached Commercial Code Revision 2026",
+    "Updated PKP-LEGAL to v2.0",
+    "Promoted from A2 Draft to A3 Recommend Only"
+  ],
+  "professional_test_run_ids": [
+    "RUN-PROF-GAP-LEG-CORP-005"
+  ],
+  "professional_test_cases": 25,
+  "test_results": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "expert_review_required": false,
+  "external_validation_required": false,
+  "residual_risk": "LOW",
+  "recommended_autonomy_decision": "RESTRICTION_DOWNGRADE",
+  "decision_details": "Downgraded restriction from DRAFT_ONLY (A2) to RECOMMEND_ONLY (A3)",
+  "evidence_status": "VERIFIED_EFFECTIVE"
+}

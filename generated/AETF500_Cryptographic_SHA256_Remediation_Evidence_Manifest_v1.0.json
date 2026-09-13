@@ -1,0 +1,7 @@
+{
+  "manifest_id": "AETF500_CRYPTOGRAPHIC_SHA256_REMEDIATION_EVIDENCE_MANIFEST_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "baseline_mutation_allowed": false,
+  "remediation_status": "PASS",
+  "crypto_final_gate_01": "PASS"
+}

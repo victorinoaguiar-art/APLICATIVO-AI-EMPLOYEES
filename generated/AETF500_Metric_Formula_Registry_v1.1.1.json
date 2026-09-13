@@ -1,0 +1,76 @@
+{
+  "registryVersion": "1.1.1",
+  "lastUpdated": "2026-09-12T11:45:00.000Z",
+  "formulas": [
+    {
+      "code": "METRIC_NRR",
+      "name": "Net Retention Rate",
+      "formula": "((OpeningMRR + ExpansionMRR - ContractionMRR - ChurnMRR) / OpeningMRR) * 100",
+      "sampleInputs": {
+        "OpeningMRR": 1000000,
+        "ExpansionMRR": 300000,
+        "ContractionMRR": 50000,
+        "ChurnMRR": 9000
+      },
+      "expectedOutput": 124.1,
+      "unit": "PERCENTAGE",
+      "temporalMaturity": "PERIOD_OBSERVED",
+      "calculationType": "DERIVED"
+    },
+    {
+      "code": "METRIC_GRR",
+      "name": "Gross Retention Rate",
+      "formula": "((OpeningMRR - ContractionMRR - ChurnMRR) / OpeningMRR) * 100",
+      "sampleInputs": {
+        "OpeningMRR": 1000000,
+        "ContractionMRR": 50000,
+        "ChurnMRR": 9000
+      },
+      "expectedOutput": 94.1,
+      "unit": "PERCENTAGE",
+      "temporalMaturity": "PERIOD_OBSERVED",
+      "calculationType": "DERIVED"
+    },
+    {
+      "code": "METRIC_ARR",
+      "name": "Annual Recurring Revenue",
+      "formula": "MRR * 12",
+      "sampleInputs": {
+        "MRR": 1241000
+      },
+      "expectedOutput": 14892000,
+      "unit": "AOA",
+      "temporalMaturity": "PERIOD_OBSERVED",
+      "calculationType": "DERIVED"
+    },
+    {
+      "code": "METRIC_NPS",
+      "name": "Net Promoter Score",
+      "formula": "((PromotersCount - DetractorsCount) / TotalRespondentsCount) * 100",
+      "sampleInputs": {
+        "PromotersCount": 60,
+        "PassivesCount": 30,
+        "DetractorsCount": 10,
+        "TotalRespondentsCount": 100
+      },
+      "expectedOutput": 50.0,
+      "unit": "SCORE",
+      "temporalMaturity": "POINT_IN_TIME",
+      "calculationType": "AGGREGATED"
+    },
+    {
+      "code": "METRIC_SETTLEMENT_BRIDGE",
+      "name": "Billing to Cash Settlement Bridge",
+      "formula": "BilledAmount - CashCollectedAmount - TaxWithholdingAmount",
+      "sampleInputs": {
+        "BilledAmount": 1320000,
+        "CashCollectedAmount": 1293600,
+        "TaxWithholdingAmount": 26400
+      },
+      "expectedOutput": 0,
+      "unit": "AOA",
+      "temporalMaturity": "PERIOD_OBSERVED",
+      "calculationType": "RECONCILED"
+    }
+  ]
+}

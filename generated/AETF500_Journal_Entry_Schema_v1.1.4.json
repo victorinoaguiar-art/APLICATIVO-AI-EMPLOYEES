@@ -1,0 +1,30 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.4_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "schema_name": "JournalEntrySchemaV114",
+  "constraints": {
+    "double_entry_balance": "SUM(DEBITS) == SUM(CREDITS)",
+    "immutability": "POSTED entries cannot be modified; requires reversal entry JRN-REV-*",
+    "hash_algorithm": "SHA-256 (64 hex characters)"
+  },
+  "fields": {
+    "journal_id": "string",
+    "transaction_id": "string",
+    "event_id": "string",
+    "document_id": "string",
+    "tenant_id": "string",
+    "customer_id": "string",
+    "accounting_date": "ISO-8601 Date",
+    "recognition_date": "ISO-8601 Date",
+    "currency": "AOA",
+    "description": "string",
+    "lines": "Array<JournalLineSchemaV114>",
+    "total_debit": "number",
+    "total_credit": "number",
+    "status": "DRAFT | POSTED | REVERSED",
+    "created_at": "ISO-8601 Timestamp",
+    "posted_at": "ISO-8601 Timestamp",
+    "pgc_version_id": "string",
+    "evidence_hash": "string (64 hex chars)"
+  }
+}

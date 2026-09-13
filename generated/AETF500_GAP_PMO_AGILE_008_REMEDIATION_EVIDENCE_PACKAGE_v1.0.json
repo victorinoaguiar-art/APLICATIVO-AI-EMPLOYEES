@@ -1,0 +1,50 @@
+{
+  "gap_id": "GAP-PMO-AGILE-008",
+  "domain": "Project Management",
+  "affected_employee_ids": [
+    "EMP-PMO-001"
+  ],
+  "affected_competency_ids": [
+    "COMP-PMO-002",
+    "COMP-PMO-005"
+  ],
+  "original_problem": "PMO Agile Frameworks 2026 & governance taxonomy v2.1 unverified",
+  "original_root_cause": "Taxonomy version mismatch",
+  "original_risk_level": "PKA_2_TECHNICAL",
+  "source_before": "PMO Agile Framework v1.0",
+  "source_after": "PMO Process Taxonomy v2.1 & Agile Framework 2026",
+  "knowledge_pack_before": "PKP-PROJECT-MGMT-v1.0",
+  "knowledge_pack_after": "PKP-PROJECT-MGMT-v2.0_UPDATED",
+  "rule_before": "Recommend-only sprint velocity predictions",
+  "rule_after": "Full autonomous sprint velocity prediction and levelling recommendations",
+  "restriction_before": {
+    "type": "RECOMMEND_ONLY",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A3"
+  },
+  "restriction_current": {
+    "type": "FULL_AUTHORIZED_AUTONOMY_WITHIN_SCOPE",
+    "status": "REMOVED",
+    "level": "A6"
+  },
+  "remediation_actions": [
+    "Attached PMO Taxonomy v2.1",
+    "Updated PKP-PROJECT-MGMT to v2.0",
+    "Removed restriction, granting A6 Full Autonomy within scope"
+  ],
+  "professional_test_run_ids": [
+    "RUN-PROF-GAP-PMO-AGILE-008"
+  ],
+  "professional_test_cases": 25,
+  "test_results": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "expert_review_required": false,
+  "external_validation_required": false,
+  "residual_risk": "ZERO",
+  "recommended_autonomy_decision": "RESTRICTION_REMOVE",
+  "decision_details": "Removed restriction, granting A6 Full Authorized Autonomy within PMO scope",
+  "evidence_status": "VERIFIED_EFFECTIVE"
+}

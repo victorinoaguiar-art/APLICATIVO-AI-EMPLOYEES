@@ -1,0 +1,74 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.3_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "total_requirements": 8,
+  "covered_requirements": 8,
+  "orphan_requirements": 0,
+  "coverage_percentage": 100.0,
+  "matrix": [
+    {
+      "requirement_id": "REQ-BLOCK-01",
+      "name": "Revenue Unit & Compatible LTV Recalculation",
+      "test_name": "Block 1: ARPA (440k AOA), ARPE (132k AOA), ARPI (132k AOA) and RevenueUnitScopeGuard enforcement",
+      "test_file": "packages/runtime/src/test/finalEvidenceConsistencyCorrectionPatch.test.ts",
+      "evidence_log": "LTV calculated strictly as (440,000 * 0.85) / 0.0208333 = 17,952,000 AOA.",
+      "status": "VERIFIED_PASS"
+    },
+    {
+      "requirement_id": "REQ-BLOCK-02",
+      "name": "CAC Historical Transition Audit Trail",
+      "test_name": "Block 2: Historical CAC (45k AOA) transition to Audited Enterprise CAC (5M AOA) with cost pool evidence",
+      "test_file": "packages/runtime/src/test/finalEvidenceConsistencyCorrectionPatch.test.ts",
+      "evidence_log": "CACChangeEvidenceRecord verified with 15M AOA cost pool over 3 acquired customers.",
+      "status": "VERIFIED_PASS"
+    },
+    {
+      "requirement_id": "REQ-BLOCK-03",
+      "name": "Statutory Legal Evidence for 2% ISR Tax Rule",
+      "test_name": "Block 3: 2% ISR withholding tax rule annotated with EXTERNAL_LEGAL_VALIDATION_REQUIRED and disclaimer",
+      "test_file": "packages/runtime/src/test/finalEvidenceConsistencyCorrectionPatch.test.ts",
+      "evidence_log": "TaxRuleEvidenceV113 verified under Artigo 67.º CII AGT Angola.",
+      "status": "VERIFIED_PASS"
+    },
+    {
+      "requirement_id": "REQ-BLOCK-04",
+      "name": "Subscription Renewal Event & Double Charge Prevention",
+      "test_name": "Block 4: Subscription Renewal classified as TRUE_RENEWAL with double charge prevention validation",
+      "test_file": "packages/runtime/src/test/finalEvidenceConsistencyCorrectionPatch.test.ts",
+      "evidence_log": "validateDoubleChargePrevention() throws DOUBLE_CHARGE_PREVENTION_TRIGGERED on duplicate invoice.",
+      "status": "VERIFIED_PASS"
+    },
+    {
+      "requirement_id": "REQ-BLOCK-05",
+      "name": "PGC Angola Accounting Mappings & Settlement Bank Role Guard",
+      "test_name": "Block 5: PGC Angola entry mappings (Débito 43.1 / Crédito 71.1) and Central Bank Role Guard (BNA vs BAI)",
+      "test_file": "packages/runtime/src/test/finalEvidenceConsistencyCorrectionPatch.test.ts",
+      "evidence_log": "PGC Angola entries verified with monthly deferred revenue recognition.",
+      "status": "VERIFIED_PASS"
+    },
+    {
+      "requirement_id": "REQ-BLOCK-06",
+      "name": "Metric DAG Completeness & Cycle Elimination",
+      "test_name": "Block 6: Metric DAG structural completeness (16 nodes, 14 edges, 0 cycles)",
+      "test_file": "packages/runtime/src/test/finalEvidenceConsistencyCorrectionPatch.test.ts",
+      "evidence_log": "DAG validation passed with 16 nodes and 0 cycles.",
+      "status": "VERIFIED_PASS"
+    },
+    {
+      "requirement_id": "REQ-BLOCK-07",
+      "name": "Full 64-Character Hex SHA-256 Hashes",
+      "test_name": "Block 7: Full 64-character hex SHA-256 baseline hashes and regex validation",
+      "test_file": "packages/runtime/src/test/finalEvidenceConsistencyCorrectionPatch.test.ts",
+      "evidence_log": "Regex ^[a-fA-F0-9]{64}$ verified across all digest hashes.",
+      "status": "VERIFIED_PASS"
+    },
+    {
+      "requirement_id": "REQ-BLOCK-08",
+      "name": "Correction Gate Execution",
+      "test_name": "Block 8: Correction Gate execution SAAS_METRICS_DICTIONARY_v1_1_3_CORRECTION_GATE",
+      "test_file": "packages/runtime/src/test/finalEvidenceConsistencyCorrectionPatch.test.ts",
+      "evidence_log": "Correction gate executed returning gate_passed: true with 8 passing checks.",
+      "status": "VERIFIED_PASS"
+    }
+  ]
+}

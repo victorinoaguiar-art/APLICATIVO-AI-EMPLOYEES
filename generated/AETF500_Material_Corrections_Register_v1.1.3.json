@@ -1,0 +1,89 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.3_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "baseline_status": "FROZEN",
+  "final_baseline_decision": "BASELINE_CONFIRMED_WITH_EXTERNAL_VALIDATIONS_PENDING",
+  "confidence_classification": "INTERNALLY_VERIFIED",
+  "corrections": [
+    {
+      "correction_id": "CORR-001",
+      "block": "Block 1",
+      "title": "Revenue Unit & Compatible LTV Recalculation",
+      "impact": "CRITICAL",
+      "description": "Formalized ARPA (440,000 AOA / Account), ARPE (132,000 AOA / Employee), and ARPI (132,000 AOA / Instance). Introduced RevenueUnitScopeGuard to prevent unit mixing. Recalculated LTV to 17,952,000 AOA based strictly on ARPA and monthly churn of 2.0833%.",
+      "previous_state": "Ambiguous ARPU and LTV calculations across account vs instance levels.",
+      "new_state": "Rigid account-level LTV calculation with RevenueUnitScopeGuard enforcement.",
+      "verification_status": "PASSED"
+    },
+    {
+      "correction_id": "CORR-002",
+      "block": "Block 2",
+      "title": "CAC Historical Transition Audit Trail",
+      "impact": "HIGH",
+      "description": "Reconciled 45,000 AOA historical marketing lead estimate with 5,000,000 AOA audited Enterprise Sales-Assisted CAC based on a 15,000,000 AOA cost pool over 3 acquired customers.",
+      "previous_state": "Discrepancy between 45k AOA and 5M AOA CAC figures without formal lineage.",
+      "new_state": "Audited CAC transition record with 15M AOA cost pool evidence log.",
+      "verification_status": "PASSED"
+    },
+    {
+      "correction_id": "CORR-003",
+      "block": "Block 3",
+      "title": "Statutory Legal Evidence for 2% ISR Tax Rule",
+      "impact": "HIGH",
+      "description": "Annotated 2% Industrial Tax (ISR) withholding under Artigo 67.º do Código do Imposto Industrial AGT Angola with validation_status: EXTERNAL_LEGAL_VALIDATION_REQUIRED and explicit disclaimer per Section 13 constraint.",
+      "previous_state": "Unqualified tax rule assertion.",
+      "new_state": "Strict legal status annotation with disclaimer pending Diário da República review.",
+      "verification_status": "PASSED"
+    },
+    {
+      "correction_id": "CORR-004",
+      "block": "Block 4",
+      "title": "Subscription Renewal Event & Double Charge Prevention",
+      "impact": "HIGH",
+      "description": "Classified subscription renewal events as TRUE_RENEWAL to maintain contract period continuity. Implemented validateDoubleChargePrevention() for strict invoice_id + period start idempotency.",
+      "previous_state": "Generic renewal event classification with potential double charge vulnerability.",
+      "new_state": "Formal TRUE_RENEWAL classification and automated double charge prevention guard.",
+      "verification_status": "PASSED"
+    },
+    {
+      "correction_id": "CORR-005",
+      "block": "Block 5",
+      "title": "PGC Angola Accounting Mappings & Settlement Bank Role Guard",
+      "impact": "CRITICAL",
+      "description": "Mapped accounting entries under PGC Angola (Decreto n.º 82/01) to Débito 43.1 (Clientes C/C) and Crédito 71.1 (Vendas e Serviços SaaS). Enforced is_central_bank_settlement_bank = false, designating BNA as regulator and BAI as commercial settlement bank.",
+      "previous_state": "Missing statutory PGC account codes and ambiguous central bank settlement roles.",
+      "new_state": "Explicit PGC Angola 43.1/71.1 entries and strict BNA/BAI role isolation.",
+      "verification_status": "PASSED"
+    },
+    {
+      "correction_id": "CORR-006",
+      "block": "Block 6",
+      "title": "Metric DAG Completeness & Cycle Elimination",
+      "impact": "HIGH",
+      "description": "Structured full mathematical Metric DAG with 16 nodes and 14 directed edges. Validated topological ordering with 0 cyclic dependencies.",
+      "previous_state": "Partial metric tree definition.",
+      "new_state": "Formally validated 16-node 14-edge 0-cycle DAG.",
+      "verification_status": "PASSED"
+    },
+    {
+      "correction_id": "CORR-007",
+      "block": "Block 7",
+      "title": "Full 64-Character Hex SHA-256 Hashes",
+      "impact": "MEDIUM",
+      "description": "Replaced truncated or placeholder hash strings with full 64-character hexadecimal SHA-256 digests validated via ^[a-fA-F0-9]{64}$ regex.",
+      "previous_state": "Incomplete hash digests.",
+      "new_state": "100% full 64-char hex SHA-256 digests.",
+      "verification_status": "PASSED"
+    },
+    {
+      "correction_id": "CORR-008",
+      "block": "Block 8",
+      "title": "Requirement -> Test -> Evidence Traceability Matrix",
+      "impact": "HIGH",
+      "description": "Constructed end-to-end traceability matrix mapping every prompt requirement to automated runtime tests and execution evidence logs with 100% coverage.",
+      "previous_state": "Untracked requirement coverage.",
+      "new_state": "100% covered RequirementTestEvidenceMatrix with 0 orphan requirements.",
+      "verification_status": "PASSED"
+    }
+  ]
+}

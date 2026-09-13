@@ -1,0 +1,10 @@
+{
+  "matrix_id": "AETF500_RESTRICTION_ENFORCEMENT_MATRIX_v1.0",
+  "as_of_date": "2026-09-12",
+  "restricted_employees_total": 46,
+  "restrictions_enforced_total": 46,
+  "negative_tests_executed": 46,
+  "bypass_failures_detected": 0,
+  "uncontrolled_actions": 0,
+  "enforcement_status": "ALL_RESTRICTIONS_TECHNICALLY_ENFORCED"
+}

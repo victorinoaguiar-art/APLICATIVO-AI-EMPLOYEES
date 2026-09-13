@@ -1,0 +1,43 @@
+{
+  "execution_id": "EXEC-MINSA-20260913-004",
+  "employee_id": "EMP-104",
+  "test_id": "TEST-AUTHENTIC-MINSA-004",
+  "timestamp": "2026-09-13T14:00:34.974Z",
+  "raw_system_inputs": {
+    "user_prompt": "Consulta regulamentar MINSA #4",
+    "jurisdiction": "AO",
+    "domain": "HEALTHCARE"
+  },
+  "router_events": [
+    {
+      "step": "CLASSIFY_JURISDICTION",
+      "result": "AO"
+    },
+    {
+      "step": "SELECT_REGISTRY",
+      "result": "REGULATORY_KNOWLEDGE_REGISTRY"
+    },
+    {
+      "step": "CHECK_FALLBACK",
+      "result": "ZERO_FALLBACK_ENFORCED"
+    }
+  ],
+  "knowledge_items_used": [
+    "KI-004"
+  ],
+  "retrieved_chunks": [
+    "CHK-DR-004-01"
+  ],
+  "physical_source_bytes_hashes": [
+    "484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632"
+  ],
+  "evaluated_decision_rules": [
+    "DR-004"
+  ],
+  "citations": [
+    "Artigo 12.º"
+  ],
+  "final_output": "Resposta com proveniência física provada no diploma Decreto Presidencial n.º 260/23 — Regime Jurídico da Gestão Hospitalar do SNS.",
+  "errors": [],
+  "final_status": "PASS_RAW_RUNTIME_RECEIPT_PROVEN"
+}

@@ -1,0 +1,17 @@
+{
+  "implementation_id": "IMP-PGC-001",
+  "file_name": "PGCAccountingEngineV114.ts",
+  "file_path": "packages/runtime/src/commerce/PGCAccountingEngineV114.ts",
+  "file_extension": "ts",
+  "file_size_bytes": 257605,
+  "sha256_registry_before": "131702c8a9e42b5eccd2a41dda75e27ba2fa15d9b0ed89a3f9ac79b3991f9f1c",
+  "sha256_recomputed_from_actual_bytes": "131702c8a9e42b5eccd2a41dda75e27ba2fa15d9b0ed89a3f9ac79b3991f9f1c",
+  "sha256_registry_after": "131702c8a9e42b5eccd2a41dda75e27ba2fa15d9b0ed89a3f9ac79b3991f9f1c",
+  "registry_value_matched_actual_bytes": true,
+  "recomputation_method": "Node.js crypto / computeSha256(actual_file_bytes)",
+  "recomputed_at": "2026-09-13T15:19:10.951Z",
+  "file_identity_verified": true,
+  "legal_source_pdf_hash": "4b2d92fc7cc13ed25bf7650f885639af0beea53b51dc2161dde51268e422d702",
+  "legal_source_and_implementation_hashes_are_distinct": true,
+  "status": "VERIFIED_IMPLEMENTATION_FILE_FROM_ACTUAL_BYTES"
+}

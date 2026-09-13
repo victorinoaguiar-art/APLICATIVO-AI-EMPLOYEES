@@ -1,0 +1,50 @@
+{
+  "gap_id": "GAP-MKT-CONSUMER-012",
+  "domain": "Marketing",
+  "affected_employee_ids": [
+    "EMP-MKT-003"
+  ],
+  "affected_competency_ids": [
+    "COMP-MKT-002",
+    "COMP-MKT-005"
+  ],
+  "original_problem": "Consumer Rights Act Angola Guidelines & ad claims compliance unverified",
+  "original_root_cause": "Advertising regulation compliance gap",
+  "original_risk_level": "PKA_1_LOW",
+  "source_before": "Lei de Defesa do Consumidor Lei n.º 15/03",
+  "source_after": "Lei n.º 15/03 & Guia de Publicidade do Consumidor 2026",
+  "knowledge_pack_before": "PKP-MARKETING-v1.0",
+  "knowledge_pack_after": "PKP-MARKETING-v2.0_UPDATED",
+  "rule_before": "Draft-only ad copy generation",
+  "rule_after": "Automated ad copy compliance validation with A5 autonomy",
+  "restriction_before": {
+    "type": "DRAFT_ONLY",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A2"
+  },
+  "restriction_current": {
+    "type": "LIMITED_AUTONOMOUS_EXECUTION",
+    "status": "REMOVED",
+    "level": "A5"
+  },
+  "remediation_actions": [
+    "Attached Consumer Rights Ad Guide 2026",
+    "Updated PKP-MARKETING to v2.0",
+    "Removed DRAFT_ONLY restriction for ad copy validation"
+  ],
+  "professional_test_run_ids": [
+    "RUN-PROF-GAP-MKT-CONSUMER-012"
+  ],
+  "professional_test_cases": 25,
+  "test_results": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "expert_review_required": false,
+  "external_validation_required": false,
+  "residual_risk": "VERY_LOW",
+  "recommended_autonomy_decision": "RESTRICTION_REMOVE",
+  "decision_details": "Removed DRAFT_ONLY restriction, promoting to A5 Limited Autonomous Execution",
+  "evidence_status": "VERIFIED_EFFECTIVE"
+}

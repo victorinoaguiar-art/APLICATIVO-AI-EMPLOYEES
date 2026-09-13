@@ -1,0 +1,25 @@
+{
+  "trace_id": "REG_ROUTER_TRACE_HEALTHCARE_20260913",
+  "execution_timestamp": "2026-09-13T11:30:00.000Z",
+  "queries_evaluated": 5,
+  "router_steps": [
+    "QUERY_PARSED",
+    "CLASSIFIER_DOM_HEALTHCARE",
+    "CLASSIFIER_JUR_AO",
+    "REGULATORY_INDEX_LOOKUP",
+    "CANONICAL_SOURCE_MATCHED",
+    "AUTHENTICITY_VERIFIED",
+    "RETRIEVAL_EXECUTED"
+  ],
+  "onedrive_fallback_events": 0,
+  "c_drive_fallback_events": 0,
+  "google_drive_unverified_fallback_events": 0,
+  "other_local_unverified_fallback_events": 0,
+  "negative_test_unverified_file_rejection": "PASS",
+  "misleading_file_rejection_test": {
+    "test_file_created": "scratch/MINSA_LEGISLACAO_ACTUALIZADA.pdf",
+    "router_decision": "REJECT_UNAUTHORIZED_SOURCE",
+    "status": "PASS"
+  },
+  "overall_router_status": "SECURE_ZERO_FALLBACK_VERIFIED"
+}

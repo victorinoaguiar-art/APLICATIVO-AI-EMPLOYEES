@@ -1,0 +1,24 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.4_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "rules": [
+    {
+      "rule_id": "RULE-REV-MONTHLY-RATABLE",
+      "name": "SaaS Monthly Ratable Recognition",
+      "method": "RATABLE_MONTHLY",
+      "description": "Recognize SaaS subscription revenue evenly across each active calendar month of service.",
+      "deferred_revenue_account": "49.1",
+      "earned_revenue_account": "62.1.1",
+      "status": "ACTIVE"
+    },
+    {
+      "rule_id": "RULE-REV-ANNUAL-RATABLE",
+      "name": "Annual Prepaid Subscription Deferral & Ratable Recognition",
+      "method": "RATABLE_MONTHLY",
+      "description": "Full annual invoice amount credited to 49.1 Deferred Revenue upon billing; amortized 1/12th per month to 62.1.1.",
+      "deferred_revenue_account": "49.1",
+      "earned_revenue_account": "62.1.1",
+      "status": "ACTIVE"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "correction_id": "CORR-001",
+    "artifact_id": "FORENSIC-ARTIFACT-01",
+    "historical_report": "AETF500_Final_Provenance_Structural_Integrity_Closure_Report_v1.0.md",
+    "historical_value": "1.048.576 bytes",
+    "correct_value": "5.188.378 bytes",
+    "error_type": "ROUNDED_FILE_SIZE_ERROR",
+    "root_cause": "A rounded 1MiB size was reported for PGC Decreto 82/01 PDF instead of reading actual filesystem bytes (5.188.378 bytes).",
+    "affected_artifacts": [
+      "AETF500_SRC_ACC_PGC_001_Primary_Source_Verification_v1.0.json"
+    ],
+    "affected_reports": [
+      "AETF500_Final_Provenance_Structural_Integrity_Closure_Report_v1.0.md"
+    ],
+    "affected_manifests": [
+      "AETF500_Final_Provenance_Structural_Closure_Evidence_Manifest_v1.0.json"
+    ],
+    "correction_applied": true,
+    "revalidation_required": false
+  },
+  {
+    "correction_id": "CORR-002",
+    "artifact_id": "FORENSIC-ARTIFACT-03",
+    "historical_report": "AETF500_Final_Provenance_Hash_Restriction_Semantics_Closure_Report_v1.0.md",
+    "historical_value": "131702c8a9e42b5eccd2a41dda75e27ba2fa15d9b0ed89a3f9ac79b3991f9f1c",
+    "correct_value": "8a3627a456d6db1d431c75408f4e936a13763e41b7d1d339c1bcc8cf40ac4fc0",
+    "error_type": "COPIED_HASH_ERROR",
+    "root_cause": "The SHA-256 digest of the IVA PDF (131702c8...) was mistakenly assigned to PGCAccountingEngineV114.ts in historical manifest metadata.",
+    "affected_artifacts": [
+      "AETF500_PGCAccountingEngineV114_Primary_Implementation_File_Verification_v1.0.json"
+    ],
+    "affected_reports": [
+      "AETF500_Final_Provenance_Hash_Restriction_Semantics_Closure_Report_v1.0.md"
+    ],
+    "affected_manifests": [
+      "AETF500_Final_Provenance_Hash_Restriction_Semantics_Evidence_Manifest_v1.0.json"
+    ],
+    "correction_applied": true,
+    "revalidation_required": false
+  }
+]

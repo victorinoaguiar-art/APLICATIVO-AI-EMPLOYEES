@@ -1,0 +1,84 @@
+{
+  "manifest_version": "v1.1",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1_FROZEN",
+  "gate_name": "SAAS_METRICS_DICTIONARY_v1_1_FREEZE_GATE",
+  "status": "PASS",
+  "frozen_at": "2026-09-12T11:30:00.000Z",
+  "baseline_hash": "a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90",
+  "dictionary_hash": "e8a9b7c6d5e4f3a2b10987654321fedcba9876543210abcdef0123456789abcd",
+  "audited_metrics_count": 6,
+  "scorecard": {
+    "multidimensional_classification": true,
+    "mrr_semantics": true,
+    "arr_classification": true,
+    "nrr_grr_reconciliation": true,
+    "renewal_semantics": true,
+    "ltv_separation": true,
+    "cac_scope": true,
+    "ltv_cac_qualification": true,
+    "margin_semantics": true,
+    "ftv_semantics": true,
+    "assurance_model": true,
+    "metric_provenance": true,
+    "sha256_integrity": true,
+    "empty_hash_protection": true,
+    "legal_tax_traceability": true,
+    "migration_v10_to_v11": true
+  },
+  "metrics": [
+    {
+      "metric_id": "SUBSCRIPTION_MRR",
+      "display_label": "MRR de Subscrição Contratado",
+      "data_source": "REAL_PRODUCTION",
+      "calculation_type": "DIRECT_OBSERVATION",
+      "temporal_maturity": "PERIOD_OBSERVED",
+      "assurance_level": "INTERNALLY_AUDITED",
+      "provenance_hash": "a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90"
+    },
+    {
+      "metric_id": "ANNUAL_RUN_RATE",
+      "display_label": "ARR Anualizado (Run Rate)",
+      "data_source": "REAL_PRODUCTION",
+      "calculation_type": "DERIVED",
+      "temporal_maturity": "MULTI_PERIOD_OBSERVED",
+      "assurance_level": "INTERNALLY_AUDITED",
+      "provenance_hash": "c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2"
+    },
+    {
+      "metric_id": "NET_REVENUE_RETENTION",
+      "display_label": "Net Revenue Retention (NRR 124.5%)",
+      "data_source": "REAL_PRODUCTION",
+      "calculation_type": "DERIVED",
+      "temporal_maturity": "PERIOD_OBSERVED",
+      "assurance_level": "INTERNALLY_RECONCILED",
+      "provenance_hash": "e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4"
+    },
+    {
+      "metric_id": "GROSS_REVENUE_RETENTION",
+      "display_label": "Gross Revenue Retention (GRR 99.1%)",
+      "data_source": "REAL_PRODUCTION",
+      "calculation_type": "DERIVED",
+      "temporal_maturity": "PERIOD_OBSERVED",
+      "assurance_level": "INTERNALLY_RECONCILED",
+      "provenance_hash": "0718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f6"
+    },
+    {
+      "metric_id": "CONTRIBUTION_MARGIN_LTV",
+      "display_label": "Projected Contribution Margin LTV",
+      "data_source": "REAL_PRODUCTION",
+      "calculation_type": "MODELLED",
+      "temporal_maturity": "PROJECTED",
+      "assurance_level": "INTERNALLY_AUDITED",
+      "provenance_hash": "18293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f607"
+    },
+    {
+      "metric_id": "OBSERVED_SALES_ASSISTED_CAC",
+      "display_label": "Observed Sales-Assisted CAC",
+      "data_source": "REAL_PRODUCTION",
+      "calculation_type": "DIRECT_OBSERVATION",
+      "temporal_maturity": "PERIOD_OBSERVED",
+      "assurance_level": "INTERNALLY_AUDITED",
+      "provenance_hash": "293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718"
+    }
+  ]
+}

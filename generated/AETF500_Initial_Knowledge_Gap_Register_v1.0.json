@@ -1,0 +1,45 @@
+{
+  "program_id": "AETF500_PROFESSIONAL_KNOWLEDGE_COMPETENCY_ASSURANCE_PROGRAM_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "as_of_date": "2026-09-12",
+  "open_knowledge_gaps": 18,
+  "open_critical_gaps": 5,
+  "uncontrolled_critical_gaps": 0,
+  "gaps": [
+    {
+      "gap_id": "GAP-TAX-WHT-2PCT",
+      "domain": "Taxation",
+      "severity": "HIGH",
+      "status": "RESTRICTED_HUMAN_REVIEW",
+      "affected_workstream": "EV-05"
+    },
+    {
+      "gap_id": "GAP-AGT-INVOICING-CERT",
+      "domain": "Taxation",
+      "severity": "HIGH",
+      "status": "RESTRICTED_HUMAN_REVIEW",
+      "affected_workstream": "EV-01"
+    },
+    {
+      "gap_id": "GAP-BNA-FOREX-SUB",
+      "domain": "Banking",
+      "severity": "HIGH",
+      "status": "RESTRICTED_HUMAN_REVIEW",
+      "affected_workstream": "EV-02"
+    },
+    {
+      "gap_id": "GAP-PGC-37-6-APPROVAL",
+      "domain": "Accounting",
+      "severity": "HIGH",
+      "status": "RESTRICTED_HUMAN_REVIEW",
+      "affected_workstream": "EV-03"
+    },
+    {
+      "gap_id": "GAP-SAFT-VAT-AGT",
+      "domain": "Taxation",
+      "severity": "HIGH",
+      "status": "RESTRICTED_HUMAN_REVIEW",
+      "affected_workstream": "EV-04"
+    }
+  ]
+}

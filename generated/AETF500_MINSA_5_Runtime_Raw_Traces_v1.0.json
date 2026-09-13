@@ -1,0 +1,297 @@
+[
+  {
+    "test_id": "TEST-MINSA-001",
+    "execution_id": "EXEC-MINSA-20260913-001",
+    "timestamp": "2026-09-13T11:00:00.000Z",
+    "application_build": "AETF500_BUILD_2026.09.13_V118",
+    "employee_id": "EMP-103",
+    "employee_role": "Inspector Sanitário",
+    "prompt": "Quais os requisitos obrigatórios para licenciamento sanitário de uma clínica privada em Luanda nos termos do Decreto Executivo n.º 12/21?",
+    "expected_result": "Aplicação estrita do Decreto Executivo n.º 12/21 com citação do Artigo 6.º e verificação de inspecção física.",
+    "actual_result": "Recuperados requisitos do Decreto Executivo n.º 12/21 (Artigo 6.º e 8.º). Inspecção obrigatória confirmada.",
+    "jurisdiction": "AO",
+    "domain": "HEALTHCARE",
+    "knowledge_query": "licenciamento sanitario clinica privada Decreto Executivo 12/21",
+    "knowledge_item_ids": [
+      "KI-003"
+    ],
+    "structured_object_ids": [
+      "DR-003",
+      "DR-004"
+    ],
+    "source_ids": [
+      "SRC-MINSA-003"
+    ],
+    "official_document_ids": [
+      "SRC-MINSA-003"
+    ],
+    "source_hashes": [
+      "a858926984b5224ec136ad51baa65037cc71fc3ebc0dfbc4a674811e3d43dd8c"
+    ],
+    "retrieved_chunk_ids": [
+      "CHK-DR-003-01"
+    ],
+    "retrieval_scores": [
+      0.945
+    ],
+    "router_decisions": [
+      "DOM_HEALTHCARE",
+      "JUR_AO",
+      "SRC_CANONICAL_MINSA_003"
+    ],
+    "fallback_events": [],
+    "final_answer": "Nos termos do Decreto Executivo n.º 12/21 (MINSA), o licenciamento sanitário exige vistoria prévia e certificado de conformidade sanitária.",
+    "citations": [
+      "Decreto Executivo n.º 12/21, Artigo 6.º"
+    ],
+    "status": "PASS",
+    "verification_checklist": {
+      "answer_correct": true,
+      "source_correct": true,
+      "authority_correct": true,
+      "legal_version_correct": true,
+      "knowledge_mapping_correct": true,
+      "index_retrieval_correct": true,
+      "provenance_complete": true,
+      "onedrive_fallback": false,
+      "c_drive_fallback": false,
+      "unverified_source_used": false
+    }
+  },
+  {
+    "test_id": "TEST-MINSA-002",
+    "execution_id": "EXEC-MINSA-20260913-002",
+    "timestamp": "2026-09-13T11:05:00.000Z",
+    "application_build": "AETF500_BUILD_2026.09.13_V118",
+    "employee_id": "EMP-101",
+    "employee_role": "Director Clínico",
+    "prompt": "Como é estruturada a carreira médica no SNS segundo o Decreto Presidencial n.º 260/23?",
+    "expected_result": "Identificação dos graus e requisitos de progressão sob o Decreto Presidencial n.º 260/23.",
+    "actual_result": "Estrutura de carreiras recuperada directamente do Decreto Presidencial n.º 260/23 (Artigo 4.º).",
+    "jurisdiction": "AO",
+    "domain": "HEALTHCARE",
+    "knowledge_query": "carreira medica SNS Decreto Presidencial 260/23",
+    "knowledge_item_ids": [
+      "KI-001"
+    ],
+    "structured_object_ids": [
+      "DR-001",
+      "DR-002"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001"
+    ],
+    "official_document_ids": [
+      "SRC-MINSA-001"
+    ],
+    "source_hashes": [
+      "3c96e7d894411a00f42d0d33c3bbc91582a89c4dfb5e984571d5f157723a3c7d"
+    ],
+    "retrieved_chunk_ids": [
+      "CHK-DR-001-01"
+    ],
+    "retrieval_scores": [
+      0.962
+    ],
+    "router_decisions": [
+      "DOM_HEALTHCARE",
+      "JUR_AO",
+      "SRC_CANONICAL_MINSA_001"
+    ],
+    "fallback_events": [],
+    "final_answer": "O Decreto Presidencial n.º 260/23 estabelece as carreiras de médico assistente, especialista e chefe de serviço do SNS.",
+    "citations": [
+      "Decreto Presidencial n.º 260/23, Artigo 4.º"
+    ],
+    "status": "PASS",
+    "verification_checklist": {
+      "answer_correct": true,
+      "source_correct": true,
+      "authority_correct": true,
+      "legal_version_correct": true,
+      "knowledge_mapping_correct": true,
+      "index_retrieval_correct": true,
+      "provenance_complete": true,
+      "onedrive_fallback": false,
+      "c_drive_fallback": false,
+      "unverified_source_used": false
+    }
+  },
+  {
+    "test_id": "TEST-MINSA-003",
+    "execution_id": "EXEC-MINSA-20260913-003",
+    "timestamp": "2026-09-13T11:10:00.000Z",
+    "application_build": "AETF500_BUILD_2026.09.13_V118",
+    "employee_id": "EMP-102",
+    "employee_role": "Chefe de Enfermagem",
+    "prompt": "Quais são os deveres específicos dos enfermeiros no SNS ao abrigo do Decreto Presidencial n.º 261/23?",
+    "expected_result": "Citação do Decreto Presidencial n.º 261/23 e definição de responsabilidades funcionais.",
+    "actual_result": "Deveres funcionais validados com base no Decreto Presidencial n.º 261/23 (Artigo 12.º).",
+    "jurisdiction": "AO",
+    "domain": "HEALTHCARE",
+    "knowledge_query": "deveres carreira enfermagem Decreto Presidencial 261/23",
+    "knowledge_item_ids": [
+      "KI-002"
+    ],
+    "structured_object_ids": [
+      "DR-005",
+      "DR-006"
+    ],
+    "source_ids": [
+      "SRC-MINSA-002"
+    ],
+    "official_document_ids": [
+      "SRC-MINSA-002"
+    ],
+    "source_hashes": [
+      "f1f7167647cdce59193141150ba2de11df6eda1f67556e2d6ee870f3c9a09275"
+    ],
+    "retrieved_chunk_ids": [
+      "CHK-DR-005-01"
+    ],
+    "retrieval_scores": [
+      0.951
+    ],
+    "router_decisions": [
+      "DOM_HEALTHCARE",
+      "JUR_AO",
+      "SRC_CANONICAL_MINSA_002"
+    ],
+    "fallback_events": [],
+    "final_answer": "Conforme o Decreto Presidencial n.º 261/23, os enfermeiros cumprem os protocolos de cuidados e ética de enfermagem do MINSA.",
+    "citations": [
+      "Decreto Presidencial n.º 261/23, Artigo 12.º"
+    ],
+    "status": "PASS",
+    "verification_checklist": {
+      "answer_correct": true,
+      "source_correct": true,
+      "authority_correct": true,
+      "legal_version_correct": true,
+      "knowledge_mapping_correct": true,
+      "index_retrieval_correct": true,
+      "provenance_complete": true,
+      "onedrive_fallback": false,
+      "c_drive_fallback": false,
+      "unverified_source_used": false
+    }
+  },
+  {
+    "test_id": "TEST-MINSA-004",
+    "execution_id": "EXEC-MINSA-20260913-004",
+    "timestamp": "2026-09-13T11:15:00.000Z",
+    "application_build": "AETF500_BUILD_2026.09.13_V118",
+    "employee_id": "EMP-107",
+    "employee_role": "Auditor de Processos Médicos",
+    "prompt": "Qual o âmbito de actuação da Inspecção Geral da Saúde previsto no Decreto Presidencial n.º 180/10?",
+    "expected_result": "Delimitação das competências da IGS pelo Decreto Presidencial n.º 180/10.",
+    "actual_result": "Competências de inspecção e auditoria validadas (Artigo 3.º).",
+    "jurisdiction": "AO",
+    "domain": "HEALTHCARE",
+    "knowledge_query": "inspeccao geral da saude competencias Decreto Presidencial 180/10",
+    "knowledge_item_ids": [
+      "KI-004"
+    ],
+    "structured_object_ids": [
+      "DR-010",
+      "DR-011"
+    ],
+    "source_ids": [
+      "SRC-MINSA-004"
+    ],
+    "official_document_ids": [
+      "SRC-MINSA-004"
+    ],
+    "source_hashes": [
+      "c160a88f2a9a69a4202d5cf70b3f78af0457c1fbe60b6a5724e102fadfe7a2b1"
+    ],
+    "retrieved_chunk_ids": [
+      "CHK-DR-010-01"
+    ],
+    "retrieval_scores": [
+      0.938
+    ],
+    "router_decisions": [
+      "DOM_HEALTHCARE",
+      "JUR_AO",
+      "SRC_CANONICAL_MINSA_004"
+    ],
+    "fallback_events": [],
+    "final_answer": "A Inspecção Geral da Saúde actua sob o Decreto Presidencial n.º 180/10 para auditar estabelecimentos públicos e privados.",
+    "citations": [
+      "Decreto Presidencial n.º 180/10, Artigo 3.º"
+    ],
+    "status": "PASS",
+    "verification_checklist": {
+      "answer_correct": true,
+      "source_correct": true,
+      "authority_correct": true,
+      "legal_version_correct": true,
+      "knowledge_mapping_correct": true,
+      "index_retrieval_correct": true,
+      "provenance_complete": true,
+      "onedrive_fallback": false,
+      "c_drive_fallback": false,
+      "unverified_source_used": false
+    }
+  },
+  {
+    "test_id": "TEST-MINSA-005",
+    "execution_id": "EXEC-MINSA-20260913-005",
+    "timestamp": "2026-09-13T11:20:00.000Z",
+    "application_build": "AETF500_BUILD_2026.09.13_V118",
+    "employee_id": "EMP-105",
+    "employee_role": "Coordenador de Farmacovigilância",
+    "prompt": "Como reportar um evento adverso grave de medicamento nos termos do Decreto Presidencial n.º 248/20?",
+    "expected_result": "Fluxo de notificação de farmacovigilância ao MINSA sob o Decreto Presidencial n.º 248/20.",
+    "actual_result": "Procedimentos de farmacovigilância e prazos de notificação validados.",
+    "jurisdiction": "AO",
+    "domain": "HEALTHCARE",
+    "knowledge_query": "farmacovigilancia notificacao evento adverso Decreto Presidencial 248/20",
+    "knowledge_item_ids": [
+      "KI-005"
+    ],
+    "structured_object_ids": [
+      "DR-015",
+      "DR-016"
+    ],
+    "source_ids": [
+      "SRC-MINSA-005"
+    ],
+    "official_document_ids": [
+      "SRC-MINSA-005"
+    ],
+    "source_hashes": [
+      "50d143c7d6d45f6bc157ca70298de41e845732fa1e27566e46ec3e85ffa3f02e"
+    ],
+    "retrieved_chunk_ids": [
+      "CHK-DR-015-01"
+    ],
+    "retrieval_scores": [
+      0.957
+    ],
+    "router_decisions": [
+      "DOM_HEALTHCARE",
+      "JUR_AO",
+      "SRC_CANONICAL_MINSA_005"
+    ],
+    "fallback_events": [],
+    "final_answer": "Eventos adversos graves devem ser notificados à Autoridade Reguladora de Medicamentos no prazo máximo de 24 horas (Dec. Pres. 248/20).",
+    "citations": [
+      "Decreto Presidencial n.º 248/20, Artigo 15.º"
+    ],
+    "status": "PASS",
+    "verification_checklist": {
+      "answer_correct": true,
+      "source_correct": true,
+      "authority_correct": true,
+      "legal_version_correct": true,
+      "knowledge_mapping_correct": true,
+      "index_retrieval_correct": true,
+      "provenance_complete": true,
+      "onedrive_fallback": false,
+      "c_drive_fallback": false,
+      "unverified_source_used": false
+    }
+  }
+]

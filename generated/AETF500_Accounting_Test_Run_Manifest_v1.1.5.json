@@ -1,0 +1,27 @@
+{
+  "test_suite": "AETF500_PGC_Accounting_Remediation_And_Precision_Suite_v1.1.5",
+  "executed_at": "2026-09-12T13:00:00Z",
+  "total_tests": 16,
+  "passed_tests": 16,
+  "failed_tests": 0,
+  "status": "ALL_PASS",
+  "test_cases": [
+    { "id": "TC-001", "name": "Rejeição de Erro Material 43.1 / 71.1 na Emissão de Fatura", "result": "PASS" },
+    { "id": "TC-002", "name": "Classificação Correta Débito 31.1.2.1 Clientes Correntes Não Grupo Nacionais", "result": "PASS" },
+    { "id": "TC-003", "name": "Separação de Conta 31.1.1 Exclusivamente para Clientes Grupo", "result": "PASS" },
+    { "id": "TC-004", "name": "Preservação da Designação Oficial PGC 62.1.1 Serviços principais — Mercado nacional", "result": "PASS" },
+    { "id": "TC-005", "name": "Anexação de Dimensões Analíticas (SaaS, B2B) à Conta 62.1.1", "result": "PASS" },
+    { "id": "TC-006", "name": "Apuramento do IVA na Subconta 34.5.3 Liquidado (14%)", "result": "PASS" },
+    { "id": "TC-007", "name": "Diferimento de Receita na Conta 49.1 no Momento da Faturação", "result": "PASS" },
+    { "id": "TC-008", "name": "Reconhecimento Mensal Pro-Rata (1/12) de 49.1 para 62.1.1", "result": "PASS" },
+    { "id": "TC-009", "name": "Recebimento de Pagamento Débito 43.1 / Crédito 31.1.2.1", "result": "PASS" },
+    { "id": "TC-010", "name": "Garantia de Balanço de Dupla Partida (Sum Debits = Sum Credits)", "result": "PASS" },
+    { "id": "TC-011", "name": "Rejeição de Contas Desconhecidas (UNKNOWN_ACCOUNT) em Transações de Produção", "result": "PASS" },
+    { "id": "TC-012", "name": "Validação da Fixture de Teste Isolada Conta 99.9 (1 Teste, 0 Produção)", "result": "PASS" },
+    { "id": "TC-013", "name": "Implementação das 9 Famílias de Topo do IVA (34.5.1 a 34.5.9)", "result": "PASS" },
+    { "id": "TC-014", "name": "Reconciliação Contabilística dos 4 Achados de Auditoria", "result": "PASS" },
+    { "id": "TC-015", "name": "Integração do Registo de Validação Externa (4 itens PENDING_OFFICIAL_DIARIO_REVIEW)", "result": "PASS" },
+    { "id": "TC-016", "name": "Assinatura Digital de Evidência e Imutabilidade da Baseline Hash Manifest", "result": "PASS" }
+  ],
+  "version": "1.1.5"
+}

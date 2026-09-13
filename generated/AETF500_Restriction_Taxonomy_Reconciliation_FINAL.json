@@ -1,0 +1,844 @@
+{
+  "active_restrictions_total": 58,
+  "unique_restricted_employees": 58,
+  "employees_with_primavera_restrictions": 10,
+  "employees_with_professional_restrictions": 48,
+  "employees_with_regulatory_restrictions": 48,
+  "employees_with_jurisdiction_restrictions": 48,
+  "employees_with_external_validation_restrictions": 48,
+  "primavera_and_professional": 0,
+  "professional_and_regulatory": 48,
+  "set_model": {
+    "primavera_functional_tool_set_P": 10,
+    "professional_knowledge_set_K": 48,
+    "regulatory_set_R": 48,
+    "jurisdiction_set_J": 48,
+    "external_validation_set_E": 48,
+    "client_policy_set_C": 0,
+    "safety_set_S": 0,
+    "intersections": {
+      "P_and_K": 0,
+      "P_and_R": 0,
+      "K_and_R": 48,
+      "K_and_J": 48,
+      "R_and_J": 48,
+      "K_and_E": 48,
+      "R_and_E": 48
+    },
+    "union_total_P_or_K_or_R_or_J_or_E_or_C_or_S": 58
+  },
+  "restrictions": [
+    {
+      "restriction_id": "REST-FIN-001",
+      "employee_id": "EMP-001",
+      "restriction_class": "FUNCTIONAL_TOOL_RESTRICTION",
+      "restriction_type": "PRIMAVERA_WRITE_BLOCKED",
+      "competency_id": "COMP-1",
+      "country_code": "AO",
+      "reason": "PRIMAVERA_ERP_CONNECTOR_WRITE_BLOCKED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-1"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-002",
+      "employee_id": "EMP-002",
+      "restriction_class": "FUNCTIONAL_TOOL_RESTRICTION",
+      "restriction_type": "PRIMAVERA_WRITE_BLOCKED",
+      "competency_id": "COMP-2",
+      "country_code": "AO",
+      "reason": "PRIMAVERA_ERP_CONNECTOR_WRITE_BLOCKED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-2"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-003",
+      "employee_id": "EMP-003",
+      "restriction_class": "FUNCTIONAL_TOOL_RESTRICTION",
+      "restriction_type": "PRIMAVERA_WRITE_BLOCKED",
+      "competency_id": "COMP-3",
+      "country_code": "AO",
+      "reason": "PRIMAVERA_ERP_CONNECTOR_WRITE_BLOCKED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-3"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-004",
+      "employee_id": "EMP-004",
+      "restriction_class": "FUNCTIONAL_TOOL_RESTRICTION",
+      "restriction_type": "PRIMAVERA_WRITE_BLOCKED",
+      "competency_id": "COMP-4",
+      "country_code": "AO",
+      "reason": "PRIMAVERA_ERP_CONNECTOR_WRITE_BLOCKED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-4"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-005",
+      "employee_id": "EMP-005",
+      "restriction_class": "FUNCTIONAL_TOOL_RESTRICTION",
+      "restriction_type": "PRIMAVERA_WRITE_BLOCKED",
+      "competency_id": "COMP-5",
+      "country_code": "AO",
+      "reason": "PRIMAVERA_ERP_CONNECTOR_WRITE_BLOCKED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-5"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-006",
+      "employee_id": "EMP-006",
+      "restriction_class": "FUNCTIONAL_TOOL_RESTRICTION",
+      "restriction_type": "PRIMAVERA_WRITE_BLOCKED",
+      "competency_id": "COMP-6",
+      "country_code": "AO",
+      "reason": "PRIMAVERA_ERP_CONNECTOR_WRITE_BLOCKED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-6"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-007",
+      "employee_id": "EMP-007",
+      "restriction_class": "FUNCTIONAL_TOOL_RESTRICTION",
+      "restriction_type": "PRIMAVERA_WRITE_BLOCKED",
+      "competency_id": "COMP-7",
+      "country_code": "AO",
+      "reason": "PRIMAVERA_ERP_CONNECTOR_WRITE_BLOCKED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-7"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-008",
+      "employee_id": "EMP-008",
+      "restriction_class": "FUNCTIONAL_TOOL_RESTRICTION",
+      "restriction_type": "PRIMAVERA_WRITE_BLOCKED",
+      "competency_id": "COMP-8",
+      "country_code": "AO",
+      "reason": "PRIMAVERA_ERP_CONNECTOR_WRITE_BLOCKED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-8"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-009",
+      "employee_id": "EMP-009",
+      "restriction_class": "FUNCTIONAL_TOOL_RESTRICTION",
+      "restriction_type": "PRIMAVERA_WRITE_BLOCKED",
+      "competency_id": "COMP-9",
+      "country_code": "AO",
+      "reason": "PRIMAVERA_ERP_CONNECTOR_WRITE_BLOCKED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-9"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-010",
+      "employee_id": "EMP-010",
+      "restriction_class": "FUNCTIONAL_TOOL_RESTRICTION",
+      "restriction_type": "PRIMAVERA_WRITE_BLOCKED",
+      "competency_id": "COMP-10",
+      "country_code": "AO",
+      "reason": "PRIMAVERA_ERP_CONNECTOR_WRITE_BLOCKED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-10"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-011",
+      "employee_id": "EMP-011",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-11",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-11"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-012",
+      "employee_id": "EMP-012",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-12",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-12"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-013",
+      "employee_id": "EMP-013",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-13",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-13"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-014",
+      "employee_id": "EMP-014",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-14",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-14"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-015",
+      "employee_id": "EMP-015",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-15",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-15"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-016",
+      "employee_id": "EMP-016",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-16",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-16"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-017",
+      "employee_id": "EMP-017",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-17",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-17"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-018",
+      "employee_id": "EMP-018",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-18",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-18"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-019",
+      "employee_id": "EMP-019",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-19",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-19"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-020",
+      "employee_id": "EMP-020",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-20",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-20"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-021",
+      "employee_id": "EMP-021",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-21",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-21"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-022",
+      "employee_id": "EMP-022",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-22",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-22"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-023",
+      "employee_id": "EMP-023",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-23",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-23"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-024",
+      "employee_id": "EMP-024",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-24",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-24"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-025",
+      "employee_id": "EMP-025",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-25",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-25"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-026",
+      "employee_id": "EMP-026",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-26",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-26"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-027",
+      "employee_id": "EMP-027",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-27",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-27"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-028",
+      "employee_id": "EMP-028",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-28",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-28"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-029",
+      "employee_id": "EMP-029",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-29",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-29"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-030",
+      "employee_id": "EMP-030",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-30",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-30"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-031",
+      "employee_id": "EMP-031",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-31",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-31"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-032",
+      "employee_id": "EMP-032",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-32",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-32"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-033",
+      "employee_id": "EMP-033",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-33",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-33"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-034",
+      "employee_id": "EMP-034",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-34",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-34"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-035",
+      "employee_id": "EMP-035",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-35",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-35"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-036",
+      "employee_id": "EMP-036",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-36",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-36"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-037",
+      "employee_id": "EMP-037",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-37",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-37"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-038",
+      "employee_id": "EMP-038",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-38",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-38"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-039",
+      "employee_id": "EMP-039",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-39",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-39"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-040",
+      "employee_id": "EMP-040",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-40",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-40"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-041",
+      "employee_id": "EMP-041",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-41",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-41"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-042",
+      "employee_id": "EMP-042",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-42",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-42"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-043",
+      "employee_id": "EMP-043",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-43",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-43"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-044",
+      "employee_id": "EMP-044",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-44",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-44"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-045",
+      "employee_id": "EMP-045",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-45",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-45"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-046",
+      "employee_id": "EMP-046",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-46",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-46"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-047",
+      "employee_id": "EMP-047",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-47",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-47"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-048",
+      "employee_id": "EMP-048",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-48",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-48"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-049",
+      "employee_id": "EMP-049",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-49",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-49"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-050",
+      "employee_id": "EMP-050",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-50",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-50"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-051",
+      "employee_id": "EMP-051",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-51",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-51"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-052",
+      "employee_id": "EMP-052",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-52",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-52"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-053",
+      "employee_id": "EMP-053",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-53",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-53"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-054",
+      "employee_id": "EMP-054",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-54",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-54"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-055",
+      "employee_id": "EMP-055",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-55",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-55"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-056",
+      "employee_id": "EMP-056",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-56",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-56"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-057",
+      "employee_id": "EMP-057",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-57",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-57"
+      ]
+    },
+    {
+      "restriction_id": "REST-FIN-058",
+      "employee_id": "EMP-058",
+      "restriction_class": "PROFESSIONAL_KNOWLEDGE_RESTRICTION",
+      "restriction_type": "SUPERVISED_EXECUTION_REQUIRED",
+      "competency_id": "COMP-58",
+      "country_code": "PT",
+      "reason": "FIELD_SUPERVISION_REQUIRED",
+      "status": "ACTIVE",
+      "enforcement_layer": "RUNTIME_POLICY_ENFORCER",
+      "evidence_ids": [
+        "EVID-REST-58"
+      ]
+    }
+  ]
+}

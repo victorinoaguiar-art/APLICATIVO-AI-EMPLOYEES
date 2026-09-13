@@ -1,0 +1,32 @@
+[
+  {
+    "canonical_source_id": "SRC-HC-001",
+    "previous_source_ids": [
+      "SRC-HC-001"
+    ],
+    "domain": "Healthcare",
+    "document_identity": "Regulamento de Licenciamento de Estabelecimentos de Saúde (Decreto Executivo n.º 260/23)",
+    "jurisdiction": "AO",
+    "reason_for_change": "RESTORED_HEALTHCARE_DOMAIN_IDENTITY",
+    "effective_from": "2026-09-12",
+    "supersedes": "MISATTRIBUTED_PGC_IDENTITY",
+    "superseded_by": "NONE",
+    "sha256": "6e8a49c25b412e87d190280f55d9134a6e297834bc681729012f458e0a1586a1",
+    "evidence": "PRIMARY_HEALTHCARE_LEGAL_DOCUMENT_BYTES"
+  },
+  {
+    "canonical_source_id": "SRC-ACC-PGC-001",
+    "previous_source_ids": [
+      "SRC-HC-001_MISATTRIBUTED"
+    ],
+    "domain": "Accounting",
+    "document_identity": "Plano Geral de Contabilidade de Angola (Decreto n.º 82/01)",
+    "jurisdiction": "AO",
+    "reason_for_change": "SEPARATED_ACCOUNTING_PGC_SOURCE_ID",
+    "effective_from": "2026-09-12",
+    "supersedes": "SRC-HC-001_MISATTRIBUTED",
+    "superseded_by": "NONE",
+    "sha256": "4b2d92fc7cc13ed25bf7650f885639af0beea53b51dc2161dde51268e422d702",
+    "evidence": "PRIMARY_PGC_LEGAL_DOCUMENT_BYTES"
+  }
+]

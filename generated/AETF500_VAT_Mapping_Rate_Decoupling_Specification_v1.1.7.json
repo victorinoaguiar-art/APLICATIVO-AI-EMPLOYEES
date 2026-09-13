@@ -1,0 +1,7 @@
+{
+  "general_sales_vat_subaccount": "34.5.3.1",
+  "general_sales_vat_subaccount_name": "Operações gerais",
+  "tax_rate_decoupling_status": "TAX_RATE_DECOUPLED_FROM_ACCOUNT_CODE",
+  "standard_rate": "14%",
+  "note": "Account code 34.5.3.1 designates general operations, not a hardcoded 14% tax rate."
+}

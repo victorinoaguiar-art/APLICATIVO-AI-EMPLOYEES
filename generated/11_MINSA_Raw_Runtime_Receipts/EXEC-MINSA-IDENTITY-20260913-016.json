@@ -1,0 +1,39 @@
+{
+  "execution_id": "EXEC-MINSA-IDENTITY-20260913-016",
+  "test_id": "TEST-MINSA-IDENTITY-016",
+  "employee_id": "EMP-116",
+  "started_at": "2026-09-13T14:36:44.492Z",
+  "completed_at": "2026-09-13T14:36:44.612Z",
+  "query": "Quais os requisitos regulamentares da norma DR-016 ao abrigo do diploma 21-B/92?",
+  "router_events": [
+    {
+      "step": "CLASSIFY_JURISDICTION",
+      "result": "AO"
+    },
+    {
+      "step": "SELECT_REGISTRY",
+      "result": "MINSA_REPAIRED_REGISTRY"
+    },
+    {
+      "step": "RESOLVE_DOCUMENT_IDENTITY",
+      "resolved_document": "Lei n.º 21-B/92"
+    }
+  ],
+  "retrieved_chunk_ids": [
+    "CHK-DR-016-01"
+  ],
+  "retrieved_source_ids": [
+    "SRC-MINSA-001"
+  ],
+  "retrieved_document_numbers": [
+    "21-B/92"
+  ],
+  "rules_applied": [
+    "DR-016"
+  ],
+  "citations": [
+    "Lei n.º 21-B/92, Artigo 1.º"
+  ],
+  "final_output": "Consulta processada com proveniência jurídica verificada no Lei n.º 21-B/92 (Lei de Bases do Sistema Nacional de Saúde).",
+  "status": "PASS_EXACT_RAW_RUNTIME_RECEIPT"
+}

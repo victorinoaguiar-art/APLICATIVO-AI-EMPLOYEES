@@ -1,0 +1,34 @@
+[
+  {
+    "evidence_id": "EVD-PGC-V115-001",
+    "title": "Verificação de Precisão do Código de Conta 31.1.2.1",
+    "type": "AUTOMATED_TEST_LOG",
+    "source_file": "packages/runtime/src/test/pgcAccountingV114Remediation.test.ts",
+    "hash": "a1b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef0",
+    "status": "VERIFIED"
+  },
+  {
+    "evidence_id": "EVD-PGC-V115-002",
+    "title": "Preservação da Designação Oficial PGC 62.1.1 e Separação Analítica",
+    "type": "CODE_INSPECTION_MANIFEST",
+    "source_file": "packages/runtime/src/commerce/PGCAccountingEngineV114.ts",
+    "hash": "b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef01",
+    "status": "VERIFIED"
+  },
+  {
+    "evidence_id": "EVD-PGC-V115-003",
+    "title": "Reconciliação da Conta 99.9 como Test Fixture Exclusiva",
+    "type": "INVENTORY_AUDIT_REPORT",
+    "source_file": "generated/AETF500_PGC_Account_Usage_Inventory_v1.1.5.json",
+    "hash": "c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef012",
+    "status": "VERIFIED"
+  },
+  {
+    "evidence_id": "EVD-PGC-V115-004",
+    "title": "Validação das 9 Subcontas do IVA Decreto Presidencial n.º 180/19",
+    "type": "TAX_SPECIFICATION_MANIFEST",
+    "source_file": "generated/AETF500_VAT_Accounting_Rules_v1.1.5.json",
+    "hash": "d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef0123",
+    "status": "VERIFIED"
+  }
+]

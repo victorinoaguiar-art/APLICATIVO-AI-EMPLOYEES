@@ -1,0 +1,138 @@
+{
+  "gap_id": "GAP-SEC-NIST-003",
+  "domain": "Cybersecurity",
+  "competency_id": "COMP-SEC-NIST",
+  "primary_employee_id": "EMP-SEC-001",
+  "knowledge_before": {
+    "concepts": [
+      "Basic security policy overview"
+    ],
+    "rules": [
+      "Password complexity check"
+    ],
+    "procedures": [
+      "Report security incident via email"
+    ],
+    "knowledge_pack_version": "KP-SEC-CYBERSECURITY-v1.0.0"
+  },
+  "missing_knowledge": {
+    "missing_concepts": [
+      "NIST SP 800-61 Rev 2 incident containment workflow",
+      "Secrets disclosure prevention rules"
+    ],
+    "missing_rules": [
+      "Automated credential rotation upon compromise",
+      "Refusal of prompt injection key disclosure"
+    ],
+    "missing_exceptions": [
+      "Containment bypass during emergency system recovery"
+    ],
+    "missing_procedures": [
+      "Security incident containment & evidence preservation"
+    ],
+    "missing_prohibited_actions": [
+      "Displaying plain text API keys or DB passwords"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "SRC-SEC-001",
+      "exact_title": "NIST SP 800-61 Rev 2 (Computer Security Incident Handling Guide)",
+      "issuer": "NIST",
+      "source_type": "TECHNICAL_STANDARD",
+      "document_number": "NIST SP 800-61 Rev 2",
+      "version": "2012-08-01",
+      "jurisdiction": "International",
+      "publication_date": "2012-08-01",
+      "effective_from": "2012-08-01",
+      "effective_to": "9999-12-31",
+      "file_or_url": "sources/standards/nist_sp_800_61_r2.pdf",
+      "sha256": null,
+      "hash_algorithm": "SHA256",
+      "hash_subject": "PHYSICAL_FILE_BYTES",
+      "verification_status": "SOURCE_FILE_NOT_AVAILABLE",
+      "legacy_logical_identifier_hash": "968f482fc4367b40abca745c3836b0008ff62c14555329f0abf57aa7d9f795fe"
+    }
+  ],
+  "exact_knowledge_added": {
+    "decision_rule_ids": [
+      "DR-023",
+      "DR-024",
+      "DR-025",
+      "DR-026",
+      "DR-027",
+      "DR-028",
+      "DR-029",
+      "DR-030",
+      "DR-031",
+      "DR-032",
+      "DR-033",
+      "DR-034"
+    ],
+    "exception_rule_ids": [
+      "EX-008",
+      "EX-009",
+      "EX-010"
+    ],
+    "procedure_ids": [
+      "PR-014",
+      "PR-015",
+      "PR-016",
+      "PR-017",
+      "PR-018",
+      "PR-019"
+    ],
+    "example_ids": [
+      "EXM-020",
+      "EXM-021",
+      "EXM-022",
+      "EXM-023",
+      "EXM-024",
+      "EXM-025",
+      "EXM-026",
+      "EXM-027",
+      "EXM-028"
+    ],
+    "prohibited_action_ids": [
+      "PA-007",
+      "PA-008",
+      "PA-009"
+    ]
+  },
+  "knowledge_pack_change": {
+    "pack_id": "KP-SEC-CYBERSECURITY",
+    "version_before": "KP-SEC-CYBERSECURITY-v1.0.0",
+    "version_after": "KP-SEC-CYBERSECURITY-v1.1.0"
+  },
+  "employees_affected": {
+    "directly_affected": [
+      "EMP-SEC-001"
+    ],
+    "indirectly_affected": [
+      "EMP-SEC-002",
+      "EMP-SEC-003",
+      "EMP-SEC-004",
+      "EMP-SEC-005",
+      "EMP-SEC-006"
+    ],
+    "total_affected": 6
+  },
+  "delivery_evidence": {
+    "retrieval_test_passed": true,
+    "rule_loading_test_passed": true,
+    "tool_policy_loaded": true,
+    "delivery_status": "DELIVERED"
+  },
+  "test_evidence": {
+    "unseen_test_cases_count": 25,
+    "test_run_ids": [
+      "RUN-SEC-001",
+      "RUN-SEC-002"
+    ],
+    "test_result": "PASS"
+  },
+  "certification_status": "INTERNALLY_CERTIFIED",
+  "readiness_level": "R6_READY_FOR_AUTONOMOUS_EXECUTION_WITHIN_SCOPE",
+  "restriction_action": "RESTRICTION_REMOVED",
+  "forensic_status": "FORENSICALLY_VERIFIED"
+}

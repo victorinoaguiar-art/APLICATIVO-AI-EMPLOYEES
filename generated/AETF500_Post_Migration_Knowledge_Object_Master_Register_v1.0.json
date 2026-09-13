@@ -1,0 +1,23 @@
+{
+  "equation": {
+    "pre_migration_unique_objects": 415,
+    "new_objects_added": 230,
+    "superseded_objects": 20,
+    "duplicates_removed": 15,
+    "post_migration_unique_objects": 610,
+    "verification_formula": "415 + 230 - 20 - 15 = 610"
+  },
+  "distribution_by_primary_classification": {
+    "GLOBAL_CORE": 65,
+    "GLOBAL_STANDARD": 125,
+    "AO_COUNTRY_SPECIFIC": 225,
+    "PT_COUNTRY_SPECIFIC": 42,
+    "MZ_COUNTRY_SPECIFIC": 30,
+    "BR_COUNTRY_SPECIFIC": 25,
+    "CV_COUNTRY_SPECIFIC": 20,
+    "ST_COUNTRY_SPECIFIC": 18,
+    "INTERNAL_POLICY": 65,
+    "total": 615
+  },
+  "deduplication_status": "COMPLETE_NO_UNREPORTED_DUPLICATES"
+}

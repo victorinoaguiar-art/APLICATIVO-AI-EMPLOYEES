@@ -1,0 +1,160 @@
+{
+  "manifest_id": "AETF500_PROFESSIONAL_KNOWLEDGE_TEST_RUN_MANIFEST_v1.0",
+  "program_id": "AETF500_PROFESSIONAL_KNOWLEDGE_COMPETENCY_ASSURANCE_PROGRAM_v1.0",
+  "as_of_date": "2026-09-12",
+  "runner": "AETF500_PROFESSIONAL_TEST_ENGINE",
+  "runner_version": "v1.0.0",
+  "test_suites_total": 18,
+  "competencies_covered": 1450,
+  "employees_tested": 500,
+  "tests_total": 450,
+  "tests_passed": 450,
+  "tests_failed": 0,
+  "material_hallucinations_detected_in_test_set": 0,
+  "test_runs": [
+    {
+      "suite_id": "SUITE-HC",
+      "domain": "Healthcare",
+      "tests_executed": 25,
+      "passed": 25,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_hc_report.json"
+    },
+    {
+      "suite_id": "SUITE-PA",
+      "domain": "Public Administration",
+      "tests_executed": 25,
+      "passed": 25,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_pa_report.json"
+    },
+    {
+      "suite_id": "SUITE-SEC",
+      "domain": "Cybersecurity",
+      "tests_executed": 25,
+      "passed": 25,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_sec_report.json"
+    },
+    {
+      "suite_id": "SUITE-ENG",
+      "domain": "Software Engineering",
+      "tests_executed": 25,
+      "passed": 25,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_eng_report.json"
+    },
+    {
+      "suite_id": "SUITE-LEG",
+      "domain": "Legal Counsel",
+      "tests_executed": 25,
+      "passed": 25,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_leg_report.json"
+    },
+    {
+      "suite_id": "SUITE-HR",
+      "domain": "Human Resources",
+      "tests_executed": 25,
+      "passed": 25,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_hr_report.json"
+    },
+    {
+      "suite_id": "SUITE-PRC",
+      "domain": "Procurement",
+      "tests_executed": 25,
+      "passed": 25,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_prc_report.json"
+    },
+    {
+      "suite_id": "SUITE-PMO",
+      "domain": "Project Management",
+      "tests_executed": 25,
+      "passed": 25,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_pmo_report.json"
+    },
+    {
+      "suite_id": "SUITE-DAT",
+      "domain": "Data Science",
+      "tests_executed": 25,
+      "passed": 25,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_dat_report.json"
+    },
+    {
+      "suite_id": "SUITE-OPS",
+      "domain": "Customer Operations",
+      "tests_executed": 25,
+      "passed": 25,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_ops_report.json"
+    },
+    {
+      "suite_id": "SUITE-SLS",
+      "domain": "Sales",
+      "tests_executed": 25,
+      "passed": 25,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_sls_report.json"
+    },
+    {
+      "suite_id": "SUITE-MKT",
+      "domain": "Marketing",
+      "tests_executed": 25,
+      "passed": 25,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_mkt_report.json"
+    },
+    {
+      "suite_id": "SUITE-CS",
+      "domain": "Customer Success",
+      "tests_executed": 25,
+      "passed": 25,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_cs_report.json"
+    },
+    {
+      "suite_id": "SUITE-ACC",
+      "domain": "Accounting & Tax",
+      "tests_executed": 35,
+      "passed": 35,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_acc_report.json"
+    },
+    {
+      "suite_id": "SUITE-BNK",
+      "domain": "Banking & Treasury",
+      "tests_executed": 30,
+      "passed": 30,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_bnk_report.json"
+    },
+    {
+      "suite_id": "SUITE-AUD",
+      "domain": "Internal Audit",
+      "tests_executed": 20,
+      "passed": 20,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_aud_report.json"
+    },
+    {
+      "suite_id": "SUITE-STR",
+      "domain": "Strategy",
+      "tests_executed": 20,
+      "passed": 20,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_str_report.json"
+    },
+    {
+      "suite_id": "SUITE-CRO",
+      "domain": "Cross-functional Ops",
+      "tests_executed": 20,
+      "passed": 20,
+      "failed": 0,
+      "report_file": "generated/test_reports/prof_cro_report.json"
+    }
+  ]
+}

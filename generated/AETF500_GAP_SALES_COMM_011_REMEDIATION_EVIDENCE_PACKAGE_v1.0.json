@@ -1,0 +1,50 @@
+{
+  "gap_id": "GAP-SALES-COMM-011",
+  "domain": "Sales",
+  "affected_employee_ids": [
+    "EMP-SLS-008"
+  ],
+  "affected_competency_ids": [
+    "COMP-SLS-003",
+    "COMP-SLS-006"
+  ],
+  "original_problem": "Sales Approval Matrix v3.0 custom pricing discount bounds unverified",
+  "original_root_cause": "Commercial pricing matrix update gap",
+  "original_risk_level": "PKA_1_LOW",
+  "source_before": "Sales Discounting Policy 2022",
+  "source_after": "Sales Approval Matrix v3.0 (2026)",
+  "knowledge_pack_before": "PKP-SALES-v1.0",
+  "knowledge_pack_after": "PKP-SALES-v2.0_UPDATED",
+  "rule_before": "Human approval required for all custom enterprise quote discounting",
+  "rule_after": "Automated discounting for standard quotes <= 15% with A3 sign-off, preserving A4 for > 20%",
+  "restriction_before": {
+    "type": "HUMAN_APPROVAL_REQUIRED",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A4"
+  },
+  "restriction_current": {
+    "type": "RECOMMEND_ONLY",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A3"
+  },
+  "remediation_actions": [
+    "Attached Sales Approval Matrix v3.0",
+    "Updated PKP-SALES to v2.0",
+    "Downgraded restriction from A4 Human Approval to A3 Recommend Only"
+  ],
+  "professional_test_run_ids": [
+    "RUN-PROF-GAP-SALES-COMM-011"
+  ],
+  "professional_test_cases": 25,
+  "test_results": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "expert_review_required": false,
+  "external_validation_required": false,
+  "residual_risk": "LOW",
+  "recommended_autonomy_decision": "RESTRICTION_DOWNGRADE",
+  "decision_details": "Downgraded restriction from HUMAN_APPROVAL_REQUIRED (A4) to RECOMMEND_ONLY (A3)",
+  "evidence_status": "VERIFIED_EFFECTIVE"
+}

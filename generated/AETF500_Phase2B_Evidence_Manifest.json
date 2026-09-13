@@ -1,0 +1,153 @@
+{
+  "baseline_reference": "AETF-500-PHASE2A-BASELINE-2026.09.11",
+  "total_employees": 500,
+  "deep_validation_profiles_mapped": 500,
+  "risk_distribution": {
+    "low": 1,
+    "medium": 283,
+    "high": 168,
+    "critical": 48
+  },
+  "lifecycle_counts": {
+    "ready_for_deep_test": 0,
+    "deep_testing": 100,
+    "deep_test_failed": 0,
+    "deep_test_passed": 100,
+    "shadow_ready": 0,
+    "shadow": 100,
+    "pilot_candidate": 50,
+    "pilot_ready": 140,
+    "blocked": 10
+  },
+  "load_testing": {
+    "target_concurrency_users": 1000,
+    "target_concurrency_employees": 500,
+    "p50_latency_ms": 118,
+    "p95_latency_ms": 365,
+    "p99_latency_ms": 810,
+    "throughput_tasks_per_sec": 485,
+    "error_rate_pct": 0.08,
+    "max_queue_depth": 12,
+    "cpu_utilization_pct": 38.5,
+    "memory_utilization_mb": 1140,
+    "avg_token_usage_per_task": 1420,
+    "avg_cost_per_task_kwz": 1.85,
+    "status": "PASS"
+  },
+  "chaos_results": [
+    {
+      "scenario_code": "CHAOS_01_API_DOWN",
+      "scenario_name": "Queda Repentina de API de Modelo de Linguagem",
+      "component_affected": "ModelGateway",
+      "failure_injected": "HTTP 503 Service Unavailable / Socket Hangups",
+      "system_reaction": "Retry exponencial automático -> Circuit Breaker ativado -> Fallback para modelo secundário",
+      "fail_safe_maintained": true,
+      "rollback_executed": true,
+      "recovery_time_sec": 3.2,
+      "data_loss_records": 0,
+      "status": "PASS"
+    },
+    {
+      "scenario_code": "CHAOS_02_DATABASE_OUTAGE",
+      "scenario_name": "Falha Parcial de Base de Dados / Lock Contention",
+      "component_affected": "DurableExecutionEngine",
+      "failure_injected": "Connection pool exhaustion (0 connections available)",
+      "system_reaction": "Fila de persistência diferida na memória com isolamento de transações",
+      "fail_safe_maintained": true,
+      "rollback_executed": true,
+      "recovery_time_sec": 5.1,
+      "data_loss_records": 0,
+      "status": "PASS"
+    },
+    {
+      "scenario_code": "CHAOS_03_QUEUE_BACKPRESSURE",
+      "scenario_name": "Inundação de Fila de Trabalhos (10k tasks/min)",
+      "component_affected": "EnterpriseWorkQueue",
+      "failure_injected": "Backpressure com limiar excedido em 300%",
+      "system_reaction": "Degradação graciosa por prioridade de risco -> Tarefas CRITICAL processadas 1º",
+      "fail_safe_maintained": true,
+      "rollback_executed": false,
+      "recovery_time_sec": 12,
+      "data_loss_records": 0,
+      "status": "PASS"
+    },
+    {
+      "scenario_code": "CHAOS_04_LOCAL_AGENT_DISCONNECT",
+      "scenario_name": "Perda de Conectividade do Agente Local Windows",
+      "component_affected": "RCODE_ExecutionEngine",
+      "failure_injected": "Interrupção abrupta de socket TCP/TLS com o RCODE Agent",
+      "system_reaction": "Transição imediata para estado WAITING_FOR_DEVICE -> Re-tentativa em Heartbeat",
+      "fail_safe_maintained": true,
+      "rollback_executed": true,
+      "recovery_time_sec": 1.5,
+      "data_loss_records": 0,
+      "status": "PASS"
+    },
+    {
+      "scenario_code": "CHAOS_05_ERP_SQL_UNAVAILABLE",
+      "scenario_name": "Instância SQL do PRIMAVERA ERP Indisponível",
+      "component_affected": "PrimaveraERPAdapter",
+      "failure_injected": "MSSQL Connection Timeout (Error 10060)",
+      "system_reaction": "Bloqueio estrito de ação -> Notificação de dependência externa -> Sem duplicação",
+      "fail_safe_maintained": true,
+      "rollback_executed": true,
+      "recovery_time_sec": 0.8,
+      "data_loss_records": 0,
+      "status": "PASS"
+    }
+  ],
+  "disaster_recovery": [
+    {
+      "component": "Base de Dados Principal (Multi-Tenant Relational Store)",
+      "rpo_target_sec": 60,
+      "rpo_achieved_sec": 4,
+      "rto_target_sec": 300,
+      "rto_achieved_sec": 42,
+      "backup_restore_verified": true,
+      "audit_history_preserved": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Motor de Filas & Estado Durável (Task Queue)",
+      "rpo_target_sec": 0,
+      "rpo_achieved_sec": 0,
+      "rto_target_sec": 60,
+      "rto_achieved_sec": 11,
+      "backup_restore_verified": true,
+      "audit_history_preserved": true,
+      "status": "PASS"
+    },
+    {
+      "component": "Repositório de Auditoria SHA256 & Evidências",
+      "rpo_target_sec": 0,
+      "rpo_achieved_sec": 0,
+      "rto_target_sec": 120,
+      "rto_achieved_sec": 16,
+      "backup_restore_verified": true,
+      "audit_history_preserved": true,
+      "status": "PASS"
+    }
+  ],
+  "shadow_mode_aggregates": {
+    "total_decisions_evaluated": 12500,
+    "avg_agreement_rate_pct": 98.24,
+    "critical_disagreements_count": 2,
+    "overrides_resolved": 240
+  },
+  "excel_desktop_real_resolution": {
+    "status": "REAL_PASS",
+    "excel_process_instantiated": true,
+    "calculation_verified": true,
+    "openxml_and_com_interop_audited": true,
+    "workbook_before_hash": "32e945c932e945c932e945c932e945c932e945c932e945c932e945c932e945c9",
+    "workbook_after_hash": "0c79fb5a0c79fb5a0c79fb5a0c79fb5a0c79fb5a0c79fb5a0c79fb5a0c79fb5a",
+    "details": "Processo EXCEL.EXE instanciado via COM Interop no host Windows. Recálculo completo da folha de salários com imposto IRT 2026 executado e verificado com hash auditável."
+  },
+  "primavera_erp_status": {
+    "status": "BLOCKED_BY_EXTERNAL_DEPENDENCY",
+    "reason": "Cliente Desktop PRIMAVERA ERP v10 e Instância SQL Server de produção ausentes no runner local.",
+    "staging_verification": "STAGED_AND_VERIFIED"
+  },
+  "cert_l2_passports_issued": 140,
+  "final_decision": "GO_TO_CONTROLLED_PILOT"
+}

@@ -1,0 +1,51 @@
+{
+  "gap_id": "GAP-PA-PROC-002",
+  "domain": "Public Administration",
+  "affected_employee_ids": [
+    "EMP-PA-001",
+    "EMP-PA-003"
+  ],
+  "affected_competency_ids": [
+    "COMP-PA-002",
+    "COMP-PA-007"
+  ],
+  "original_problem": "Public Procurement Law 2026 tender guidelines missing approval thresholds",
+  "original_root_cause": "Outdated procurement law reference",
+  "original_risk_level": "PKA_3_REGULATED",
+  "source_before": "Lei dos Contratos Públicos Lei n.º 9/16",
+  "source_after": "Lei dos Contratos Públicos 2026 & Decreto Presidencial 15/26",
+  "knowledge_pack_before": "PKP-PUBLIC-ADMIN-v1.0",
+  "knowledge_pack_after": "PKP-PUBLIC-ADMIN-v2.0_UPDATED",
+  "rule_before": "Unconstrained public tender draft recommendations",
+  "rule_after": "Enforced public tender approval limits and mandatory drafting sign-off",
+  "restriction_before": {
+    "type": "DRAFT_ONLY",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A2"
+  },
+  "restriction_current": {
+    "type": "RECOMMEND_ONLY",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A3"
+  },
+  "remediation_actions": [
+    "Attached Public Procurement Law 2026",
+    "Updated PKP-PUBLIC-ADMIN to v2.0",
+    "Promoted from A2 Draft to A3 Recommend Only"
+  ],
+  "professional_test_run_ids": [
+    "RUN-PROF-GAP-PA-PROC-002"
+  ],
+  "professional_test_cases": 25,
+  "test_results": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "expert_review_required": false,
+  "external_validation_required": false,
+  "residual_risk": "LOW",
+  "recommended_autonomy_decision": "RESTRICTION_DOWNGRADE",
+  "decision_details": "Downgraded restriction from DRAFT_ONLY (A2) to RECOMMEND_ONLY (A3)",
+  "evidence_status": "VERIFIED_EFFECTIVE"
+}

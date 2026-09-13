@@ -1,0 +1,11 @@
+{
+  "program_id": "AETF500_CRYPTOGRAPHIC_SHA256_REMEDIATION_DEPENDENT_HASH_RECALCULATION_v1.0",
+  "known_vectors": {
+    "empty_string": "PASS",
+    "abc_string": "PASS"
+  },
+  "tests_executed": 7,
+  "tests_passed": 7,
+  "tests_failed": 0,
+  "negative_test_64_char_fake_digest": "PASS_REJECTED"
+}

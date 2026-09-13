@@ -1,0 +1,15 @@
+{
+  "register_id": "AETF500_RUNTIME_FALLBACK_ANOMALY_REGISTER_v1.0",
+  "anomalies": [
+    {
+      "anomaly_id": "ANOM-FALLBACK-001",
+      "type": "UNCONTROLLED_LOCAL_FILE_FALLBACK",
+      "trigger": "CANONICAL_KNOWLEDGE_MISS on MINSA Healthcare Query",
+      "attempted_targets": [
+        "OneDrive",
+        "C:\\Users\\..."
+      ],
+      "verdict": "UNCONTROLLED_REGULATORY_FALLBACK = FAIL"
+    }
+  ]
+}

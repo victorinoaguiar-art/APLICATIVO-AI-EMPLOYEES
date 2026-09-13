@@ -1,0 +1,57 @@
+[
+  {
+    "snapshot_id": "SNAP-MINSA-001",
+    "source_id": "SRC-MINSA-001",
+    "source_url": "https://www.minsa.gov.ao/legislacao/decreto_presidencial_260_23.pdf",
+    "retrieved_at": "2026-09-13T09:00:00.000Z",
+    "physical_path": "packages/runtime/src/knowledge/minsa/src-minsa-001.pdf",
+    "mime_type": "application/pdf",
+    "byte_size": 1542000,
+    "page_count": 24,
+    "sha256": "3c96e7d894411a00f42d0d33c3bbc91582a89c4dfb5e984571d5f157723a3c7d"
+  },
+  {
+    "snapshot_id": "SNAP-MINSA-002",
+    "source_id": "SRC-MINSA-002",
+    "source_url": "https://www.minsa.gov.ao/legislacao/decreto_presidencial_261_23.pdf",
+    "retrieved_at": "2026-09-13T09:00:00.000Z",
+    "physical_path": "packages/runtime/src/knowledge/minsa/src-minsa-002.pdf",
+    "mime_type": "application/pdf",
+    "byte_size": 1776100,
+    "page_count": 32,
+    "sha256": "f1f7167647cdce59193141150ba2de11df6eda1f67556e2d6ee870f3c9a09275"
+  },
+  {
+    "snapshot_id": "SNAP-MINSA-003",
+    "source_id": "SRC-MINSA-003",
+    "source_url": "https://www.minsa.gov.ao/legislacao/decreto_executivo_12_21.pdf",
+    "retrieved_at": "2026-09-13T09:00:00.000Z",
+    "physical_path": "packages/runtime/src/knowledge/minsa/src-minsa-003.pdf",
+    "mime_type": "application/pdf",
+    "byte_size": 2010200,
+    "page_count": 40,
+    "sha256": "a858926984b5224ec136ad51baa65037cc71fc3ebc0dfbc4a674811e3d43dd8c"
+  },
+  {
+    "snapshot_id": "SNAP-MINSA-004",
+    "source_id": "SRC-MINSA-004",
+    "source_url": "https://www.minsa.gov.ao/legislacao/decreto_presidencial_180_10.pdf",
+    "retrieved_at": "2026-09-13T09:00:00.000Z",
+    "physical_path": "packages/runtime/src/knowledge/minsa/src-minsa-004.pdf",
+    "mime_type": "application/pdf",
+    "byte_size": 2244300,
+    "page_count": 48,
+    "sha256": "c160a88f2a9a69a4202d5cf70b3f78af0457c1fbe60b6a5724e102fadfe7a2b1"
+  },
+  {
+    "snapshot_id": "SNAP-MINSA-005",
+    "source_id": "SRC-MINSA-005",
+    "source_url": "https://www.minsa.gov.ao/legislacao/decreto_presidencial_248_20.pdf",
+    "retrieved_at": "2026-09-13T09:00:00.000Z",
+    "physical_path": "packages/runtime/src/knowledge/minsa/src-minsa-005.pdf",
+    "mime_type": "application/pdf",
+    "byte_size": 2478400,
+    "page_count": 56,
+    "sha256": "50d143c7d6d45f6bc157ca70298de41e845732fa1e27566e46ec3e85ffa3f02e"
+  }
+]

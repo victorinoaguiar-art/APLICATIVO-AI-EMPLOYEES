@@ -1,0 +1,35 @@
+{
+  "active_restriction_records": 58,
+  "active_restriction_class_memberships": 202,
+  "unique_restricted_employees": 58,
+  "class_populations": {
+    "P_functional_tool_primavera": 10,
+    "K_professional_knowledge": 48,
+    "R_regulatory": 48,
+    "J_jurisdiction": 48,
+    "E_external_validation": 48,
+    "C_client_policy": 0,
+    "S_safety": 0
+  },
+  "intersections": {
+    "P_intersect_K": 0,
+    "P_intersect_R": 0,
+    "P_intersect_J": 0,
+    "P_intersect_E": 0,
+    "K_intersect_R": 48,
+    "K_intersect_J": 48,
+    "K_intersect_E": 48,
+    "R_intersect_J": 48,
+    "R_intersect_E": 48,
+    "J_intersect_E": 48
+  },
+  "set_identities": {
+    "K_equals_R": true,
+    "K_equals_J": true,
+    "K_equals_E": true,
+    "R_equals_J": true,
+    "R_equals_E": true,
+    "J_equals_E": true
+  },
+  "explanation": "58 active restriction records exist (1 per restricted employee). Each record has 1 primary restriction class and optional secondary tags. Employee EMP-001..EMP-010 have 1 primary class P. Employees EMP-011..EMP-058 have 1 primary class K and 3 secondary tags R, J, E. Total unique employees = 58. Total class memberships = 10 + 48*4 = 202."
+}

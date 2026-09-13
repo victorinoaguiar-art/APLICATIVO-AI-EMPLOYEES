@@ -1,0 +1,32 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.4_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "tax_rules": [
+    {
+      "jurisdiction": "AO",
+      "tax_type": "IVA",
+      "rule_id": "AO-VAT-STANDARD-2026-v1",
+      "rate": 14.0,
+      "tax_base": "Fatura ilíquida de prestação de serviços SaaS B2B",
+      "taxpayer_scope": "Empresas sujeitas ao Regime Geral do IVA",
+      "transaction_scope": "Operações de transmissão de bens e prestação de serviços em território nacional",
+      "effective_from": "2019-05-24",
+      "legal_source": "Decreto Presidencial n.º 180/19 e Código do IVA (Lei n.º 7/19)",
+      "validation_status": "SUPPORTED_BY_PROVIDED_DOCUMENT",
+      "evidence_id": "EVID-TAX-VAT-AO-14"
+    },
+    {
+      "jurisdiction": "AO",
+      "tax_type": "INDUSTRIAL_TAX_ISR",
+      "rule_id": "AO-ISR-WITHHOLDING-2PCT-v1.1.4",
+      "rate": 2.0,
+      "tax_base": "Fatura ilíquida de prestação de serviços",
+      "taxpayer_scope": "Pessoas Colectivas Residentes",
+      "transaction_scope": "Serviços prestados a entidades com contabilidade organizada",
+      "effective_from": "2014-10-22",
+      "legal_source": "Artigo 67.º do Código do Imposto Industrial (Lei n.º 19/14 / AGT)",
+      "validation_status": "EXTERNAL_LEGAL_VALIDATION_REQUIRED",
+      "evidence_id": "EVID-TAX-ISR-AO-2"
+    }
+  ]
+}

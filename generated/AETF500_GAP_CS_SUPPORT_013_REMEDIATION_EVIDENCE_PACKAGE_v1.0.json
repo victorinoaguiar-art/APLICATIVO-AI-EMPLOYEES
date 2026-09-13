@@ -1,0 +1,50 @@
+{
+  "gap_id": "GAP-CS-SUPPORT-013",
+  "domain": "Customer Success",
+  "affected_employee_ids": [
+    "EMP-CS-005"
+  ],
+  "affected_competency_ids": [
+    "COMP-CS-003",
+    "COMP-CS-007"
+  ],
+  "original_problem": "Health Score Model v2.4 churn risk escalation unaligned",
+  "original_root_cause": "Health score algorithm version gap",
+  "original_risk_level": "PKA_1_LOW",
+  "source_before": "Customer Success Playbook v1.0",
+  "source_after": "Health Score Model v2.4 (2026)",
+  "knowledge_pack_before": "PKP-CUSTOMER-SUCCESS-v1.0",
+  "knowledge_pack_after": "PKP-CUSTOMER-SUCCESS-v2.0_UPDATED",
+  "rule_before": "Recommend-only churn risk scoring",
+  "rule_after": "Full autonomous churn risk scoring and health score calculation",
+  "restriction_before": {
+    "type": "RECOMMEND_ONLY",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A3"
+  },
+  "restriction_current": {
+    "type": "FULL_AUTHORIZED_AUTONOMY_WITHIN_SCOPE",
+    "status": "REMOVED",
+    "level": "A6"
+  },
+  "remediation_actions": [
+    "Attached Health Score Model v2.4",
+    "Updated PKP-CUSTOMER-SUCCESS to v2.0",
+    "Removed restriction, granting A6 Full Autonomy within CS scope"
+  ],
+  "professional_test_run_ids": [
+    "RUN-PROF-GAP-CS-SUPPORT-013"
+  ],
+  "professional_test_cases": 25,
+  "test_results": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "expert_review_required": false,
+  "external_validation_required": false,
+  "residual_risk": "ZERO",
+  "recommended_autonomy_decision": "RESTRICTION_REMOVE",
+  "decision_details": "Removed restriction, granting A6 Full Authorized Autonomy within Customer Success scope",
+  "evidence_status": "VERIFIED_EFFECTIVE"
+}

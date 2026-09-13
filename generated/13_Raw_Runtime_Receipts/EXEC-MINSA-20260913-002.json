@@ -1,0 +1,43 @@
+{
+  "execution_id": "EXEC-MINSA-20260913-002",
+  "employee_id": "EMP-102",
+  "test_id": "TEST-AUTHENTIC-MINSA-002",
+  "timestamp": "2026-09-13T14:00:34.966Z",
+  "raw_system_inputs": {
+    "user_prompt": "Consulta regulamentar MINSA #2",
+    "jurisdiction": "AO",
+    "domain": "HEALTHCARE"
+  },
+  "router_events": [
+    {
+      "step": "CLASSIFY_JURISDICTION",
+      "result": "AO"
+    },
+    {
+      "step": "SELECT_REGISTRY",
+      "result": "REGULATORY_KNOWLEDGE_REGISTRY"
+    },
+    {
+      "step": "CHECK_FALLBACK",
+      "result": "ZERO_FALLBACK_ENFORCED"
+    }
+  ],
+  "knowledge_items_used": [
+    "KI-002"
+  ],
+  "retrieved_chunks": [
+    "CHK-DR-002-01"
+  ],
+  "physical_source_bytes_hashes": [
+    "025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3"
+  ],
+  "evaluated_decision_rules": [
+    "DR-002"
+  ],
+  "citations": [
+    "Artigo 4.º"
+  ],
+  "final_output": "Resposta com proveniência física provada no diploma Decreto Presidencial n.º 187/18 — Regime Jurídico da Carreira de Enfermagem.",
+  "errors": [],
+  "final_status": "PASS_RAW_RUNTIME_RECEIPT_PROVEN"
+}

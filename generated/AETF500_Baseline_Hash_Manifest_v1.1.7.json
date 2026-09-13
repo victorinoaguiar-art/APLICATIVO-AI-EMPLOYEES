@@ -1,0 +1,24 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.7_FROZEN",
+  "created_at": "2026-09-12T13:03:54.214Z",
+  "document_generation_status": "SYSTEM_GENERATED",
+  "integrity_protection": "SHA256_HASHED",
+  "digital_signature_status": "NOT_IMPLEMENTED",
+  "file_count": 14,
+  "files": {
+    "AETF500_SAAS_METRICS_DICTIONARY_v1.1.7_FROZEN.md": "f2c8b5f8bd118022d20a6fcc912b7587ab3e5b57532091b0aad1ae1fc6d99237",
+    "AETF500_PGC_Master_Account_Registry_v1.1.7.json": "6fcc9fae84ac738cece3487619c0d9944ec239ca8466dd2c7eca6ee40d3cfddc",
+    "AETF500_PGC_37_37_6_Policy_Specification_v1.1.7.json": "11c15c1fdc9369c5c76ea2a77aebfe57253f35b3cc9d6fc84393dba5b9c3b738",
+    "AETF500_VAT_Official_Subaccount_Tree_v1.1.7.json": "b37f69060edd54952b455aaa23e66227c7381cb0b485504a9f9be52ac6ac533e",
+    "AETF500_VAT_Mapping_Rate_Decoupling_Specification_v1.1.7.json": "78000effccd3f4713df8dd941e53ccba6137ef83928fdbd3581d4cb2e13a04b5",
+    "AETF500_External_Validation_Register_v1.1.7.json": "30e271f09f05271d1cf3fb22a60866e1a1f00cdf1a47a9dc53595115521cebe2",
+    "AETF500_Account_Usage_Inventory_v1.1.7.json": "e6e422f6e653b4c1d258f9a5f721d1565c1a3b590ec5da78b26d6992132cf6d8",
+    "AETF500_SAAS_Revenue_Accounting_Mapping_v1.1.7.json": "bf16636a5068ca5e157caa3b853208ebeacc21b9654f8facb7a8133d3da141b9",
+    "AETF500_PGC_49_Provisões_Compliance_Spec_v1.1.7.json": "7903f0f1e8d1dc2e7ee11dc452d2fac6a22539d830f60de0e891ef0f22a9a370",
+    "AETF500_VAT_Artigo22_Statutory_Subaccount_Inventory_v1.1.7.json": "d7c5bb4be3cc695df860d62a2cda61557454b6d948112781f24c0c44e15ad67a",
+    "AETF500_Tax_Rate_Decoupling_Validation_Spec_v1.1.7.json": "543745731cd540e36a312aa8f3c1e4012ba5331c5e82baaadea040d1f36f0920",
+    "AETF500_Manifest_Sidecar_Semantics_v1.1.7.json": "27bc4a90c8ad916baa77fd907b85a5065e728976864f43a73bde1e801fa664ff",
+    "AETF500_Baseline_Superseded_Register_v1.1.7.json": "f9aec2ae4ffa8db624fc6ecfa79d60fcd5af34c64b923c6184275c4092cbcc25",
+    "AETF500_Accounting_Gate_v1.1.7_Execution_Log.json": "05a06dbc3cb8e1862afd11ea37273fb78a960d2cf851bb72f231514248f903d8"
+  }
+}

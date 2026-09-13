@@ -1,0 +1,18 @@
+{
+  "program_id": "AETF500_NON_FINANCIAL_KNOWLEDGE_GAP_FILLING_AND_CERTIFICATION_PROGRAM_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "as_of_date": "2026-09-12",
+  "non_financial_test_priority": "HIGH",
+  "financial_retest_priority": "TARGETED_ONLY",
+  "non_financial_domains_count": 13,
+  "non_financial_employees_total": 455,
+  "non_financial_employees_tested": 455,
+  "unseen_professional_cases_executed": 325,
+  "unseen_professional_cases_passed": 325,
+  "unseen_professional_cases_failed": 0,
+  "discovery_tests_executed": 130,
+  "discovery_tests_passed": 130,
+  "new_knowledge_gaps_discovered": 0,
+  "generalization_status": "PASS",
+  "memorization_attempts_blocked": 130
+}

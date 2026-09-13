@@ -1,0 +1,28 @@
+{
+  "program_id": "AETF500_FINAL_MULTI_JURISDICTION_SEMANTIC_FREEZE_MICRO_PATCH_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "records": [
+    {
+      "workstream_id": "EXT-VAL-PT-OCC-001",
+      "country_code": "PT",
+      "target_institution": "Ordem dos Contabilistas Certificados (OCC)",
+      "internal_scope_claim": "500_EMPLOYEES",
+      "external_scope_authenticity_verified": false,
+      "external_scope_verification_status": "PENDING_EXTERNAL_VERIFICATION",
+      "internal_exception_canonical_status": "DOCUMENTED_INTERNAL_EXCEPTION_PENDING_EXTERNAL_VERIFICATION",
+      "external_assurance_closure": "OPEN",
+      "action_required": "Direct third-party authentication with OCC when official external evidence portal is accessible"
+    },
+    {
+      "workstream_id": "EXT-VAL-MZ-OCAM-001",
+      "country_code": "MZ",
+      "target_institution": "Ordem dos Contabilistas e Auditores de Moçambique (OCAM)",
+      "internal_scope_claim": "500_EMPLOYEES",
+      "external_scope_authenticity_verified": false,
+      "external_scope_verification_status": "PENDING_EXTERNAL_VERIFICATION",
+      "internal_exception_canonical_status": "DOCUMENTED_INTERNAL_EXCEPTION_PENDING_EXTERNAL_VERIFICATION",
+      "external_assurance_closure": "OPEN",
+      "action_required": "Direct third-party authentication with OCAM when official external evidence portal is accessible"
+    }
+  ]
+}

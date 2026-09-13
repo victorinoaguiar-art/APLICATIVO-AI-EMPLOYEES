@@ -1,0 +1,20 @@
+{
+  "manifest_name": "IRECE — AI Employee Input Readiness, Evidence Completeness & Preflight Engine Manifest",
+  "version": "1.1.0",
+  "spec_reference": "AI_Employee_Prompt_Input_Readiness_Evidence_Completeness_Preflight_500_v1.1.md",
+  "status": "PRODUCTION_READY",
+  "compatibility": "500/500 Priority Employees",
+  "preflight_gate_enforced": true,
+  "supported_readiness_statuses": [
+    "READY",
+    "READY_WITH_WARNINGS",
+    "NEEDS_DATA",
+    "NEEDS_CLARIFICATION",
+    "DATA_CONFLICT",
+    "STALE_DATA",
+    "INVALID_DATA",
+    "UNAUTHORIZED_SOURCE",
+    "BLOCKED"
+  ],
+  "generated_at": "2026-09-10T18:24:00.000Z"
+}

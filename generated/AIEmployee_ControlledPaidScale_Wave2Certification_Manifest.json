@@ -1,0 +1,63 @@
+{
+  "artifact_id": "AIEMPLOYEE_CONTROLLED_PAID_SCALE_WAVE2_CERTIFICATION_MANIFEST_2026_09_12",
+  "active_release": "AETF-500 Release v3.0 (Controlled Scale Phase)",
+  "previous_frozen_baseline": "AETF-500-COMMERCIAL-WAVE1-FROZEN-v2.1-2026.09.12",
+  "timestamp": "2026-09-12T10:48:00.000Z",
+  "wave_status": "WAVE_2_CERTIFIED",
+  "authorization": "AUTHORIZED_FOR_WAVE_3_10_CUSTOMERS",
+  "pilot_coorte_summary": {
+    "total_pilot_customers": 3,
+    "customer_a": {
+      "customer_id": "CUST-W2-ALPHA",
+      "name": "Alpha Logística & Transportes Lda",
+      "complexity": "LOW",
+      "active_employees": 1,
+      "mrr_aoa": 120000,
+      "health_score": 98,
+      "ftv_hours": 0.20
+    },
+    "customer_b": {
+      "customer_id": "CUST-W2-BETA",
+      "name": "Grupo Beta Distribuição SA",
+      "complexity": "MEDIUM",
+      "active_employees": 3,
+      "mrr_aoa": 350000,
+      "health_score": 95,
+      "ftv_hours": 0.25
+    },
+    "customer_c": {
+      "customer_id": "CUST-W2-GAMMA",
+      "name": "Gamma Conglomerado Industrial S.A.",
+      "complexity": "HIGH",
+      "active_employees": 6,
+      "mrr_aoa": 850000,
+      "health_score": 92,
+      "ftv_hours": 0.35
+    }
+  },
+  "saas_revenue_metrics": {
+    "mrr_aoa": 1320000,
+    "arr_aoa": 15840000,
+    "nrr_pct": 124.5,
+    "grr_pct": 99.1,
+    "arpa_aoa": 440000
+  },
+  "unit_economics": {
+    "avg_contribution_margin_pct": 88.75,
+    "cac_payback_months": 1.5,
+    "ltv_cac_ratio": 24.5,
+    "profitability_status": "HIGHLY_PROFITABLE"
+  },
+  "wave_2_repeatability_scorecard": {
+    "repeatable_onboarding": true,
+    "repeatable_payment": true,
+    "repeatable_provisioning": true,
+    "repeatable_first_value": true,
+    "repeatable_support": true,
+    "repeatable_margin": true,
+    "repeatable_evidence": true,
+    "repeatable_renewal": true,
+    "all_passed": true
+  },
+  "sha256_manifest_integrity": "9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b"
+}

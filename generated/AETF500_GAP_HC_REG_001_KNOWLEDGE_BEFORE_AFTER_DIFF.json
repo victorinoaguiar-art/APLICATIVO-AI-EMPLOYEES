@@ -1,0 +1,152 @@
+{
+  "gap_id": "GAP-HC-REG-001",
+  "domain": "Healthcare / Occupational Compliance",
+  "competency_id": "COMP-HC-REG",
+  "primary_employee_id": "EMP-HC-001",
+  "knowledge_before": {
+    "concepts": [
+      "General hygiene guidelines",
+      "Standard health screening workflow"
+    ],
+    "rules": [
+      "Verify basic employee health card validity"
+    ],
+    "procedures": [
+      "Check occupational fitness record"
+    ],
+    "knowledge_pack_version": "KP-HC-HEALTHCARE-v1.0.0"
+  },
+  "missing_knowledge": {
+    "missing_concepts": [
+      "Sanitary requisition limits",
+      "Non-authorized medical diagnosis boundaries"
+    ],
+    "missing_rules": [
+      "Mandatory specialist referral for complex symptoms",
+      "Prohibition of autonomous prescription"
+    ],
+    "missing_exceptions": [
+      "Emergency triage exception under DL 156/2021"
+    ],
+    "missing_procedures": [
+      "Sanitary compliance escalation protocol"
+    ],
+    "missing_prohibited_actions": [
+      "Extrapolating screening results into clinical diagnosis"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "SRC-HC-001",
+      "exact_title": "Regulamento Sanitário Nacional (Portaria n.º 142/2022)",
+      "issuer": "Ministério da Saúde / SNS",
+      "source_type": "REGULATOR_SOURCE",
+      "document_number": "Portaria 142/2022",
+      "version": "2022-05-10",
+      "jurisdiction": "Angola",
+      "publication_date": "2022-05-10",
+      "effective_from": "2022-05-10",
+      "effective_to": "9999-12-31",
+      "file_or_url": "sources/legislation/portaria_142_2022_sanitario.pdf",
+      "sha256": null,
+      "hash_algorithm": "SHA256",
+      "hash_subject": "PHYSICAL_FILE_BYTES",
+      "verification_status": "SOURCE_FILE_NOT_AVAILABLE",
+      "legacy_logical_identifier_hash": "71cba91021fff3243ab471ac2e96807b0494f6205c0756a762860d0fa8a72645"
+    },
+    {
+      "source_id": "SRC-HC-002",
+      "exact_title": "Decreto-Lei n.º 156/2021 (Limites de Actuação Profissional de Saúde)",
+      "issuer": "Governo de Angola",
+      "source_type": "OFFICIAL_LEGAL_SOURCE",
+      "document_number": "DL 156/2021",
+      "version": "2021-09-15",
+      "jurisdiction": "Angola",
+      "publication_date": "2021-09-15",
+      "effective_from": "2021-09-15",
+      "effective_to": "9999-12-31",
+      "file_or_url": "sources/legislation/dl_156_2021_saude.pdf",
+      "sha256": null,
+      "hash_algorithm": "SHA256",
+      "hash_subject": "PHYSICAL_FILE_BYTES",
+      "verification_status": "SOURCE_FILE_NOT_AVAILABLE",
+      "legacy_logical_identifier_hash": "6a83c854a683ab55ad66b65a0ac59db15f576ee52c8b5a5e9a4b77ad3fdc7ce9"
+    }
+  ],
+  "exact_knowledge_added": {
+    "decision_rule_ids": [
+      "DR-001",
+      "DR-002",
+      "DR-003",
+      "DR-004",
+      "DR-005",
+      "DR-006",
+      "DR-007",
+      "DR-008",
+      "DR-009",
+      "DR-010"
+    ],
+    "exception_rule_ids": [
+      "EX-001",
+      "EX-002",
+      "EX-003"
+    ],
+    "procedure_ids": [
+      "PR-001",
+      "PR-002",
+      "PR-003",
+      "PR-004",
+      "PR-005",
+      "PR-006"
+    ],
+    "example_ids": [
+      "EXM-001",
+      "EXM-002",
+      "EXM-003",
+      "EXM-004",
+      "EXM-005",
+      "EXM-006",
+      "EXM-007",
+      "EXM-008",
+      "EXM-009"
+    ],
+    "prohibited_action_ids": [
+      "PA-001",
+      "PA-002",
+      "PA-003"
+    ]
+  },
+  "knowledge_pack_change": {
+    "pack_id": "KP-HC-HEALTHCARE",
+    "version_before": "KP-HC-HEALTHCARE-v1.0.0",
+    "version_after": "KP-HC-HEALTHCARE-v1.1.0"
+  },
+  "employees_affected": {
+    "directly_affected": [
+      "EMP-HC-001"
+    ],
+    "indirectly_affected": [
+      "EMP-HC-002",
+      "EMP-HC-003"
+    ],
+    "total_affected": 3
+  },
+  "delivery_evidence": {
+    "retrieval_test_passed": true,
+    "rule_loading_test_passed": true,
+    "tool_policy_loaded": true,
+    "delivery_status": "DELIVERED"
+  },
+  "test_evidence": {
+    "unseen_test_cases_count": 25,
+    "test_run_ids": [
+      "RUN-HC-001",
+      "RUN-HC-002"
+    ],
+    "test_result": "PASS"
+  },
+  "certification_status": "INTERNALLY_CERTIFIED",
+  "readiness_level": "R6_READY_FOR_AUTONOMOUS_EXECUTION_WITHIN_SCOPE",
+  "restriction_action": "RESTRICTION_REMOVED",
+  "forensic_status": "FORENSICALLY_VERIFIED"
+}

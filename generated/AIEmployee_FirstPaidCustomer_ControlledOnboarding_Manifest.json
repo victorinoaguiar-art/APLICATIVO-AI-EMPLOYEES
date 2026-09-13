@@ -1,0 +1,61 @@
+{
+  "artifact_id": "AIEMPLOYEE_FIRST_PAID_CUSTOMER_CONTROLLED_ONBOARDING_MANIFEST_2026_09_12",
+  "baseline_consumed": "AETF-500-CERTL3-PRODUCTION-BASELINE-2026.09.11",
+  "commercial_baseline": "COMMERCIAL-BASELINE-v2.0",
+  "timestamp": "2026-09-12T09:50:00.000Z",
+  "readiness_status": "PILOT_CUSTOMER_READY",
+  "cohort_waves": {
+    "active_wave": "WAVE_1_SINGLE_CUSTOMER",
+    "total_waves": 7,
+    "waves": [
+      "WAVE_0_INTERNAL",
+      "WAVE_1_SINGLE_CUSTOMER",
+      "WAVE_2_TRIO_CUSTOMERS",
+      "WAVE_3_10_CUSTOMERS",
+      "WAVE_4_25_CUSTOMERS",
+      "WAVE_5_50_CUSTOMERS",
+      "GENERAL_AVAILABILITY"
+    ]
+  },
+  "readiness_gates": {
+    "count": 23,
+    "mandatory_all_passed_required": true
+  },
+  "first_day_at_work_wizard": {
+    "steps_count": 20,
+    "autonomy_limits_enforced": true
+  },
+  "task_risk_routing": {
+    "risk_levels": ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+    "critical_autonomous_execution_blocked": true
+  },
+  "first_task_lifecycle": {
+    "states": [
+      "FIRST_TASK_STARTED",
+      "FIRST_TASK_COMPLETED",
+      "FIRST_TASK_REVIEWED",
+      "FIRST_TASK_ACCEPTED"
+    ]
+  },
+  "first_time_to_value": {
+    "metric": "FTV = AcceptedResultTime - PaymentTime",
+    "tracking_enabled": true
+  },
+  "revenue_margin_audit": {
+    "contribution_margin_formula": "ContributionMargin = MonthlyContractValue - (AICost + InfraCost + APICost + SupportCost)",
+    "real_paid_mrr_audit_status": "PILOT_CUSTOMER_READY"
+  },
+  "customer_health_score": {
+    "scale": "0_to_100",
+    "statuses": ["HEALTHY", "ATTENTION", "AT_RISK", "CRITICAL"]
+  },
+  "validation_scorecard": {
+    "dimensions_count": 11,
+    "statuses": [
+      "FIRST_PAID_CUSTOMER_VALIDATED",
+      "REAL_REVENUE_VALIDATED",
+      "READY_FOR_CONTROLLED_PAID_SCALE"
+    ]
+  },
+  "sha256_manifest_integrity": "8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9"
+}

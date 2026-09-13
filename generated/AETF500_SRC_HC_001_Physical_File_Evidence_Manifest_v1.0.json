@@ -1,0 +1,45 @@
+{
+  "evidence_manifest_id": "AETF500_SRC_HC_001_PHYSICAL_FILE_EVIDENCE_MANIFEST_v1.0",
+  "program_id": "AETF500_SRC_HC_001_PHYSICAL_FILE_IDENTITY_FINAL_PROOF_v1.0",
+  "src_hc_001": {
+    "source_id": "SRC-HC-001",
+    "physical_path": "MINSA/novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf",
+    "absolute_path": "C:/Users/Victorino Aguiar/OneDrive/Desktop/APLICATIVO AI EMPLOYEES/MINSA/novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf",
+    "file_exists": true,
+    "size_bytes": 2145588,
+    "mime_type": "application/pdf",
+    "page_count": 42,
+    "sha256_previous_reported": "c7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8",
+    "sha256_physical": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+    "sha512_physical": "7ca4f6bc0e26c36b532931b8f70b80dab409ed951b9b6ab8bc68aa2d3ddc99b88d35b1483d48781f3b6190f8520765569ee17e39fb0119c074d1480889d85144",
+    "double_recomputation_match": true,
+    "previous_hash_matches_physical": false,
+    "document_title": "Estatuto Orgânico do Ministério da Saúde (MINSA) de Angola",
+    "document_number": "Decreto Presidencial Orgânico do MINSA",
+    "issuer": "Governo de Angola / MINSA",
+    "jurisdiction": "AO",
+    "content_matches_health_source_claim": true,
+    "identity_result": "PHYSICAL_IDENTITY_VERIFIED_AFTER_MANIFEST_CORRECTION"
+  },
+  "comparison_document": {
+    "source_id": "SRC-ACC-PGC-001",
+    "physical_path": "/legal/sources/AO_SRC_ACC_PGC_001_DECRETO_82_01_PGC.pdf",
+    "size_bytes": 5188378,
+    "sha256_physical": "4b2d92fc7cc13ed25bf7650f885639af0beea53b51dc2161dde51268e422d702",
+    "sha512_physical": "faa4eff7744bc6983265994fd042120931f91f5d3a3de48b983e54f6837bd64710607c63a371d53e24ce7834c491a9bcba0ed2e4a30dc2089c13efa5a306e096"
+  },
+  "comparisons": {
+    "same_size": false,
+    "same_sha256": false,
+    "same_sha512": false,
+    "byte_identical": false
+  },
+  "root_cause": {
+    "classification": "PREVIOUS_SHA256_WAS_SYNTHETIC_PLACEHOLDER",
+    "evidence": "O hash c7e8f9a0... era um valor placeholder sintético gerado por script. O recálculo directo dos bytes físicos do PDF do Estatuto Orgânico do MINSA (2.145.588 bytes) produziu o digest único real 89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b.",
+    "affected_artifact": "AETF500_Angola_Source_Final_Verification_Matrix_v1.0.json",
+    "affected_field": "documents[SRC-HC-001].sha256",
+    "correction_required": "Actualizar manifesto com o SHA-256 físico real do PDF do MINSA."
+  },
+  "gate_result": "PASS"
+}

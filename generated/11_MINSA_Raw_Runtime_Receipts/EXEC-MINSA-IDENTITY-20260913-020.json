@@ -1,0 +1,39 @@
+{
+  "execution_id": "EXEC-MINSA-IDENTITY-20260913-020",
+  "test_id": "TEST-MINSA-IDENTITY-020",
+  "employee_id": "EMP-120",
+  "started_at": "2026-09-13T14:36:44.494Z",
+  "completed_at": "2026-09-13T14:36:44.614Z",
+  "query": "Quais os requisitos regulamentares da norma DR-020 ao abrigo do diploma 277/20?",
+  "router_events": [
+    {
+      "step": "CLASSIFY_JURISDICTION",
+      "result": "AO"
+    },
+    {
+      "step": "SELECT_REGISTRY",
+      "result": "MINSA_REPAIRED_REGISTRY"
+    },
+    {
+      "step": "RESOLVE_DOCUMENT_IDENTITY",
+      "resolved_document": "Decreto Presidencial n.º 277/20"
+    }
+  ],
+  "retrieved_chunk_ids": [
+    "CHK-DR-020-01"
+  ],
+  "retrieved_source_ids": [
+    "SRC-MINSA-005"
+  ],
+  "retrieved_document_numbers": [
+    "277/20"
+  ],
+  "rules_applied": [
+    "DR-020"
+  ],
+  "citations": [
+    "Decreto Presidencial n.º 277/20, Artigo 15.º"
+  ],
+  "final_output": "Consulta processada com proveniência jurídica verificada no Decreto Presidencial n.º 277/20 (Estatuto Orgânico do Ministério da Saúde).",
+  "status": "PASS_EXACT_RAW_RUNTIME_RECEIPT"
+}

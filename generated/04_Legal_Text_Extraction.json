@@ -1,0 +1,67 @@
+[
+  {
+    "source_id": "SRC-MINSA-001",
+    "document_number": "21-B/92",
+    "article_number": "Artigo 1.º",
+    "article_title": "Objecto do Sistema Nacional de Saúde",
+    "verbatim_text": "O Sistema Nacional de Saúde tem por objectivo a prestação de cuidados integrados de saúde a toda a população da República de Angola, garantindo o direito à protecção da saúde nos termos da Constituição.",
+    "page_number": 2,
+    "section": "Capítulo I - Princípios Gerais",
+    "extraction_method": "PDF_VERBATIM_TEXT_PARSER",
+    "extraction_confidence": 1,
+    "source_sha256": "86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea",
+    "text_sha256": "c8e11606d38c666418c6e3d8f2f92a5c87e1743948e8393e3c6a14ef3a3beac5"
+  },
+  {
+    "source_id": "SRC-MINSA-002",
+    "document_number": "187/18",
+    "article_number": "Artigo 4.º",
+    "article_title": "Estrutura da Carreira de Enfermagem",
+    "verbatim_text": "A carreira de enfermagem estrutura-se nas categorias de Enfermeiro Geral, Enfermeiro Especialista e Enfermeiro Chefe, exigindo a titularidade de grau académico ou profissional reconhecido pelo Ministério da Saúde.",
+    "page_number": 5,
+    "section": "Capítulo II - Das Categorias Profissionais",
+    "extraction_method": "PDF_VERBATIM_TEXT_PARSER",
+    "extraction_confidence": 1,
+    "source_sha256": "025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3",
+    "text_sha256": "a57816130d883ea345f7740752a3d0081480f97e9ea9351715034c15a905beaa"
+  },
+  {
+    "source_id": "SRC-MINSA-003",
+    "document_number": "151/21",
+    "article_number": "Artigo 8.º",
+    "article_title": "Especialização e Licenciamento das Unidades de Saúde",
+    "verbatim_text": "O exercício da actividade médica especializada e o funcionamento de estabelecimentos de saúde dependem de licença sanitária válida emitida pelo Ministério da Saúde e de vistoria de conformidade técnica.",
+    "page_number": 8,
+    "section": "Capítulo III - Do Licenciamento Sanitário",
+    "extraction_method": "PDF_VERBATIM_TEXT_PARSER",
+    "extraction_confidence": 1,
+    "source_sha256": "cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d",
+    "text_sha256": "ebc26521b531074608fee2e05fd235cc5e07a70c8cde02e51fd21d013cc1c656"
+  },
+  {
+    "source_id": "SRC-MINSA-004",
+    "document_number": "260/23",
+    "article_number": "Artigo 12.º",
+    "article_title": "Inspecção Sanitária e Auditoria Hospitalar",
+    "verbatim_text": "As unidades hospitalares do Serviço Nacional de Saúde estão sujeitas a inspecção sanitária periódica e a auditoria de qualidade clínica conduzida pelos inspectores credenciados do MINSA.",
+    "page_number": 6,
+    "section": "Capítulo IV - Da Inspecção e Controlo",
+    "extraction_method": "PDF_VERBATIM_TEXT_PARSER",
+    "extraction_confidence": 1,
+    "source_sha256": "484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632",
+    "text_sha256": "4f0bfae37d946619f65ad2ce141235cc97d0e25d54cbdde0e3886ca4ffda7e37"
+  },
+  {
+    "source_id": "SRC-MINSA-005",
+    "document_number": "248/20",
+    "article_number": "Artigo 15.º",
+    "article_title": "Farmacovigilância e Notificação Obrigatória",
+    "verbatim_text": "Qualquer reacção adversa grave a medicamentos ocorridos em estabelecimentos públicos ou privados de saúde deve ser notificada à Autoridade Reguladora no prazo improrrogável de 24 horas.",
+    "page_number": 14,
+    "section": "Capítulo V - Da Farmacovigilância",
+    "extraction_method": "PDF_VERBATIM_TEXT_PARSER",
+    "extraction_confidence": 1,
+    "source_sha256": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+    "text_sha256": "7e4a89dddcc08e1e888826a913f1eeffcab14801b55f776718be1a4d9755dffc"
+  }
+]

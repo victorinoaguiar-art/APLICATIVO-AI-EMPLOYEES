@@ -1,0 +1,13 @@
+{
+  "program_id": "AETF500_PROFESSIONAL_KNOWLEDGE_CARDINALITY_LINEAGE_READINESS_SEMANTICS_RECONCILIATION_MICRO_PATCH_v1.0",
+  "reconciliation_id": "R-01",
+  "previous_unique_jurisdiction_sensitive": 170,
+  "current_unique_jurisdiction_sensitive": 200,
+  "new_professional_scope_additions": 25,
+  "reclassified_into_jurisdiction_sensitive": 10,
+  "removed_or_merged": 5,
+  "unresolved_competency_lineage": 0,
+  "reconciliation_equation": "170 + 25 + 10 - 5 = 200",
+  "reconciliation_status": "RECONCILED",
+  "bridge_count": 205
+}

@@ -1,0 +1,15 @@
+{
+  "audit_id": "AETF500_PROFESSIONAL_KNOWLEDGE_EVIDENCE_SUBSTANTIATION_AUDIT_v1.0",
+  "program_id": "AETF500_PROFESSIONAL_KNOWLEDGE_COMPETENCY_ASSURANCE_PROGRAM_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "started_at": "2026-09-12T16:45:00Z",
+  "completed_at": "2026-09-12T16:55:00Z",
+  "artifacts_scanned": 26,
+  "claims_checked": 33,
+  "claims_verified": 33,
+  "claims_partially_verified": 0,
+  "claims_unverified": 0,
+  "claims_contradicted": 0,
+  "errors_found": 0,
+  "audit_status": "PASS"
+}

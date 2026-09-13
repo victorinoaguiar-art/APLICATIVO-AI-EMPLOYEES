@@ -1,0 +1,26 @@
+{
+  "version": "1.1.6",
+  "inventory": [
+    {
+      "account_code": "37.6",
+      "official_name": "Proveitos a repartir por períodos futuros",
+      "usage": "Diferimento de receita de subscrições SaaS anuais cobradas antecipadamente",
+      "status": "VERIFIED_CORRECT",
+      "source_document": "Decreto n.º 82/01"
+    },
+    {
+      "account_code": "49.1",
+      "official_name": "Adiantamentos de Clientes",
+      "usage": "INVALIDATED FOR SAAS DEFERRED REVENUE — Restricted strictly to customer deposit liabilities",
+      "status": "MATERIAL_ERROR_CORRECTED",
+      "source_document": "Prompt Mestre v1.1.6 Correção 1"
+    },
+    {
+      "account_code": "34.5.9",
+      "official_name": "IVA liquidações oficiosas",
+      "usage": "Registo de liquidações promovidas de ofício pela AGT",
+      "status": "CORRECTED_OFFICIAL_NAME",
+      "source_document": "Decreto Presidencial n.º 180/19"
+    }
+  ]
+}

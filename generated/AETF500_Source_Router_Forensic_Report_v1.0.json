@@ -1,0 +1,10 @@
+{
+  "report_id": "AETF500_SOURCE_ROUTER_FORENSIC_REPORT_v1.0",
+  "router_evaluation": "REGULATORY_ROUTING_DESIGN_FAILURE",
+  "priority_order": [
+    "CANONICAL_INDEX",
+    "LOCAL_FILES_CONNECTOR",
+    "WEB"
+  ],
+  "flaw": "Router fallback allows searching unvalidated local files (OneDrive / C:\\) when canonical retrieval misses regulatory content."
+}

@@ -1,0 +1,18 @@
+{
+  "source_id": "SRC-HC-001",
+  "document_title": "Plano Geral de Contabilidade de Angola (Decreto n.º 82/01)",
+  "document_number": "Decreto n.º 82/01",
+  "issuer": "Ministério das Finanças de Angola",
+  "jurisdiction": "AO",
+  "file_path": "packages/runtime/src/commerce/PGCAccountingEngineV114.ts",
+  "file_name": "PGCAccountingEngineV114.ts",
+  "file_size_bytes": 245699,
+  "sha256_recomputed": "4b2d92fc7cc13ed25bf7650f885639af0beea53b51dc2161dde51268e422d702",
+  "recomputed_at": "2026-09-13T15:19:10.922Z",
+  "recomputation_tool": "Node.js crypto / computeSha256()",
+  "registry_sha256_before": "4b2d92fc7cc13ed25bf7650f885639af0beea53b51dc2161dde51268e422d702",
+  "registry_sha256_after": "4b2d92fc7cc13ed25bf7650f885639af0beea53b51dc2161dde51268e422d702",
+  "hash_match": true,
+  "document_identity_match": true,
+  "verification_status": "VERIFIED_FROM_ACTUAL_BYTES"
+}

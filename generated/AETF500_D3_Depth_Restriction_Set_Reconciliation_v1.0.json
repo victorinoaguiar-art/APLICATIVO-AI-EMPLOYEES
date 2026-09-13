@@ -1,0 +1,11 @@
+{
+  "d3_items_total": 17,
+  "d3_acceptable_requirement_is_d3": 5,
+  "d3_optional_non_material": 5,
+  "d3_below_required_depth_controlled_by_restriction": 7,
+  "d3_remediation_required": 0,
+  "d3_data_errors": 0,
+  "d3_uncontrolled_material_items": 0,
+  "d3_controlled_employees_without_active_restriction": 0,
+  "controlled_employee_subset_proof": true
+}

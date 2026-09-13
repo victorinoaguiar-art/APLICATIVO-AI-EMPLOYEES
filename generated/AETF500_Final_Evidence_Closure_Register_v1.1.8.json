@@ -1,0 +1,62 @@
+{
+  "addendum_id": "AETF500_v1.1.8_EVIDENCE_CLOSURE_ADDENDUM_2",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "closure_items": [
+    {
+      "closure_id": "EVC-001_REAL_SOURCE_HASH_PGC",
+      "subject": "Decreto n.º 82/01 PGC Real SHA-256",
+      "source_sha256": "4b2d92fc7cc13ed25bf7650f885639af0beea53b51dc2161dde51268e422d702",
+      "status": "VERIFIED",
+      "blocking": true
+    },
+    {
+      "closure_id": "EVC-002_REAL_SOURCE_HASH_VAT",
+      "subject": "Decreto Presidencial n.º 180/19 IVA Real SHA-256",
+      "source_sha256": "131702c8a9e42b5eccd2a41dda75e27ba2fa15d9b0ed89a3f9ac79b3991f9f1c",
+      "status": "VERIFIED",
+      "blocking": true
+    },
+    {
+      "closure_id": "EVC-003_MANIFEST_REAL_SHA256",
+      "subject": "Baseline Hash Manifest SHA-256 over real file bytes",
+      "status": "VERIFIED",
+      "blocking": true
+    },
+    {
+      "closure_id": "EVC-004_SIDECAR_CONTENT",
+      "subject": "Sidecar content_value textually equals manifest SHA-256",
+      "status": "VERIFIED",
+      "blocking": true
+    },
+    {
+      "closure_id": "EVC-005_SIDECAR_FILE_SHA256",
+      "subject": "Sidecar own file_sha256 computed over real sidecar bytes",
+      "status": "VERIFIED",
+      "blocking": true
+    },
+    {
+      "closure_id": "EVC-006_ARTIFACT_INVENTORY_NO_SELF_REFERENCE",
+      "subject": "Artifact Inventory reclassified as EVIDENCE_METADATA eliminating self-reference",
+      "status": "VERIFIED",
+      "blocking": true
+    },
+    {
+      "closure_id": "EVC-007_EVIDENCE_LAYERING_DAG",
+      "subject": "Acyclic evidence dependency graph (Primary -> Inventory -> Manifest -> Sidecar)",
+      "status": "VERIFIED",
+      "blocking": true
+    },
+    {
+      "closure_id": "EVC-008_FULL_TEST_PROVENANCE",
+      "subject": "Traceable test run manifest with full commit SHA and report hash",
+      "status": "VERIFIED",
+      "blocking": true
+    },
+    {
+      "closure_id": "EVC-009_CERTIFICATION_LANGUAGE",
+      "subject": "Accurate transparent certification language without external overstatements",
+      "status": "VERIFIED",
+      "blocking": true
+    }
+  ]
+}

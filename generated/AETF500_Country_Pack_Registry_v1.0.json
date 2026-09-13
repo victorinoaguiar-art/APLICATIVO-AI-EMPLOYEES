@@ -1,0 +1,110 @@
+[
+  {
+    "country_pack_id": "AETF-COUNTRY-AO",
+    "country_code": "AO",
+    "country_name": "Angola",
+    "version": "v1.0.0",
+    "status": "PRODUCTION_CERTIFIED",
+    "legal_system": "Civil Law (Romano-Germânico)",
+    "currency": "AOA",
+    "official_languages": [
+      "pt"
+    ],
+    "maturity_level": "L6_PRODUCTION_CERTIFIED",
+    "source_registry_count": 45,
+    "knowledge_objects_count": 225,
+    "jurisdiction_sensitive_competencies": 450,
+    "palop_bundle_eligible": true,
+    "is_verified": true
+  },
+  {
+    "country_pack_id": "AETF-COUNTRY-PT",
+    "country_code": "PT",
+    "country_name": "Portugal",
+    "version": "v0.9.0",
+    "status": "CERTIFIED_WITH_SUPERVISION",
+    "legal_system": "Civil Law (EU Directives)",
+    "currency": "EUR",
+    "official_languages": [
+      "pt"
+    ],
+    "maturity_level": "L4_PROFESSIONALLY_TESTED",
+    "source_registry_count": 20,
+    "knowledge_objects_count": 42,
+    "jurisdiction_sensitive_competencies": 120,
+    "palop_bundle_eligible": false,
+    "is_verified": true
+  },
+  {
+    "country_pack_id": "AETF-COUNTRY-MZ",
+    "country_code": "MZ",
+    "country_name": "Moçambique",
+    "version": "v0.8.0",
+    "status": "CERTIFIED_WITH_SUPERVISION",
+    "legal_system": "Civil Law",
+    "currency": "MZN",
+    "official_languages": [
+      "pt"
+    ],
+    "maturity_level": "L3_INTERNALLY_VERIFIED",
+    "source_registry_count": 15,
+    "knowledge_objects_count": 30,
+    "jurisdiction_sensitive_competencies": 95,
+    "palop_bundle_eligible": true,
+    "is_verified": true
+  },
+  {
+    "country_pack_id": "AETF-COUNTRY-CV",
+    "country_code": "CV",
+    "country_name": "Cabo Verde",
+    "version": "v0.7.0",
+    "status": "KNOWLEDGE_VERIFICATION",
+    "legal_system": "Civil Law",
+    "currency": "CVE",
+    "official_languages": [
+      "pt"
+    ],
+    "maturity_level": "L2_KNOWLEDGE_STRUCTURED",
+    "source_registry_count": 10,
+    "knowledge_objects_count": 20,
+    "jurisdiction_sensitive_competencies": 70,
+    "palop_bundle_eligible": true,
+    "is_verified": true
+  },
+  {
+    "country_pack_id": "AETF-COUNTRY-ST",
+    "country_code": "ST",
+    "country_name": "São Tomé e Príncipe",
+    "version": "v0.6.0",
+    "status": "KNOWLEDGE_VERIFICATION",
+    "legal_system": "Civil Law",
+    "currency": "STN",
+    "official_languages": [
+      "pt"
+    ],
+    "maturity_level": "L2_KNOWLEDGE_STRUCTURED",
+    "source_registry_count": 8,
+    "knowledge_objects_count": 18,
+    "jurisdiction_sensitive_competencies": 60,
+    "palop_bundle_eligible": true,
+    "is_verified": true
+  },
+  {
+    "country_pack_id": "AETF-COUNTRY-BR",
+    "country_code": "BR",
+    "country_name": "Brasil",
+    "version": "v0.5.0",
+    "status": "KNOWLEDGE_COLLECTION",
+    "legal_system": "Civil Law (Federal)",
+    "currency": "BRL",
+    "official_languages": [
+      "pt"
+    ],
+    "maturity_level": "L1_SOURCES_COLLECTED",
+    "source_registry_count": 12,
+    "knowledge_objects_count": 25,
+    "jurisdiction_sensitive_competencies": 55,
+    "palop_bundle_eligible": false,
+    "is_verified": false
+  }
+]

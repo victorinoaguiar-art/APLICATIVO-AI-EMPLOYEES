@@ -1,0 +1,25 @@
+{
+  "policy_id": "AETF500_JURISDICTION_RESOLUTION_SAFETY_POLICY_v1.0",
+  "high_risk_categories": [
+    "TAX",
+    "LEGAL",
+    "PAYROLL",
+    "ACCOUNTING_COMPLIANCE",
+    "BANKING",
+    "REGULATORY",
+    "PUBLIC_ADMINISTRATION",
+    "EMPLOYMENT",
+    "CUSTOMS",
+    "FINANCIAL_FILING"
+  ],
+  "unknown_jurisdiction_behavior": "FAIL_CLOSED",
+  "allow_ao_legal_default_for_high_risk": false,
+  "product_default_country": "AO",
+  "product_default_separated_from_legal_jurisdiction": true,
+  "rules": [
+    "HIGH_RISK_UNKNOWN_JURISDICTION_FAILS_CLOSED",
+    "NO_AO_LEGAL_DEFAULT_FOR_HIGH_RISK_CASES",
+    "JURISDICTION_SELECTION_SEPARATED_FROM_NORMATIVE_PRECEDENCE",
+    "COUNTRY_PACK_RESOLVED_BEFORE_JURISDICTION_SENSITIVE_EXECUTION"
+  ]
+}

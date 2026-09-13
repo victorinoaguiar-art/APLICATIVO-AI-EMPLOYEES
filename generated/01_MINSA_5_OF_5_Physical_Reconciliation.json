@@ -1,0 +1,57 @@
+[
+  {
+    "source_id": "SRC-MINSA-001",
+    "physical_filename": "src-minsa-001.pdf",
+    "physical_bytes": 507454,
+    "expected_bytes": 507454,
+    "sha256": "86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea",
+    "expected_sha256": "86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea",
+    "magic_header": "%PDF-1.6",
+    "is_pdf_valid": true,
+    "physical_reconciliation_status": "VERIFIED_UNCHANGED"
+  },
+  {
+    "source_id": "SRC-MINSA-002",
+    "physical_filename": "src-minsa-002.pdf",
+    "physical_bytes": 1016469,
+    "expected_bytes": 1016469,
+    "sha256": "025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3",
+    "expected_sha256": "025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3",
+    "magic_header": "%PDF-1.5",
+    "is_pdf_valid": true,
+    "physical_reconciliation_status": "VERIFIED_UNCHANGED"
+  },
+  {
+    "source_id": "SRC-MINSA-003",
+    "physical_filename": "src-minsa-003.pdf",
+    "physical_bytes": 995714,
+    "expected_bytes": 995714,
+    "sha256": "cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d",
+    "expected_sha256": "cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d",
+    "magic_header": "%PDF-1.4",
+    "is_pdf_valid": true,
+    "physical_reconciliation_status": "VERIFIED_UNCHANGED"
+  },
+  {
+    "source_id": "SRC-MINSA-004",
+    "physical_filename": "src-minsa-004.pdf",
+    "physical_bytes": 345904,
+    "expected_bytes": 345904,
+    "sha256": "484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632",
+    "expected_sha256": "484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632",
+    "magic_header": "%PDF-1.4",
+    "is_pdf_valid": true,
+    "physical_reconciliation_status": "VERIFIED_UNCHANGED"
+  },
+  {
+    "source_id": "SRC-MINSA-005",
+    "physical_filename": "src-minsa-005.pdf",
+    "physical_bytes": 2145588,
+    "expected_bytes": 2145588,
+    "sha256": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+    "expected_sha256": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+    "magic_header": "%PDF-1.3",
+    "is_pdf_valid": true,
+    "physical_reconciliation_status": "VERIFIED_UNCHANGED"
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "dictionary_version": "1.1.6",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.6_FROZEN",
+  "previous_baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.5_FROZEN",
+  "previous_baseline_status": "SUPERSEDED",
+  "effective_date": "2026-09-12",
+  "jurisdiction": "AO",
+  "currency": "AOA",
+  "status": "FINAL_ACCOUNTING_INTEGRITY_PATCH",
+  "accounting_internal_remediation": "COMPLETE",
+  "baseline_status": "BASELINE_CONFIRMED_WITH_EXTERNAL_VALIDATIONS_PENDING",
+  "corrections": [
+    {
+      "correction_id": "CORR-V116-01",
+      "area": "DEFERRED_REVENUE",
+      "error_id": "DEFERRED_REVENUE_ACCOUNT_49_1",
+      "description": "Invalidação da Conta 49.1 e Conciliação da Conta 37.6 (Proveitos a repartir por períodos futuros - Decreto n.º 82/01) com Dimensões Analíticas (AnalyticDimensionsV116)",
+      "legal_basis": "Decreto n.º 82/01 - PGC Angola, Classe 37 Acréscimos e Diferimentos",
+      "status": "CORRECTED"
+    },
+    {
+      "correction_id": "CORR-V116-02",
+      "area": "VAT_SEMANTICS",
+      "error_id": "VAT_ACCOUNT_34_5_9_SEMANTIC_ERROR",
+      "description": "Invalidação de '34.5.9 IVA Retenções na Fonte' e correção para '34.5.9 IVA liquidações oficiosas' (Decreto Presidencial n.º 180/19) com Registo de 12 Desdobramentos Oficiais",
+      "legal_basis": "Decreto Presidencial n.º 180/19, Artigo 16.º",
+      "status": "CORRECTED"
+    },
+    {
+      "correction_id": "CORR-V116-03",
+      "area": "CRYPTOGRAPHIC_INTEGRITY",
+      "error_id": "EMPTY_SHA256_BASELINE_HASH",
+      "description": "Rejeição de digests SHA-256 de 0 bytes (e3b0c442...), cálculo de hashes sobre bytes reais e declaração explícita DIGITAL_SIGNATURE_STATUS = NOT_IMPLEMENTED",
+      "legal_basis": "AETF-500 Standard Criptográfico de Integridade Criptográfica de Evidências",
+      "status": "CORRECTED"
+    }
+  ]
+}

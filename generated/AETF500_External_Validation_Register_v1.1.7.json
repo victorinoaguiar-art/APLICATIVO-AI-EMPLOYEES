@@ -1,0 +1,35 @@
+{
+  "register_count": 5,
+  "validations": [
+    {
+      "validation_id": "EXT-VAL-AGT-001",
+      "target": "AGT (Administração Geral Tributária)",
+      "category": "TAX_INVOICING_RULES",
+      "status": "PENDING_EXTERNAL_VALIDATION"
+    },
+    {
+      "validation_id": "EXT-VAL-BNA-002",
+      "target": "BNA (Banco Nacional de Angola)",
+      "category": "FOREIGN_EXCHANGE_CONTROLS",
+      "status": "PENDING_EXTERNAL_VALIDATION"
+    },
+    {
+      "validation_id": "EXT-VAL-PGC-003",
+      "target": "CNC / Ordem dos Contabilistas",
+      "category": "PGC_ANGOLA_SUBACCOUNT_TREE",
+      "status": "PENDING_EXTERNAL_VALIDATION"
+    },
+    {
+      "validation_id": "EXT-VAL-VAT-004",
+      "target": "AGT - IVA Department",
+      "category": "VAT_ELECTRONIC_REPORTING",
+      "status": "PENDING_EXTERNAL_VALIDATION"
+    },
+    {
+      "validation_id": "EXT-VAL-WHT-2PCT",
+      "target": "AGT - Imposto Industrial",
+      "category": "WITHHOLDING_TAX_2PCT_SERVICES",
+      "status": "PENDING_EXTERNAL_VALIDATION"
+    }
+  ]
+}

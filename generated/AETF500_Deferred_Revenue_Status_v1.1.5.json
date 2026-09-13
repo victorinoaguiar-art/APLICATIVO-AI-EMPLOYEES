@@ -1,0 +1,25 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.5_FROZEN",
+  "revenue_recognition_logic_status": "INTERNALLY_VERIFIED",
+  "deferred_revenue_account_mapping_status": "INTERNALLY_VERIFIED",
+  "deferred_account_code": "49.1",
+  "deferred_account_name": "Proveitos com Diferimento - Subscrições SaaS de AI Employees",
+  "recognized_revenue_account_code": "62.1.1",
+  "recognized_revenue_account_official_name": "Serviços principais — Mercado nacional",
+  "analytic_dimensions": {
+    "service_family": "SaaS",
+    "commercial_model": "B2B"
+  },
+  "sub-schedules": [
+    {
+      "customer": "Angola Telecom EP",
+      "plan": "ENTERPRISE",
+      "contract_value_aoa": 60000000,
+      "deferred_balance_aoa": 55000000,
+      "monthly_recognition_aoa": 5000000,
+      "duration_months": 12,
+      "status": "ACTIVE_ACCORDING_TO_SCHEDULE"
+    }
+  ],
+  "version": "1.1.5"
+}

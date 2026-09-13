@@ -1,0 +1,52 @@
+[
+  {
+    "field_name": "country_pack_maturity_level",
+    "entity_level": "COUNTRY_PACK",
+    "semantic_definition": "Degree of knowledge codification, verification, and audit completeness of the Country Pack software artifact",
+    "allowed_values": [
+      "L0_EMPTY",
+      "L1_SOURCES_COLLECTED",
+      "L2_KNOWLEDGE_STRUCTURED",
+      "L3_INTERNALLY_VERIFIED",
+      "L4_PROFESSIONALLY_TESTED",
+      "L5_CERTIFIED_WITH_SUPERVISION",
+      "L6_PRODUCTION_CERTIFIED"
+    ],
+    "counting_rule": "Single formal enum value per Country Pack ID",
+    "relationship_to_other_statuses": "Prerequisite for operational deployment, but does not automatically grant employee individual certification",
+    "automatic_propagation_allowed": false
+  },
+  {
+    "field_name": "country_operational_status",
+    "entity_level": "COUNTRY",
+    "semantic_definition": "Jurisdictional deployment authorization and active operational governance status of a country environment",
+    "allowed_values": [
+      "KNOWLEDGE_COLLECTION",
+      "KNOWLEDGE_VERIFICATION",
+      "INTERNAL_VALIDATION",
+      "PROFESSIONAL_TESTING",
+      "CERTIFIED_WITH_SUPERVISION",
+      "PRODUCTION_CERTIFIED",
+      "SUSPENDED",
+      "NOT_ACTIVE"
+    ],
+    "counting_rule": "Single operational status per registered country jurisdiction",
+    "relationship_to_other_statuses": "Governs platform operational rules for the jurisdiction; does not automatically certify all 500 Employees",
+    "automatic_propagation_allowed": false
+  },
+  {
+    "field_name": "employee_country_certification_status",
+    "entity_level": "EMPLOYEE_COUNTRY",
+    "semantic_definition": "Individual readiness, domain competency verification, and legal execution status for a specific AI Employee in a specific country",
+    "allowed_values": [
+      "PRODUCTION_CERTIFIED",
+      "CERTIFIED_WITH_SUPERVISION",
+      "KNOWLEDGE_COLLECTION",
+      "KNOWLEDGE_VERIFICATION",
+      "NOT_INDIVIDUALLY_CERTIFIED"
+    ],
+    "counting_rule": "Evaluated row-by-row for each of the 3,000 distinct Employee x Country pairs",
+    "relationship_to_other_statuses": "Independent evaluation per employee per country; requires positive individual evidence",
+    "automatic_propagation_allowed": false
+  }
+]

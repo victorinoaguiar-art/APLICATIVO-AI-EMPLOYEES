@@ -1,0 +1,117 @@
+{
+  "manifest_id": "AETF500_MINSA_PHYSICAL_EVIDENCE_MANIFEST_v2",
+  "program": "AETF500_PHYSICAL_SOURCE_AUTHENTICITY_REMEDIATION_GATE_V2.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "baseline_mutation_allowed": false,
+  "items": [
+    {
+      "filename": "01_Physical_Source_Audit.json",
+      "physical_path": "generated/01_Physical_Source_Audit.json",
+      "size_bytes": 7300,
+      "mime_type": "application/json",
+      "sha256": "bcf3c1c080ffc11a34134a6c4c0051f0c9ce01fc3eee7f5f224d1663bda7b279",
+      "generated_at": "2026-09-13T14:00:34.947Z",
+      "producer": "AETF500_PHYSICAL_REMEDIATION_ENGINE_V2"
+    },
+    {
+      "filename": "02_Source_Authenticity_Matrix.csv",
+      "physical_path": "generated/02_Source_Authenticity_Matrix.csv",
+      "size_bytes": 845,
+      "mime_type": "text/csv",
+      "sha256": "3780ad14d891e63eaf004ffd52bc8ad02279fef950a5ffc66f34455f218f7d63",
+      "generated_at": "2026-09-13T14:00:34.948Z",
+      "producer": "AETF500_PHYSICAL_REMEDIATION_ENGINE_V2"
+    },
+    {
+      "filename": "03_Legal_Source_Register.json",
+      "physical_path": "generated/03_Legal_Source_Register.json",
+      "size_bytes": 3150,
+      "mime_type": "application/json",
+      "sha256": "c4672cd4480116dfe19fc07394e7cd6e02b5e008a7798bd88fc7569da084fe63",
+      "generated_at": "2026-09-13T14:00:34.949Z",
+      "producer": "AETF500_PHYSICAL_REMEDIATION_ENGINE_V2"
+    },
+    {
+      "filename": "04_Legal_Text_Extraction.json",
+      "physical_path": "generated/04_Legal_Text_Extraction.json",
+      "size_bytes": 3765,
+      "mime_type": "application/json",
+      "sha256": "493a3c577999db25ab4b7dea081960c869effb82a13845cc6a5a4abe976cb2a6",
+      "generated_at": "2026-09-13T14:00:34.951Z",
+      "producer": "AETF500_PHYSICAL_REMEDIATION_ENGINE_V2"
+    },
+    {
+      "filename": "05_Article_Provenance_Matrix.csv",
+      "physical_path": "generated/05_Article_Provenance_Matrix.csv",
+      "size_bytes": 1212,
+      "mime_type": "text/csv",
+      "sha256": "07ac32f4c3f2ea027caa850466c51513b939c624b7c864ca0eba8d22fd651966",
+      "generated_at": "2026-09-13T14:00:34.952Z",
+      "producer": "AETF500_PHYSICAL_REMEDIATION_ENGINE_V2"
+    },
+    {
+      "filename": "06_Decision_Rule_Reconstruction.json",
+      "physical_path": "generated/06_Decision_Rule_Reconstruction.json",
+      "size_bytes": 54505,
+      "mime_type": "application/json",
+      "sha256": "83a52ca235232c5d2e8c8491b30eeb5908455fc74c9ceb000da362547ece6459",
+      "generated_at": "2026-09-13T14:00:34.954Z",
+      "producer": "AETF500_PHYSICAL_REMEDIATION_ENGINE_V2"
+    },
+    {
+      "filename": "07_Rule_Provenance_Graph.json",
+      "physical_path": "generated/07_Rule_Provenance_Graph.json",
+      "size_bytes": 15892,
+      "mime_type": "application/json",
+      "sha256": "1c48b47da546a6eda349d5c89d89acb62824bafcd5fe1845fe613c5903ec3764",
+      "generated_at": "2026-09-13T14:00:34.956Z",
+      "producer": "AETF500_PHYSICAL_REMEDIATION_ENGINE_V2"
+    },
+    {
+      "filename": "08_Vector_Index_Rebuild.json",
+      "physical_path": "generated/08_Vector_Index_Rebuild.json",
+      "size_bytes": 25468,
+      "mime_type": "application/json",
+      "sha256": "8a6cf291e153c958b23e282e4a87f7b59c2a4d2aefcc72a14951f0597d86be52",
+      "generated_at": "2026-09-13T14:00:34.959Z",
+      "producer": "AETF500_PHYSICAL_REMEDIATION_ENGINE_V2"
+    },
+    {
+      "filename": "09_Retrieval_Truth_Tests.json",
+      "physical_path": "generated/09_Retrieval_Truth_Tests.json",
+      "size_bytes": 1995,
+      "mime_type": "application/json",
+      "sha256": "fa62791f3e22c2925cfdf36d211421ebee9a24f1acb41e5d1e082efb10da557d",
+      "generated_at": "2026-09-13T14:00:34.961Z",
+      "producer": "AETF500_PHYSICAL_REMEDIATION_ENGINE_V2"
+    },
+    {
+      "filename": "10_Router_Raw_Trace.json",
+      "physical_path": "generated/10_Router_Raw_Trace.json",
+      "size_bytes": 897,
+      "mime_type": "application/json",
+      "sha256": "859597402a2bd3a26104f6e30cbc80fdf7847ec94725be70a5536b2e7937b507",
+      "generated_at": "2026-09-13T14:00:34.962Z",
+      "producer": "AETF500_PHYSICAL_REMEDIATION_ENGINE_V2"
+    },
+    {
+      "filename": "11_Employee_Knowledge_Dependency_Map.json",
+      "physical_path": "generated/11_Employee_Knowledge_Dependency_Map.json",
+      "size_bytes": 16168,
+      "mime_type": "application/json",
+      "sha256": "7ad08376496e6269e6b5d7c04a95d27397f4325fea42e140f1362e2990588cef",
+      "generated_at": "2026-09-13T14:00:34.963Z",
+      "producer": "AETF500_PHYSICAL_REMEDIATION_ENGINE_V2"
+    },
+    {
+      "filename": "12_Employee_Retest_Results.json",
+      "physical_path": "generated/12_Employee_Retest_Results.json",
+      "size_bytes": 18520,
+      "mime_type": "application/json",
+      "sha256": "079f230e84119b11e8557eb76735560b583ec290db5d6c2b5a5a03b88b282bb4",
+      "generated_at": "2026-09-13T14:00:34.965Z",
+      "producer": "AETF500_PHYSICAL_REMEDIATION_ENGINE_V2"
+    }
+  ],
+  "manifest_sha256": "fdb3c5f9def1831f15f06fca988c75cad7d151b4d10bc1c69e721c01aa0fb300"
+}

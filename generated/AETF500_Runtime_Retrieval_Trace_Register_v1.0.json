@@ -1,0 +1,14 @@
+{
+  "register_id": "AETF500_RUNTIME_RETRIEVAL_TRACE_REGISTER_v1.0",
+  "traces": [
+    {
+      "trace_id": "TRACE-HC-001",
+      "user_prompt": "Quais são os requisitos regulatórios do MINSA para unidades de saúde?",
+      "employee_id": "EMP-001",
+      "retrieved_source_id": "SRC-LAB-001",
+      "retrieved_text": "Lei Geral do Trabalho - Artigo 1.º Âmbito de Aplicação",
+      "relevance_score": 0.12,
+      "result": "CANONICAL_KNOWLEDGE_MISS"
+    }
+  ]
+}

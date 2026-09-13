@@ -1,0 +1,17 @@
+{
+  "implementation_id": "IMP-PGC-001",
+  "pre_patch": {
+    "file_size_bytes": 284126,
+    "sha256": "b853bca00239a5b06b1981e8d23315d1e74cfcac3c9c88bb9bbff25fd4335f88",
+    "git_commit": "5f8868b6202d334e01f78beaf9247d0ccec8d8ad",
+    "git_blob_id": "d6cd8879585e9af2a7003ad19f34bc6e3bdf8a8c"
+  },
+  "post_patch": {
+    "file_size_bytes": 294180,
+    "sha256": "0568aebae65f1de3f13aae4d88aa933b83c05eb276e2631f18b0250d862d09fb",
+    "sha512": "f5aa59d4c760ce48bbf36b2fd510b5fcc638cad76d27fcb894f50b43d08d35f33119fd7e8afc191034ab2cf0cd088894a2ac7eb2a03dd0faecdb74daac425591",
+    "git_commit": "5f8868b6202d334e01f78beaf9247d0ccec8d8ad",
+    "git_blob_id": "a639fe5b01bf0357f8cb51504921a120ea96468c"
+  },
+  "change_reason": "REPLACE_NON_CRYPTOGRAPHIC_computeSha256_WITH_REAL_SHA256"
+}

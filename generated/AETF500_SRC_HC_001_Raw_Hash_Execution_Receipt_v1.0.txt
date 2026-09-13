@@ -1,0 +1,97 @@
+=== COMMAND 01 ===
+TIMESTAMP: 2026-09-13T00:41:10+01:00
+WORKING_DIRECTORY: c:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES
+COMMAND: certutil -hashfile "C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\MINSA\novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf" SHA256
+EXIT_CODE: 0
+STDOUT:
+SHA256 hash of C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\MINSA\novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf:
+89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b
+CertUtil: -hashfile command completed successfully.
+STDERR:
+
+=== COMMAND 02 ===
+TIMESTAMP: 2026-09-13T00:41:22+01:00
+WORKING_DIRECTORY: c:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES
+COMMAND: certutil -hashfile "C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\MINSA\novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf" SHA512
+EXIT_CODE: 0
+STDOUT:
+SHA512 hash of C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\MINSA\novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf:
+7ca4f6bc0e26c36b532931b8f70b80dab409ed951b9b6ab8bc68aa2d3ddc99b88d35b1483d48781f3b6190f8520765569ee17e39fb0119c074d1480889d85144
+CertUtil: -hashfile command completed successfully.
+STDERR:
+
+=== COMMAND 03 ===
+TIMESTAMP: 2026-09-13T00:43:38+01:00
+WORKING_DIRECTORY: c:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES
+COMMAND: powershell -Command "Get-FileHash -Algorithm SHA256 'C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\MINSA\novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf' | Format-List"
+EXIT_CODE: 0
+STDOUT:
+Algorithm : SHA256
+Hash      : 89C450D16444B97B7AD6EFD6A372CCED1255E9CC617411D4D20EEF0874942D2B
+Path      : C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\MINSA\novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf
+STDERR:
+
+=== COMMAND 04 ===
+TIMESTAMP: 2026-09-13T00:43:59+01:00
+WORKING_DIRECTORY: c:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES
+COMMAND: powershell -Command "Get-FileHash -Algorithm SHA512 'C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\MINSA\novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf' | Format-List"
+EXIT_CODE: 0
+STDOUT:
+Algorithm : SHA512
+Hash      : 7CA4F6BC0E26C36B532931B8F70B80DAB409ED951B9B6AB8BC68AA2D3DDC99B88D35B1483D48781F3B6190F8520765569EE17E39FB0119C074D1480889D85144
+Path      : C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\MINSA\novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf
+STDERR:
+
+=== COMMAND 05 ===
+TIMESTAMP: 2026-09-13T00:24:59+01:00
+WORKING_DIRECTORY: c:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES
+COMMAND: certutil -hashfile "C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\generated\AETF500_Physical_Evidence_Artifact_Package_v1.0\AETF500_SRC_ACC_PGC_001_Decreto_82_01.pdf" SHA256
+EXIT_CODE: 0
+STDOUT:
+SHA256 hash of C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\generated\AETF500_Physical_Evidence_Artifact_Package_v1.0\AETF500_SRC_ACC_PGC_001_Decreto_82_01.pdf:
+4b2d92fc7cc13ed25bf7650f885639af0beea53b51dc2161dde51268e422d702
+CertUtil: -hashfile command completed successfully.
+STDERR:
+
+=== COMMAND 06 ===
+TIMESTAMP: 2026-09-13T00:25:16+01:00
+WORKING_DIRECTORY: c:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES
+COMMAND: certutil -hashfile "C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\generated\AETF500_Physical_Evidence_Artifact_Package_v1.0\AETF500_SRC_ACC_PGC_001_Decreto_82_01.pdf" SHA512
+EXIT_CODE: 0
+STDOUT:
+SHA512 hash of C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\generated\AETF500_Physical_Evidence_Artifact_Package_v1.0\AETF500_SRC_ACC_PGC_001_Decreto_82_01.pdf:
+faa4eff7744bc6983265994fd042120931f91f5d3a3de48b983e54f6837bd64710607c63a371d53e24ce7834c491a9bcba0ed2e4a30dc2089c13efa5a306e096
+CertUtil: -hashfile command completed successfully.
+STDERR:
+
+=== COMMAND 07 ===
+TIMESTAMP: 2026-09-13T00:25:31+01:00
+WORKING_DIRECTORY: c:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES
+COMMAND: powershell -Command "Get-FileHash -Algorithm SHA256 'C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\generated\AETF500_Physical_Evidence_Artifact_Package_v1.0\AETF500_SRC_ACC_PGC_001_Decreto_82_01.pdf' | Format-List"
+EXIT_CODE: 0
+STDOUT:
+Algorithm : SHA256
+Hash      : 4B2D92FC7CC13ED25BF7650F885639AF0BEEA53B51DC2161DDE51268E422D702
+Path      : C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\generated\AETF500_Physical_Evidence_Artifact_Package_v1.0\AETF500_SRC_ACC_PGC_001_Decreto_82_01.pdf
+STDERR:
+
+=== COMMAND 08 ===
+TIMESTAMP: 2026-09-13T00:25:47+01:00
+WORKING_DIRECTORY: c:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES
+COMMAND: powershell -Command "Get-FileHash -Algorithm SHA512 'C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\generated\AETF500_Physical_Evidence_Artifact_Package_v1.0\AETF500_SRC_ACC_PGC_001_Decreto_82_01.pdf' | Format-List"
+EXIT_CODE: 0
+STDOUT:
+Algorithm : SHA512
+Hash      : FAA4EFF7744BC6983265994FD042120931F91F5D3A3DE48B983E54F6837BD64710607C63A371D53E24CE7834C491A9BCBA0ED2E4A30DC2089C13EFA5A306E096
+Path      : C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\generated\AETF500_Physical_Evidence_Artifact_Package_v1.0\AETF500_SRC_ACC_PGC_001_Decreto_82_01.pdf
+STDERR:
+
+=== COMMAND 09 ===
+TIMESTAMP: 2026-09-13T00:41:44+01:00
+WORKING_DIRECTORY: c:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES
+COMMAND: cmd /c fc /b "C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\MINSA\novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf" "C:\Users\Victorino Aguiar\OneDrive\Desktop\APLICATIVO AI EMPLOYEES\MINSA\novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7 (1).pdf"
+EXIT_CODE: 0
+STDOUT:
+Comparing files C:\USERS\VICTORINO AGUIAR\ONEDRIVE\DESKTOP\APLICATIVO AI EMPLOYEES\MINSA\novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf and C:\USERS\VICTORINO AGUIAR\ONEDRIVE\DESKTOP\APLICATIVO AI EMPLOYEES\MINSA\NOVO_ESTATUTO_ORGANICO_DO_MINSA_205682676560A3907D06A6E_B66C9477D7 (1).PDF
+FC: no differences encountered
+STDERR:

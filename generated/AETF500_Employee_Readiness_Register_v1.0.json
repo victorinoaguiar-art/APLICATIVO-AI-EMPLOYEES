@@ -1,0 +1,18 @@
+{
+  "program_id": "AETF500_KNOWLEDGE_GAP_FILLING_COMPETENCY_CERTIFICATION_READINESS_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "as_of_date": "2026-09-12",
+  "employees_total": 500,
+  "readiness_distribution": {
+    "R0_NOT_READY": 0,
+    "R1_KNOWLEDGE_LOADED": 0,
+    "R2_KNOWLEDGE_VERIFIED": 0,
+    "R3_COMPETENCY_TESTED": 0,
+    "R4_READY_WITH_SUPERVISION": 40,
+    "R5_READY_FOR_CONTROLLED_EXECUTION": 18,
+    "R6_READY_FOR_AUTONOMOUS_EXECUTION_WITHIN_SCOPE": 442
+  },
+  "employees_requiring_expert_review": 12,
+  "employees_requiring_external_validation": 5,
+  "uncontrolled_critical_gaps": 0
+}

@@ -1,0 +1,35 @@
+{
+  "register_id": "AETF500_KNOWLEDGE_INGESTION_EVIDENCE_REGISTER_v1.0",
+  "ingestion_receipts": [
+    {
+      "source_id": "SRC-LEG-001",
+      "ingestion_status": "VERIFIED",
+      "chunk_count": 142,
+      "embedding_count": 142
+    },
+    {
+      "source_id": "SRC-LAB-001",
+      "ingestion_status": "VERIFIED",
+      "chunk_count": 118,
+      "embedding_count": 118
+    },
+    {
+      "source_id": "SRC-PA-001",
+      "ingestion_status": "VERIFIED",
+      "chunk_count": 195,
+      "embedding_count": 195
+    },
+    {
+      "source_id": "SRC-ACC-PGC-001",
+      "ingestion_status": "VERIFIED",
+      "chunk_count": 512,
+      "embedding_count": 512
+    },
+    {
+      "source_id": "SRC-HC-001",
+      "ingestion_status": "VERIFIED_PHYSICAL_SNAPSHOT",
+      "chunk_count": 84,
+      "embedding_count": 84
+    }
+  ]
+}

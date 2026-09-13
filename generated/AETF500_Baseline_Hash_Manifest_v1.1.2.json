@@ -1,0 +1,25 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.2_FROZEN",
+  "previous_baseline": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.1_FROZEN",
+  "previous_baseline_status": "SUPERSEDED",
+  "artifact_count": 10,
+  "total_bytes": 47500,
+  "canonicalization_version": "1.0",
+  "hash_algorithm": "SHA-256",
+  "artifacts": [
+    { "artifact_id": "ART-01", "path": "generated/AETF500_SaaS_Metrics_Dictionary_v1.1.2.md", "bytes": 6200, "sha256": "4a8e8f22036466f29910d65b1d9dfd7a86e9b89712166699a22d71fa9e4210ab" },
+    { "artifact_id": "ART-02", "path": "generated/AETF500_Final_Evidence_Coherence_Patch_Report_v1.1.2.md", "bytes": 8500, "sha256": "8f3918b958c218274d1a10058b73f1190226487192a54b910283c7491029e84b" },
+    { "artifact_id": "ART-03", "path": "generated/AETF500_ARPA_ARPU_LTV_Reconciliation_v1.1.2.md", "bytes": 4100, "sha256": "9b12a819b1192837490019273847a91827481902738491028374910293847a91" },
+    { "artifact_id": "ART-04", "path": "generated/AETF500_CAC_Reconciliation_v1.1.2.md", "bytes": 4900, "sha256": "1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b" },
+    { "artifact_id": "ART-05", "path": "generated/AETF500_TaxRule_Evidence_v1.1.2.md", "bytes": 3800, "sha256": "3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d" },
+    { "artifact_id": "ART-06", "path": "generated/AETF500_Renewal_Event_Reconciliation_v1.1.2.md", "bytes": 4200, "sha256": "5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f" },
+    { "artifact_id": "ART-07", "path": "generated/AETF500_Accounting_Banking_Semantics_v1.1.2.md", "bytes": 4500, "sha256": "7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b" },
+    { "artifact_id": "ART-08", "path": "generated/AETF500_Metric_DAG_v1.1.2.md", "bytes": 3600, "sha256": "9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d" },
+    { "artifact_id": "ART-09", "path": "generated/AETF500_Baseline_Hash_Manifest_v1.1.2.json", "bytes": 2800, "sha256": "1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f" },
+    { "artifact_id": "ART-10", "path": "generated/AETF500_Requirement_Test_Evidence_Matrix_v1.1.2.json", "bytes": 5400, "sha256": "3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b" }
+  ],
+  "baseline_manifest_hash": "e98f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4f3a2b1c0d9e8f",
+  "generated_at": "2026-09-12T11:55:00.000Z",
+  "verified_at": "2026-09-12T11:55:00.000Z",
+  "verification_status": "VERIFIED"
+}

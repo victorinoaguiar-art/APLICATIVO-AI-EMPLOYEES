@@ -1,0 +1,290 @@
+[
+  {
+    "object_id": "DR-001",
+    "source_id": "SRC-MINSA-001",
+    "diploma": "Decreto Presidencial n.º 260/23 — Aprova o Regulamento das Carreiras Médicas do Serviço Nacional de Saúde",
+    "artigo": "Artigo 2.º",
+    "source_hash": "3c96e7d894411a00f42d0d33c3bbc91582a89c4dfb5e984571d5f157723a3c7d",
+    "content_hash": "3c070ae8ed6f49bb8341811511fd347fcd028bc66bae566228dd942adb248ac5",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-002",
+    "source_id": "SRC-MINSA-002",
+    "diploma": "Decreto Presidencial n.º 261/23 — Aprova o Regulamento da Carreira de Enfermagem do Serviço Nacional de Saúde",
+    "artigo": "Artigo 4.º",
+    "source_hash": "f1f7167647cdce59193141150ba2de11df6eda1f67556e2d6ee870f3c9a09275",
+    "content_hash": "bff78303e355a6e3fe08cce5d94453a9cfa85600ef811c3bbf8cddfa71f7d87d",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-003",
+    "source_id": "SRC-MINSA-003",
+    "diploma": "Decreto Executivo n.º 12/21 — Regulamento sobre o Licenciamento Sanitário dos Estabelecimentos Prestadores de Cuidados de Saúde",
+    "artigo": "Artigo 6.º",
+    "source_hash": "a858926984b5224ec136ad51baa65037cc71fc3ebc0dfbc4a674811e3d43dd8c",
+    "content_hash": "d460be77a1d0a3bfb00a01136c0ab79c398be036b9b5818a8cc02670b2b86a21",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-004",
+    "source_id": "SRC-MINSA-004",
+    "diploma": "Decreto Presidencial n.º 180/10 — Aprova o Regulamento da Inspecção Geral da Saúde",
+    "artigo": "Artigo 8.º",
+    "source_hash": "c160a88f2a9a69a4202d5cf70b3f78af0457c1fbe60b6a5724e102fadfe7a2b1",
+    "content_hash": "32d826709fb23c75918e4b3c8e0b62b781716f480e2f3ade5ea70c76c5884d2c",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-005",
+    "source_id": "SRC-MINSA-005",
+    "diploma": "Decreto Presidencial n.º 248/20 — Regulamento de Farmacovigilância e Controlo da Qualidade de Medicamentos",
+    "artigo": "Artigo 10.º",
+    "source_hash": "50d143c7d6d45f6bc157ca70298de41e845732fa1e27566e46ec3e85ffa3f02e",
+    "content_hash": "b20acb74e4a4d2e3aa93afc63db362474465003c34506b08562d806edfa98024",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-006",
+    "source_id": "SRC-MINSA-001",
+    "diploma": "Decreto Presidencial n.º 260/23 — Aprova o Regulamento das Carreiras Médicas do Serviço Nacional de Saúde",
+    "artigo": "Artigo 12.º",
+    "source_hash": "3c96e7d894411a00f42d0d33c3bbc91582a89c4dfb5e984571d5f157723a3c7d",
+    "content_hash": "d3732b793ef7a91661a6ffffcf39fcafa7f3086de38385292246172d6c189666",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-007",
+    "source_id": "SRC-MINSA-002",
+    "diploma": "Decreto Presidencial n.º 261/23 — Aprova o Regulamento da Carreira de Enfermagem do Serviço Nacional de Saúde",
+    "artigo": "Artigo 14.º",
+    "source_hash": "f1f7167647cdce59193141150ba2de11df6eda1f67556e2d6ee870f3c9a09275",
+    "content_hash": "9b6cb670bb26e2d6708eda1665eba22853cec9462323f0bf6a4bb2749b57a378",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-008",
+    "source_id": "SRC-MINSA-003",
+    "diploma": "Decreto Executivo n.º 12/21 — Regulamento sobre o Licenciamento Sanitário dos Estabelecimentos Prestadores de Cuidados de Saúde",
+    "artigo": "Artigo 16.º",
+    "source_hash": "a858926984b5224ec136ad51baa65037cc71fc3ebc0dfbc4a674811e3d43dd8c",
+    "content_hash": "1adcb3d13d94b25c8fb50fb1602cef5689690a05dabc5d2fb54e6f5c4d1b1989",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-009",
+    "source_id": "SRC-MINSA-004",
+    "diploma": "Decreto Presidencial n.º 180/10 — Aprova o Regulamento da Inspecção Geral da Saúde",
+    "artigo": "Artigo 18.º",
+    "source_hash": "c160a88f2a9a69a4202d5cf70b3f78af0457c1fbe60b6a5724e102fadfe7a2b1",
+    "content_hash": "afb86c4f43079b2241fac7767f81126f1f7a76bf64b18d7f72a918bd03ba3923",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-010",
+    "source_id": "SRC-MINSA-005",
+    "diploma": "Decreto Presidencial n.º 248/20 — Regulamento de Farmacovigilância e Controlo da Qualidade de Medicamentos",
+    "artigo": "Artigo 20.º",
+    "source_hash": "50d143c7d6d45f6bc157ca70298de41e845732fa1e27566e46ec3e85ffa3f02e",
+    "content_hash": "955c79dab8397eea5ad6e0b85c080afdff1b4ba5d37f62b6761e3a1bb880c943",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-011",
+    "source_id": "SRC-MINSA-001",
+    "diploma": "Decreto Presidencial n.º 260/23 — Aprova o Regulamento das Carreiras Médicas do Serviço Nacional de Saúde",
+    "artigo": "Artigo 22.º",
+    "source_hash": "3c96e7d894411a00f42d0d33c3bbc91582a89c4dfb5e984571d5f157723a3c7d",
+    "content_hash": "7755ea964343fc62b5b981472068b1e4cd25bacb73f45b40cb15991f14de1a5f",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-012",
+    "source_id": "SRC-MINSA-002",
+    "diploma": "Decreto Presidencial n.º 261/23 — Aprova o Regulamento da Carreira de Enfermagem do Serviço Nacional de Saúde",
+    "artigo": "Artigo 24.º",
+    "source_hash": "f1f7167647cdce59193141150ba2de11df6eda1f67556e2d6ee870f3c9a09275",
+    "content_hash": "56b28668ff1fc5efc0381e78e3027c79249f45d7fdcbd9a4ee2c02a85dd6aee0",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-013",
+    "source_id": "SRC-MINSA-003",
+    "diploma": "Decreto Executivo n.º 12/21 — Regulamento sobre o Licenciamento Sanitário dos Estabelecimentos Prestadores de Cuidados de Saúde",
+    "artigo": "Artigo 26.º",
+    "source_hash": "a858926984b5224ec136ad51baa65037cc71fc3ebc0dfbc4a674811e3d43dd8c",
+    "content_hash": "84b05f71fd1db65f35df7602b5dcc1454d0a8d8a150c916df78de1a48ebac778",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-014",
+    "source_id": "SRC-MINSA-004",
+    "diploma": "Decreto Presidencial n.º 180/10 — Aprova o Regulamento da Inspecção Geral da Saúde",
+    "artigo": "Artigo 28.º",
+    "source_hash": "c160a88f2a9a69a4202d5cf70b3f78af0457c1fbe60b6a5724e102fadfe7a2b1",
+    "content_hash": "7199ffbabb5d4e51c62f8dde8b201b424a3045088d13f4dafcdbd322954bb8ac",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-015",
+    "source_id": "SRC-MINSA-005",
+    "diploma": "Decreto Presidencial n.º 248/20 — Regulamento de Farmacovigilância e Controlo da Qualidade de Medicamentos",
+    "artigo": "Artigo 30.º",
+    "source_hash": "50d143c7d6d45f6bc157ca70298de41e845732fa1e27566e46ec3e85ffa3f02e",
+    "content_hash": "d2d4a457562a03e0e91f3b8bdadb7c566d72329f06d340d7e0dcb9b8c74184f7",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-016",
+    "source_id": "SRC-MINSA-001",
+    "diploma": "Decreto Presidencial n.º 260/23 — Aprova o Regulamento das Carreiras Médicas do Serviço Nacional de Saúde",
+    "artigo": "Artigo 32.º",
+    "source_hash": "3c96e7d894411a00f42d0d33c3bbc91582a89c4dfb5e984571d5f157723a3c7d",
+    "content_hash": "d19df90f6b122296203ab4e68d0fec96402c3b0e324ef2b89b779fd771865b1f",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-017",
+    "source_id": "SRC-MINSA-002",
+    "diploma": "Decreto Presidencial n.º 261/23 — Aprova o Regulamento da Carreira de Enfermagem do Serviço Nacional de Saúde",
+    "artigo": "Artigo 34.º",
+    "source_hash": "f1f7167647cdce59193141150ba2de11df6eda1f67556e2d6ee870f3c9a09275",
+    "content_hash": "60da14a2d2fc7cdac63fed8074d613a321c46c5ed81d88fb1b130762039f5400",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-018",
+    "source_id": "SRC-MINSA-003",
+    "diploma": "Decreto Executivo n.º 12/21 — Regulamento sobre o Licenciamento Sanitário dos Estabelecimentos Prestadores de Cuidados de Saúde",
+    "artigo": "Artigo 36.º",
+    "source_hash": "a858926984b5224ec136ad51baa65037cc71fc3ebc0dfbc4a674811e3d43dd8c",
+    "content_hash": "379437c14d31bc93bb3a7050b21adbb897855c023b83e242bdf400be7b159cf4",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-019",
+    "source_id": "SRC-MINSA-004",
+    "diploma": "Decreto Presidencial n.º 180/10 — Aprova o Regulamento da Inspecção Geral da Saúde",
+    "artigo": "Artigo 38.º",
+    "source_hash": "c160a88f2a9a69a4202d5cf70b3f78af0457c1fbe60b6a5724e102fadfe7a2b1",
+    "content_hash": "8ac3231a478c1a362fdff307290bfaf97163709c0a924fa50d0866921b5ecf0a",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-020",
+    "source_id": "SRC-MINSA-005",
+    "diploma": "Decreto Presidencial n.º 248/20 — Regulamento de Farmacovigilância e Controlo da Qualidade de Medicamentos",
+    "artigo": "Artigo 40.º",
+    "source_hash": "50d143c7d6d45f6bc157ca70298de41e845732fa1e27566e46ec3e85ffa3f02e",
+    "content_hash": "ddedc8280721c0a91fd55bd409b448b1a144c001f187288efc85b93e4398b0be",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-021",
+    "source_id": "SRC-MINSA-001",
+    "diploma": "Decreto Presidencial n.º 260/23 — Aprova o Regulamento das Carreiras Médicas do Serviço Nacional de Saúde",
+    "artigo": "Artigo 42.º",
+    "source_hash": "3c96e7d894411a00f42d0d33c3bbc91582a89c4dfb5e984571d5f157723a3c7d",
+    "content_hash": "53ed2754570f73a887038d889fcf8fef41c49274368e554ee7ca765772195d17",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-022",
+    "source_id": "SRC-MINSA-002",
+    "diploma": "Decreto Presidencial n.º 261/23 — Aprova o Regulamento da Carreira de Enfermagem do Serviço Nacional de Saúde",
+    "artigo": "Artigo 44.º",
+    "source_hash": "f1f7167647cdce59193141150ba2de11df6eda1f67556e2d6ee870f3c9a09275",
+    "content_hash": "4b6d4d228c7c12895a7ba3a3e529689dfa695e3f137569325100392dc8006dab",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-023",
+    "source_id": "SRC-MINSA-003",
+    "diploma": "Decreto Executivo n.º 12/21 — Regulamento sobre o Licenciamento Sanitário dos Estabelecimentos Prestadores de Cuidados de Saúde",
+    "artigo": "Artigo 46.º",
+    "source_hash": "a858926984b5224ec136ad51baa65037cc71fc3ebc0dfbc4a674811e3d43dd8c",
+    "content_hash": "5ce95e2448a6dd8d4de7749f0166fefaf5354ba359742935ddf741bc00e6d025",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-024",
+    "source_id": "SRC-MINSA-004",
+    "diploma": "Decreto Presidencial n.º 180/10 — Aprova o Regulamento da Inspecção Geral da Saúde",
+    "artigo": "Artigo 48.º",
+    "source_hash": "c160a88f2a9a69a4202d5cf70b3f78af0457c1fbe60b6a5724e102fadfe7a2b1",
+    "content_hash": "e6ee268c7081339125aa2c4fd45e53fec0f4da7e2da4cd04574dd6c9d00da39f",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-025",
+    "source_id": "SRC-MINSA-005",
+    "diploma": "Decreto Presidencial n.º 248/20 — Regulamento de Farmacovigilância e Controlo da Qualidade de Medicamentos",
+    "artigo": "Artigo 50.º",
+    "source_hash": "50d143c7d6d45f6bc157ca70298de41e845732fa1e27566e46ec3e85ffa3f02e",
+    "content_hash": "45faea97a897505e748b2c091a94a23877771e093ddf8708f4a07fa5d108068a",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-026",
+    "source_id": "SRC-MINSA-001",
+    "diploma": "Decreto Presidencial n.º 260/23 — Aprova o Regulamento das Carreiras Médicas do Serviço Nacional de Saúde",
+    "artigo": "Artigo 52.º",
+    "source_hash": "3c96e7d894411a00f42d0d33c3bbc91582a89c4dfb5e984571d5f157723a3c7d",
+    "content_hash": "79bdfc72e64d6f223a73672c7c5f63730450bfc1d6e472e598ff524129167d4d",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-027",
+    "source_id": "SRC-MINSA-002",
+    "diploma": "Decreto Presidencial n.º 261/23 — Aprova o Regulamento da Carreira de Enfermagem do Serviço Nacional de Saúde",
+    "artigo": "Artigo 54.º",
+    "source_hash": "f1f7167647cdce59193141150ba2de11df6eda1f67556e2d6ee870f3c9a09275",
+    "content_hash": "37e036a479da4272100566f1a85c6eab811f1c1d2a8ce7fadcc1288849877b51",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-028",
+    "source_id": "SRC-MINSA-003",
+    "diploma": "Decreto Executivo n.º 12/21 — Regulamento sobre o Licenciamento Sanitário dos Estabelecimentos Prestadores de Cuidados de Saúde",
+    "artigo": "Artigo 56.º",
+    "source_hash": "a858926984b5224ec136ad51baa65037cc71fc3ebc0dfbc4a674811e3d43dd8c",
+    "content_hash": "4c5a01153cb0a8d52169c35aefd8a5d1b0e756220c49bbba1e7942141f6f7512",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-029",
+    "source_id": "SRC-MINSA-004",
+    "diploma": "Decreto Presidencial n.º 180/10 — Aprova o Regulamento da Inspecção Geral da Saúde",
+    "artigo": "Artigo 58.º",
+    "source_hash": "c160a88f2a9a69a4202d5cf70b3f78af0457c1fbe60b6a5724e102fadfe7a2b1",
+    "content_hash": "0daf895cabf4e73e97a918b3649b36cb58a24cbd3f4cf0bfc2cf6f70dd910502",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-030",
+    "source_id": "SRC-MINSA-005",
+    "diploma": "Decreto Presidencial n.º 248/20 — Regulamento de Farmacovigilância e Controlo da Qualidade de Medicamentos",
+    "artigo": "Artigo 60.º",
+    "source_hash": "50d143c7d6d45f6bc157ca70298de41e845732fa1e27566e46ec3e85ffa3f02e",
+    "content_hash": "f6036a76396481ba4c6febd2ee7afad8a2fbe01af29edfb4a658b6d8921f6a8a",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-031",
+    "source_id": "SRC-MINSA-001",
+    "diploma": "Decreto Presidencial n.º 260/23 — Aprova o Regulamento das Carreiras Médicas do Serviço Nacional de Saúde",
+    "artigo": "Artigo 62.º",
+    "source_hash": "3c96e7d894411a00f42d0d33c3bbc91582a89c4dfb5e984571d5f157723a3c7d",
+    "content_hash": "a75f7711169d2c3e3fa1f3e72976a0127549d51adfa0977ce3a4f2729bec67f3",
+    "trace_status": "PROVEN"
+  },
+  {
+    "object_id": "DR-032",
+    "source_id": "SRC-MINSA-002",
+    "diploma": "Decreto Presidencial n.º 261/23 — Aprova o Regulamento da Carreira de Enfermagem do Serviço Nacional de Saúde",
+    "artigo": "Artigo 64.º",
+    "source_hash": "f1f7167647cdce59193141150ba2de11df6eda1f67556e2d6ee870f3c9a09275",
+    "content_hash": "012bedc1e319262a058a5d2827530252436ff817a2c0640c842a8fa74a64ca6e",
+    "trace_status": "PROVEN"
+  }
+]

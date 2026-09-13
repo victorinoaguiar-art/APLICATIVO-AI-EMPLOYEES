@@ -1,0 +1,15 @@
+{
+  "matrix_id": "AETF500_TEST_TO_COMPETENCY_COVERAGE_MATRIX_v1.0",
+  "as_of_date": "2026-09-12",
+  "professional_test_cases_total": 450,
+  "unique_competencies_requiring_test": 1450,
+  "unique_competencies_with_valid_test": 1450,
+  "critical_competencies_with_valid_test": 285,
+  "pka3_required_test_coverage_pct": 100,
+  "pka4_required_test_coverage_pct": 100,
+  "critical_competency_test_coverage_pct": 100,
+  "professional_test_coverage_pct": 100,
+  "orphan_tests_count": 0,
+  "orphan_competencies_count": 0,
+  "coverage_status": "FULL_TRACEABILITY_VERIFIED"
+}

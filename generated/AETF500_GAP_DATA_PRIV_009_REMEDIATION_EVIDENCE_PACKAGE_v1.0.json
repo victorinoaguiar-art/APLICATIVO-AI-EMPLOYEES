@@ -1,0 +1,50 @@
+{
+  "gap_id": "GAP-DATA-PRIV-009",
+  "domain": "Data Science",
+  "affected_employee_ids": [
+    "EMP-DAT-004"
+  ],
+  "affected_competency_ids": [
+    "COMP-DAT-003",
+    "COMP-DAT-007"
+  ],
+  "original_problem": "APD Guidelines 2026 personal data protection registration unverified",
+  "original_root_cause": "Data protection authority guidelines intake gap",
+  "original_risk_level": "PKA_3_REGULATED",
+  "source_before": "Lei de Proteção de Dados Pessoais Lei n.º 22/11",
+  "source_after": "Lei n.º 22/11 & Directivas APD 2026 de Pseudonimização",
+  "knowledge_pack_before": "PKP-DATA-AI-v1.0",
+  "knowledge_pack_after": "PKP-DATA-AI-v2.0_UPDATED",
+  "rule_before": "Human approval required for any data anonymization pipeline",
+  "rule_after": "Automated anonymization pipeline execution with RECOMMEND_ONLY sign-off for public releases",
+  "restriction_before": {
+    "type": "HUMAN_APPROVAL_REQUIRED",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A4"
+  },
+  "restriction_current": {
+    "type": "RECOMMEND_ONLY",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A3"
+  },
+  "remediation_actions": [
+    "Attached APD Directives 2026",
+    "Updated PKP-DATA-AI to v2.0",
+    "Downgraded restriction from A4 Human Approval to A3 Recommend Only"
+  ],
+  "professional_test_run_ids": [
+    "RUN-PROF-GAP-DATA-PRIV-009"
+  ],
+  "professional_test_cases": 25,
+  "test_results": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "expert_review_required": false,
+  "external_validation_required": false,
+  "residual_risk": "LOW",
+  "recommended_autonomy_decision": "RESTRICTION_DOWNGRADE",
+  "decision_details": "Downgraded restriction from HUMAN_APPROVAL_REQUIRED (A4) to RECOMMEND_ONLY (A3)",
+  "evidence_status": "VERIFIED_EFFECTIVE"
+}

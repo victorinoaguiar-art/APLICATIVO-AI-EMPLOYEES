@@ -1,0 +1,140 @@
+{
+  "gap_id": "GAP-PA-PROC-002",
+  "domain": "Public Administration",
+  "competency_id": "COMP-PA-PROC",
+  "primary_employee_id": "EMP-PA-001",
+  "knowledge_before": {
+    "concepts": [
+      "Basic public document drafting"
+    ],
+    "rules": [
+      "Standard administrative document layout"
+    ],
+    "procedures": [
+      "Draft public request form"
+    ],
+    "knowledge_pack_version": "KP-PA-PUBLICADMIN-v1.0.0"
+  },
+  "missing_knowledge": {
+    "missing_concepts": [
+      "Public procurement statutory thresholds (€75k/€221k)",
+      "Tribunal de Contas prior review rules"
+    ],
+    "missing_rules": [
+      "Mandatory public tender procedure above threshold limit",
+      "Conflict of interest declaration"
+    ],
+    "missing_exceptions": [
+      "Urgent public interest procurement exception"
+    ],
+    "missing_procedures": [
+      "Public procurement document pack generation"
+    ],
+    "missing_prohibited_actions": [
+      "Direct award authorization above statutory threshold"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "SRC-PA-001",
+      "exact_title": "Código dos Contratos Públicos (Decreto-Lei n.º 111/B/2017 actualizado DL 78/2022)",
+      "issuer": "Assembleia Nacional de Angola",
+      "source_type": "OFFICIAL_LEGAL_SOURCE",
+      "document_number": "DL 111/B/2017",
+      "version": "2022-07-20",
+      "jurisdiction": "Angola",
+      "publication_date": "2017-08-31",
+      "effective_from": "2022-07-20",
+      "effective_to": "9999-12-31",
+      "file_or_url": "sources/legislation/ccp_angola_2022.pdf",
+      "sha256": null,
+      "hash_algorithm": "SHA256",
+      "hash_subject": "PHYSICAL_FILE_BYTES",
+      "verification_status": "SOURCE_FILE_NOT_AVAILABLE",
+      "legacy_logical_identifier_hash": "bc9e648e81b9760cf85cef5894d50fff5bfd3b45d2c5e8786f413c44b161f5e5"
+    }
+  ],
+  "exact_knowledge_added": {
+    "decision_rule_ids": [
+      "DR-011",
+      "DR-012",
+      "DR-013",
+      "DR-014",
+      "DR-015",
+      "DR-016",
+      "DR-017",
+      "DR-018",
+      "DR-019",
+      "DR-020",
+      "DR-021",
+      "DR-022"
+    ],
+    "exception_rule_ids": [
+      "EX-004",
+      "EX-005",
+      "EX-006",
+      "EX-007"
+    ],
+    "procedure_ids": [
+      "PR-007",
+      "PR-008",
+      "PR-009",
+      "PR-010",
+      "PR-011",
+      "PR-012",
+      "PR-013"
+    ],
+    "example_ids": [
+      "EXM-010",
+      "EXM-011",
+      "EXM-012",
+      "EXM-013",
+      "EXM-014",
+      "EXM-015",
+      "EXM-016",
+      "EXM-017",
+      "EXM-018",
+      "EXM-019"
+    ],
+    "prohibited_action_ids": [
+      "PA-004",
+      "PA-005",
+      "PA-006"
+    ]
+  },
+  "knowledge_pack_change": {
+    "pack_id": "KP-PA-PUBLICADMIN",
+    "version_before": "KP-PA-PUBLICADMIN-v1.0.0",
+    "version_after": "KP-PA-PUBLICADMIN-v1.1.0"
+  },
+  "employees_affected": {
+    "directly_affected": [
+      "EMP-PA-001"
+    ],
+    "indirectly_affected": [
+      "EMP-PA-002",
+      "EMP-PA-003",
+      "EMP-PA-004",
+      "EMP-PA-005"
+    ],
+    "total_affected": 5
+  },
+  "delivery_evidence": {
+    "retrieval_test_passed": true,
+    "rule_loading_test_passed": true,
+    "tool_policy_loaded": true,
+    "delivery_status": "DELIVERED"
+  },
+  "test_evidence": {
+    "unseen_test_cases_count": 25,
+    "test_run_ids": [
+      "RUN-PA-001",
+      "RUN-PA-002"
+    ],
+    "test_result": "PASS"
+  },
+  "certification_status": "INTERNALLY_CERTIFIED_WITH_RESTRICTIONS",
+  "readiness_level": "R5_READY_FOR_CONTROLLED_EXECUTION",
+  "restriction_action": "RESTRICTION_DOWNGRADED",
+  "forensic_status": "FORENSICALLY_VERIFIED"
+}

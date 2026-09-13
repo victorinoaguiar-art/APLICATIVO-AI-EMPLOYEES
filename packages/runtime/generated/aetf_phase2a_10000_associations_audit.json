@@ -1,0 +1,4002 @@
+[
+  {
+    "association_id": "ASSOC_000001",
+    "employee_id": "001",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_001_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000002",
+    "employee_id": "001",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_001_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000003",
+    "employee_id": "001",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_001_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000004",
+    "employee_id": "001",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_001_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000005",
+    "employee_id": "001",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_001_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000006",
+    "employee_id": "001",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_001_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000007",
+    "employee_id": "001",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_001_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000008",
+    "employee_id": "001",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_001_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000009",
+    "employee_id": "001",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_001_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000010",
+    "employee_id": "001",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_001_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000011",
+    "employee_id": "001",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_001_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000012",
+    "employee_id": "001",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_001_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000013",
+    "employee_id": "001",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_001_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000014",
+    "employee_id": "001",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_001_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000015",
+    "employee_id": "001",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_001_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000016",
+    "employee_id": "001",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_001_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000017",
+    "employee_id": "001",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_001_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000018",
+    "employee_id": "001",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_001_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000019",
+    "employee_id": "001",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_001_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000020",
+    "employee_id": "001",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_001_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000021",
+    "employee_id": "002",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_002_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000022",
+    "employee_id": "002",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_002_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000023",
+    "employee_id": "002",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_002_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000024",
+    "employee_id": "002",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_002_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000025",
+    "employee_id": "002",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_002_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000026",
+    "employee_id": "002",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_002_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000027",
+    "employee_id": "002",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_002_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000028",
+    "employee_id": "002",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_002_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000029",
+    "employee_id": "002",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_002_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000030",
+    "employee_id": "002",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_002_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000031",
+    "employee_id": "002",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_002_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000032",
+    "employee_id": "002",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_002_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000033",
+    "employee_id": "002",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_002_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000034",
+    "employee_id": "002",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_002_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000035",
+    "employee_id": "002",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_002_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000036",
+    "employee_id": "002",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_002_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000037",
+    "employee_id": "002",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_002_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000038",
+    "employee_id": "002",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_002_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000039",
+    "employee_id": "002",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_002_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000040",
+    "employee_id": "002",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_002_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000041",
+    "employee_id": "003",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_003_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000042",
+    "employee_id": "003",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_003_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000043",
+    "employee_id": "003",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_003_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000044",
+    "employee_id": "003",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_003_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000045",
+    "employee_id": "003",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_003_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000046",
+    "employee_id": "003",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_003_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000047",
+    "employee_id": "003",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_003_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000048",
+    "employee_id": "003",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_003_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000049",
+    "employee_id": "003",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_003_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000050",
+    "employee_id": "003",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_003_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000051",
+    "employee_id": "003",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_003_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000052",
+    "employee_id": "003",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_003_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000053",
+    "employee_id": "003",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_003_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000054",
+    "employee_id": "003",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_003_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000055",
+    "employee_id": "003",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_003_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000056",
+    "employee_id": "003",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_003_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000057",
+    "employee_id": "003",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_003_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000058",
+    "employee_id": "003",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_003_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000059",
+    "employee_id": "003",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_003_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000060",
+    "employee_id": "003",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_003_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000061",
+    "employee_id": "004",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_004_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000062",
+    "employee_id": "004",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_004_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000063",
+    "employee_id": "004",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_004_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000064",
+    "employee_id": "004",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_004_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000065",
+    "employee_id": "004",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_004_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000066",
+    "employee_id": "004",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_004_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000067",
+    "employee_id": "004",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_004_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000068",
+    "employee_id": "004",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_004_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000069",
+    "employee_id": "004",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_004_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000070",
+    "employee_id": "004",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_004_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.363Z"
+  },
+  {
+    "association_id": "ASSOC_000071",
+    "employee_id": "004",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_004_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000072",
+    "employee_id": "004",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_004_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000073",
+    "employee_id": "004",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_004_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000074",
+    "employee_id": "004",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_004_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000075",
+    "employee_id": "004",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_004_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000076",
+    "employee_id": "004",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_004_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000077",
+    "employee_id": "004",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_004_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000078",
+    "employee_id": "004",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_004_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000079",
+    "employee_id": "004",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_004_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000080",
+    "employee_id": "004",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_004_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000081",
+    "employee_id": "005",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_005_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000082",
+    "employee_id": "005",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_005_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000083",
+    "employee_id": "005",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_005_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000084",
+    "employee_id": "005",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_005_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000085",
+    "employee_id": "005",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_005_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000086",
+    "employee_id": "005",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_005_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000087",
+    "employee_id": "005",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_005_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000088",
+    "employee_id": "005",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_005_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000089",
+    "employee_id": "005",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_005_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000090",
+    "employee_id": "005",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_005_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000091",
+    "employee_id": "005",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_005_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000092",
+    "employee_id": "005",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_005_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000093",
+    "employee_id": "005",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_005_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000094",
+    "employee_id": "005",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_005_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000095",
+    "employee_id": "005",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_005_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000096",
+    "employee_id": "005",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_005_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000097",
+    "employee_id": "005",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_005_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000098",
+    "employee_id": "005",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_005_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000099",
+    "employee_id": "005",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_005_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000100",
+    "employee_id": "005",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_005_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000101",
+    "employee_id": "006",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_006_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000102",
+    "employee_id": "006",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_006_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000103",
+    "employee_id": "006",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_006_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000104",
+    "employee_id": "006",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_006_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000105",
+    "employee_id": "006",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_006_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000106",
+    "employee_id": "006",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_006_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000107",
+    "employee_id": "006",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_006_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000108",
+    "employee_id": "006",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_006_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000109",
+    "employee_id": "006",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_006_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000110",
+    "employee_id": "006",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_006_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000111",
+    "employee_id": "006",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_006_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000112",
+    "employee_id": "006",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_006_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000113",
+    "employee_id": "006",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_006_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000114",
+    "employee_id": "006",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_006_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000115",
+    "employee_id": "006",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_006_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000116",
+    "employee_id": "006",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_006_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000117",
+    "employee_id": "006",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_006_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000118",
+    "employee_id": "006",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_006_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000119",
+    "employee_id": "006",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_006_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000120",
+    "employee_id": "006",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_006_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000121",
+    "employee_id": "007",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_007_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000122",
+    "employee_id": "007",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_007_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000123",
+    "employee_id": "007",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_007_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000124",
+    "employee_id": "007",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_007_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000125",
+    "employee_id": "007",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_007_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000126",
+    "employee_id": "007",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_007_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000127",
+    "employee_id": "007",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_007_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000128",
+    "employee_id": "007",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_007_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000129",
+    "employee_id": "007",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_007_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000130",
+    "employee_id": "007",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_007_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000131",
+    "employee_id": "007",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_007_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000132",
+    "employee_id": "007",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_007_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000133",
+    "employee_id": "007",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_007_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000134",
+    "employee_id": "007",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_007_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000135",
+    "employee_id": "007",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_007_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000136",
+    "employee_id": "007",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_007_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000137",
+    "employee_id": "007",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_007_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000138",
+    "employee_id": "007",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_007_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000139",
+    "employee_id": "007",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_007_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000140",
+    "employee_id": "007",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_007_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000141",
+    "employee_id": "008",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_008_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000142",
+    "employee_id": "008",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_008_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000143",
+    "employee_id": "008",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_008_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000144",
+    "employee_id": "008",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_008_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000145",
+    "employee_id": "008",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_008_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000146",
+    "employee_id": "008",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_008_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000147",
+    "employee_id": "008",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_008_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000148",
+    "employee_id": "008",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_008_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000149",
+    "employee_id": "008",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_008_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000150",
+    "employee_id": "008",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_008_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000151",
+    "employee_id": "008",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_008_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000152",
+    "employee_id": "008",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_008_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000153",
+    "employee_id": "008",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_008_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000154",
+    "employee_id": "008",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_008_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000155",
+    "employee_id": "008",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_008_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000156",
+    "employee_id": "008",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_008_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000157",
+    "employee_id": "008",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_008_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000158",
+    "employee_id": "008",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_008_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000159",
+    "employee_id": "008",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_008_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000160",
+    "employee_id": "008",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_008_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000161",
+    "employee_id": "009",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_009_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000162",
+    "employee_id": "009",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_009_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000163",
+    "employee_id": "009",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_009_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000164",
+    "employee_id": "009",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_009_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000165",
+    "employee_id": "009",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_009_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000166",
+    "employee_id": "009",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_009_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000167",
+    "employee_id": "009",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_009_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000168",
+    "employee_id": "009",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_009_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000169",
+    "employee_id": "009",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_009_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000170",
+    "employee_id": "009",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_009_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000171",
+    "employee_id": "009",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_009_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000172",
+    "employee_id": "009",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_009_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000173",
+    "employee_id": "009",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_009_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000174",
+    "employee_id": "009",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_009_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000175",
+    "employee_id": "009",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_009_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000176",
+    "employee_id": "009",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_009_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000177",
+    "employee_id": "009",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_009_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000178",
+    "employee_id": "009",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_009_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000179",
+    "employee_id": "009",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_009_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000180",
+    "employee_id": "009",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_009_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000181",
+    "employee_id": "010",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_010_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000182",
+    "employee_id": "010",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_010_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000183",
+    "employee_id": "010",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_010_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000184",
+    "employee_id": "010",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_010_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000185",
+    "employee_id": "010",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_010_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000186",
+    "employee_id": "010",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_010_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000187",
+    "employee_id": "010",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_010_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000188",
+    "employee_id": "010",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_010_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000189",
+    "employee_id": "010",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_010_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000190",
+    "employee_id": "010",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_010_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000191",
+    "employee_id": "010",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_010_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000192",
+    "employee_id": "010",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_010_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000193",
+    "employee_id": "010",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_010_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000194",
+    "employee_id": "010",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_010_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000195",
+    "employee_id": "010",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_010_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000196",
+    "employee_id": "010",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_010_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000197",
+    "employee_id": "010",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_010_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000198",
+    "employee_id": "010",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_010_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000199",
+    "employee_id": "010",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_010_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000200",
+    "employee_id": "010",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_010_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000201",
+    "employee_id": "011",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_011_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000202",
+    "employee_id": "011",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_011_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000203",
+    "employee_id": "011",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_011_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000204",
+    "employee_id": "011",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_011_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000205",
+    "employee_id": "011",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_011_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000206",
+    "employee_id": "011",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_011_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000207",
+    "employee_id": "011",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_011_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000208",
+    "employee_id": "011",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_011_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000209",
+    "employee_id": "011",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_011_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000210",
+    "employee_id": "011",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_011_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000211",
+    "employee_id": "011",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_011_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000212",
+    "employee_id": "011",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_011_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000213",
+    "employee_id": "011",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_011_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000214",
+    "employee_id": "011",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_011_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000215",
+    "employee_id": "011",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_011_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000216",
+    "employee_id": "011",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_011_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000217",
+    "employee_id": "011",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_011_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000218",
+    "employee_id": "011",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_011_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000219",
+    "employee_id": "011",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_011_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000220",
+    "employee_id": "011",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_011_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000221",
+    "employee_id": "012",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_012_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000222",
+    "employee_id": "012",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_012_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000223",
+    "employee_id": "012",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_012_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000224",
+    "employee_id": "012",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_012_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000225",
+    "employee_id": "012",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_012_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000226",
+    "employee_id": "012",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_012_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000227",
+    "employee_id": "012",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_012_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000228",
+    "employee_id": "012",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_012_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000229",
+    "employee_id": "012",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_012_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000230",
+    "employee_id": "012",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_012_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000231",
+    "employee_id": "012",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_012_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000232",
+    "employee_id": "012",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_012_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000233",
+    "employee_id": "012",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_012_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000234",
+    "employee_id": "012",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_012_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000235",
+    "employee_id": "012",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_012_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000236",
+    "employee_id": "012",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_012_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000237",
+    "employee_id": "012",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_012_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000238",
+    "employee_id": "012",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_012_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000239",
+    "employee_id": "012",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_012_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000240",
+    "employee_id": "012",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_012_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000241",
+    "employee_id": "013",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_013_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000242",
+    "employee_id": "013",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_013_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000243",
+    "employee_id": "013",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_013_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000244",
+    "employee_id": "013",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_013_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000245",
+    "employee_id": "013",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_013_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000246",
+    "employee_id": "013",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_013_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000247",
+    "employee_id": "013",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_013_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000248",
+    "employee_id": "013",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_013_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000249",
+    "employee_id": "013",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_013_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000250",
+    "employee_id": "013",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_013_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000251",
+    "employee_id": "013",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_013_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000252",
+    "employee_id": "013",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_013_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000253",
+    "employee_id": "013",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_013_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000254",
+    "employee_id": "013",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_013_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000255",
+    "employee_id": "013",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_013_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000256",
+    "employee_id": "013",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_013_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000257",
+    "employee_id": "013",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_013_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000258",
+    "employee_id": "013",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_013_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000259",
+    "employee_id": "013",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_013_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000260",
+    "employee_id": "013",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_013_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000261",
+    "employee_id": "014",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_014_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000262",
+    "employee_id": "014",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_014_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000263",
+    "employee_id": "014",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_014_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000264",
+    "employee_id": "014",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_014_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000265",
+    "employee_id": "014",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_014_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000266",
+    "employee_id": "014",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_014_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000267",
+    "employee_id": "014",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_014_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000268",
+    "employee_id": "014",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_014_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000269",
+    "employee_id": "014",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_014_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000270",
+    "employee_id": "014",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_014_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000271",
+    "employee_id": "014",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_014_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000272",
+    "employee_id": "014",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_014_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000273",
+    "employee_id": "014",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_014_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000274",
+    "employee_id": "014",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_014_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000275",
+    "employee_id": "014",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_014_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000276",
+    "employee_id": "014",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_014_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000277",
+    "employee_id": "014",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_014_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000278",
+    "employee_id": "014",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_014_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000279",
+    "employee_id": "014",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_014_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000280",
+    "employee_id": "014",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_014_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000281",
+    "employee_id": "015",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_015_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000282",
+    "employee_id": "015",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_015_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000283",
+    "employee_id": "015",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_015_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000284",
+    "employee_id": "015",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_015_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000285",
+    "employee_id": "015",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_015_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000286",
+    "employee_id": "015",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_015_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000287",
+    "employee_id": "015",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_015_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000288",
+    "employee_id": "015",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_015_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000289",
+    "employee_id": "015",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_015_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000290",
+    "employee_id": "015",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_015_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000291",
+    "employee_id": "015",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_015_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000292",
+    "employee_id": "015",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_015_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000293",
+    "employee_id": "015",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_015_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000294",
+    "employee_id": "015",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_015_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000295",
+    "employee_id": "015",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_015_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000296",
+    "employee_id": "015",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_015_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000297",
+    "employee_id": "015",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_015_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000298",
+    "employee_id": "015",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_015_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000299",
+    "employee_id": "015",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_015_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000300",
+    "employee_id": "015",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_015_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000301",
+    "employee_id": "016",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_016_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000302",
+    "employee_id": "016",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_016_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000303",
+    "employee_id": "016",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_016_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000304",
+    "employee_id": "016",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_016_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000305",
+    "employee_id": "016",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_016_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000306",
+    "employee_id": "016",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_016_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000307",
+    "employee_id": "016",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_016_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000308",
+    "employee_id": "016",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_016_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000309",
+    "employee_id": "016",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_016_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000310",
+    "employee_id": "016",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_016_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000311",
+    "employee_id": "016",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_016_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000312",
+    "employee_id": "016",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_016_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000313",
+    "employee_id": "016",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_016_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000314",
+    "employee_id": "016",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_016_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000315",
+    "employee_id": "016",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_016_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000316",
+    "employee_id": "016",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_016_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000317",
+    "employee_id": "016",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_016_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000318",
+    "employee_id": "016",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_016_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000319",
+    "employee_id": "016",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_016_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000320",
+    "employee_id": "016",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_016_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000321",
+    "employee_id": "017",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_017_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000322",
+    "employee_id": "017",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_017_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000323",
+    "employee_id": "017",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_017_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000324",
+    "employee_id": "017",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_017_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000325",
+    "employee_id": "017",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_017_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000326",
+    "employee_id": "017",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_017_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000327",
+    "employee_id": "017",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_017_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000328",
+    "employee_id": "017",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_017_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000329",
+    "employee_id": "017",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_017_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000330",
+    "employee_id": "017",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_017_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000331",
+    "employee_id": "017",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_017_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000332",
+    "employee_id": "017",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_017_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000333",
+    "employee_id": "017",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_017_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000334",
+    "employee_id": "017",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_017_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000335",
+    "employee_id": "017",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_017_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000336",
+    "employee_id": "017",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_017_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000337",
+    "employee_id": "017",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_017_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000338",
+    "employee_id": "017",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_017_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000339",
+    "employee_id": "017",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_017_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000340",
+    "employee_id": "017",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_017_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000341",
+    "employee_id": "018",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_018_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000342",
+    "employee_id": "018",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_018_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000343",
+    "employee_id": "018",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_018_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000344",
+    "employee_id": "018",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_018_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000345",
+    "employee_id": "018",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_018_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000346",
+    "employee_id": "018",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_018_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000347",
+    "employee_id": "018",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_018_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000348",
+    "employee_id": "018",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_018_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000349",
+    "employee_id": "018",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_018_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000350",
+    "employee_id": "018",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_018_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000351",
+    "employee_id": "018",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_018_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000352",
+    "employee_id": "018",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_018_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000353",
+    "employee_id": "018",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_018_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000354",
+    "employee_id": "018",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_018_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000355",
+    "employee_id": "018",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_018_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000356",
+    "employee_id": "018",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_018_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000357",
+    "employee_id": "018",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_018_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000358",
+    "employee_id": "018",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_018_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000359",
+    "employee_id": "018",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_018_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000360",
+    "employee_id": "018",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_018_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000361",
+    "employee_id": "019",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_019_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000362",
+    "employee_id": "019",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_019_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000363",
+    "employee_id": "019",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_019_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000364",
+    "employee_id": "019",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_019_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000365",
+    "employee_id": "019",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_019_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000366",
+    "employee_id": "019",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_019_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000367",
+    "employee_id": "019",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_019_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000368",
+    "employee_id": "019",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_019_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.364Z"
+  },
+  {
+    "association_id": "ASSOC_000369",
+    "employee_id": "019",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_019_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000370",
+    "employee_id": "019",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_019_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000371",
+    "employee_id": "019",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_019_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000372",
+    "employee_id": "019",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_019_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000373",
+    "employee_id": "019",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_019_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000374",
+    "employee_id": "019",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_019_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000375",
+    "employee_id": "019",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_019_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000376",
+    "employee_id": "019",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_019_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000377",
+    "employee_id": "019",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_019_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000378",
+    "employee_id": "019",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_019_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000379",
+    "employee_id": "019",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_019_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000380",
+    "employee_id": "019",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_019_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000381",
+    "employee_id": "020",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_020_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000382",
+    "employee_id": "020",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_020_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000383",
+    "employee_id": "020",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_020_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000384",
+    "employee_id": "020",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_020_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000385",
+    "employee_id": "020",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_020_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000386",
+    "employee_id": "020",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_020_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000387",
+    "employee_id": "020",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_020_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000388",
+    "employee_id": "020",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_020_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000389",
+    "employee_id": "020",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_020_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000390",
+    "employee_id": "020",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_020_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000391",
+    "employee_id": "020",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_020_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000392",
+    "employee_id": "020",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_020_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000393",
+    "employee_id": "020",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_020_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000394",
+    "employee_id": "020",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_020_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000395",
+    "employee_id": "020",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_020_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000396",
+    "employee_id": "020",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_020_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000397",
+    "employee_id": "020",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_020_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000398",
+    "employee_id": "020",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_020_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000399",
+    "employee_id": "020",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_020_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000400",
+    "employee_id": "020",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_020_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000401",
+    "employee_id": "021",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_021_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000402",
+    "employee_id": "021",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_021_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000403",
+    "employee_id": "021",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_021_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000404",
+    "employee_id": "021",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_021_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000405",
+    "employee_id": "021",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_021_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000406",
+    "employee_id": "021",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_021_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000407",
+    "employee_id": "021",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_021_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000408",
+    "employee_id": "021",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_021_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000409",
+    "employee_id": "021",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_021_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000410",
+    "employee_id": "021",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_021_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000411",
+    "employee_id": "021",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_021_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000412",
+    "employee_id": "021",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_021_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000413",
+    "employee_id": "021",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_021_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000414",
+    "employee_id": "021",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_021_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000415",
+    "employee_id": "021",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_021_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000416",
+    "employee_id": "021",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_021_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000417",
+    "employee_id": "021",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_021_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000418",
+    "employee_id": "021",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_021_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000419",
+    "employee_id": "021",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_021_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000420",
+    "employee_id": "021",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_021_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000421",
+    "employee_id": "022",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_022_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000422",
+    "employee_id": "022",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_022_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000423",
+    "employee_id": "022",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_022_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000424",
+    "employee_id": "022",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_022_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000425",
+    "employee_id": "022",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_022_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000426",
+    "employee_id": "022",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_022_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000427",
+    "employee_id": "022",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_022_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000428",
+    "employee_id": "022",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_022_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000429",
+    "employee_id": "022",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_022_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000430",
+    "employee_id": "022",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_022_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000431",
+    "employee_id": "022",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_022_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000432",
+    "employee_id": "022",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_022_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000433",
+    "employee_id": "022",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_022_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000434",
+    "employee_id": "022",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_022_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000435",
+    "employee_id": "022",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_022_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000436",
+    "employee_id": "022",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_022_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000437",
+    "employee_id": "022",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_022_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000438",
+    "employee_id": "022",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_022_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000439",
+    "employee_id": "022",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_022_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000440",
+    "employee_id": "022",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_022_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000441",
+    "employee_id": "023",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_023_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000442",
+    "employee_id": "023",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_023_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000443",
+    "employee_id": "023",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_023_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000444",
+    "employee_id": "023",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_023_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000445",
+    "employee_id": "023",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_023_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000446",
+    "employee_id": "023",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_023_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000447",
+    "employee_id": "023",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_023_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000448",
+    "employee_id": "023",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_023_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000449",
+    "employee_id": "023",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_023_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000450",
+    "employee_id": "023",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_023_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000451",
+    "employee_id": "023",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_023_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000452",
+    "employee_id": "023",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_023_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000453",
+    "employee_id": "023",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_023_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000454",
+    "employee_id": "023",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_023_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000455",
+    "employee_id": "023",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_023_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000456",
+    "employee_id": "023",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_023_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000457",
+    "employee_id": "023",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_023_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000458",
+    "employee_id": "023",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_023_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000459",
+    "employee_id": "023",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_023_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000460",
+    "employee_id": "023",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_023_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000461",
+    "employee_id": "024",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_024_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000462",
+    "employee_id": "024",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_024_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000463",
+    "employee_id": "024",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_024_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000464",
+    "employee_id": "024",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_024_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000465",
+    "employee_id": "024",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_024_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000466",
+    "employee_id": "024",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_024_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000467",
+    "employee_id": "024",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_024_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000468",
+    "employee_id": "024",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_024_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000469",
+    "employee_id": "024",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_024_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000470",
+    "employee_id": "024",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_024_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000471",
+    "employee_id": "024",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_024_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000472",
+    "employee_id": "024",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_024_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000473",
+    "employee_id": "024",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_024_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000474",
+    "employee_id": "024",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_024_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000475",
+    "employee_id": "024",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_024_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000476",
+    "employee_id": "024",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_024_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000477",
+    "employee_id": "024",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_024_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000478",
+    "employee_id": "024",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_024_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000479",
+    "employee_id": "024",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_024_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000480",
+    "employee_id": "024",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_024_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000481",
+    "employee_id": "025",
+    "evaluation_axis": "TECHNICAL_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_025_TECHNICAL_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000482",
+    "employee_id": "025",
+    "evaluation_axis": "REGULATORY_KNOWLEDGE",
+    "test_case_id": "TC_EVAL_025_REGULATORY_KNOWLEDGE",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000483",
+    "employee_id": "025",
+    "evaluation_axis": "TEMPORAL_REASONING",
+    "test_case_id": "TC_EVAL_025_TEMPORAL_REASONING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000484",
+    "employee_id": "025",
+    "evaluation_axis": "CALCULATION",
+    "test_case_id": "TC_EVAL_025_CALCULATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000485",
+    "employee_id": "025",
+    "evaluation_axis": "WORKFLOW",
+    "test_case_id": "TC_EVAL_025_WORKFLOW",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000486",
+    "employee_id": "025",
+    "evaluation_axis": "DOCUMENT_UNDERSTANDING",
+    "test_case_id": "TC_EVAL_025_DOCUMENT_UNDERSTANDING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000487",
+    "employee_id": "025",
+    "evaluation_axis": "TOOL_SELECTION",
+    "test_case_id": "TC_EVAL_025_TOOL_SELECTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000488",
+    "employee_id": "025",
+    "evaluation_axis": "TOOL_EXECUTION",
+    "test_case_id": "TC_EVAL_025_TOOL_EXECUTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000489",
+    "employee_id": "025",
+    "evaluation_axis": "PERMISSION_HANDLING",
+    "test_case_id": "TC_EVAL_025_PERMISSION_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000490",
+    "employee_id": "025",
+    "evaluation_axis": "HITL",
+    "test_case_id": "TC_EVAL_025_HITL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000491",
+    "employee_id": "025",
+    "evaluation_axis": "ERROR_HANDLING",
+    "test_case_id": "TC_EVAL_025_ERROR_HANDLING",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000492",
+    "employee_id": "025",
+    "evaluation_axis": "AMBIGUITY",
+    "test_case_id": "TC_EVAL_025_AMBIGUITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000493",
+    "employee_id": "025",
+    "evaluation_axis": "CONTRADICTION",
+    "test_case_id": "TC_EVAL_025_CONTRADICTION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000494",
+    "employee_id": "025",
+    "evaluation_axis": "REFUSAL",
+    "test_case_id": "TC_EVAL_025_REFUSAL",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000495",
+    "employee_id": "025",
+    "evaluation_axis": "SECURITY",
+    "test_case_id": "TC_EVAL_025_SECURITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000496",
+    "employee_id": "025",
+    "evaluation_axis": "PRIVACY",
+    "test_case_id": "TC_EVAL_025_PRIVACY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000497",
+    "employee_id": "025",
+    "evaluation_axis": "AUDITABILITY",
+    "test_case_id": "TC_EVAL_025_AUDITABILITY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000498",
+    "employee_id": "025",
+    "evaluation_axis": "RECOVERY",
+    "test_case_id": "TC_EVAL_025_RECOVERY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000499",
+    "employee_id": "025",
+    "evaluation_axis": "ISOLATION",
+    "test_case_id": "TC_EVAL_025_ISOLATION",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  },
+  {
+    "association_id": "ASSOC_000500",
+    "employee_id": "025",
+    "evaluation_axis": "IDEMPOTENCY",
+    "test_case_id": "TC_EVAL_025_IDEMPOTENCY",
+    "status": "PASSED",
+    "last_evaluated_at": "2026-09-13T15:18:46.365Z"
+  }
+]

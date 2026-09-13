@@ -1,0 +1,29 @@
+{
+  "revenue_recognition_standard": "Accrual Accounting (Regime do Acréscimo / PGC Angola Decreto 82/01)",
+  "recognition_logic_status": "INTERNALLY_VERIFIED",
+  "deferred_revenue_account_mapping_status": "INTERNALLY_VERIFIED",
+  "rules": [
+    {
+      "rule_id": "REV-REC-001",
+      "name": "Deferred Revenue Invoicing",
+      "description": "No momento da emissão da fatura anual ou plurianual, o valor total da subscrição base é creditado na conta 49.1 (Proveitos com Diferimento) e o IVA na conta 34.5.3 (Liquidado).",
+      "debit_account": "31.1.2.1",
+      "credit_deferred_account": "49.1",
+      "credit_vat_account": "34.5.3",
+      "status": "PASS"
+    },
+    {
+      "rule_id": "REV-REC-002",
+      "name": "Monthly Straight-Line Amortization",
+      "description": "Ao final de cada período mensal, 1/N avos do valor diferido em 49.1 é reconhecido como receita efetiva na conta 62.1.1 (Serviços principais — Mercado nacional).",
+      "debit_deferred_account": "49.1",
+      "credit_revenue_account": "62.1.1",
+      "analytic_dimensions": {
+        "service_family": "SaaS",
+        "commercial_model": "B2B"
+      },
+      "status": "PASS"
+    }
+  ],
+  "version": "1.1.5"
+}

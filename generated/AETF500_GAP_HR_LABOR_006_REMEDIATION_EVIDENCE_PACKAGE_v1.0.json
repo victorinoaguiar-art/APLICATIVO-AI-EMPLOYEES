@@ -1,0 +1,50 @@
+{
+  "gap_id": "GAP-HR-LABOR-006",
+  "domain": "Human Resources",
+  "affected_employee_ids": [
+    "EMP-HR-003"
+  ],
+  "affected_competency_ids": [
+    "COMP-HR-004",
+    "COMP-HR-008"
+  ],
+  "original_problem": "Labor Code Revision 2026 severance pay multipliers unverified",
+  "original_root_cause": "Pending statutory amendment intake",
+  "original_risk_level": "PKA_3_REGULATED",
+  "source_before": "Lei Geral do Trabalho Lei n.º 7/15",
+  "source_after": "Lei Geral do Trabalho Lei n.º 12/23 & Regulamentação 2026",
+  "knowledge_pack_before": "PKP-HR-PAYROLL-v1.0",
+  "knowledge_pack_after": "PKP-HR-PAYROLL-v2.0_UPDATED",
+  "rule_before": "Recommend-only payroll calculation requiring manual HR sign-off",
+  "rule_after": "Automated IRT & standard payroll processing with A5 autonomy, reserving sign-off for contested severance",
+  "restriction_before": {
+    "type": "RECOMMEND_ONLY",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A3"
+  },
+  "restriction_current": {
+    "type": "LIMITED_AUTONOMOUS_EXECUTION",
+    "status": "REMOVED",
+    "level": "A5"
+  },
+  "remediation_actions": [
+    "Attached Labor Code 12/23 & 2026 updates",
+    "Updated PKP-HR-PAYROLL to v2.0",
+    "Removed RECOMMEND_ONLY for standard payroll"
+  ],
+  "professional_test_run_ids": [
+    "RUN-PROF-GAP-HR-LABOR-006"
+  ],
+  "professional_test_cases": 25,
+  "test_results": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "expert_review_required": false,
+  "external_validation_required": false,
+  "residual_risk": "VERY_LOW",
+  "recommended_autonomy_decision": "RESTRICTION_REMOVE",
+  "decision_details": "Removed RECOMMEND_ONLY restriction, promoting to A5 Limited Autonomous Execution for standard payroll",
+  "evidence_status": "VERIFIED_EFFECTIVE"
+}

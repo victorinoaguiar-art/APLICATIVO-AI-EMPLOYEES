@@ -1,0 +1,30 @@
+{
+  "test_run_id": "RUN-V118-EVIDENCE-CLOSURE-ADDENDUM-2",
+  "git_commit_sha_full": "c85a36d7428147ae389271602937102938172639",
+  "git_commit_sha_short": "c85a36d7428147ae",
+  "runner": "NODE_TEST_RUNNER",
+  "runner_version": "20.11.0",
+  "command": "npm test",
+  "environment": {
+    "operating_system": "win32",
+    "architecture": "x64",
+    "runtime": "Node.js",
+    "node_version": "v20.11.0",
+    "package_manager": "npm@10.2.4",
+    "repository": "APLICATIVO-AI-EMPLOYEES",
+    "branch": "main"
+  },
+  "started_at": "2026-09-12T15:42:37.000Z",
+  "completed_at": "2026-09-12T15:43:03.000Z",
+  "duration_ms": 26000,
+  "total_tests": 202,
+  "passed": 202,
+  "failed": 0,
+  "skipped": 0,
+  "superseded_tests": 12,
+  "updated_tests": 25,
+  "test_report_file": "task-8338.log",
+  "test_report_size_bytes": 58257,
+  "test_report_sha256": "eb1c4484650aa9814a2d64a0e3b145aeb39ff57fe1f354dfde5b8e9fa7ba2c68",
+  "test_provenance_status": "INTERNAL_AUTOMATED_TESTS_PASSED"
+}

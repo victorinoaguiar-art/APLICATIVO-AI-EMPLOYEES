@@ -1,0 +1,173 @@
+[
+  {
+    "account_code": "31.1.1",
+    "account_name": "Clientes Correntes — Grupo",
+    "official_pgc_class": "31",
+    "legal_ref": "Decreto n.º 82/01",
+    "allowed_operations": ["DEBIT"],
+    "analytical_required": true,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "31.1.2.1",
+    "account_name": "Clientes Correntes Não Grupo Nacionais",
+    "official_pgc_class": "31",
+    "legal_ref": "Decreto n.º 82/01",
+    "allowed_operations": ["DEBIT"],
+    "analytical_required": true,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "31.1.2.2",
+    "account_name": "Clientes Correntes Não Grupo Estrangeiros",
+    "official_pgc_class": "31",
+    "legal_ref": "Decreto n.º 82/01",
+    "allowed_operations": ["DEBIT"],
+    "analytical_required": true,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "62.1.1",
+    "account_name": "Serviços principais — Mercado nacional",
+    "official_pgc_class": "62",
+    "legal_ref": "Decreto n.º 82/01",
+    "allowed_operations": ["CREDIT"],
+    "analytical_required": true,
+    "analytic_dimensions": {
+      "service_family": "SaaS",
+      "commercial_model": "B2B"
+    },
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "62.1.2",
+    "account_name": "Serviços principais — Mercado estrangeiro",
+    "official_pgc_class": "62",
+    "legal_ref": "Decreto n.º 82/01",
+    "allowed_operations": ["CREDIT"],
+    "analytical_required": true,
+    "analytic_dimensions": {
+      "service_family": "SaaS",
+      "commercial_model": "B2B_EXPORT"
+    },
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "34.5.1",
+    "account_name": "Imposto sobre o Valor Acrescentado (IVA) - Suportado",
+    "official_pgc_class": "34",
+    "legal_ref": "Decreto Presidencial n.º 180/19",
+    "allowed_operations": ["DEBIT"],
+    "analytical_required": false,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "34.5.2",
+    "account_name": "Imposto sobre o Valor Acrescentado (IVA) - Dedutível",
+    "official_pgc_class": "34",
+    "legal_ref": "Decreto Presidencial n.º 180/19",
+    "allowed_operations": ["DEBIT"],
+    "analytical_required": false,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "34.5.3",
+    "account_name": "Imposto sobre o Valor Acrescentado (IVA) - Liquidado",
+    "official_pgc_class": "34",
+    "legal_ref": "Decreto Presidencial n.º 180/19",
+    "allowed_operations": ["CREDIT"],
+    "analytical_required": false,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "34.5.4",
+    "account_name": "Imposto sobre o Valor Acrescentado (IVA) - Regularizações",
+    "official_pgc_class": "34",
+    "legal_ref": "Decreto Presidencial n.º 180/19",
+    "allowed_operations": ["DEBIT", "CREDIT"],
+    "analytical_required": false,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "34.5.5",
+    "account_name": "Imposto sobre o Valor Acrescentado (IVA) - Apuramento",
+    "official_pgc_class": "34",
+    "legal_ref": "Decreto Presidencial n.º 180/19",
+    "allowed_operations": ["DEBIT", "CREDIT"],
+    "analytical_required": false,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "34.5.6",
+    "account_name": "Imposto sobre o Valor Acrescentado (IVA) - A Pagar",
+    "official_pgc_class": "34",
+    "legal_ref": "Decreto Presidencial n.º 180/19",
+    "allowed_operations": ["CREDIT"],
+    "analytical_required": false,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "34.5.7",
+    "account_name": "Imposto sobre o Valor Acrescentado (IVA) - A Recuperar",
+    "official_pgc_class": "34",
+    "legal_ref": "Decreto Presidencial n.º 180/19",
+    "allowed_operations": ["DEBIT"],
+    "analytical_required": false,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "34.5.8",
+    "account_name": "Imposto sobre o Valor Acrescentado (IVA) - Reembolso Pedido",
+    "official_pgc_class": "34",
+    "legal_ref": "Decreto Presidencial n.º 180/19",
+    "allowed_operations": ["DEBIT"],
+    "analytical_required": false,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "34.5.9",
+    "account_name": "Imposto sobre o Valor Acrescentado (IVA) - Retenções na Fonte",
+    "official_pgc_class": "34",
+    "legal_ref": "Decreto Presidencial n.º 180/19",
+    "allowed_operations": ["CREDIT"],
+    "analytical_required": false,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "43.1",
+    "account_name": "Depósitos à Ordem - Bancos Nacionais (BFA/BAI)",
+    "official_pgc_class": "43",
+    "legal_ref": "Decreto n.º 82/01",
+    "allowed_operations": ["DEBIT", "CREDIT"],
+    "analytical_required": true,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "49.1",
+    "account_name": "Proveitos com Diferimento - Subscrições SaaS de AI Employees",
+    "official_pgc_class": "49",
+    "legal_ref": "Decreto n.º 82/01",
+    "allowed_operations": ["CREDIT", "DEBIT"],
+    "analytical_required": true,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "71.1",
+    "account_name": "Custos das Existências Vendidas - Matérias (Proibida para SaaS)",
+    "official_pgc_class": "71",
+    "legal_ref": "Decreto n.º 82/01",
+    "allowed_operations": ["FORBIDDEN_FOR_SAAS"],
+    "analytical_required": false,
+    "version": "1.1.5"
+  },
+  {
+    "account_code": "99.9",
+    "account_name": "Conta Genérica Não Mapeada (Apenas para Testes de Validação)",
+    "official_pgc_class": "99",
+    "legal_ref": "Test Fixture Internal",
+    "allowed_operations": ["FORBIDDEN_IN_PRODUCTION"],
+    "analytical_required": false,
+    "test_fixture_only": true,
+    "version": "1.1.5"
+  }
+]

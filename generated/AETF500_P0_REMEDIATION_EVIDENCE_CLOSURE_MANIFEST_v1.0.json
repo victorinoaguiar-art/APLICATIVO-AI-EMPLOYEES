@@ -1,0 +1,132 @@
+{
+  "manifest_id": "AETF500_P0_REMEDIATION_EVIDENCE_CLOSURE_MANIFEST_v1.0",
+  "program_id": "AETF500_P0_REMEDIATION_EVIDENCE_CLOSURE_GATE_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "baseline_mutation_allowed": false,
+  "execution_timestamp": "2026-09-13T12:30:00.000Z",
+  "deliverables_count": 11,
+  "artifacts": [
+    {
+      "artifact_id": "AETF500_SRC_MINSA_Legal_Identity_Verification_v1.0",
+      "file_name": "AETF500_SRC_MINSA_Legal_Identity_Verification_v1.0.json",
+      "physical_path": "generated/AETF500_SRC_MINSA_Legal_Identity_Verification_v1.0.json",
+      "byte_size": 5850,
+      "sha256": "7dd1a3d7c32950b505d2abfd90cbe7993e5c44eb0fdfc4d16bb6a9d77f032818",
+      "created_at": "2026-09-13T13:28:04.949Z",
+      "modified_at": "2026-09-13T13:28:04.950Z",
+      "evidence_category": "HEALTHCARE_MINSA_PHYSICAL_EVIDENCE",
+      "supports_gate": "AETF500_P0_REMEDIATION_EVIDENCE_CLOSURE_GATE_v1.0"
+    },
+    {
+      "artifact_id": "AETF500_SRC_MINSA_Official_Document_Registry_v1.0",
+      "file_name": "AETF500_SRC_MINSA_Official_Document_Registry_v1.0.json",
+      "physical_path": "generated/AETF500_SRC_MINSA_Official_Document_Registry_v1.0.json",
+      "byte_size": 2661,
+      "sha256": "a160b9583b26c9bcb3c889e2b0dcfda11172640854e233c9426df03d03382d33",
+      "created_at": "2026-09-13T13:28:04.951Z",
+      "modified_at": "2026-09-13T13:28:04.951Z",
+      "evidence_category": "HEALTHCARE_MINSA_PHYSICAL_EVIDENCE",
+      "supports_gate": "AETF500_P0_REMEDIATION_EVIDENCE_CLOSURE_GATE_v1.0"
+    },
+    {
+      "artifact_id": "AETF500_SRC_MINSA_Cryptographic_Snapshot_Manifest_v1.0",
+      "file_name": "AETF500_SRC_MINSA_Cryptographic_Snapshot_Manifest_v1.0.json",
+      "physical_path": "generated/AETF500_SRC_MINSA_Cryptographic_Snapshot_Manifest_v1.0.json",
+      "byte_size": 2303,
+      "sha256": "b8e00a84f4e8808ae33dd701bfe7e9e22403d7b806f1a77a80c16a01954209ef",
+      "created_at": "2026-09-13T13:28:04.954Z",
+      "modified_at": "2026-09-13T13:28:04.954Z",
+      "evidence_category": "HEALTHCARE_MINSA_PHYSICAL_EVIDENCE",
+      "supports_gate": "AETF500_P0_REMEDIATION_EVIDENCE_CLOSURE_GATE_v1.0"
+    },
+    {
+      "artifact_id": "AETF500_DR001_DR032_Content_Closure_v1.0",
+      "file_name": "AETF500_DR001_DR032_Content_Closure_v1.0.json",
+      "physical_path": "generated/AETF500_DR001_DR032_Content_Closure_v1.0.json",
+      "byte_size": 30679,
+      "sha256": "13f8f1efb51419bb2c4354c44503b6f86ca6d4085ef8e706b4a74dc3622379cc",
+      "created_at": "2026-09-13T13:28:04.957Z",
+      "modified_at": "2026-09-13T13:28:04.957Z",
+      "evidence_category": "HEALTHCARE_MINSA_PHYSICAL_EVIDENCE",
+      "supports_gate": "AETF500_P0_REMEDIATION_EVIDENCE_CLOSURE_GATE_v1.0"
+    },
+    {
+      "artifact_id": "AETF500_DR001_DR032_Source_Article_Traceability_v1.0",
+      "file_name": "AETF500_DR001_DR032_Source_Article_Traceability_v1.0.json",
+      "physical_path": "generated/AETF500_DR001_DR032_Source_Article_Traceability_v1.0.json",
+      "byte_size": 13889,
+      "sha256": "602f54373c96557234631fd83a4fa653d65783af6e44b25a3559854085184846",
+      "created_at": "2026-09-13T13:28:04.959Z",
+      "modified_at": "2026-09-13T13:28:04.959Z",
+      "evidence_category": "HEALTHCARE_MINSA_PHYSICAL_EVIDENCE",
+      "supports_gate": "AETF500_P0_REMEDIATION_EVIDENCE_CLOSURE_GATE_v1.0"
+    },
+    {
+      "artifact_id": "AETF500_Healthcare_Index_Rebuild_Evidence_v1.0",
+      "file_name": "AETF500_Healthcare_Index_Rebuild_Evidence_v1.0.json",
+      "physical_path": "generated/AETF500_Healthcare_Index_Rebuild_Evidence_v1.0.json",
+      "byte_size": 25282,
+      "sha256": "fbae717121f90063c7d947be71b4a98b1104d4ede09c207a8edda36f28fa29b9",
+      "created_at": "2026-09-13T13:28:04.961Z",
+      "modified_at": "2026-09-13T13:28:04.962Z",
+      "evidence_category": "HEALTHCARE_MINSA_PHYSICAL_EVIDENCE",
+      "supports_gate": "AETF500_P0_REMEDIATION_EVIDENCE_CLOSURE_GATE_v1.0"
+    },
+    {
+      "artifact_id": "AETF500_Healthcare_25_Employee_Nominal_Retest_Register_v1.0",
+      "file_name": "AETF500_Healthcare_25_Employee_Nominal_Retest_Register_v1.0.json",
+      "physical_path": "generated/AETF500_Healthcare_25_Employee_Nominal_Retest_Register_v1.0.json",
+      "byte_size": 16658,
+      "sha256": "1f002748a0f8c5694ac79e22ca09725827d906922dde6159f6ef77a18a3e42ca",
+      "created_at": "2026-09-13T13:28:04.964Z",
+      "modified_at": "2026-09-13T13:28:04.965Z",
+      "evidence_category": "HEALTHCARE_MINSA_PHYSICAL_EVIDENCE",
+      "supports_gate": "AETF500_P0_REMEDIATION_EVIDENCE_CLOSURE_GATE_v1.0"
+    },
+    {
+      "artifact_id": "AETF500_MINSA_5_Runtime_Raw_Traces_v1.0",
+      "file_name": "AETF500_MINSA_5_Runtime_Raw_Traces_v1.0.json",
+      "physical_path": "generated/AETF500_MINSA_5_Runtime_Raw_Traces_v1.0.json",
+      "byte_size": 9913,
+      "sha256": "4ba3c2c47d74c92f563fd02067ba4facc5d6ceccf7abd7eb7d22df1728a2e40b",
+      "created_at": "2026-09-13T13:28:04.966Z",
+      "modified_at": "2026-09-13T13:28:04.966Z",
+      "evidence_category": "HEALTHCARE_MINSA_PHYSICAL_EVIDENCE",
+      "supports_gate": "AETF500_P0_REMEDIATION_EVIDENCE_CLOSURE_GATE_v1.0"
+    },
+    {
+      "artifact_id": "AETF500_Regulatory_Router_Raw_Trace_v1.0",
+      "file_name": "AETF500_Regulatory_Router_Raw_Trace_v1.0.json",
+      "physical_path": "generated/AETF500_Regulatory_Router_Raw_Trace_v1.0.json",
+      "byte_size": 814,
+      "sha256": "3832a7d6894c0cc40267c3de2b9655e4cf00643363c88a3e4436086e742cfa28",
+      "created_at": "2026-09-13T13:28:04.968Z",
+      "modified_at": "2026-09-13T13:28:04.968Z",
+      "evidence_category": "HEALTHCARE_MINSA_PHYSICAL_EVIDENCE",
+      "supports_gate": "AETF500_P0_REMEDIATION_EVIDENCE_CLOSURE_GATE_v1.0"
+    },
+    {
+      "artifact_id": "AETF500_89_vs_91_Final_Physical_Reconciliation_v1.0",
+      "file_name": "AETF500_89_vs_91_Final_Physical_Reconciliation_v1.0.json",
+      "physical_path": "generated/AETF500_89_vs_91_Final_Physical_Reconciliation_v1.0.json",
+      "byte_size": 4523,
+      "sha256": "6b4619227570c0ba491fc64ebb227cd7c47aac56c12e46d5711c580e89286bf6",
+      "created_at": "2026-09-13T13:28:04.969Z",
+      "modified_at": "2026-09-13T13:28:04.969Z",
+      "evidence_category": "HEALTHCARE_MINSA_PHYSICAL_EVIDENCE",
+      "supports_gate": "AETF500_P0_REMEDIATION_EVIDENCE_CLOSURE_GATE_v1.0"
+    },
+    {
+      "artifact_id": "AETF500_Pre_Remediation_Chain_of_Custody_Closure_v1.0",
+      "file_name": "AETF500_Pre_Remediation_Chain_of_Custody_Closure_v1.0.json",
+      "physical_path": "generated/AETF500_Pre_Remediation_Chain_of_Custody_Closure_v1.0.json",
+      "byte_size": 997,
+      "sha256": "5178b9d8c90d515d9914d516f0dd0b47da95955a603fe3b368af266900bd3618",
+      "created_at": "2026-09-13T13:28:04.969Z",
+      "modified_at": "2026-09-13T13:28:04.970Z",
+      "evidence_category": "HEALTHCARE_MINSA_PHYSICAL_EVIDENCE",
+      "supports_gate": "AETF500_P0_REMEDIATION_EVIDENCE_CLOSURE_GATE_v1.0"
+    }
+  ],
+  "manifest_sha256": "c5cb06e272a86669a888eb043352b2869214bc9e107e6dd67eb22a21db7e9443"
+}

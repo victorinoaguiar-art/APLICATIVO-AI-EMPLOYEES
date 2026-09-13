@@ -1,0 +1,50 @@
+{
+  "gap_id": "GAP-PROC-INCO-007",
+  "domain": "Procurement",
+  "affected_employee_ids": [
+    "EMP-PRC-002"
+  ],
+  "affected_competency_ids": [
+    "COMP-PRC-003",
+    "COMP-PRC-006"
+  ],
+  "original_problem": "Incoterms 2020 duty calculation & Angolan Tariff Schedule 2026 unaligned",
+  "original_root_cause": "Tariff schedule update gap",
+  "original_risk_level": "PKA_2_TECHNICAL",
+  "source_before": "Pauta Desembaraço Aduaneiro 2019",
+  "source_after": "Pauta Despacho Aduaneiro Angola 2026 & Incoterms 2020",
+  "knowledge_pack_before": "PKP-PROCUREMENT-v1.0",
+  "knowledge_pack_after": "PKP-PROCUREMENT-v2.0_UPDATED",
+  "rule_before": "Draft-only purchase order duty calculations",
+  "rule_after": "Automated tariff calculation within approved PO limits",
+  "restriction_before": {
+    "type": "DRAFT_ONLY",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A2"
+  },
+  "restriction_current": {
+    "type": "LIMITED_AUTONOMOUS_EXECUTION",
+    "status": "REMOVED",
+    "level": "A5"
+  },
+  "remediation_actions": [
+    "Attached Angolan Tariff Schedule 2026",
+    "Updated PKP-PROCUREMENT to v2.0",
+    "Removed DRAFT_ONLY restriction for standard PO duties"
+  ],
+  "professional_test_run_ids": [
+    "RUN-PROF-GAP-PROC-INCO-007"
+  ],
+  "professional_test_cases": 25,
+  "test_results": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "expert_review_required": false,
+  "external_validation_required": false,
+  "residual_risk": "VERY_LOW",
+  "recommended_autonomy_decision": "RESTRICTION_REMOVE",
+  "decision_details": "Removed DRAFT_ONLY restriction, promoting to A5 Limited Autonomous Execution within PO limits",
+  "evidence_status": "VERIFIED_EFFECTIVE"
+}

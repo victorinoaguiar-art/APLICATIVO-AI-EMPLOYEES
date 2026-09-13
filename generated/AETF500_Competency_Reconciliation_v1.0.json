@@ -1,0 +1,10 @@
+{
+  "unique_competency_definitions_total": 1450,
+  "employee_competency_assignments_total": 6850,
+  "domain_competency_assignments_total": 1495,
+  "cross_domain_shared_competency_definitions": 45,
+  "reported_competencies_total": 1450,
+  "reconciled_competencies_total": 1450,
+  "reconciliation_formula": "1495 domain assignments - 45 cross-domain shared definitions = 1450 unique competency definitions",
+  "reconciliation_status": "RECONCILED_MATHEMATICALLY"
+}

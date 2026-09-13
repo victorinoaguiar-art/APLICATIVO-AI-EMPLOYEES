@@ -1,0 +1,26 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.4_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "schema_name": "RevenueRecognitionScheduleV114",
+  "fields": {
+    "schedule_id": "string",
+    "contract_id": "string",
+    "subscription_id": "string",
+    "customer_id": "string",
+    "invoice_id": "string",
+    "service_start": "ISO-8601 Date",
+    "service_end": "ISO-8601 Date",
+    "billing_date": "ISO-8601 Date",
+    "billing_amount": "number (AOA)",
+    "tax_amount": "number (AOA)",
+    "recognisable_amount": "number (AOA Net Revenue)",
+    "recognised_to_date": "number (AOA)",
+    "remaining_unrecognised": "number (AOA)",
+    "recognition_method": "RATABLE_DAILY | RATABLE_MONTHLY | POINT_IN_TIME",
+    "recognition_frequency": "MONTHLY",
+    "journal_rule": "string",
+    "account_mapping_rule": "string",
+    "status": "ACTIVE | COMPLETED | CANCELLED | SUSPENDED",
+    "evidence_id": "string"
+  }
+}

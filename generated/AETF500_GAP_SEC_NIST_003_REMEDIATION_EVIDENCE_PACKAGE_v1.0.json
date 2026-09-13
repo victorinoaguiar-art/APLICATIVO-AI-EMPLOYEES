@@ -1,0 +1,50 @@
+{
+  "gap_id": "GAP-SEC-NIST-003",
+  "domain": "Cybersecurity",
+  "affected_employee_ids": [
+    "EMP-SEC-004"
+  ],
+  "affected_competency_ids": [
+    "COMP-SEC-003",
+    "COMP-SEC-008"
+  ],
+  "original_problem": "NIST SP 800-53 Rev. 5 SOC playbook outdated versioning",
+  "original_root_cause": "Legacy threat playbook rules",
+  "original_risk_level": "PKA_4_CRITICAL",
+  "source_before": "NIST SP 800-53 Rev. 4",
+  "source_after": "NIST SP 800-53 Rev. 5 & OWASP Security Playbook 2026",
+  "knowledge_pack_before": "PKP-CYBERSECURITY-v1.0",
+  "knowledge_pack_after": "PKP-CYBERSECURITY-v2.0_UPDATED",
+  "rule_before": "Manual incident routing without automated SOC isolation rules",
+  "rule_after": "Automated threat detection logging with mandatory human sign-off for firewall block actions",
+  "restriction_before": {
+    "type": "HUMAN_APPROVAL_REQUIRED",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A4"
+  },
+  "restriction_current": {
+    "type": "EXECUTE_WITH_HUMAN_APPROVAL",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A4"
+  },
+  "remediation_actions": [
+    "Attached NIST SP 800-53 Rev. 5",
+    "Updated PKP-CYBERSECURITY to v2.0",
+    "Enabled automated SOC logging while retaining A4 for active blocks"
+  ],
+  "professional_test_run_ids": [
+    "RUN-PROF-GAP-SEC-NIST-003"
+  ],
+  "professional_test_cases": 25,
+  "test_results": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "expert_review_required": false,
+  "external_validation_required": false,
+  "residual_risk": "LOW_CONTROLLED",
+  "recommended_autonomy_decision": "RESTRICTION_DOWNGRADE",
+  "decision_details": "Downgraded restriction to EXECUTE_WITH_HUMAN_APPROVAL (A4) with automated A5 threat logging",
+  "evidence_status": "VERIFIED_EFFECTIVE"
+}

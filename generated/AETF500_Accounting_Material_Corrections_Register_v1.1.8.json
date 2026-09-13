@@ -1,0 +1,65 @@
+{
+  "total_corrections": 12,
+  "corrections": [
+    {
+      "error_id": "VAT_V117_OFFICIAL_TREE_NAME_MISMATCH",
+      "severity": "MATERIAL",
+      "status": "RESOLVED_IN_V118"
+    },
+    {
+      "error_id": "VAT_3451_NOMENCLATURE_CORRECTION",
+      "severity": "MATERIAL",
+      "status": "RESOLVED_IN_V118"
+    },
+    {
+      "error_id": "VAT_3452_NOMENCLATURE_CORRECTION",
+      "severity": "MATERIAL",
+      "status": "RESOLVED_IN_V118"
+    },
+    {
+      "error_id": "VAT_3453_NOMENCLATURE_CORRECTION",
+      "severity": "MATERIAL",
+      "status": "RESOLVED_IN_V118"
+    },
+    {
+      "error_id": "VAT_3454_NOMENCLATURE_CORRECTION",
+      "severity": "MATERIAL",
+      "status": "RESOLVED_IN_V118"
+    },
+    {
+      "error_id": "VAT_3455_NOMENCLATURE_CORRECTION",
+      "severity": "MATERIAL",
+      "status": "RESOLVED_IN_V118"
+    },
+    {
+      "error_id": "VAT_3456_NOMENCLATURE_CORRECTION",
+      "severity": "MATERIAL",
+      "status": "RESOLVED_IN_V118"
+    },
+    {
+      "error_id": "VAT_3457_NOMENCLATURE_CORRECTION",
+      "severity": "MATERIAL",
+      "status": "RESOLVED_IN_V118"
+    },
+    {
+      "error_id": "VAT_3458_NOMENCLATURE_CORRECTION",
+      "severity": "MATERIAL",
+      "status": "RESOLVED_IN_V118"
+    },
+    {
+      "error_id": "VAT_3459_1_OFFICIAL_STATUS_CORRECTION",
+      "severity": "MATERIAL",
+      "status": "RESOLVED_IN_V118"
+    },
+    {
+      "error_id": "VAT_SAAS_OFFICIAL_NAME_DECOUPLING",
+      "severity": "MATERIAL",
+      "status": "RESOLVED_IN_V118"
+    },
+    {
+      "error_id": "VAT_SOURCE_LOCK_IMPLEMENTATION",
+      "severity": "MATERIAL",
+      "status": "RESOLVED_IN_V118"
+    }
+  ]
+}

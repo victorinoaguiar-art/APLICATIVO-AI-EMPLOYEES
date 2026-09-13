@@ -1,0 +1,289 @@
+{
+  "register_id": "AETF500_EMPLOYEE_AUTONOMY_RESTORATION_REGISTER_v1.0",
+  "as_of_date": "2026-09-12",
+  "employees_total": 500,
+  "employees_reviewed": 14,
+  "employees_autonomy_increased": 14,
+  "employees_autonomy_unchanged": 486,
+  "employees_autonomy_reduced": 0,
+  "restrictions_removed": 6,
+  "restrictions_downgraded": 7,
+  "restrictions_remaining_active": 40,
+  "employee_decisions": [
+    {
+      "gap_id": "GAP-HC-REG-001",
+      "domain": "Healthcare",
+      "affected_employee_ids": [
+        "EMP-HC-001",
+        "EMP-HC-002"
+      ],
+      "restriction_before": {
+        "type": "HUMAN_APPROVAL_REQUIRED",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A4"
+      },
+      "restriction_after": {
+        "type": "HUMAN_APPROVAL_REQUIRED",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A4"
+      },
+      "autonomy_before": "A4",
+      "autonomy_after": "A4",
+      "restriction_decision": "RESTRICTION_DOWNGRADE",
+      "residual_risk": "LOW_CONTROLLED"
+    },
+    {
+      "gap_id": "GAP-PA-PROC-002",
+      "domain": "Public Administration",
+      "affected_employee_ids": [
+        "EMP-PA-001",
+        "EMP-PA-003"
+      ],
+      "restriction_before": {
+        "type": "DRAFT_ONLY",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A2"
+      },
+      "restriction_after": {
+        "type": "RECOMMEND_ONLY",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A3"
+      },
+      "autonomy_before": "A2",
+      "autonomy_after": "A3",
+      "restriction_decision": "RESTRICTION_DOWNGRADE",
+      "residual_risk": "LOW"
+    },
+    {
+      "gap_id": "GAP-SEC-NIST-003",
+      "domain": "Cybersecurity",
+      "affected_employee_ids": [
+        "EMP-SEC-004"
+      ],
+      "restriction_before": {
+        "type": "HUMAN_APPROVAL_REQUIRED",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A4"
+      },
+      "restriction_after": {
+        "type": "EXECUTE_WITH_HUMAN_APPROVAL",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A4"
+      },
+      "autonomy_before": "A4",
+      "autonomy_after": "A4",
+      "restriction_decision": "RESTRICTION_DOWNGRADE",
+      "residual_risk": "LOW_CONTROLLED"
+    },
+    {
+      "gap_id": "GAP-ENG-OWASP-004",
+      "domain": "Software Engineering",
+      "affected_employee_ids": [
+        "EMP-ENG-012"
+      ],
+      "restriction_before": {
+        "type": "READ_ONLY",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A1"
+      },
+      "restriction_after": {
+        "type": "LIMITED_AUTONOMOUS_EXECUTION",
+        "status": "REMOVED",
+        "level": "A5"
+      },
+      "autonomy_before": "A1",
+      "autonomy_after": "A5",
+      "restriction_decision": "RESTRICTION_REMOVE",
+      "residual_risk": "VERY_LOW"
+    },
+    {
+      "gap_id": "GAP-LEG-CORP-005",
+      "domain": "Legal Counsel",
+      "affected_employee_ids": [
+        "EMP-LEG-005"
+      ],
+      "restriction_before": {
+        "type": "DRAFT_ONLY",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A2"
+      },
+      "restriction_after": {
+        "type": "RECOMMEND_ONLY",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A3"
+      },
+      "autonomy_before": "A2",
+      "autonomy_after": "A3",
+      "restriction_decision": "RESTRICTION_DOWNGRADE",
+      "residual_risk": "LOW"
+    },
+    {
+      "gap_id": "GAP-HR-LABOR-006",
+      "domain": "Human Resources",
+      "affected_employee_ids": [
+        "EMP-HR-003"
+      ],
+      "restriction_before": {
+        "type": "RECOMMEND_ONLY",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A3"
+      },
+      "restriction_after": {
+        "type": "LIMITED_AUTONOMOUS_EXECUTION",
+        "status": "REMOVED",
+        "level": "A5"
+      },
+      "autonomy_before": "A3",
+      "autonomy_after": "A5",
+      "restriction_decision": "RESTRICTION_REMOVE",
+      "residual_risk": "VERY_LOW"
+    },
+    {
+      "gap_id": "GAP-PROC-INCO-007",
+      "domain": "Procurement",
+      "affected_employee_ids": [
+        "EMP-PRC-002"
+      ],
+      "restriction_before": {
+        "type": "DRAFT_ONLY",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A2"
+      },
+      "restriction_after": {
+        "type": "LIMITED_AUTONOMOUS_EXECUTION",
+        "status": "REMOVED",
+        "level": "A5"
+      },
+      "autonomy_before": "A2",
+      "autonomy_after": "A5",
+      "restriction_decision": "RESTRICTION_REMOVE",
+      "residual_risk": "VERY_LOW"
+    },
+    {
+      "gap_id": "GAP-PMO-AGILE-008",
+      "domain": "Project Management",
+      "affected_employee_ids": [
+        "EMP-PMO-001"
+      ],
+      "restriction_before": {
+        "type": "RECOMMEND_ONLY",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A3"
+      },
+      "restriction_after": {
+        "type": "FULL_AUTHORIZED_AUTONOMY_WITHIN_SCOPE",
+        "status": "REMOVED",
+        "level": "A6"
+      },
+      "autonomy_before": "A3",
+      "autonomy_after": "A6",
+      "restriction_decision": "RESTRICTION_REMOVE",
+      "residual_risk": "ZERO"
+    },
+    {
+      "gap_id": "GAP-DATA-PRIV-009",
+      "domain": "Data Science",
+      "affected_employee_ids": [
+        "EMP-DAT-004"
+      ],
+      "restriction_before": {
+        "type": "HUMAN_APPROVAL_REQUIRED",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A4"
+      },
+      "restriction_after": {
+        "type": "RECOMMEND_ONLY",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A3"
+      },
+      "autonomy_before": "A4",
+      "autonomy_after": "A3",
+      "restriction_decision": "RESTRICTION_DOWNGRADE",
+      "residual_risk": "LOW"
+    },
+    {
+      "gap_id": "GAP-OPS-SLA-010",
+      "domain": "Customer Operations",
+      "affected_employee_ids": [
+        "EMP-OPS-006"
+      ],
+      "restriction_before": {
+        "type": "RECOMMEND_ONLY",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A3"
+      },
+      "restriction_after": {
+        "type": "FULL_AUTHORIZED_AUTONOMY_WITHIN_SCOPE",
+        "status": "REMOVED",
+        "level": "A6"
+      },
+      "autonomy_before": "A3",
+      "autonomy_after": "A6",
+      "restriction_decision": "RESTRICTION_REMOVE",
+      "residual_risk": "ZERO"
+    },
+    {
+      "gap_id": "GAP-SALES-COMM-011",
+      "domain": "Sales",
+      "affected_employee_ids": [
+        "EMP-SLS-008"
+      ],
+      "restriction_before": {
+        "type": "HUMAN_APPROVAL_REQUIRED",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A4"
+      },
+      "restriction_after": {
+        "type": "RECOMMEND_ONLY",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A3"
+      },
+      "autonomy_before": "A4",
+      "autonomy_after": "A3",
+      "restriction_decision": "RESTRICTION_DOWNGRADE",
+      "residual_risk": "LOW"
+    },
+    {
+      "gap_id": "GAP-MKT-CONSUMER-012",
+      "domain": "Marketing",
+      "affected_employee_ids": [
+        "EMP-MKT-003"
+      ],
+      "restriction_before": {
+        "type": "DRAFT_ONLY",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A2"
+      },
+      "restriction_after": {
+        "type": "LIMITED_AUTONOMOUS_EXECUTION",
+        "status": "REMOVED",
+        "level": "A5"
+      },
+      "autonomy_before": "A2",
+      "autonomy_after": "A5",
+      "restriction_decision": "RESTRICTION_REMOVE",
+      "residual_risk": "VERY_LOW"
+    },
+    {
+      "gap_id": "GAP-CS-SUPPORT-013",
+      "domain": "Customer Success",
+      "affected_employee_ids": [
+        "EMP-CS-005"
+      ],
+      "restriction_before": {
+        "type": "RECOMMEND_ONLY",
+        "status": "ACTIVE_ENFORCED",
+        "level": "A3"
+      },
+      "restriction_after": {
+        "type": "FULL_AUTHORIZED_AUTONOMY_WITHIN_SCOPE",
+        "status": "REMOVED",
+        "level": "A6"
+      },
+      "autonomy_before": "A3",
+      "autonomy_after": "A6",
+      "restriction_decision": "RESTRICTION_REMOVE",
+      "residual_risk": "ZERO"
+    }
+  ]
+}

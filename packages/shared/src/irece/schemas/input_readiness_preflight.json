@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InputReadinessPreflightSchema",
+  "type": "object",
+  "properties": {
+    "employee_id": { "type": "string" },
+    "task_type": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": [
+        "READY",
+        "READY_WITH_WARNINGS",
+        "NEEDS_DATA",
+        "NEEDS_CLARIFICATION",
+        "DATA_CONFLICT",
+        "STALE_DATA",
+        "INVALID_DATA",
+        "UNAUTHORIZED_SOURCE",
+        "BLOCKED"
+      ]
+    },
+    "execution_permitted": { "type": "boolean" }
+  },
+  "required": ["employee_id", "task_type", "status", "execution_permitted"]
+}

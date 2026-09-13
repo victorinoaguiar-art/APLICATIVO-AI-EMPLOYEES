@@ -1,0 +1,16 @@
+{
+  "package_id": "AETF500_PHYSICAL_EVIDENCE_ARTIFACT_PACKAGE_v1.0",
+  "created_at": "2026-09-13T15:19:10.959Z",
+  "artifacts_delivered": 3,
+  "artifact_ids": [
+    "SRC-ACC-PGC-001",
+    "SRC-VAT-AO-001",
+    "IMP-PGC-001"
+  ],
+  "manifest_included": true,
+  "verification_instructions_included": true,
+  "package_file_size_bytes": 6395982,
+  "package_sha256": "893e9b40012213a058a9dff32eca5090f74de75cf79f8dbdca3139e07927fb83",
+  "package_sha512": "767a5b238e30c334cc68288322a4549fac42a4b27463604d160c29f7d50d086e6a602225182be265ac4848798ed2507660c9416af5305e71c8b816e8fd9e9070",
+  "delivery_status": "PHYSICAL_EVIDENCE_COMPLETE_PENDING_THIRD_PARTY_VERIFICATION"
+}

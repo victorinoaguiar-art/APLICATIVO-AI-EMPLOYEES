@@ -1,0 +1,90 @@
+{
+  "legal_framework": "Decreto Presidencial n.º 180/19, Artigo 22.º",
+  "total_statutory_subaccounts_level4": 25,
+  "families": [
+    {
+      "family": "34.5.1",
+      "name": "IVA - Suportado",
+      "subaccounts": [
+        "34.5.1.1",
+        "34.5.1.2",
+        "34.5.1.3"
+      ]
+    },
+    {
+      "family": "34.5.2",
+      "name": "IVA - Dedutível",
+      "subaccounts": [
+        "34.5.2.1",
+        "34.5.2.2",
+        "34.5.2.3"
+      ]
+    },
+    {
+      "family": "34.5.3",
+      "name": "IVA - Liquidado",
+      "subaccounts": [
+        "34.5.3.1",
+        "34.5.3.2",
+        "34.5.3.3",
+        "34.5.3.4"
+      ]
+    },
+    {
+      "family": "34.5.4",
+      "name": "IVA - Regularizações",
+      "subaccounts": [
+        "34.5.4.1",
+        "34.5.4.2",
+        "34.5.4.3",
+        "34.5.4.4"
+      ]
+    },
+    {
+      "family": "34.5.5",
+      "name": "IVA - Apuramento",
+      "subaccounts": [
+        "34.5.5.1",
+        "34.5.5.2"
+      ]
+    },
+    {
+      "family": "34.5.6",
+      "name": "IVA - A pagar",
+      "subaccounts": [
+        "34.5.6.1",
+        "34.5.6.2",
+        "34.5.6.3"
+      ]
+    },
+    {
+      "family": "34.5.7",
+      "name": "IVA - A recuperar",
+      "subaccounts": [
+        "34.5.7.1",
+        "34.5.7.2"
+      ]
+    },
+    {
+      "family": "34.5.8",
+      "name": "IVA - Reembolsos pedidos",
+      "subaccounts": [
+        "34.5.8.1",
+        "34.5.8.2",
+        "34.5.8.3",
+        "34.5.8.4"
+      ]
+    },
+    {
+      "family": "34.5.9",
+      "name": "IVA - Liquidações oficiosas",
+      "subaccounts": []
+    }
+  ],
+  "invalidated_subaccounts": [
+    {
+      "code": "34.5.9.1",
+      "reason": "Artigo 22.º do Decreto Presidencial n.º 180/19 não define subcontas de 4.º grau para a família 34.5.9."
+    }
+  ]
+}

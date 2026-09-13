@@ -1,0 +1,32 @@
+{
+  "program_id": "AETF500_COUNTRY_MATURITY_EMPLOYEE_JURISDICTION_CERTIFICATION_SEMANTIC_CLOSURE_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "baseline_mutation_allowed": false,
+  "execution_date": "2026-09-13T15:19:10.991Z",
+  "country_ao_maturity_level": "L6",
+  "country_ao_operational_status": "PRODUCTION_CERTIFIED",
+  "country_pt_maturity_level": "L4",
+  "country_pt_operational_status": "CERTIFIED_WITH_SUPERVISION",
+  "country_mz_maturity_level": "L3",
+  "country_mz_operational_status": "CERTIFIED_WITH_SUPERVISION",
+  "country_br_maturity_level": "L1",
+  "country_br_operational_status": "KNOWLEDGE_COLLECTION",
+  "country_cv_maturity_level": "L2",
+  "country_cv_operational_status": "KNOWLEDGE_VERIFICATION",
+  "country_st_maturity_level": "L2",
+  "country_st_operational_status": "KNOWLEDGE_VERIFICATION",
+  "employee_country_support_records": 3000,
+  "employee_country_status_distribution_sum": 3000,
+  "employee_jurisdiction_positive_certification_records": 1500,
+  "positive_certification_count_recomputed_from_individual_records": true,
+  "country_status_auto_propagation_used": false,
+  "double_counted_employee_country_records": 0,
+  "subgates": {
+    "country_maturity_single_value_gate": "PASS",
+    "country_operational_status_separation_gate": "PASS",
+    "employee_country_certification_recomputation_gate": "PASS"
+  },
+  "country_certification_semantic_gate_01": "PASS",
+  "material_country_certification_semantic_gaps": 0,
+  "final_country_certification_semantic_status": "PASS"
+}

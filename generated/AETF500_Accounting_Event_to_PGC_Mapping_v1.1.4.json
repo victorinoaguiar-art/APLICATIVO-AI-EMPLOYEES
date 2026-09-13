@@ -1,0 +1,56 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.4_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "mappings": [
+    {
+      "event_type": "SERVICE_INVOICE_ISSUED",
+      "market": "DOMESTIC",
+      "debit_account": "31.1.1",
+      "credit_account_revenue": "62.1.1",
+      "credit_account_vat": "34.5.3",
+      "vat_rate_pct": 14.0,
+      "legal_basis": "Decreto n.º 82/01 (PGC Angola) e Decreto Presidencial n.º 180/19 (IVA)",
+      "status": "REMEDIATED_VERIFIED"
+    },
+    {
+      "event_type": "SERVICE_INVOICE_ISSUED",
+      "market": "FOREIGN",
+      "debit_account": "31.1.2",
+      "credit_account_revenue": "62.1.2",
+      "credit_account_vat": null,
+      "vat_rate_pct": 0.0,
+      "legal_basis": "Decreto n.º 82/01 (PGC Angola) - Isenção de IVA para Exportação de Serviços",
+      "status": "REMEDIATED_VERIFIED"
+    },
+    {
+      "event_type": "CUSTOMER_PAYMENT_RECEIVED",
+      "payment_method": "BANK_TRANSFER",
+      "debit_account": "43.1.1",
+      "credit_account": "31.1.1",
+      "legal_basis": "Decreto n.º 82/01 (Liquidação Financeira em Depósito à Ordem)",
+      "status": "VERIFIED"
+    },
+    {
+      "event_type": "CUSTOMER_PAYMENT_RECEIVED",
+      "payment_method": "PAYMENT_PROCESSOR",
+      "debit_account": "43.2.1",
+      "credit_account": "31.1.1",
+      "legal_basis": "Decreto n.º 82/01 (Processador de Pagamentos Saldo de Apuramento)",
+      "status": "VERIFIED"
+    },
+    {
+      "event_type": "CUSTOMER_ADVANCE_RECEIVED",
+      "debit_account": "43.1.1",
+      "credit_account": "49.1",
+      "legal_basis": "Decreto n.º 82/01 (Adiantamentos de Clientes e Proveitos a Diferir)",
+      "status": "VERIFIED"
+    },
+    {
+      "event_type": "FX_GAIN_REALIZED",
+      "debit_account": "31.1.2",
+      "credit_account": "66.1",
+      "legal_basis": "Decreto n.º 82/01 (Proveitos Financeiros - Ganhos Cambiais)",
+      "status": "VERIFIED"
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "addendum_id": "AETF500_v1.1.8_EVIDENCE_CLOSURE_ADDENDUM_2",
+  "created_at": "2026-09-13T15:19:10.699Z",
+  "primary_baseline_artifacts_total": 11,
+  "evidence_metadata_files_total": 4,
+  "integrity_metadata_files_total": 2,
+  "all_generated_files_total": 17,
+  "self_referential_hashes_found": 0,
+  "orphan_artifacts_found": 0,
+  "missing_artifacts_found": 0,
+  "evidence_layering_status": "ACYCLIC_DAG_VERIFIED",
+  "primary_baseline_artifacts": [
+    {
+      "filename": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8.md",
+      "category": "PRIMARY_BASELINE_ARTIFACT",
+      "purpose": "Baseline Functional Specification"
+    },
+    {
+      "filename": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8.json",
+      "category": "PRIMARY_BASELINE_ARTIFACT",
+      "purpose": "Baseline Functional Specification"
+    },
+    {
+      "filename": "AETF500_PGC_Master_Account_Registry_v1.1.8.json",
+      "category": "PRIMARY_BASELINE_ARTIFACT",
+      "purpose": "Baseline Functional Specification"
+    },
+    {
+      "filename": "AETF500_VAT_Official_Subaccount_Registry_v1.1.8.json",
+      "category": "PRIMARY_BASELINE_ARTIFACT",
+      "purpose": "Baseline Functional Specification"
+    },
+    {
+      "filename": "AETF500_VAT_Accounting_Rules_v1.1.8.json",
+      "category": "PRIMARY_BASELINE_ARTIFACT",
+      "purpose": "Baseline Functional Specification"
+    },
+    {
+      "filename": "AETF500_Tax_Rule_Version_Registry_v1.1.8.json",
+      "category": "PRIMARY_BASELINE_ARTIFACT",
+      "purpose": "Baseline Functional Specification"
+    },
+    {
+      "filename": "AETF500_Accounting_Event_to_PGC_Mapping_v1.1.8.json",
+      "category": "PRIMARY_BASELINE_ARTIFACT",
+      "purpose": "Baseline Functional Specification"
+    },
+    {
+      "filename": "AETF500_External_Validation_Register_v1.1.8.json",
+      "category": "PRIMARY_BASELINE_ARTIFACT",
+      "purpose": "Baseline Functional Specification"
+    },
+    {
+      "filename": "AETF500_Accounting_Test_Run_Manifest_v1.1.8.json",
+      "category": "PRIMARY_BASELINE_ARTIFACT",
+      "purpose": "Baseline Functional Specification"
+    },
+    {
+      "filename": "AETF500_Accounting_Evidence_Registry_v1.1.8.json",
+      "category": "PRIMARY_BASELINE_ARTIFACT",
+      "purpose": "Baseline Functional Specification"
+    },
+    {
+      "filename": "AETF500_Accounting_Material_Corrections_Register_v1.1.8.json",
+      "category": "PRIMARY_BASELINE_ARTIFACT",
+      "purpose": "Baseline Functional Specification"
+    }
+  ],
+  "evidence_metadata": [
+    {
+      "filename": "AETF500_Baseline_Artifact_Inventory_v1.1.8.json",
+      "category": "EVIDENCE_METADATA",
+      "purpose": "Evidence Inventory & Proof Verification"
+    },
+    {
+      "filename": "AETF500_Final_Evidence_Closure_Register_v1.1.8.json",
+      "category": "EVIDENCE_METADATA",
+      "purpose": "Evidence Inventory & Proof Verification"
+    },
+    {
+      "filename": "AETF500_Final_Evidence_Closure_Gate_v1.1.8.json",
+      "category": "EVIDENCE_METADATA",
+      "purpose": "Evidence Inventory & Proof Verification"
+    },
+    {
+      "filename": "AETF500_Final_Evidence_Closure_Addendum_v1.1.8.md",
+      "category": "EVIDENCE_METADATA",
+      "purpose": "Evidence Inventory & Proof Verification"
+    }
+  ],
+  "integrity_metadata": [
+    {
+      "filename": "AETF500_Baseline_Hash_Manifest_v1.1.8.json",
+      "category": "INTEGRITY_METADATA",
+      "purpose": "Cryptographic SHA-256 Manifest"
+    },
+    {
+      "filename": "AETF500_Baseline_Hash_Manifest_v1.1.8.json.digest",
+      "category": "INTEGRITY_METADATA",
+      "purpose": "Manifest Sidecar Textual Digest"
+    }
+  ]
+}

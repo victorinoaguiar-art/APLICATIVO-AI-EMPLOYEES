@@ -1,0 +1,25 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.4_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "legal_instrument": "Decreto Presidencial n.º 180/19, de 24 de Maio",
+  "jurisdiction": "AO",
+  "standard_rate_pct": 14.0,
+  "subaccounts_345": [
+    { "code": "34.5.1", "name": "IVA Suportado", "state": "VAT_SUPPORTED", "normal_balance": "DEBIT" },
+    { "code": "34.5.2", "name": "IVA Dedutível", "state": "VAT_DEDUCTIBLE", "normal_balance": "DEBIT" },
+    { "code": "34.5.3", "name": "IVA Liquidado", "state": "VAT_LIQUIDATED", "normal_balance": "CREDIT" },
+    { "code": "34.5.4", "name": "IVA Regularizações", "state": "VAT_REGULARIZATION", "normal_balance": "DEBIT" },
+    { "code": "34.5.5", "name": "IVA Apuramento", "state": "VAT_SETTLEMENT", "normal_balance": "CREDIT" },
+    { "code": "34.5.6", "name": "IVA a Pagar", "state": "VAT_PAYABLE", "normal_balance": "CREDIT" },
+    { "code": "34.5.7", "name": "IVA a Recuperar", "state": "VAT_RECOVERABLE", "normal_balance": "DEBIT" },
+    { "code": "34.5.8", "name": "IVA Reembolsos Pedidos", "state": "VAT_REFUND_REQUESTED", "normal_balance": "DEBIT" },
+    { "code": "34.5.9", "name": "IVA Liquidações Oficiosas", "state": "VAT_OFFICIAL_ASSESSMENT", "normal_balance": "CREDIT" }
+  ],
+  "vat_lifecycle": [
+    "Billing Event -> Credit 34.5.3 (IVA Liquidado)",
+    "Supplier Purchase -> Debit 34.5.1 (IVA Suportado) -> Transfer to 34.5.2 (IVA Dedutível)",
+    "Monthly Period Close -> Apuramento em 34.5.5 (Transferência de 34.5.3 e 34.5.2)",
+    "If Net Credit -> Transfer 34.5.5 to 34.5.6 (IVA a Pagar) -> Payment to AGT via 43.1.1",
+    "If Net Debit -> Transfer 34.5.5 to 34.5.7 (IVA a Recuperar) or 34.5.8 (Reembolsos Pedidos)"
+  ]
+}

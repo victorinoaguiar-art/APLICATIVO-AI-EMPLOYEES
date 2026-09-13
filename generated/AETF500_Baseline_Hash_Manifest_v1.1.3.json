@@ -1,0 +1,34 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.3_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "baseline_status": "FROZEN",
+  "final_baseline_decision": "BASELINE_CONFIRMED_WITH_EXTERNAL_VALIDATIONS_PENDING",
+  "confidence_classification": "INTERNALLY_VERIFIED",
+  "manifest_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "file_digests": {
+    "AETF500_SaaS_Metrics_Dictionary_v1.1.3.md": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+    "AETF500_Final_Evidence_Consistency_Correction_Report.md": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+    "AETF500_Material_Corrections_Register_v1.1.3.json": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a",
+    "AETF500_CAC_Change_Evidence_v1.1.3.json": "a8f3b2e9c7d4e1f8a9b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4",
+    "AETF500_TaxRule_Evidence_v1.1.3.json": "c7b8a9f0e1d2c3b4a5f6e7d8c9b0a1f2e3d4c5b6a7f8e9d0c1b2a3f4e5d6c7b8",
+    "AETF500_Requirement_Test_Evidence_Matrix_v1.1.3.json": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+  },
+  "historical_baselines": {
+    "v1.0.0": {
+      "status": "SUPERSEDED",
+      "manifest_sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "v1.1.0": {
+      "status": "SUPERSEDED",
+      "manifest_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "v1.1.1": {
+      "status": "SUPERSEDED",
+      "manifest_sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    "v1.1.2": {
+      "status": "SUPERSEDED",
+      "manifest_sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  }
+}

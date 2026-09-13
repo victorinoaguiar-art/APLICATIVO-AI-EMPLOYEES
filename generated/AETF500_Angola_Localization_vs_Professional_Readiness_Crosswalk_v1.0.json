@@ -1,0 +1,54 @@
+{
+  "program_id": "AETF500_ANGOLA_SOURCE_HASH_LEGAL_EVIDENCE_TEST_CARDINALITY_FINAL_CORRECTION_v1.0",
+  "dimensions_explicitly_separated": true,
+  "angola_localization_scope": {
+    "r6_employees": 442,
+    "r5_employees": 18,
+    "r4_employees": 40,
+    "restricted_employees_recomputed": 58,
+    "r6_percentage": "88.4%",
+    "r5_percentage": "3.6%",
+    "r4_percentage": "8.0%"
+  },
+  "professional_knowledge_readiness_scope": {
+    "ready_employees": 420,
+    "ready_with_restrictions_employees": 80,
+    "ready_percentage": "84.0%",
+    "restrictions_percentage": "16.0%"
+  },
+  "scope_reconciliation_note": "ANGOLA_LOCALIZATION_CERTIFICATION (442/58) e PROFESSIONAL_KNOWLEDGE_READINESS (420/80) medem dimensões distintas. A readiness profissional global de 420/80 permanece congelada como baseline independente sem sobreposição.",
+  "crosswalk_sample": [
+    {
+      "employee_id": "EMP-001",
+      "angola_localization_level": "R6_READY_FOR_FULL_AUTONOMOUS_PRODUCTION",
+      "angola_localization_restrictions": [],
+      "professional_knowledge_status": "READY",
+      "professional_knowledge_restrictions": [],
+      "status_dimensions_consistent": true
+    },
+    {
+      "employee_id": "EMP-037",
+      "angola_localization_level": "R5_READY_FOR_CONTROLLED_EXECUTION",
+      "angola_localization_restrictions": [
+        "EXPERT_REVIEW_REQUIRED_HEALTHCARE"
+      ],
+      "professional_knowledge_status": "READY_WITH_RESTRICTIONS",
+      "professional_knowledge_restrictions": [
+        "EXPERT_REVIEW_REQUIRED_HEALTHCARE"
+      ],
+      "status_dimensions_consistent": true
+    },
+    {
+      "employee_id": "EMP-087",
+      "angola_localization_level": "R4_PARTIALLY_READY",
+      "angola_localization_restrictions": [
+        "PARTIAL_REGULATORY_SUPERVISION"
+      ],
+      "professional_knowledge_status": "READY_WITH_RESTRICTIONS",
+      "professional_knowledge_restrictions": [
+        "PARTIAL_REGULATORY_SUPERVISION"
+      ],
+      "status_dimensions_consistent": true
+    }
+  ]
+}

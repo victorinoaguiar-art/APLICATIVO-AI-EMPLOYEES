@@ -1,0 +1,11 @@
+{
+  "program_id": "AETF500_MASS_EXCEPTION_LEGITIMACY_EXTERNAL_EVIDENCE_AUTHENTICITY_MICRO_GATE_v1.0",
+  "are_500_pt_exceptions_materially_identical": true,
+  "are_500_mz_exceptions_materially_identical": true,
+  "do_they_rely_on_one_common_authorization": true,
+  "does_authorization_cover_all_500_employees": true,
+  "is_this_actually_a_pilot_programme_policy": true,
+  "would_one_country_level_policy_be_more_accurate": true,
+  "would_preserving_500_individual_references_still_be_useful_for_audit": true,
+  "summary_recommendation": "The 500 PT exceptions and 500 MZ exceptions constitute a legitimate structural pilot policy. Individual employee records should be preserved for auditability while formalizing country-level pilot framework policies in future country pack maturity updates."
+}

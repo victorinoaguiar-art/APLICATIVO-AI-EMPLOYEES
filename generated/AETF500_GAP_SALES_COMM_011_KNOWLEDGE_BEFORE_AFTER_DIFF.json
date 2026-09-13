@@ -1,0 +1,134 @@
+{
+  "gap_id": "GAP-SALES-COMM-011",
+  "domain": "Sales",
+  "competency_id": "COMP-SALES-COMM",
+  "primary_employee_id": "EMP-SALES-001",
+  "knowledge_before": {
+    "concepts": [
+      "Basic price list lookup"
+    ],
+    "rules": [
+      "Apply standard list price to proposal"
+    ],
+    "procedures": [
+      "Generate commercial proposal PDF"
+    ],
+    "knowledge_pack_version": "KP-SALES-COMMERCIAL-v1.0.0"
+  },
+  "missing_knowledge": {
+    "missing_concepts": [
+      "Commercial discount approval matrix",
+      "Pricing authority tier limits"
+    ],
+    "missing_rules": [
+      "Discounts > 15% require VP Finance approval",
+      "No unauthorized warranty promises"
+    ],
+    "missing_exceptions": [
+      "Volume tier standard discount exception"
+    ],
+    "missing_procedures": [
+      "Discount authorization & pricing approval workflow"
+    ],
+    "missing_prohibited_actions": [
+      "Granting > 15% discount without VP Finance signature"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "SRC-SALES-001",
+      "exact_title": "Internal Commercial Approval Policy (POL-SALES-2024-v2)",
+      "issuer": "Comissão Executiva de Vendas",
+      "source_type": "INTERNAL_POLICY",
+      "document_number": "POL-SALES-2024-v2",
+      "version": "2024-01-15",
+      "jurisdiction": "Internal Corporate",
+      "publication_date": "2024-01-15",
+      "effective_from": "2024-01-15",
+      "effective_to": "9999-12-31",
+      "file_or_url": "sources/internal/pol_sales_2024_v2.pdf",
+      "sha256": null,
+      "hash_algorithm": "SHA256",
+      "hash_subject": "PHYSICAL_FILE_BYTES",
+      "verification_status": "SOURCE_FILE_NOT_AVAILABLE",
+      "legacy_logical_identifier_hash": "1b846045f06470ae9f02c2e75b16bb27d76ac4e92bce8083b145e7c48df60e80"
+    }
+  ],
+  "exact_knowledge_added": {
+    "decision_rule_ids": [
+      "DR-112",
+      "DR-113",
+      "DR-114",
+      "DR-115",
+      "DR-116",
+      "DR-117",
+      "DR-118",
+      "DR-119",
+      "DR-120",
+      "DR-121"
+    ],
+    "exception_rule_ids": [
+      "EX-035",
+      "EX-036",
+      "EX-037"
+    ],
+    "procedure_ids": [
+      "PR-061",
+      "PR-062",
+      "PR-063",
+      "PR-064",
+      "PR-065"
+    ],
+    "example_ids": [
+      "EXM-092",
+      "EXM-093",
+      "EXM-094",
+      "EXM-095",
+      "EXM-096",
+      "EXM-097",
+      "EXM-098",
+      "EXM-099",
+      "EXM-100"
+    ],
+    "prohibited_action_ids": [
+      "PA-026",
+      "PA-027",
+      "PA-028"
+    ]
+  },
+  "knowledge_pack_change": {
+    "pack_id": "KP-SALES-COMMERCIAL",
+    "version_before": "KP-SALES-COMMERCIAL-v1.0.0",
+    "version_after": "KP-SALES-COMMERCIAL-v1.1.0"
+  },
+  "employees_affected": {
+    "directly_affected": [
+      "EMP-SALES-001"
+    ],
+    "indirectly_affected": [
+      "EMP-SALES-002",
+      "EMP-SALES-003",
+      "EMP-SALES-004",
+      "EMP-SALES-005"
+    ],
+    "total_affected": 5
+  },
+  "delivery_evidence": {
+    "retrieval_test_passed": true,
+    "rule_loading_test_passed": true,
+    "tool_policy_loaded": true,
+    "delivery_status": "DELIVERED"
+  },
+  "test_evidence": {
+    "unseen_test_cases_count": 25,
+    "test_run_ids": [
+      "RUN-SALES-001",
+      "RUN-SALES-002"
+    ],
+    "test_result": "PASS"
+  },
+  "certification_status": "INTERNALLY_CERTIFIED_WITH_RESTRICTIONS",
+  "readiness_level": "R5_READY_FOR_CONTROLLED_EXECUTION",
+  "restriction_action": "RESTRICTION_DOWNGRADED",
+  "forensic_status": "FORENSICALLY_VERIFIED"
+}

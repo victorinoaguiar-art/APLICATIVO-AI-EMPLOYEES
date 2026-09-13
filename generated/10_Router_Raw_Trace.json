@@ -1,0 +1,33 @@
+{
+  "trace_id": "TRACE_ROUTER_ZERO_FALLBACK_20260913",
+  "policy": "MINSA_ZERO_UNAUTHORIZED_FILESYSTEM_FALLBACK",
+  "evaluated_paths": [
+    {
+      "path": "C:\\",
+      "lookup_requested": false,
+      "policy_decision": "DENIED",
+      "lookup_executed": false,
+      "lookup_blocked": true,
+      "reason": "UNAUTHORIZED_LOCAL_DISK"
+    },
+    {
+      "path": "OneDrive",
+      "lookup_requested": false,
+      "policy_decision": "DENIED",
+      "lookup_executed": false,
+      "lookup_blocked": true,
+      "reason": "UNAUTHORIZED_CLOUD_STORAGE"
+    },
+    {
+      "path": "Google Drive",
+      "lookup_requested": false,
+      "policy_decision": "DENIED",
+      "lookup_executed": false,
+      "lookup_blocked": true,
+      "reason": "UNAUTHORIZED_CLOUD_STORAGE"
+    }
+  ],
+  "regulatory_source_used": "REGULATORY_KNOWLEDGE_REGISTRY",
+  "unauthorized_fallback_count": 0,
+  "status": "PASS"
+}

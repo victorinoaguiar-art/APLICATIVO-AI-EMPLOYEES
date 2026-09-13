@@ -1,0 +1,12 @@
+{
+  "matrix_version": "1.1.6",
+  "evidence_layers": [
+    { "layer": "COMMERCIAL_CONTRACT", "status": "VERIFIED" },
+    { "layer": "INVOICE_BILLING", "status": "VERIFIED" },
+    { "layer": "PGC_JOURNAL_POSTING", "status": "VERIFIED" },
+    { "layer": "BANK_SETTLEMENT", "status": "VERIFIED" },
+    { "layer": "TAX_DETERMINATION_VAT_ISR", "status": "VERIFIED" }
+  ],
+  "coherence_score_pct": 100.0,
+  "status": "EVIDENCE_COHERENT"
+}

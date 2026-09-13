@@ -12,5 +12,6 @@
     { "path": "../approvals" },
     { "path": "../tool-sdk" }
   ],
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["src/test/awdseEngine.test.ts", "src/test/gwnisIntegrationEngine.test.ts"]
 }

@@ -159,8 +159,8 @@ export class PEIPIntegrationEngine {
 
     const ledger1: CanonicalLedgerEntry = {
       entryId: 'LGD_2026_901',
-      accountNumber: '71.1.1',
-      accountName: 'Vendas de Produtos e Serviços — Mercado Nacional',
+      accountNumber: '62.1.1',
+      accountName: 'Prestações de Serviço SaaS B2B — Mercado Nacional',
       debitAoa: 0,
       creditAoa: 45000000,
       entryDate: '2026-08-15',

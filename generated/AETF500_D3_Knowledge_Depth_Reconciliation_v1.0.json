@@ -1,0 +1,12 @@
+{
+  "program_id": "AETF500_PROFESSIONAL_KNOWLEDGE_CARDINALITY_LINEAGE_READINESS_SEMANTICS_RECONCILIATION_MICRO_PATCH_v1.0",
+  "reconciliation_id": "R-03",
+  "d3_items_total": 17,
+  "d3_optional_non_material": 10,
+  "d3_acceptable_requirement_is_d3": 0,
+  "d3_controlled_by_restriction": 7,
+  "d3_remediation_required": 0,
+  "d3_data_errors": 0,
+  "uncontrolled_d3_material_items": 0,
+  "reconciliation_status": "FULLY_CLASSIFIED"
+}

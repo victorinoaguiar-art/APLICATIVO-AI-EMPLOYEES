@@ -1,0 +1,11 @@
+{
+  "manifest_id": "AETF500_SRC_HC_001_MANIFEST_AFTER_v1.0",
+  "source_id": "SRC-HC-001",
+  "physical_path": "MINSA/novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf",
+  "file_exists": true,
+  "size_bytes": 2145588,
+  "sha256": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+  "sha512": "7ca4f6bc0e26c36b532931b8f70b80dab409ed951b9b6ab8bc68aa2d3ddc99b88d35b1483d48781f3b6190f8520765569ee17e39fb0119c074d1480889d85144",
+  "status": "VERIFIED_PHYSICAL_BYTE_HASH_MATCH",
+  "verification_method": "RAW_PHYSICAL_BYTE_AUDIT_MINSA_PDF"
+}

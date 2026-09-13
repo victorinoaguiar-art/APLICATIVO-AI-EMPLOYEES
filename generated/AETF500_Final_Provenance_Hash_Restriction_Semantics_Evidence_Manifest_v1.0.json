@@ -1,0 +1,13 @@
+{
+  "artifact_id": "AETF500_FINAL_PROVENANCE_HASH_RESTRICTION_SEMANTICS_EVIDENCE_MANIFEST_v1.0",
+  "artifact_type": "EVIDENCE_MANIFEST",
+  "program_id": "AETF500_FINAL_PROVENANCE_HASH_RESTRICTION_SEMANTICS_CLOSURE_PATCH_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "baseline_mutation_allowed": false,
+  "execution_timestamp": "2026-09-13T15:19:10.953Z",
+  "quality_micro_gates": 2,
+  "quality_micro_gates_passed": 2,
+  "material_provenance_gaps": 0,
+  "material_restriction_semantic_gaps": 0,
+  "final_patch_status": "PASS"
+}

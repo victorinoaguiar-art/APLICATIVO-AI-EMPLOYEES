@@ -1,0 +1,47 @@
+[
+  {
+    "outcome_id": "out-mkt-campaign",
+    "name": "Campanha de Marketing Digital Multicanal",
+    "description": "Lançamento completo de campanha de comunicação digital com calendário de conteúdos, artes e veiculação em redes sociais.",
+    "commercial_area_code": "A08",
+    "solution_pack_ids": ["pack-mkt-digital"],
+    "primary_rolepack_id": 25,
+    "primary_rolepack_title": "Marketing Planner Employee",
+    "required_inputs": ["Manual de Identidade Visual", "Público-Alvo Persona", "Orçamento de Mídia"],
+    "recommended_inputs": ["Histórico de Campanhas Anteriores"],
+    "expected_deliverables": ["Calendário Editorial 30 Dias", "Conjunto de Anúncios Prontos", "Relatório de Desempenho"],
+    "success_metrics": ["Cost per Lead (CPL)", "Engagement Rate > 4.5%", "ROAS > 3.0x"],
+    "commercial_tags": ["marketing", "campanhas", "redes sociais", "vendas"],
+    "status": "ACTIVE"
+  },
+  {
+    "outcome_id": "out-fin-cashflow",
+    "name": "Projeção de Fluxo de Caixa a 13 Semanas",
+    "description": "Demonstração preditiva de tesouraria de curto e médio prazo integrada com receitas e pagamentos previstos.",
+    "commercial_area_code": "A03",
+    "solution_pack_ids": ["pack-fin-treasury"],
+    "primary_rolepack_id": 41,
+    "primary_rolepack_title": "Bank Reconciliation Employee",
+    "required_inputs": ["Extracto Bancário PDF", "Razão da Conta 43 ERP"],
+    "recommended_inputs": ["Plano de Orçamento Anual"],
+    "expected_deliverables": ["Mapa de Fluxo de Caixa Diário", "Alerta de Rutura de Liquidez", "Reconciliação Bancária"],
+    "success_metrics": ["Accuracy de Previsão > 95%", "Zero Ruturas de Caixa"],
+    "commercial_tags": ["finanças", "tesouraria", "bancos", "caixa"],
+    "status": "ACTIVE"
+  },
+  {
+    "outcome_id": "out-tax-saft",
+    "name": "Ficheiro SAFT-AO Validador AGT & IVA",
+    "description": "Certificação e validação prévia do ficheiro SAFT-AO mensal e liquidação sem erros da declaração do IVA.",
+    "commercial_area_code": "A05",
+    "solution_pack_ids": ["pack-tax-saft-iva"],
+    "primary_rolepack_id": 61,
+    "primary_rolepack_title": "Tax Compliance Employee",
+    "required_inputs": ["Ficheiro SAFT XML ERP", "Período Fiscal Referência"],
+    "recommended_inputs": ["Guias do Mês Anterior"],
+    "expected_deliverables": ["Relatório de Pré-Validação SAFT", "Guia de Pagamento de IVA AGT"],
+    "success_metrics": ["100% Submissões sem Erro AGT", "Zero Multas Fiscais"],
+    "commercial_tags": ["fiscalidade", "agt", "saft", "iva"],
+    "status": "ACTIVE"
+  }
+]

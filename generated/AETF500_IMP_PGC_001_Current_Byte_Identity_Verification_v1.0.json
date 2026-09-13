@@ -1,0 +1,20 @@
+{
+  "implementation_id": "IMP-PGC-001",
+  "path": "packages/runtime/src/commerce/PGCAccountingEngineV114.ts",
+  "file_size_bytes": 453606,
+  "sha256": "24bc67db4c3765fb0d3a7fca405e09edae1560d4bedb08471d4dd2d34976ba77",
+  "sha512": "35a32ae3c489e8047e8390f7f0c9ea1bd31dce99962c0e0dc6390480b44000a68d1ecf33d02a6f2f6ab16e697bacf8ba2f83751f9ecba9fa2e728623b01f9a70",
+  "node_sha256": "24bc67db4c3765fb0d3a7fca405e09edae1560d4bedb08471d4dd2d34976ba77",
+  "system_sha256": "24bc67db4c3765fb0d3a7fca405e09edae1560d4bedb08471d4dd2d34976ba77",
+  "methods_match": true,
+  "git_worktree_blob": "42c96fd60c83f5946b8af871e5039543c9afed20",
+  "git_head_blob": "N/A",
+  "blob_matches_head": false,
+  "git_head": "5f8868b6202d334e01f78beaf9247d0ccec8d8ad",
+  "commit_containing_current_blob": "UNCOMMITTED_WORKTREE_VERSION",
+  "worktree_modified": true,
+  "delivery_copy_sha256": "24bc67db4c3765fb0d3a7fca405e09edae1560d4bedb08471d4dd2d34976ba77",
+  "delivery_copy_matches": true,
+  "zip_embedded_sha256": "24bc67db4c3765fb0d3a7fca405e09edae1560d4bedb08471d4dd2d34976ba77",
+  "zip_embedded_matches": true
+}

@@ -1,0 +1,25 @@
+{
+  "receipt_id": "AETF500_SRC_HC_001_HASH_REPRODUCIBILITY_RECEIPT_v1.0",
+  "program_id": "AETF500_SRC_HC_001_PHYSICAL_FILE_IDENTITY_FINAL_PROOF_v1.0",
+  "file_path": "MINSA/novo_estatuto_organico_do_minsa_205682676560a3907d06a6e_b66c9477d7.pdf",
+  "file_size_bytes": 2145588,
+  "algorithm_primary": "SHA-256",
+  "implementation_a": "certutil -hashfile",
+  "digest_a": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+  "implementation_b": "powershell Get-FileHash",
+  "digest_b": "89C450D16444B97B7AD6EFD6A372CCED1255E9CC617411D4D20EEF0874942D2B",
+  "digest_match": true,
+  "algorithm_secondary": "SHA-512",
+  "sha512_digest": "7ca4f6bc0e26c36b532931b8f70b80dab409ed951b9b6ab8bc68aa2d3ddc99b88d35b1483d48781f3b6190f8520765569ee17e39fb0119c074d1480889d85144",
+  "byte_subject": {
+    "source": "PHYSICAL_FILE_BYTES",
+    "offset_start": 0,
+    "offset_end": 2145588
+  },
+  "reproducible": true,
+  "evidence_classification": {
+    "src_hc_001_hash_status_reported": "SYNTHETIC_PLACEHOLDER_REPLACED",
+    "src_hc_001_hash_status_reproducible": "REPRODUCIBLE_VIA_CLI_TOOLS",
+    "src_hc_001_hash_status_independently_recomputed": "INDEPENDENTLY_RECOMPUTED_FROM_PHYSICAL_BYTES"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.4_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "pgc_version": {
+    "version_id": "PGC_ANGOLA_v1.1.4_DECRETO_82_01",
+    "legal_instrument": "Decreto n.º 82/01, de 16 de Novembro",
+    "publication_date": "2001-11-16",
+    "effective_from": "2001-11-16",
+    "source_document": "Plano Geral de Contabilidade de Angola (Diário da República I Série - N.º 54)",
+    "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation_status": "SUPPORTED_BY_PROVIDED_DOCUMENT"
+  }
+}

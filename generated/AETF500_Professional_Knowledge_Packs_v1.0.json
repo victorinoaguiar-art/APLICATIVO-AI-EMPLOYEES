@@ -1,0 +1,104 @@
+{
+  "program_id": "AETF500_PROFESSIONAL_KNOWLEDGE_COMPETENCY_ASSURANCE_PROGRAM_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "as_of_date": "2026-09-12",
+  "professional_knowledge_packs_total": 16,
+  "packs": [
+    {
+      "pack_id": "PKP-ACCOUNTING-ANGOLA",
+      "domain": "Accounting",
+      "jurisdiction": "AO",
+      "status": "INTERNALLY_VALIDATED"
+    },
+    {
+      "pack_id": "PKP-VAT-ANGOLA",
+      "domain": "Taxation",
+      "jurisdiction": "AO",
+      "status": "INTERNALLY_VALIDATED"
+    },
+    {
+      "pack_id": "PKP-PAYROLL-ANGOLA",
+      "domain": "HR / Payroll",
+      "jurisdiction": "AO",
+      "status": "INTERNALLY_VALIDATED"
+    },
+    {
+      "pack_id": "PKP-BANKING-ANGOLA",
+      "domain": "Banking",
+      "jurisdiction": "AO",
+      "status": "INTERNALLY_VALIDATED"
+    },
+    {
+      "pack_id": "PKP-CYBERSECURITY",
+      "domain": "Security",
+      "jurisdiction": "GLOBAL",
+      "status": "INTERNALLY_VALIDATED"
+    },
+    {
+      "pack_id": "PKP-PROJECT-MANAGEMENT",
+      "domain": "PMO",
+      "jurisdiction": "GLOBAL",
+      "status": "INTERNALLY_VALIDATED"
+    },
+    {
+      "pack_id": "PKP-LEGAL-COMPLIANCE",
+      "domain": "Legal",
+      "jurisdiction": "AO",
+      "status": "INTERNALLY_VALIDATED"
+    },
+    {
+      "pack_id": "PKP-SOFTWARE-ENGINEERING",
+      "domain": "IT",
+      "jurisdiction": "GLOBAL",
+      "status": "INTERNALLY_VALIDATED"
+    },
+    {
+      "pack_id": "PKP-STRATEGY-ANALYTICS",
+      "domain": "Strategy",
+      "jurisdiction": "GLOBAL",
+      "status": "INTERNALLY_VALIDATED"
+    },
+    {
+      "pack_id": "PKP-DATA-PRIVACY",
+      "domain": "Compliance",
+      "jurisdiction": "GLOBAL_AO",
+      "status": "INTERNALLY_VALIDATED"
+    },
+    {
+      "pack_id": "PKP-PROCUREMENT-SUPPLYCHAIN",
+      "domain": "Procurement",
+      "jurisdiction": "GLOBAL",
+      "status": "INTERNALLY_VALIDATED"
+    },
+    {
+      "pack_id": "PKP-CUSTOMER-OPERATIONS",
+      "domain": "Operations",
+      "jurisdiction": "GLOBAL",
+      "status": "INTERNALLY_VALIDATED"
+    },
+    {
+      "pack_id": "PKP-TREASURY-FINANCE",
+      "domain": "Treasury",
+      "jurisdiction": "AO",
+      "status": "INTERNALLY_VALIDATED"
+    },
+    {
+      "pack_id": "PKP-HEALTHCARE-COMPLIANCE",
+      "domain": "Healthcare",
+      "jurisdiction": "AO",
+      "status": "VALIDATED_WITH_RESTRICTIONS"
+    },
+    {
+      "pack_id": "PKP-PUBLIC-ADMINISTRATION",
+      "domain": "Public Sector",
+      "jurisdiction": "AO",
+      "status": "INTERNALLY_VALIDATED"
+    },
+    {
+      "pack_id": "PKP-MARKETING-SALES",
+      "domain": "Commercial",
+      "jurisdiction": "GLOBAL",
+      "status": "INTERNALLY_VALIDATED"
+    }
+  ]
+}

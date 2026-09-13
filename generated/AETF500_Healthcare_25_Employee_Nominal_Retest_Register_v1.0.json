@@ -1,0 +1,652 @@
+[
+  {
+    "employee_id": "EMP-101",
+    "canonical_role": "Director Clínico",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-002"
+    ],
+    "structured_object_ids": [
+      "DR-002",
+      "DR-003"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-002"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-1"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-102",
+    "canonical_role": "Chefe de Enfermagem",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-003"
+    ],
+    "structured_object_ids": [
+      "DR-003",
+      "DR-005"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-003"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-2"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-103",
+    "canonical_role": "Inspector Sanitário",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-004"
+    ],
+    "structured_object_ids": [
+      "DR-004",
+      "DR-007"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-004"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-3"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-104",
+    "canonical_role": "Farmacêutico Hospitalar",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-005"
+    ],
+    "structured_object_ids": [
+      "DR-005",
+      "DR-009"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-005"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-4"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-105",
+    "canonical_role": "Coordenador de Farmacovigilância",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-006"
+    ],
+    "structured_object_ids": [
+      "DR-006",
+      "DR-011"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-001"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-5"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-106",
+    "canonical_role": "Gestor de Qualidade Hospitalar",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-007"
+    ],
+    "structured_object_ids": [
+      "DR-007",
+      "DR-013"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-002"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-6"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-107",
+    "canonical_role": "Auditor de Processos Médicos",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-001"
+    ],
+    "structured_object_ids": [
+      "DR-008",
+      "DR-015"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-003"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-7"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-108",
+    "canonical_role": "Especialista em Licenciamento Sanitário",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-002"
+    ],
+    "structured_object_ids": [
+      "DR-009",
+      "DR-017"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-004"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-8"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-109",
+    "canonical_role": "Médico Regulador",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-003"
+    ],
+    "structured_object_ids": [
+      "DR-010",
+      "DR-019"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-005"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-9"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-110",
+    "canonical_role": "Enfermeiro de Diagnóstico",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-004"
+    ],
+    "structured_object_ids": [
+      "DR-011",
+      "DR-021"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-001"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-10"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-111",
+    "canonical_role": "Técnico de Laboratório Clínico",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-005"
+    ],
+    "structured_object_ids": [
+      "DR-012",
+      "DR-023"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-002"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-11"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-112",
+    "canonical_role": "Gestor de Carreira Médica",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-006"
+    ],
+    "structured_object_ids": [
+      "DR-013",
+      "DR-025"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-003"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-12"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-113",
+    "canonical_role": "Analista de Riscos Sanitários",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-007"
+    ],
+    "structured_object_ids": [
+      "DR-014",
+      "DR-027"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-004"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-13"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-114",
+    "canonical_role": "Supervisor de Biossegurança",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-001"
+    ],
+    "structured_object_ids": [
+      "DR-015",
+      "DR-029"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-005"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-14"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-115",
+    "canonical_role": "Gestor de Medicamentos de Controlo",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-002"
+    ],
+    "structured_object_ids": [
+      "DR-016",
+      "DR-031"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-001"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-15"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-116",
+    "canonical_role": "Inspector de Carreiras de Enfermagem",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-003"
+    ],
+    "structured_object_ids": [
+      "DR-017",
+      "DR-001"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-002"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-16"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-117",
+    "canonical_role": "Coordenador de Urgência Médica",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-004"
+    ],
+    "structured_object_ids": [
+      "DR-018",
+      "DR-003"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-003"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-17"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-118",
+    "canonical_role": "Consultor Fiscais de Cuidados de Saúde",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-005"
+    ],
+    "structured_object_ids": [
+      "DR-019",
+      "DR-005"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-004"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-18"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-119",
+    "canonical_role": "Analista de Conformidade MINSA",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-006"
+    ],
+    "structured_object_ids": [
+      "DR-020",
+      "DR-007"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-005"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-19"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-120",
+    "canonical_role": "Especialista em Protocolos Clínicos",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-007"
+    ],
+    "structured_object_ids": [
+      "DR-021",
+      "DR-009"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-001"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-20"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-121",
+    "canonical_role": "Técnico de Controlo Epidemiológico",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-001"
+    ],
+    "structured_object_ids": [
+      "DR-022",
+      "DR-011"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-002"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-21"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-122",
+    "canonical_role": "Gestor de Registo de Práticas Médicas",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-002"
+    ],
+    "structured_object_ids": [
+      "DR-023",
+      "DR-013"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-003"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-22"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-123",
+    "canonical_role": "Auditor de Segurança do Paciente",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-003"
+    ],
+    "structured_object_ids": [
+      "DR-024",
+      "DR-015"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-004"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-23"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-124",
+    "canonical_role": "Especialista em Regulamentos de Farmácia",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-004"
+    ],
+    "structured_object_ids": [
+      "DR-025",
+      "DR-017"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-005"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-24"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  },
+  {
+    "employee_id": "EMP-125",
+    "canonical_role": "Gestor de Credenciação Profissional",
+    "department": "HEALTHCARE_OPERATIONS",
+    "healthcare_requirement": "MINSA_REGULATORY_COMPLIANCE",
+    "knowledge_item_ids": [
+      "KI-005"
+    ],
+    "structured_object_ids": [
+      "DR-026",
+      "DR-019"
+    ],
+    "source_ids": [
+      "SRC-MINSA-001",
+      "SRC-MINSA-003"
+    ],
+    "pre_remediation_status": "PROVENANCE_FAIL",
+    "post_remediation_status": "RETESTED_PASS",
+    "test_ids": [
+      "TEST-MINSA-001"
+    ],
+    "runtime_execution_ids": [
+      "EXEC-MINSA-20260913-25"
+    ],
+    "recertification_status": "CERTIFIED_HEALTHCARE_VERIFIED"
+  }
+]

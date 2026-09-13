@@ -1,0 +1,204 @@
+{
+  "audit_id": "AETF500_PROFESSIONAL_KNOWLEDGE_EVIDENCE_SUBSTANTIATION_AUDIT_v1.0",
+  "as_of_date": "2026-09-12",
+  "non_financial_open_gaps": 13,
+  "findings": [
+    {
+      "gap_id": "GAP-HC-REG-001",
+      "domain": "Healthcare",
+      "employees_affected": [
+        "EMP-HC-001",
+        "EMP-HC-002"
+      ],
+      "competencies": [
+        "Medical Device Compliance",
+        "Sanitary Authorization"
+      ],
+      "issue_type": "INCOMPLETE_LOCAL_SOURCE",
+      "risk_level": "PKA_4_CRITICAL",
+      "restriction": "HUMAN_APPROVAL_REQUIRED",
+      "remediation": "Attach MINSA Statutory Gazette Decree 2026"
+    },
+    {
+      "gap_id": "GAP-PA-PROC-002",
+      "domain": "Public Administration",
+      "employees_affected": [
+        "EMP-PA-001",
+        "EMP-PA-003"
+      ],
+      "competencies": [
+        "Public Tender Evaluation",
+        "Administrative Code"
+      ],
+      "issue_type": "PROCEDURAL_SOURCE_DEPENDENCY",
+      "risk_level": "PKA_3_REGULATED",
+      "restriction": "DRAFT_ONLY",
+      "remediation": "Integrate Public Procurement Law 2026 guidelines"
+    },
+    {
+      "gap_id": "GAP-SEC-NIST-003",
+      "domain": "Cybersecurity",
+      "employees_affected": [
+        "EMP-SEC-004"
+      ],
+      "competencies": [
+        "Incident Response Plan",
+        "Threat Detection"
+      ],
+      "issue_type": "TOOL_SPECIFIC_CONFIG",
+      "risk_level": "PKA_4_CRITICAL",
+      "restriction": "HUMAN_APPROVAL_REQUIRED",
+      "remediation": "Update SOC playbook versioning"
+    },
+    {
+      "gap_id": "GAP-ENG-OWASP-004",
+      "domain": "Software Engineering",
+      "employees_affected": [
+        "EMP-ENG-012"
+      ],
+      "competencies": [
+        "Secure Coding API",
+        "Secrets Governance"
+      ],
+      "issue_type": "TOOL_SPECIFIC_CONFIG",
+      "risk_level": "PKA_2_TECHNICAL",
+      "restriction": "READ_ONLY",
+      "remediation": "Enforce OWASP API Top 10 2026 ruleset"
+    },
+    {
+      "gap_id": "GAP-LEG-CORP-005",
+      "domain": "Legal Counsel",
+      "employees_affected": [
+        "EMP-LEG-005"
+      ],
+      "competencies": [
+        "Corporate Contract Drafting",
+        "Shareholder Resolutions"
+      ],
+      "issue_type": "INCOMPLETE_LOCAL_SOURCE",
+      "risk_level": "PKA_3_REGULATED",
+      "restriction": "DRAFT_ONLY",
+      "remediation": "Attach Commercial Code Revision 2026"
+    },
+    {
+      "gap_id": "GAP-HR-LABOR-006",
+      "domain": "Human Resources",
+      "employees_affected": [
+        "EMP-HR-003"
+      ],
+      "competencies": [
+        "Collective Bargaining",
+        "Termination Settlement"
+      ],
+      "issue_type": "INCOMPLETE_LOCAL_SOURCE",
+      "risk_level": "PKA_3_REGULATED",
+      "restriction": "RECOMMEND_ONLY",
+      "remediation": "Validate new Labor Code severance multipliers"
+    },
+    {
+      "gap_id": "GAP-PROC-INCO-007",
+      "domain": "Procurement",
+      "employees_affected": [
+        "EMP-PRC-002"
+      ],
+      "competencies": [
+        "Customs Clearance",
+        "Incoterms 2020 Duty Calculation"
+      ],
+      "issue_type": "JURISDICTION_DEPENDENCY",
+      "risk_level": "PKA_2_TECHNICAL",
+      "restriction": "DRAFT_ONLY",
+      "remediation": "Attach Angolan Tariff Schedule 2026"
+    },
+    {
+      "gap_id": "GAP-PMO-AGILE-008",
+      "domain": "Project Management",
+      "employees_affected": [
+        "EMP-PMO-001"
+      ],
+      "competencies": [
+        "Sprint Velocity Prediction",
+        "Resource Levelling"
+      ],
+      "issue_type": "PROCEDURAL_GAP",
+      "risk_level": "PKA_2_TECHNICAL",
+      "restriction": "RECOMMEND_ONLY",
+      "remediation": "Attach PMO Process Taxonomy v2.1"
+    },
+    {
+      "gap_id": "GAP-DATA-PRIV-009",
+      "domain": "Data Science",
+      "employees_affected": [
+        "EMP-DAT-004"
+      ],
+      "competencies": [
+        "Personal Data Anonymization",
+        "APD Registration"
+      ],
+      "issue_type": "JURISDICTION_DEPENDENCY",
+      "risk_level": "PKA_3_REGULATED",
+      "restriction": "HUMAN_APPROVAL_REQUIRED",
+      "remediation": "Attach APD Data Protection Guidelines 2026"
+    },
+    {
+      "gap_id": "GAP-OPS-SLA-010",
+      "domain": "Customer Operations",
+      "employees_affected": [
+        "EMP-OPS-006"
+      ],
+      "competencies": [
+        "Tier 3 Escalation Routing",
+        "SLA Penalty Calculation"
+      ],
+      "issue_type": "PROCEDURAL_GAP",
+      "risk_level": "PKA_1_LOW",
+      "restriction": "RECOMMEND_ONLY",
+      "remediation": "Update SLA Matrix for SaaS Tier 1 Accounts"
+    },
+    {
+      "gap_id": "GAP-SALES-COMM-011",
+      "domain": "Sales",
+      "employees_affected": [
+        "EMP-SLS-008"
+      ],
+      "competencies": [
+        "Enterprise Quotas",
+        "Custom Pricing Discounting"
+      ],
+      "issue_type": "PROCEDURAL_GAP",
+      "risk_level": "PKA_1_LOW",
+      "restriction": "HUMAN_APPROVAL_REQUIRED",
+      "remediation": "Link Sales Approval Matrix v3.0"
+    },
+    {
+      "gap_id": "GAP-MKT-CONSUMER-012",
+      "domain": "Marketing",
+      "employees_affected": [
+        "EMP-MKT-003"
+      ],
+      "competencies": [
+        "Ad Claims Compliance",
+        "Consumer Protection Law"
+      ],
+      "issue_type": "JURISDICTION_DEPENDENCY",
+      "risk_level": "PKA_1_LOW",
+      "restriction": "DRAFT_ONLY",
+      "remediation": "Attach Consumer Rights Act Angola Guidelines"
+    },
+    {
+      "gap_id": "GAP-CS-SUPPORT-013",
+      "domain": "Customer Success",
+      "employees_affected": [
+        "EMP-CS-005"
+      ],
+      "competencies": [
+        "Churn Risk Analysis",
+        "Account Health Scoring"
+      ],
+      "issue_type": "PROCEDURAL_GAP",
+      "risk_level": "PKA_1_LOW",
+      "restriction": "RECOMMEND_ONLY",
+      "remediation": "Link Health Score Model v2.4"
+    }
+  ]
+}

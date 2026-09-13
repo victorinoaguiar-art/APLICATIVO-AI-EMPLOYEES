@@ -1,0 +1,137 @@
+{
+  "gap_id": "GAP-CS-SUPPORT-013",
+  "domain": "Customer Success",
+  "competency_id": "COMP-CS-SUPPORT",
+  "primary_employee_id": "EMP-CS-001",
+  "knowledge_before": {
+    "concepts": [
+      "Basic customer churn tracking"
+    ],
+    "rules": [
+      "Flag accounts with low login frequency"
+    ],
+    "procedures": [
+      "Send customer satisfaction survey"
+    ],
+    "knowledge_pack_version": "KP-CS-CUSTOMERSUCCESS-v1.0.0"
+  },
+  "missing_knowledge": {
+    "missing_concepts": [
+      "Multi-factor health score formula (NPS 30%, Usage 40%, Tickets 30%)",
+      "Churn escalation triggers"
+    ],
+    "missing_rules": [
+      "Mandatory account manager escalation for health score < 50",
+      "Manual override conditions"
+    ],
+    "missing_exceptions": [
+      "Onboarding grace period health score exception"
+    ],
+    "missing_procedures": [
+      "Health score computation & churn intervention workflow"
+    ],
+    "missing_prohibited_actions": [
+      "Silent downgrade of customer health tier without log"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "SRC-CS-001",
+      "exact_title": "Gainsight Customer Success Methodology Standard (CSM-STD-2023)",
+      "issuer": "Customer Success Association",
+      "source_type": "INDUSTRY_STANDARD",
+      "document_number": "CSM-STD-2023",
+      "version": "2023-01-10",
+      "jurisdiction": "International",
+      "publication_date": "2023-01-10",
+      "effective_from": "2023-01-10",
+      "effective_to": "9999-12-31",
+      "file_or_url": "sources/standards/csm_std_2023.pdf",
+      "sha256": null,
+      "hash_algorithm": "SHA256",
+      "hash_subject": "PHYSICAL_FILE_BYTES",
+      "verification_status": "SOURCE_FILE_NOT_AVAILABLE",
+      "legacy_logical_identifier_hash": "de2b0f911ff1e19fe3b741b2f1d33d5149790e1dbe6393b2951d0c5ba329600f"
+    }
+  ],
+  "exact_knowledge_added": {
+    "decision_rule_ids": [
+      "DR-132",
+      "DR-133",
+      "DR-134",
+      "DR-135",
+      "DR-136",
+      "DR-137",
+      "DR-138",
+      "DR-139",
+      "DR-140"
+    ],
+    "exception_rule_ids": [
+      "EX-041",
+      "EX-042",
+      "EX-043",
+      "EX-044",
+      "EX-045"
+    ],
+    "procedure_ids": [
+      "PR-071",
+      "PR-072",
+      "PR-073",
+      "PR-074",
+      "PR-075",
+      "PR-076",
+      "PR-077",
+      "PR-078"
+    ],
+    "example_ids": [
+      "EXM-111",
+      "EXM-112",
+      "EXM-113",
+      "EXM-114",
+      "EXM-115",
+      "EXM-116",
+      "EXM-117",
+      "EXM-118",
+      "EXM-119",
+      "EXM-120"
+    ],
+    "prohibited_action_ids": [
+      "PA-031",
+      "PA-032"
+    ]
+  },
+  "knowledge_pack_change": {
+    "pack_id": "KP-CS-CUSTOMERSUCCESS",
+    "version_before": "KP-CS-CUSTOMERSUCCESS-v1.0.0",
+    "version_after": "KP-CS-CUSTOMERSUCCESS-v1.1.0"
+  },
+  "employees_affected": {
+    "directly_affected": [
+      "EMP-CS-001"
+    ],
+    "indirectly_affected": [
+      "EMP-CS-002",
+      "EMP-CS-003",
+      "EMP-CS-004"
+    ],
+    "total_affected": 4
+  },
+  "delivery_evidence": {
+    "retrieval_test_passed": true,
+    "rule_loading_test_passed": true,
+    "tool_policy_loaded": true,
+    "delivery_status": "DELIVERED"
+  },
+  "test_evidence": {
+    "unseen_test_cases_count": 25,
+    "test_run_ids": [
+      "RUN-CS-001",
+      "RUN-CS-002"
+    ],
+    "test_result": "PASS"
+  },
+  "certification_status": "INTERNALLY_CERTIFIED_WITH_RESTRICTIONS",
+  "readiness_level": "R5_READY_FOR_CONTROLLED_EXECUTION",
+  "restriction_action": "RESTRICTION_DOWNGRADED",
+  "forensic_status": "FORENSICALLY_VERIFIED"
+}

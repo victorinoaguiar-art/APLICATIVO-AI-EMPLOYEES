@@ -1,0 +1,9 @@
+{
+  "matrix_version": "1.1.6",
+  "vat_general_rate_pct": 14.0,
+  "vat_account_family": "34.5",
+  "vat_official_subaccount_34_5_9": "IVA liquidações oficiosas",
+  "industrial_tax_withholding_rate_pct": 2.0,
+  "industrial_tax_withholding_rule": "EXT-VAL-WHT-2PCT",
+  "tax_decoupling_status": "DECOUPLED_AND_VERSIONED"
+}

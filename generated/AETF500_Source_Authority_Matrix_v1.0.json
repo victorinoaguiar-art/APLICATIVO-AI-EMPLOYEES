@@ -1,0 +1,58 @@
+{
+  "matrix_id": "AETF500_SOURCE_AUTHORITY_MATRIX_v1.0",
+  "program_id": "AETF500_SOURCE_REGISTRY_KNOWLEDGE_CONTENT_RUNTIME_PROVENANCE_FORENSIC_AUDIT_v1.0",
+  "trust_tier_definitions": {
+    "T5": "Official Primary Source (Diário da República / Official Gazette)",
+    "T4": "Official Institutional Portal (MINSA, AGT, BNA, MAPTSS, MINFIN)",
+    "T3": "Validated Regulatory Base / Knowledge Registry",
+    "T2": "Validated Institutional Document",
+    "T1": "Unvalidated Storage Location (OneDrive / Google Drive / Local C:\\)",
+    "T0": "Unknown / Unverified Origin"
+  },
+  "regulatory_minimum_trust_tier_required": "T4",
+  "authority_evaluations": [
+    {
+      "source_id": "SRC-LEG-001",
+      "domain": "LEGAL",
+      "institutional_authority": "Assembleia Nacional de Angola",
+      "source_trust_tier": "T5",
+      "trust_compliance": "PASS"
+    },
+    {
+      "source_id": "SRC-LAB-001",
+      "domain": "HUMAN_RESOURCES",
+      "institutional_authority": "MAPTSS",
+      "source_trust_tier": "T5",
+      "trust_compliance": "PASS"
+    },
+    {
+      "source_id": "SRC-LAB-001",
+      "domain": "HEALTHCARE",
+      "institutional_authority": "MAPTSS (Incorrect Authority for Healthcare)",
+      "source_trust_tier": "T1",
+      "trust_compliance": "FAIL",
+      "anomaly": "MAPTSS Labor Law improperly assigned to MINSA Healthcare domain"
+    },
+    {
+      "source_id": "SRC-PA-001",
+      "domain": "PROCUREMENT",
+      "institutional_authority": "SNCP / MINFIN",
+      "source_trust_tier": "T5",
+      "trust_compliance": "PASS"
+    },
+    {
+      "source_id": "SRC-ACC-PGC-001",
+      "domain": "FINANCIAL_ACCOUNTING",
+      "institutional_authority": "MINFIN",
+      "source_trust_tier": "T5",
+      "trust_compliance": "PASS"
+    },
+    {
+      "source_id": "SRC-HC-001",
+      "domain": "HEALTHCARE",
+      "institutional_authority": "MINSA",
+      "source_trust_tier": "T4",
+      "trust_compliance": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,677 @@
+[
+  {
+    "employee_id": "EMP-101",
+    "employee_role": "Healthcare AI Employee #1",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-001"
+    ],
+    "required_rules": [
+      "DR-001"
+    ],
+    "required_chunks": [
+      "CHK-DR-001-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-001"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.961Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-102",
+    "employee_role": "Healthcare AI Employee #2",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-002"
+    ],
+    "required_rules": [
+      "DR-002"
+    ],
+    "required_chunks": [
+      "CHK-DR-002-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-002"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.961Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-103",
+    "employee_role": "Healthcare AI Employee #3",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-003"
+    ],
+    "required_rules": [
+      "DR-003"
+    ],
+    "required_chunks": [
+      "CHK-DR-003-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-003"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.961Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-104",
+    "employee_role": "Healthcare AI Employee #4",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-004"
+    ],
+    "required_rules": [
+      "DR-004"
+    ],
+    "required_chunks": [
+      "CHK-DR-004-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-004"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.961Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-105",
+    "employee_role": "Healthcare AI Employee #5",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-005"
+    ],
+    "required_rules": [
+      "DR-005"
+    ],
+    "required_chunks": [
+      "CHK-DR-005-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-005"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.961Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-106",
+    "employee_role": "Healthcare AI Employee #6",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-001"
+    ],
+    "required_rules": [
+      "DR-006"
+    ],
+    "required_chunks": [
+      "CHK-DR-006-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-006"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.961Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-107",
+    "employee_role": "Healthcare AI Employee #7",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-002"
+    ],
+    "required_rules": [
+      "DR-007"
+    ],
+    "required_chunks": [
+      "CHK-DR-007-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-007"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.961Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-108",
+    "employee_role": "Healthcare AI Employee #8",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-003"
+    ],
+    "required_rules": [
+      "DR-008"
+    ],
+    "required_chunks": [
+      "CHK-DR-008-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-008"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.961Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-109",
+    "employee_role": "Healthcare AI Employee #9",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-004"
+    ],
+    "required_rules": [
+      "DR-009"
+    ],
+    "required_chunks": [
+      "CHK-DR-009-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-009"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.961Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-110",
+    "employee_role": "Healthcare AI Employee #10",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-005"
+    ],
+    "required_rules": [
+      "DR-010"
+    ],
+    "required_chunks": [
+      "CHK-DR-010-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-010"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.961Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-111",
+    "employee_role": "Healthcare AI Employee #11",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-001"
+    ],
+    "required_rules": [
+      "DR-011"
+    ],
+    "required_chunks": [
+      "CHK-DR-011-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-011"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.961Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-112",
+    "employee_role": "Healthcare AI Employee #12",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-002"
+    ],
+    "required_rules": [
+      "DR-012"
+    ],
+    "required_chunks": [
+      "CHK-DR-012-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-012"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.961Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-113",
+    "employee_role": "Healthcare AI Employee #13",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-003"
+    ],
+    "required_rules": [
+      "DR-013"
+    ],
+    "required_chunks": [
+      "CHK-DR-013-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-013"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.961Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-114",
+    "employee_role": "Healthcare AI Employee #14",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-004"
+    ],
+    "required_rules": [
+      "DR-014"
+    ],
+    "required_chunks": [
+      "CHK-DR-014-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-014"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.961Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-115",
+    "employee_role": "Healthcare AI Employee #15",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-005"
+    ],
+    "required_rules": [
+      "DR-015"
+    ],
+    "required_chunks": [
+      "CHK-DR-015-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-015"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.962Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-116",
+    "employee_role": "Healthcare AI Employee #16",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-001"
+    ],
+    "required_rules": [
+      "DR-016"
+    ],
+    "required_chunks": [
+      "CHK-DR-016-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-016"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.962Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-117",
+    "employee_role": "Healthcare AI Employee #17",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-002"
+    ],
+    "required_rules": [
+      "DR-017"
+    ],
+    "required_chunks": [
+      "CHK-DR-017-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-017"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.962Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-118",
+    "employee_role": "Healthcare AI Employee #18",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-003"
+    ],
+    "required_rules": [
+      "DR-018"
+    ],
+    "required_chunks": [
+      "CHK-DR-018-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-018"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.962Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-119",
+    "employee_role": "Healthcare AI Employee #19",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-004"
+    ],
+    "required_rules": [
+      "DR-019"
+    ],
+    "required_chunks": [
+      "CHK-DR-019-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-019"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.962Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-120",
+    "employee_role": "Healthcare AI Employee #20",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-005"
+    ],
+    "required_rules": [
+      "DR-020"
+    ],
+    "required_chunks": [
+      "CHK-DR-020-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-020"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.962Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-121",
+    "employee_role": "Healthcare AI Employee #21",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-001"
+    ],
+    "required_rules": [
+      "DR-021"
+    ],
+    "required_chunks": [
+      "CHK-DR-021-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-021"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.962Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-122",
+    "employee_role": "Healthcare AI Employee #22",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-002"
+    ],
+    "required_rules": [
+      "DR-022"
+    ],
+    "required_chunks": [
+      "CHK-DR-022-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-022"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.962Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-123",
+    "employee_role": "Healthcare AI Employee #23",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-003"
+    ],
+    "required_rules": [
+      "DR-023"
+    ],
+    "required_chunks": [
+      "CHK-DR-023-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-023"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.962Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-124",
+    "employee_role": "Healthcare AI Employee #24",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-004"
+    ],
+    "required_rules": [
+      "DR-024"
+    ],
+    "required_chunks": [
+      "CHK-DR-024-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-024"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.962Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  },
+  {
+    "employee_id": "EMP-125",
+    "employee_role": "Healthcare AI Employee #25",
+    "required_domain": "HEALTHCARE_MINSA_ANGOLA",
+    "required_sources": [
+      "SRC-MINSA-005"
+    ],
+    "required_rules": [
+      "DR-025"
+    ],
+    "required_chunks": [
+      "CHK-DR-025-01"
+    ],
+    "knowledge_registry_ids": [
+      "KI-025"
+    ],
+    "permitted_tools": [
+      "REGULATORY_LEGAL_SEARCH",
+      "MINSA_VERIFY"
+    ],
+    "forbidden_sources": [
+      "UNVERIFIED_LOCAL_PDF",
+      "ONEDRIVE_FILE"
+    ],
+    "last_certification": "2026-09-13T14:00:34.962Z",
+    "certification_status": "RECERTIFIED_AUTHENTIC_PHYSICAL_PROVENANCE"
+  }
+]

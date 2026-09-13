@@ -1,0 +1,312 @@
+{
+  "previous_expert_review_dependencies": 12,
+  "expert_reviews_completed_and_passed": 0,
+  "expert_reviews_completed_with_restrictions": 5,
+  "expert_reviews_completed_and_failed": 0,
+  "expert_reviews_still_pending": 7,
+  "expert_reviews_superseded_with_valid_evidence": 0,
+  "unresolved_expert_review_lineage": 0,
+  "pending_expert_review_employees_in_ready_unrestricted": 0,
+  "records": [
+    {
+      "employee_id": "EMP-010",
+      "previous_expert_review_required": true,
+      "previous_status": "EXPERT_REVIEW_PENDING",
+      "previous_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "previous_evidence_ids": [
+        "EVID-PREV-1"
+      ],
+      "review_performed": true,
+      "review_type": "CONDITIONAL_EXPERT_APPROVAL",
+      "reviewer_identity": "REV-EXP-EXPERT-1",
+      "reviewer_qualification": "Senior Legal & Tax Counsel",
+      "review_date": "2026-09-10",
+      "review_evidence_id": "EVID-EXP-REV-001",
+      "review_result": "PASSED_WITH_CONDITIONS",
+      "current_professional_knowledge_status": "READY_WITH_RESTRICTIONS",
+      "current_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "dependency_still_open": false,
+      "closure_basis": "CONDITIONAL_EXPERT_APPROVAL",
+      "lineage_status": "EXPERT_REVIEW_COMPLETED_WITH_RESTRICTIONS"
+    },
+    {
+      "employee_id": "EMP-020",
+      "previous_expert_review_required": true,
+      "previous_status": "EXPERT_REVIEW_PENDING",
+      "previous_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "previous_evidence_ids": [
+        "EVID-PREV-2"
+      ],
+      "review_performed": true,
+      "review_type": "CONDITIONAL_EXPERT_APPROVAL",
+      "reviewer_identity": "REV-EXP-EXPERT-2",
+      "reviewer_qualification": "Senior Legal & Tax Counsel",
+      "review_date": "2026-09-10",
+      "review_evidence_id": "EVID-EXP-REV-002",
+      "review_result": "PASSED_WITH_CONDITIONS",
+      "current_professional_knowledge_status": "READY_WITH_RESTRICTIONS",
+      "current_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "dependency_still_open": false,
+      "closure_basis": "CONDITIONAL_EXPERT_APPROVAL",
+      "lineage_status": "EXPERT_REVIEW_COMPLETED_WITH_RESTRICTIONS"
+    },
+    {
+      "employee_id": "EMP-030",
+      "previous_expert_review_required": true,
+      "previous_status": "EXPERT_REVIEW_PENDING",
+      "previous_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "previous_evidence_ids": [
+        "EVID-PREV-3"
+      ],
+      "review_performed": true,
+      "review_type": "CONDITIONAL_EXPERT_APPROVAL",
+      "reviewer_identity": "REV-EXP-EXPERT-3",
+      "reviewer_qualification": "Senior Legal & Tax Counsel",
+      "review_date": "2026-09-10",
+      "review_evidence_id": "EVID-EXP-REV-003",
+      "review_result": "PASSED_WITH_CONDITIONS",
+      "current_professional_knowledge_status": "READY_WITH_RESTRICTIONS",
+      "current_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "dependency_still_open": false,
+      "closure_basis": "CONDITIONAL_EXPERT_APPROVAL",
+      "lineage_status": "EXPERT_REVIEW_COMPLETED_WITH_RESTRICTIONS"
+    },
+    {
+      "employee_id": "EMP-040",
+      "previous_expert_review_required": true,
+      "previous_status": "EXPERT_REVIEW_PENDING",
+      "previous_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "previous_evidence_ids": [
+        "EVID-PREV-4"
+      ],
+      "review_performed": true,
+      "review_type": "CONDITIONAL_EXPERT_APPROVAL",
+      "reviewer_identity": "REV-EXP-EXPERT-4",
+      "reviewer_qualification": "Senior Legal & Tax Counsel",
+      "review_date": "2026-09-10",
+      "review_evidence_id": "EVID-EXP-REV-004",
+      "review_result": "PASSED_WITH_CONDITIONS",
+      "current_professional_knowledge_status": "READY_WITH_RESTRICTIONS",
+      "current_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "dependency_still_open": false,
+      "closure_basis": "CONDITIONAL_EXPERT_APPROVAL",
+      "lineage_status": "EXPERT_REVIEW_COMPLETED_WITH_RESTRICTIONS"
+    },
+    {
+      "employee_id": "EMP-050",
+      "previous_expert_review_required": true,
+      "previous_status": "EXPERT_REVIEW_PENDING",
+      "previous_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "previous_evidence_ids": [
+        "EVID-PREV-5"
+      ],
+      "review_performed": true,
+      "review_type": "CONDITIONAL_EXPERT_APPROVAL",
+      "reviewer_identity": "REV-EXP-EXPERT-5",
+      "reviewer_qualification": "Senior Legal & Tax Counsel",
+      "review_date": "2026-09-10",
+      "review_evidence_id": "EVID-EXP-REV-005",
+      "review_result": "PASSED_WITH_CONDITIONS",
+      "current_professional_knowledge_status": "READY_WITH_RESTRICTIONS",
+      "current_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "dependency_still_open": false,
+      "closure_basis": "CONDITIONAL_EXPERT_APPROVAL",
+      "lineage_status": "EXPERT_REVIEW_COMPLETED_WITH_RESTRICTIONS"
+    },
+    {
+      "employee_id": "EMP-060",
+      "previous_expert_review_required": true,
+      "previous_status": "EXPERT_REVIEW_PENDING",
+      "previous_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "previous_evidence_ids": [
+        "EVID-PREV-6"
+      ],
+      "review_performed": false,
+      "review_type": "NONE",
+      "reviewer_identity": "UNASSIGNED",
+      "reviewer_qualification": "Senior Legal & Tax Counsel",
+      "review_date": "N/A",
+      "review_evidence_id": "NONE",
+      "review_result": "NOT_EVALUATED",
+      "current_professional_knowledge_status": "READY_WITH_RESTRICTIONS",
+      "current_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "dependency_still_open": true,
+      "closure_basis": "PENDING_HUMAN_EXPERT_REVIEW",
+      "lineage_status": "EXPERT_REVIEW_NOT_PERFORMED_STILL_REQUIRED"
+    },
+    {
+      "employee_id": "EMP-070",
+      "previous_expert_review_required": true,
+      "previous_status": "EXPERT_REVIEW_PENDING",
+      "previous_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "previous_evidence_ids": [
+        "EVID-PREV-7"
+      ],
+      "review_performed": false,
+      "review_type": "NONE",
+      "reviewer_identity": "UNASSIGNED",
+      "reviewer_qualification": "Senior Legal & Tax Counsel",
+      "review_date": "N/A",
+      "review_evidence_id": "NONE",
+      "review_result": "NOT_EVALUATED",
+      "current_professional_knowledge_status": "READY_WITH_RESTRICTIONS",
+      "current_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "dependency_still_open": true,
+      "closure_basis": "PENDING_HUMAN_EXPERT_REVIEW",
+      "lineage_status": "EXPERT_REVIEW_NOT_PERFORMED_STILL_REQUIRED"
+    },
+    {
+      "employee_id": "EMP-080",
+      "previous_expert_review_required": true,
+      "previous_status": "EXPERT_REVIEW_PENDING",
+      "previous_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "previous_evidence_ids": [
+        "EVID-PREV-8"
+      ],
+      "review_performed": false,
+      "review_type": "NONE",
+      "reviewer_identity": "UNASSIGNED",
+      "reviewer_qualification": "Senior Legal & Tax Counsel",
+      "review_date": "N/A",
+      "review_evidence_id": "NONE",
+      "review_result": "NOT_EVALUATED",
+      "current_professional_knowledge_status": "READY_WITH_RESTRICTIONS",
+      "current_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "dependency_still_open": true,
+      "closure_basis": "PENDING_HUMAN_EXPERT_REVIEW",
+      "lineage_status": "EXPERT_REVIEW_NOT_PERFORMED_STILL_REQUIRED"
+    },
+    {
+      "employee_id": "EMP-090",
+      "previous_expert_review_required": true,
+      "previous_status": "EXPERT_REVIEW_PENDING",
+      "previous_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "previous_evidence_ids": [
+        "EVID-PREV-9"
+      ],
+      "review_performed": false,
+      "review_type": "NONE",
+      "reviewer_identity": "UNASSIGNED",
+      "reviewer_qualification": "Senior Legal & Tax Counsel",
+      "review_date": "N/A",
+      "review_evidence_id": "NONE",
+      "review_result": "NOT_EVALUATED",
+      "current_professional_knowledge_status": "READY_WITH_RESTRICTIONS",
+      "current_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "dependency_still_open": true,
+      "closure_basis": "PENDING_HUMAN_EXPERT_REVIEW",
+      "lineage_status": "EXPERT_REVIEW_NOT_PERFORMED_STILL_REQUIRED"
+    },
+    {
+      "employee_id": "EMP-100",
+      "previous_expert_review_required": true,
+      "previous_status": "EXPERT_REVIEW_PENDING",
+      "previous_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "previous_evidence_ids": [
+        "EVID-PREV-10"
+      ],
+      "review_performed": false,
+      "review_type": "NONE",
+      "reviewer_identity": "UNASSIGNED",
+      "reviewer_qualification": "Senior Legal & Tax Counsel",
+      "review_date": "N/A",
+      "review_evidence_id": "NONE",
+      "review_result": "NOT_EVALUATED",
+      "current_professional_knowledge_status": "READY_WITH_RESTRICTIONS",
+      "current_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "dependency_still_open": true,
+      "closure_basis": "PENDING_HUMAN_EXPERT_REVIEW",
+      "lineage_status": "EXPERT_REVIEW_NOT_PERFORMED_STILL_REQUIRED"
+    },
+    {
+      "employee_id": "EMP-110",
+      "previous_expert_review_required": true,
+      "previous_status": "EXPERT_REVIEW_PENDING",
+      "previous_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "previous_evidence_ids": [
+        "EVID-PREV-11"
+      ],
+      "review_performed": false,
+      "review_type": "NONE",
+      "reviewer_identity": "UNASSIGNED",
+      "reviewer_qualification": "Senior Legal & Tax Counsel",
+      "review_date": "N/A",
+      "review_evidence_id": "NONE",
+      "review_result": "NOT_EVALUATED",
+      "current_professional_knowledge_status": "READY_WITH_RESTRICTIONS",
+      "current_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "dependency_still_open": true,
+      "closure_basis": "PENDING_HUMAN_EXPERT_REVIEW",
+      "lineage_status": "EXPERT_REVIEW_NOT_PERFORMED_STILL_REQUIRED"
+    },
+    {
+      "employee_id": "EMP-120",
+      "previous_expert_review_required": true,
+      "previous_status": "EXPERT_REVIEW_PENDING",
+      "previous_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "previous_evidence_ids": [
+        "EVID-PREV-12"
+      ],
+      "review_performed": false,
+      "review_type": "NONE",
+      "reviewer_identity": "UNASSIGNED",
+      "reviewer_qualification": "Senior Legal & Tax Counsel",
+      "review_date": "N/A",
+      "review_evidence_id": "NONE",
+      "review_result": "NOT_EVALUATED",
+      "current_professional_knowledge_status": "READY_WITH_RESTRICTIONS",
+      "current_restriction_ids": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_LEGAL"
+      ],
+      "dependency_still_open": true,
+      "closure_basis": "PENDING_HUMAN_EXPERT_REVIEW",
+      "lineage_status": "EXPERT_REVIEW_NOT_PERFORMED_STILL_REQUIRED"
+    }
+  ]
+}

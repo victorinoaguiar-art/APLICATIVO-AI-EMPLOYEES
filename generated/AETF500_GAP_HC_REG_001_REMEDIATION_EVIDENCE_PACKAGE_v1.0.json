@@ -1,0 +1,51 @@
+{
+  "gap_id": "GAP-HC-REG-001",
+  "domain": "Healthcare",
+  "affected_employee_ids": [
+    "EMP-HC-001",
+    "EMP-HC-002"
+  ],
+  "affected_competency_ids": [
+    "COMP-HC-001",
+    "COMP-HC-004"
+  ],
+  "original_problem": "Local regulatory Decree MINSA 2026 missing from statutory scope",
+  "original_root_cause": "Incomplete local gazette intake for sanitary authorization",
+  "original_risk_level": "PKA_4_CRITICAL",
+  "source_before": "MINSA General Framework 2020",
+  "source_after": "MINSA Statutory Gazette Decree n.º 42/26, SHA-256: 8a9f2e7b...",
+  "knowledge_pack_before": "PKP-HEALTHCARE-v1.0",
+  "knowledge_pack_after": "PKP-HEALTHCARE-v2.0_UPDATED",
+  "rule_before": "Generic sanitary advice without local decree bounds",
+  "rule_after": "Strict MINSA 2026 decree boundary check with mandatory human review for diagnostic claims",
+  "restriction_before": {
+    "type": "HUMAN_APPROVAL_REQUIRED",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A4"
+  },
+  "restriction_current": {
+    "type": "HUMAN_APPROVAL_REQUIRED",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A4"
+  },
+  "remediation_actions": [
+    "Attached MINSA Decree 42/26",
+    "Updated PKP-HEALTHCARE to v2.0",
+    "Enforced A4 human approval on diagnostic outputs"
+  ],
+  "professional_test_run_ids": [
+    "RUN-PROF-GAP-HC-REG-001"
+  ],
+  "professional_test_cases": 25,
+  "test_results": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "expert_review_required": false,
+  "external_validation_required": false,
+  "residual_risk": "LOW_CONTROLLED",
+  "recommended_autonomy_decision": "RESTRICTION_DOWNGRADE",
+  "decision_details": "Downgraded scope from global draft block to targeted A4 human approval for diagnostic claims, granting A4 execute with approval",
+  "evidence_status": "VERIFIED_EFFECTIVE"
+}

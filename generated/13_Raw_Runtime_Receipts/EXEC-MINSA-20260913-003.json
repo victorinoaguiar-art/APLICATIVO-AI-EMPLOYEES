@@ -1,0 +1,43 @@
+{
+  "execution_id": "EXEC-MINSA-20260913-003",
+  "employee_id": "EMP-103",
+  "test_id": "TEST-AUTHENTIC-MINSA-003",
+  "timestamp": "2026-09-13T14:00:34.967Z",
+  "raw_system_inputs": {
+    "user_prompt": "Consulta regulamentar MINSA #3",
+    "jurisdiction": "AO",
+    "domain": "HEALTHCARE"
+  },
+  "router_events": [
+    {
+      "step": "CLASSIFY_JURISDICTION",
+      "result": "AO"
+    },
+    {
+      "step": "SELECT_REGISTRY",
+      "result": "REGULATORY_KNOWLEDGE_REGISTRY"
+    },
+    {
+      "step": "CHECK_FALLBACK",
+      "result": "ZERO_FALLBACK_ENFORCED"
+    }
+  ],
+  "knowledge_items_used": [
+    "KI-003"
+  ],
+  "retrieved_chunks": [
+    "CHK-DR-003-01"
+  ],
+  "physical_source_bytes_hashes": [
+    "cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d"
+  ],
+  "evaluated_decision_rules": [
+    "DR-003"
+  ],
+  "citations": [
+    "Artigo 8.º"
+  ],
+  "final_output": "Resposta com proveniência física provada no diploma Decreto Presidencial n.º 151/21 — Estatuto do Instituto de Especialização em Saúde.",
+  "errors": [],
+  "final_status": "PASS_RAW_RUNTIME_RECEIPT_PROVEN"
+}

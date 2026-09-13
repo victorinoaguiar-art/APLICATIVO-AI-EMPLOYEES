@@ -1,0 +1,10 @@
+{
+  "report_id": "AETF500_EMPLOYEE_KNOWLEDGE_MAPPING_FORENSIC_REPORT_v1.0",
+  "employees_tested_count": 500,
+  "mapping_summary": {
+    "emp_001_to_emp_003_healthcare": {
+      "status": "BROKEN_SOURCE_REFERENCE",
+      "description": "EMP-001 to EMP-003 mapped to HEALTHCARE KI-001..KI-007, but KI-001 points to SRC-LAB-001 (Labor Law)."
+    }
+  }
+}

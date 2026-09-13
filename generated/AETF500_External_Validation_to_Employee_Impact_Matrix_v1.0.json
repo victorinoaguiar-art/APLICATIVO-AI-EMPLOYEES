@@ -1,0 +1,48 @@
+{
+  "matrix_id": "AETF500_EXTERNAL_VALIDATION_TO_EMPLOYEE_IMPACT_MATRIX_v1.0",
+  "as_of_date": "2026-09-12",
+  "external_validations_total": 5,
+  "employees_affected_total": 5,
+  "impact_mapping": [
+    {
+      "validation_id": "EXT-VAL-AGT-001",
+      "affected_employees": [
+        "EMP-ACC-001"
+      ],
+      "restriction": "HUMAN_APPROVAL_REQUIRED",
+      "risk_controlled": true
+    },
+    {
+      "validation_id": "EXT-VAL-BNA-002",
+      "affected_employees": [
+        "EMP-BNK-002"
+      ],
+      "restriction": "HUMAN_APPROVAL_REQUIRED",
+      "risk_controlled": true
+    },
+    {
+      "validation_id": "EXT-VAL-PGC-003",
+      "affected_employees": [
+        "EMP-ACC-003"
+      ],
+      "restriction": "DRAFT_ONLY",
+      "risk_controlled": true
+    },
+    {
+      "validation_id": "EXT-VAL-VAT-004",
+      "affected_employees": [
+        "EMP-ACC-004"
+      ],
+      "restriction": "DRAFT_ONLY",
+      "risk_controlled": true
+    },
+    {
+      "validation_id": "EXT-VAL-WHT-2PCT",
+      "affected_employees": [
+        "EMP-TAX-002"
+      ],
+      "restriction": "HUMAN_APPROVAL_REQUIRED",
+      "risk_controlled": true
+    }
+  ]
+}

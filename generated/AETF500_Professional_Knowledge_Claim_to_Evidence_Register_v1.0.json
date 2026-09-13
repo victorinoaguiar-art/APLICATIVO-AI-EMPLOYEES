@@ -1,0 +1,310 @@
+{
+  "audit_id": "AETF500_PROFESSIONAL_KNOWLEDGE_EVIDENCE_SUBSTANTIATION_AUDIT_v1.0",
+  "program_id": "AETF500_PROFESSIONAL_KNOWLEDGE_COMPETENCY_ASSURANCE_PROGRAM_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "as_of_date": "2026-09-12",
+  "claims_total": 33,
+  "claims_verified": 33,
+  "claims_partially_verified": 0,
+  "claims_unverified": 0,
+  "claims_contradicted": 0,
+  "claims": [
+    {
+      "claim_id": "CLM-001",
+      "claim": "EMPLOYEES_TOTAL = 500",
+      "reported_value": 500,
+      "recomputed_value": 500,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Domain_Inventory_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-002",
+      "claim": "EMPLOYEES_MAPPED = 500",
+      "reported_value": 500,
+      "recomputed_value": 500,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Employee_to_Competency_Matrix_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-003",
+      "claim": "EMPLOYEES_ASSESSED = 500",
+      "reported_value": 500,
+      "recomputed_value": 500,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Assurance_Gate_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-004",
+      "claim": "EMPLOYEES_INTERNALLY_VALIDATED = 442",
+      "reported_value": 442,
+      "recomputed_value": 442,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Assurance_Gate_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-005",
+      "claim": "EMPLOYEES_VALIDATED_WITH_RESTRICTIONS = 46",
+      "reported_value": 46,
+      "recomputed_value": 46,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Assurance_Gate_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-006",
+      "claim": "EMPLOYEES_REQUIRING_EXPERT_REVIEW = 12",
+      "reported_value": 12,
+      "recomputed_value": 12,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Assurance_Gate_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-007",
+      "claim": "EMPLOYEES_REQUIRING_EXTERNAL_VALIDATION = 5",
+      "reported_value": 5,
+      "recomputed_value": 5,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_External_Validation_Master_Register_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-008",
+      "claim": "EMPLOYEES_BLOCKED = 0",
+      "reported_value": 0,
+      "recomputed_value": 0,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Assurance_Gate_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-009",
+      "claim": "EMPLOYEES_NOT_ASSESSED = 0",
+      "reported_value": 0,
+      "recomputed_value": 0,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Domain_Inventory_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-010",
+      "claim": "DOMAINS_TOTAL = 18",
+      "reported_value": 18,
+      "recomputed_value": 18,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Domain_Inventory_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-011",
+      "claim": "COMPETENCIES_TOTAL = 1450",
+      "reported_value": 1450,
+      "recomputed_value": 1450,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Competency_Inventory_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-012",
+      "claim": "CRITICAL_COMPETENCIES_TOTAL = 285",
+      "reported_value": 285,
+      "recomputed_value": 285,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Competency_Inventory_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-013",
+      "claim": "PROFESSIONAL_KNOWLEDGE_PACKS_TOTAL = 16",
+      "reported_value": 16,
+      "recomputed_value": 16,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Packs_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-014",
+      "claim": "AUTHORITATIVE_SOURCE_COVERAGE = 100%",
+      "reported_value": "100%",
+      "recomputed_value": 100,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Assurance_Gate_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-015",
+      "claim": "CURRENT_SOURCE_COVERAGE = 100%",
+      "reported_value": "100%",
+      "recomputed_value": 100,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Assurance_Gate_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-016",
+      "claim": "PROFESSIONAL_TEST_COVERAGE = 100%",
+      "reported_value": "100%",
+      "recomputed_value": 100,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Assurance_Gate_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-017",
+      "claim": "OPEN_KNOWLEDGE_GAPS = 18",
+      "reported_value": 18,
+      "recomputed_value": 18,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Initial_Knowledge_Gap_Register_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-018",
+      "claim": "OPEN_CRITICAL_GAPS = 5",
+      "reported_value": 5,
+      "recomputed_value": 5,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Initial_Knowledge_Gap_Register_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-019",
+      "claim": "UNCONTROLLED_CRITICAL_GAPS = 0",
+      "reported_value": 0,
+      "recomputed_value": 0,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Initial_Knowledge_Gap_Register_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-020",
+      "claim": "PROFESSIONAL_HALLUCINATIONS_FOUND = 0",
+      "reported_value": 0,
+      "recomputed_value": 0,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Assurance_Gate_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-021",
+      "claim": "PASSPORTS_FOUND = 500",
+      "reported_value": 500,
+      "recomputed_value": 500,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Assurance_Gate_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-022",
+      "claim": "PKA_1_LOW = 450",
+      "reported_value": 450,
+      "recomputed_value": 450,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Risk_Classification_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-023",
+      "claim": "PKA_2_TECHNICAL = 515",
+      "reported_value": 515,
+      "recomputed_value": 515,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Risk_Classification_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-024",
+      "claim": "PKA_3_REGULATED = 340",
+      "reported_value": 340,
+      "recomputed_value": 340,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Risk_Classification_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-025",
+      "claim": "PKA_4_CRITICAL = 145",
+      "reported_value": 145,
+      "recomputed_value": 145,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Risk_Classification_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-026",
+      "claim": "NON_FINANCIAL_OPEN_GAPS = 13",
+      "reported_value": 13,
+      "recomputed_value": 13,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_NON_FINANCIAL_PROFESSIONAL_CONTENT_FINDINGS_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-027",
+      "claim": "RESTRICTED_EMPLOYEES_VERIFIED = 46",
+      "reported_value": 46,
+      "recomputed_value": 46,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Assurance_Gate_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-028",
+      "claim": "EXPERT_REVIEW_REQUIRED_VERIFIED = 12",
+      "reported_value": 12,
+      "recomputed_value": 12,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Assurance_Gate_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-029",
+      "claim": "EXTERNAL_VALIDATION_REQUIRED_VERIFIED = 5",
+      "reported_value": 5,
+      "recomputed_value": 5,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_External_Validation_Master_Register_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-030",
+      "claim": "AUTOMATED_TESTS_EXECUTED = 202",
+      "reported_value": 202,
+      "recomputed_value": 202,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Accounting_Test_Run_Manifest_v1.1.8.json"
+    },
+    {
+      "claim_id": "CLM-031",
+      "claim": "AUTOMATED_TESTS_PASSED = 202",
+      "reported_value": 202,
+      "recomputed_value": 202,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Accounting_Test_Run_Manifest_v1.1.8.json"
+    },
+    {
+      "claim_id": "CLM-032",
+      "claim": "BASELINE_MUTATION_ALLOWED = false",
+      "reported_value": false,
+      "recomputed_value": false,
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Assurance_Gate_v1.0.json"
+    },
+    {
+      "claim_id": "CLM-033",
+      "claim": "FINAL_PROFESSIONAL_KNOWLEDGE_EVIDENCE_STATUS = PASS",
+      "reported_value": "PASS",
+      "recomputed_value": "PASS",
+      "matches": true,
+      "verification_status": "VERIFIED",
+      "evidence_file": "AETF500_Professional_Knowledge_Evidence_Audit_Gate_v1.0.json"
+    }
+  ]
+}

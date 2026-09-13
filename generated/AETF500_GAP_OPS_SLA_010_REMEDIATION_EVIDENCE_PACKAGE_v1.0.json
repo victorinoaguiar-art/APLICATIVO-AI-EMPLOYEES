@@ -1,0 +1,50 @@
+{
+  "gap_id": "GAP-OPS-SLA-010",
+  "domain": "Customer Operations",
+  "affected_employee_ids": [
+    "EMP-OPS-006"
+  ],
+  "affected_competency_ids": [
+    "COMP-OPS-004",
+    "COMP-OPS-008"
+  ],
+  "original_problem": "SLA Matrix for SaaS Tier 1 Accounts escalation routing unaligned",
+  "original_root_cause": "Operational SLA matrix update gap",
+  "original_risk_level": "PKA_1_LOW",
+  "source_before": "Customer Operations SLA v1.0",
+  "source_after": "SLA Matrix for SaaS Tier 1 Accounts v2026",
+  "knowledge_pack_before": "PKP-CUSTOMER-OPS-v1.0",
+  "knowledge_pack_after": "PKP-CUSTOMER-OPS-v2.0_UPDATED",
+  "rule_before": "Recommend-only Tier 3 escalation routing",
+  "rule_after": "Full autonomous Tier 3 escalation routing and SLA penalty calculation",
+  "restriction_before": {
+    "type": "RECOMMEND_ONLY",
+    "status": "ACTIVE_ENFORCED",
+    "level": "A3"
+  },
+  "restriction_current": {
+    "type": "FULL_AUTHORIZED_AUTONOMY_WITHIN_SCOPE",
+    "status": "REMOVED",
+    "level": "A6"
+  },
+  "remediation_actions": [
+    "Attached Tier 1 SLA Matrix 2026",
+    "Updated PKP-CUSTOMER-OPS to v2.0",
+    "Removed restriction, granting A6 Full Autonomy within scope"
+  ],
+  "professional_test_run_ids": [
+    "RUN-PROF-GAP-OPS-SLA-010"
+  ],
+  "professional_test_cases": 25,
+  "test_results": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "expert_review_required": false,
+  "external_validation_required": false,
+  "residual_risk": "ZERO",
+  "recommended_autonomy_decision": "RESTRICTION_REMOVE",
+  "decision_details": "Removed restriction, granting A6 Full Authorized Autonomy within Customer Operations scope",
+  "evidence_status": "VERIFIED_EFFECTIVE"
+}

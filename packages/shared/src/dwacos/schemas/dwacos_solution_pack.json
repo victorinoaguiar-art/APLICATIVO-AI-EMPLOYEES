@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DWACOS Solution Pack Schema",
+  "type": "object",
+  "properties": {
+    "solution_pack_id": { "type": "string" },
+    "commercial_area_code": { "type": "string", "pattern": "^(A[0-2][0-8]|S[0-2][0-9]|P01)$" },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "business_problem": { "type": "string" },
+    "target_outcomes": { "type": "array", "items": { "type": "string" } },
+    "included_rolepack_ids": { "type": "array", "items": { "type": "integer" } },
+    "required_inputs": { "type": "array", "items": { "type": "string" } },
+    "required_connectors": { "type": "array", "items": { "type": "string" } },
+    "default_autonomy": { "type": "string", "enum": ["FULL_AUTONOMY", "HUMAN_APPROVAL_REQUIRED", "STRICT_SUPERVISION"] },
+    "risk_profile": { "type": "string", "enum": ["LOW_RISK", "MEDIUM_RISK", "HIGH_RISK"] },
+    "pricing_reference_kwz": { "type": "number" },
+    "status": { "type": "string", "enum": ["DRAFT", "VALIDATED", "COMMERCIAL_READY", "ACTIVE", "SUSPENDED", "DEPRECATED"] },
+    "version": { "type": "string" }
+  },
+  "required": ["solution_pack_id", "commercial_area_code", "name", "business_problem", "included_rolepack_ids", "status"]
+}

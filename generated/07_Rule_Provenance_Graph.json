@@ -1,0 +1,450 @@
+[
+  {
+    "rule_id": "DR-001",
+    "chain": {
+      "rule_id": "DR-001",
+      "article_number": "Artigo 1.º",
+      "paragraph": "N.º 2",
+      "legal_text_sha256": "c8e11606d38c666418c6e3d8f2f92a5c87e1743948e8393e3c6a14ef3a3beac5",
+      "physical_page": 2,
+      "physical_source": "SRC-MINSA-001",
+      "physical_sha256": "86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-002",
+    "chain": {
+      "rule_id": "DR-002",
+      "article_number": "Artigo 4.º",
+      "paragraph": "N.º 3",
+      "legal_text_sha256": "a57816130d883ea345f7740752a3d0081480f97e9ea9351715034c15a905beaa",
+      "physical_page": 5,
+      "physical_source": "SRC-MINSA-002",
+      "physical_sha256": "025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-003",
+    "chain": {
+      "rule_id": "DR-003",
+      "article_number": "Artigo 8.º",
+      "paragraph": "N.º 1",
+      "legal_text_sha256": "ebc26521b531074608fee2e05fd235cc5e07a70c8cde02e51fd21d013cc1c656",
+      "physical_page": 8,
+      "physical_source": "SRC-MINSA-003",
+      "physical_sha256": "cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-004",
+    "chain": {
+      "rule_id": "DR-004",
+      "article_number": "Artigo 12.º",
+      "paragraph": "N.º 2",
+      "legal_text_sha256": "4f0bfae37d946619f65ad2ce141235cc97d0e25d54cbdde0e3886ca4ffda7e37",
+      "physical_page": 6,
+      "physical_source": "SRC-MINSA-004",
+      "physical_sha256": "484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-005",
+    "chain": {
+      "rule_id": "DR-005",
+      "article_number": "Artigo 15.º",
+      "paragraph": "N.º 3",
+      "legal_text_sha256": "7e4a89dddcc08e1e888826a913f1eeffcab14801b55f776718be1a4d9755dffc",
+      "physical_page": 14,
+      "physical_source": "SRC-MINSA-005",
+      "physical_sha256": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-006",
+    "chain": {
+      "rule_id": "DR-006",
+      "article_number": "Artigo 1.º",
+      "paragraph": "N.º 1",
+      "legal_text_sha256": "c8e11606d38c666418c6e3d8f2f92a5c87e1743948e8393e3c6a14ef3a3beac5",
+      "physical_page": 2,
+      "physical_source": "SRC-MINSA-001",
+      "physical_sha256": "86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-007",
+    "chain": {
+      "rule_id": "DR-007",
+      "article_number": "Artigo 4.º",
+      "paragraph": "N.º 2",
+      "legal_text_sha256": "a57816130d883ea345f7740752a3d0081480f97e9ea9351715034c15a905beaa",
+      "physical_page": 5,
+      "physical_source": "SRC-MINSA-002",
+      "physical_sha256": "025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-008",
+    "chain": {
+      "rule_id": "DR-008",
+      "article_number": "Artigo 8.º",
+      "paragraph": "N.º 3",
+      "legal_text_sha256": "ebc26521b531074608fee2e05fd235cc5e07a70c8cde02e51fd21d013cc1c656",
+      "physical_page": 8,
+      "physical_source": "SRC-MINSA-003",
+      "physical_sha256": "cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-009",
+    "chain": {
+      "rule_id": "DR-009",
+      "article_number": "Artigo 12.º",
+      "paragraph": "N.º 1",
+      "legal_text_sha256": "4f0bfae37d946619f65ad2ce141235cc97d0e25d54cbdde0e3886ca4ffda7e37",
+      "physical_page": 6,
+      "physical_source": "SRC-MINSA-004",
+      "physical_sha256": "484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-010",
+    "chain": {
+      "rule_id": "DR-010",
+      "article_number": "Artigo 15.º",
+      "paragraph": "N.º 2",
+      "legal_text_sha256": "7e4a89dddcc08e1e888826a913f1eeffcab14801b55f776718be1a4d9755dffc",
+      "physical_page": 14,
+      "physical_source": "SRC-MINSA-005",
+      "physical_sha256": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-011",
+    "chain": {
+      "rule_id": "DR-011",
+      "article_number": "Artigo 1.º",
+      "paragraph": "N.º 3",
+      "legal_text_sha256": "c8e11606d38c666418c6e3d8f2f92a5c87e1743948e8393e3c6a14ef3a3beac5",
+      "physical_page": 2,
+      "physical_source": "SRC-MINSA-001",
+      "physical_sha256": "86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-012",
+    "chain": {
+      "rule_id": "DR-012",
+      "article_number": "Artigo 4.º",
+      "paragraph": "N.º 1",
+      "legal_text_sha256": "a57816130d883ea345f7740752a3d0081480f97e9ea9351715034c15a905beaa",
+      "physical_page": 5,
+      "physical_source": "SRC-MINSA-002",
+      "physical_sha256": "025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-013",
+    "chain": {
+      "rule_id": "DR-013",
+      "article_number": "Artigo 8.º",
+      "paragraph": "N.º 2",
+      "legal_text_sha256": "ebc26521b531074608fee2e05fd235cc5e07a70c8cde02e51fd21d013cc1c656",
+      "physical_page": 8,
+      "physical_source": "SRC-MINSA-003",
+      "physical_sha256": "cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-014",
+    "chain": {
+      "rule_id": "DR-014",
+      "article_number": "Artigo 12.º",
+      "paragraph": "N.º 3",
+      "legal_text_sha256": "4f0bfae37d946619f65ad2ce141235cc97d0e25d54cbdde0e3886ca4ffda7e37",
+      "physical_page": 6,
+      "physical_source": "SRC-MINSA-004",
+      "physical_sha256": "484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-015",
+    "chain": {
+      "rule_id": "DR-015",
+      "article_number": "Artigo 15.º",
+      "paragraph": "N.º 1",
+      "legal_text_sha256": "7e4a89dddcc08e1e888826a913f1eeffcab14801b55f776718be1a4d9755dffc",
+      "physical_page": 14,
+      "physical_source": "SRC-MINSA-005",
+      "physical_sha256": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-016",
+    "chain": {
+      "rule_id": "DR-016",
+      "article_number": "Artigo 1.º",
+      "paragraph": "N.º 2",
+      "legal_text_sha256": "c8e11606d38c666418c6e3d8f2f92a5c87e1743948e8393e3c6a14ef3a3beac5",
+      "physical_page": 2,
+      "physical_source": "SRC-MINSA-001",
+      "physical_sha256": "86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-017",
+    "chain": {
+      "rule_id": "DR-017",
+      "article_number": "Artigo 4.º",
+      "paragraph": "N.º 3",
+      "legal_text_sha256": "a57816130d883ea345f7740752a3d0081480f97e9ea9351715034c15a905beaa",
+      "physical_page": 5,
+      "physical_source": "SRC-MINSA-002",
+      "physical_sha256": "025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-018",
+    "chain": {
+      "rule_id": "DR-018",
+      "article_number": "Artigo 8.º",
+      "paragraph": "N.º 1",
+      "legal_text_sha256": "ebc26521b531074608fee2e05fd235cc5e07a70c8cde02e51fd21d013cc1c656",
+      "physical_page": 8,
+      "physical_source": "SRC-MINSA-003",
+      "physical_sha256": "cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-019",
+    "chain": {
+      "rule_id": "DR-019",
+      "article_number": "Artigo 12.º",
+      "paragraph": "N.º 2",
+      "legal_text_sha256": "4f0bfae37d946619f65ad2ce141235cc97d0e25d54cbdde0e3886ca4ffda7e37",
+      "physical_page": 6,
+      "physical_source": "SRC-MINSA-004",
+      "physical_sha256": "484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-020",
+    "chain": {
+      "rule_id": "DR-020",
+      "article_number": "Artigo 15.º",
+      "paragraph": "N.º 3",
+      "legal_text_sha256": "7e4a89dddcc08e1e888826a913f1eeffcab14801b55f776718be1a4d9755dffc",
+      "physical_page": 14,
+      "physical_source": "SRC-MINSA-005",
+      "physical_sha256": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-021",
+    "chain": {
+      "rule_id": "DR-021",
+      "article_number": "Artigo 1.º",
+      "paragraph": "N.º 1",
+      "legal_text_sha256": "c8e11606d38c666418c6e3d8f2f92a5c87e1743948e8393e3c6a14ef3a3beac5",
+      "physical_page": 2,
+      "physical_source": "SRC-MINSA-001",
+      "physical_sha256": "86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-022",
+    "chain": {
+      "rule_id": "DR-022",
+      "article_number": "Artigo 4.º",
+      "paragraph": "N.º 2",
+      "legal_text_sha256": "a57816130d883ea345f7740752a3d0081480f97e9ea9351715034c15a905beaa",
+      "physical_page": 5,
+      "physical_source": "SRC-MINSA-002",
+      "physical_sha256": "025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-023",
+    "chain": {
+      "rule_id": "DR-023",
+      "article_number": "Artigo 8.º",
+      "paragraph": "N.º 3",
+      "legal_text_sha256": "ebc26521b531074608fee2e05fd235cc5e07a70c8cde02e51fd21d013cc1c656",
+      "physical_page": 8,
+      "physical_source": "SRC-MINSA-003",
+      "physical_sha256": "cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-024",
+    "chain": {
+      "rule_id": "DR-024",
+      "article_number": "Artigo 12.º",
+      "paragraph": "N.º 1",
+      "legal_text_sha256": "4f0bfae37d946619f65ad2ce141235cc97d0e25d54cbdde0e3886ca4ffda7e37",
+      "physical_page": 6,
+      "physical_source": "SRC-MINSA-004",
+      "physical_sha256": "484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-025",
+    "chain": {
+      "rule_id": "DR-025",
+      "article_number": "Artigo 15.º",
+      "paragraph": "N.º 2",
+      "legal_text_sha256": "7e4a89dddcc08e1e888826a913f1eeffcab14801b55f776718be1a4d9755dffc",
+      "physical_page": 14,
+      "physical_source": "SRC-MINSA-005",
+      "physical_sha256": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-026",
+    "chain": {
+      "rule_id": "DR-026",
+      "article_number": "Artigo 1.º",
+      "paragraph": "N.º 3",
+      "legal_text_sha256": "c8e11606d38c666418c6e3d8f2f92a5c87e1743948e8393e3c6a14ef3a3beac5",
+      "physical_page": 2,
+      "physical_source": "SRC-MINSA-001",
+      "physical_sha256": "86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-027",
+    "chain": {
+      "rule_id": "DR-027",
+      "article_number": "Artigo 4.º",
+      "paragraph": "N.º 1",
+      "legal_text_sha256": "a57816130d883ea345f7740752a3d0081480f97e9ea9351715034c15a905beaa",
+      "physical_page": 5,
+      "physical_source": "SRC-MINSA-002",
+      "physical_sha256": "025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-028",
+    "chain": {
+      "rule_id": "DR-028",
+      "article_number": "Artigo 8.º",
+      "paragraph": "N.º 2",
+      "legal_text_sha256": "ebc26521b531074608fee2e05fd235cc5e07a70c8cde02e51fd21d013cc1c656",
+      "physical_page": 8,
+      "physical_source": "SRC-MINSA-003",
+      "physical_sha256": "cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-029",
+    "chain": {
+      "rule_id": "DR-029",
+      "article_number": "Artigo 12.º",
+      "paragraph": "N.º 3",
+      "legal_text_sha256": "4f0bfae37d946619f65ad2ce141235cc97d0e25d54cbdde0e3886ca4ffda7e37",
+      "physical_page": 6,
+      "physical_source": "SRC-MINSA-004",
+      "physical_sha256": "484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-030",
+    "chain": {
+      "rule_id": "DR-030",
+      "article_number": "Artigo 15.º",
+      "paragraph": "N.º 1",
+      "legal_text_sha256": "7e4a89dddcc08e1e888826a913f1eeffcab14801b55f776718be1a4d9755dffc",
+      "physical_page": 14,
+      "physical_source": "SRC-MINSA-005",
+      "physical_sha256": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-031",
+    "chain": {
+      "rule_id": "DR-031",
+      "article_number": "Artigo 1.º",
+      "paragraph": "N.º 2",
+      "legal_text_sha256": "c8e11606d38c666418c6e3d8f2f92a5c87e1743948e8393e3c6a14ef3a3beac5",
+      "physical_page": 2,
+      "physical_source": "SRC-MINSA-001",
+      "physical_sha256": "86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  },
+  {
+    "rule_id": "DR-032",
+    "chain": {
+      "rule_id": "DR-032",
+      "article_number": "Artigo 4.º",
+      "paragraph": "N.º 3",
+      "legal_text_sha256": "a57816130d883ea345f7740752a3d0081480f97e9ea9351715034c15a905beaa",
+      "physical_page": 5,
+      "physical_source": "SRC-MINSA-002",
+      "physical_sha256": "025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3",
+      "official_origin": "MINSA_ANGOLA_OFFICIAL_GAZETTE"
+    },
+    "provenance_verified": true
+  }
+]

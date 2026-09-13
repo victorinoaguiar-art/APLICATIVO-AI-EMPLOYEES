@@ -1,0 +1,202 @@
+{
+  "program_id": "AETF500_KNOWLEDGE_GAP_FILLING_COMPETENCY_CERTIFICATION_READINESS_v1.0",
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.8_FROZEN",
+  "as_of_date": "2026-09-12",
+  "gaps_diagnosed_total": 18,
+  "diagnoses": [
+    {
+      "gap_id": "GAP-HC-REG-001",
+      "domain": "Healthcare",
+      "gap_class": [
+        "KNOWLEDGE_INCOMPLETE",
+        "SOURCE_MISSING"
+      ],
+      "existing_knowledge": "MINSA General Framework 2020",
+      "missing_knowledge": "MINSA Statutory Gazette Decree n.º 42/26 medical device compliance boundaries",
+      "risk_level": "PKA_4_CRITICAL"
+    },
+    {
+      "gap_id": "GAP-PA-PROC-002",
+      "domain": "Public Administration",
+      "gap_class": [
+        "KNOWLEDGE_OUTDATED",
+        "PROCEDURAL_GAP"
+      ],
+      "existing_knowledge": "Lei dos Contratos Públicos 9/16",
+      "missing_knowledge": "Public Procurement Law 2026 guidelines & approval limits",
+      "risk_level": "PKA_3_REGULATED"
+    },
+    {
+      "gap_id": "GAP-SEC-NIST-003",
+      "domain": "Cybersecurity",
+      "gap_class": [
+        "KNOWLEDGE_OUTDATED",
+        "TOOL_EXECUTION_FAILURE"
+      ],
+      "existing_knowledge": "NIST SP 800-53 Rev. 4",
+      "missing_knowledge": "NIST SP 800-53 Rev. 5 & OWASP Security Playbook 2026 rules",
+      "risk_level": "PKA_4_CRITICAL"
+    },
+    {
+      "gap_id": "GAP-ENG-OWASP-004",
+      "domain": "Software Engineering",
+      "gap_class": [
+        "APPLICATION_FAILURE",
+        "TOOL_EXECUTION_FAILURE"
+      ],
+      "existing_knowledge": "OWASP API Top 10 2021",
+      "missing_knowledge": "OWASP API Security Top 10 2026 ruleset & dependency security",
+      "risk_level": "PKA_2_TECHNICAL"
+    },
+    {
+      "gap_id": "GAP-LEG-CORP-005",
+      "domain": "Legal Counsel",
+      "gap_class": [
+        "KNOWLEDGE_INCOMPLETE",
+        "SOURCE_MISSING"
+      ],
+      "existing_knowledge": "Código Comercial 1888",
+      "missing_knowledge": "Commercial Code Revision 2026 corporate governance boundaries",
+      "risk_level": "PKA_3_REGULATED"
+    },
+    {
+      "gap_id": "GAP-HR-LABOR-006",
+      "domain": "Human Resources",
+      "gap_class": [
+        "KNOWLEDGE_INCOMPLETE",
+        "PROCEDURAL_GAP"
+      ],
+      "existing_knowledge": "Lei Geral do Trabalho 7/15",
+      "missing_knowledge": "Labor Code Revision Lei n.º 12/23 severance multipliers",
+      "risk_level": "PKA_3_REGULATED"
+    },
+    {
+      "gap_id": "GAP-PROC-INCO-007",
+      "domain": "Procurement",
+      "gap_class": [
+        "KNOWLEDGE_OUTDATED",
+        "SOURCE_MISSING"
+      ],
+      "existing_knowledge": "Pauta Aduaneira 2019",
+      "missing_knowledge": "Pauta Despacho Aduaneiro Angola 2026 & Incoterms 2020 duty rules",
+      "risk_level": "PKA_2_TECHNICAL"
+    },
+    {
+      "gap_id": "GAP-PMO-AGILE-008",
+      "domain": "Project Management",
+      "gap_class": [
+        "PROCEDURAL_GAP"
+      ],
+      "existing_knowledge": "PMO Agile Framework v1.0",
+      "missing_knowledge": "PMO Process Taxonomy v2.1 sprint velocity prediction models",
+      "risk_level": "PKA_2_TECHNICAL"
+    },
+    {
+      "gap_id": "GAP-DATA-PRIV-009",
+      "domain": "Data Science",
+      "gap_class": [
+        "KNOWLEDGE_INCOMPLETE",
+        "SOURCE_MISSING"
+      ],
+      "existing_knowledge": "Lei n.º 22/11",
+      "missing_knowledge": "Directivas APD 2026 personal data protection anonymization rules",
+      "risk_level": "PKA_3_REGULATED"
+    },
+    {
+      "gap_id": "GAP-OPS-SLA-010",
+      "domain": "Customer Operations",
+      "gap_class": [
+        "PROCEDURAL_GAP"
+      ],
+      "existing_knowledge": "Customer Operations SLA v1.0",
+      "missing_knowledge": "SLA Matrix for SaaS Tier 1 Accounts v2026 escalation paths",
+      "risk_level": "PKA_1_LOW"
+    },
+    {
+      "gap_id": "GAP-SALES-COMM-011",
+      "domain": "Sales",
+      "gap_class": [
+        "PROCEDURAL_GAP"
+      ],
+      "existing_knowledge": "Sales Discounting Policy 2022",
+      "missing_knowledge": "Sales Approval Matrix v3.0 custom pricing discount thresholds",
+      "risk_level": "PKA_1_LOW"
+    },
+    {
+      "gap_id": "GAP-MKT-CONSUMER-012",
+      "domain": "Marketing",
+      "gap_class": [
+        "KNOWLEDGE_INCOMPLETE",
+        "SOURCE_MISSING"
+      ],
+      "existing_knowledge": "Lei n.º 15/03",
+      "missing_knowledge": "Guia de Publicidade do Consumidor 2026 ad claim compliance rules",
+      "risk_level": "PKA_1_LOW"
+    },
+    {
+      "gap_id": "GAP-CS-SUPPORT-013",
+      "domain": "Customer Success",
+      "gap_class": [
+        "PROCEDURAL_GAP"
+      ],
+      "existing_knowledge": "CS Playbook v1.0",
+      "missing_knowledge": "Health Score Model v2.4 churn risk escalation protocols",
+      "risk_level": "PKA_1_LOW"
+    },
+    {
+      "gap_id": "GAP-FIN-AGT-001",
+      "domain": "Taxation",
+      "gap_class": [
+        "SOURCE_MISSING",
+        "EXTERNAL_DEPENDENCY"
+      ],
+      "existing_knowledge": "Internal invoicing model",
+      "missing_knowledge": "Official AGT software certification specification & validation token",
+      "risk_level": "PKA_4_CRITICAL"
+    },
+    {
+      "gap_id": "GAP-FIN-BNA-002",
+      "domain": "Banking",
+      "gap_class": [
+        "SOURCE_MISSING",
+        "EXTERNAL_DEPENDENCY"
+      ],
+      "existing_knowledge": "Internal forex clearing",
+      "missing_knowledge": "BNA official foreign exchange license & international repatriation mandate",
+      "risk_level": "PKA_4_CRITICAL"
+    },
+    {
+      "gap_id": "GAP-FIN-PGC-003",
+      "domain": "Accounting",
+      "gap_class": [
+        "KNOWLEDGE_INCOMPLETE",
+        "EXTERNAL_DEPENDENCY"
+      ],
+      "existing_knowledge": "Internal account 37.6 mapping",
+      "missing_knowledge": "CNC/OCPCA official accounting policy endorsement for 37.6 deferred SaaS revenue",
+      "risk_level": "PKA_4_CRITICAL"
+    },
+    {
+      "gap_id": "GAP-FIN-VAT-004",
+      "domain": "Taxation",
+      "gap_class": [
+        "SOURCE_MISSING",
+        "EXTERNAL_DEPENDENCY"
+      ],
+      "existing_knowledge": "Internal SAF-T draft export",
+      "missing_knowledge": "AGT tax inspection validation token for SAF-T AO schema v1.0",
+      "risk_level": "PKA_4_CRITICAL"
+    },
+    {
+      "gap_id": "GAP-FIN-WHT-005",
+      "domain": "Taxation",
+      "gap_class": [
+        "SOURCE_MISSING",
+        "EXTERNAL_DEPENDENCY"
+      ],
+      "existing_knowledge": "Internal 2% WHT rule model",
+      "missing_knowledge": "AGT official tax ruling on 2% Industrial Tax withholding applicability to B2B SaaS",
+      "risk_level": "PKA_4_CRITICAL"
+    }
+  ]
+}

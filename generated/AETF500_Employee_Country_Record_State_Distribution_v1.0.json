@@ -1,0 +1,16 @@
+{
+  "program_id": "AETF500_MULTI_JURISDICTION_METRIC_SEMANTICS_CARDINALITY_RECONCILIATION_MICRO_PATCH_v1.0",
+  "employees_total": 500,
+  "country_packs_total": 6,
+  "employee_country_support_records": 3000,
+  "employee_jurisdiction_positive_certification_records": 1500,
+  "state_counts": {
+    "PRODUCTION_CERTIFIED": 500,
+    "CERTIFIED_WITH_SUPERVISION": 1000,
+    "KNOWLEDGE_COLLECTION": 500,
+    "KNOWLEDGE_VERIFICATION": 1000
+  },
+  "state_sum": 3000,
+  "formula_verified": "500 * 6 = 3000 EMPLOYEE_COUNTRY_SUPPORT_RECORDS",
+  "semantics_gate_status": "PASS"
+}

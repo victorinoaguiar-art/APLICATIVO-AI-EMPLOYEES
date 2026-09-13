@@ -1,0 +1,22 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.3_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "cac_evidence": {
+    "historical_cac_aoa": 45000,
+    "historical_scope": "Simplified digital marketing lead cost estimate during initial Phase 1 sandbox tests",
+    "audited_enterprise_cac_aoa": 5000000,
+    "audited_scope": "Enterprise Sales-Assisted CAC for Wave 2 customers",
+    "total_cost_pool_aoa": 15000000,
+    "cost_pool_breakdown": {
+      "enterprise_sales_salaries_commissions_aoa": 9000000,
+      "commercial_travel_field_events_aoa": 3500000,
+      "paid_acquisition_digital_campaigns_aoa": 2500000
+    },
+    "customers_acquired": 3,
+    "acquisition_period": "2026-08-01 to 2026-09-11",
+    "cac_formula": "total_cost_pool_aoa / customers_acquired",
+    "calculation_audit": "15,000,000 / 3 = 5,000,000 AOA",
+    "audit_timestamp": "2026-09-12T10:30:00Z",
+    "audit_hash": "a8f3b2e9c7d4e1f8a9b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4"
+  }
+}

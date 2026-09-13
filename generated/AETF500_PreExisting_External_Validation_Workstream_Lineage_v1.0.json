@@ -1,0 +1,71 @@
+{
+  "pre_existing_regulatory_external_workstreams_total": 5,
+  "all_5_historical_workstream_ids_accounted_for": true,
+  "employee_regulatory_external_validation_open_workstreams": 5,
+  "employees_affected_by_regulatory_external_validation_workstreams": 500,
+  "jurisdiction_external_assurance_open_workstreams": 2,
+  "total_open_external_workstreams": 7,
+  "unresolved_external_workstream_lineage": 0,
+  "workstreams": [
+    {
+      "workstream_id": "EXT-VAL-AGT-001",
+      "domain": "AGT Invoicing & Tax Certification",
+      "previous_status": "SOURCE_COLLECTION_IN_PROGRESS",
+      "current_status": "SOURCE_COLLECTION_IN_PROGRESS",
+      "external_authority": "Administração Geral Tributária (AGT)",
+      "external_validation_completed": false,
+      "restrictions_if_open": [
+        "MANDATORY_HUMAN_APPROVAL_TAX_DOCUMENTS"
+      ],
+      "lineage_status": "OPEN"
+    },
+    {
+      "workstream_id": "EXT-VAL-BNA-002",
+      "domain": "BNA Foreign Exchange & International Subscriptions",
+      "previous_status": "SOURCE_COLLECTION_IN_PROGRESS",
+      "current_status": "SOURCE_COLLECTION_IN_PROGRESS",
+      "external_authority": "Banco Nacional de Angola (BNA)",
+      "external_validation_completed": false,
+      "restrictions_if_open": [
+        "MANDATORY_HUMAN_APPROVAL_FOREX_TRANSACTIONS"
+      ],
+      "lineage_status": "OPEN"
+    },
+    {
+      "workstream_id": "EXT-VAL-PGC-003",
+      "domain": "PGC Chart of Accounts Accounting Standards Validation",
+      "previous_status": "SOURCE_COLLECTION_IN_PROGRESS",
+      "current_status": "SOURCE_COLLECTION_IN_PROGRESS",
+      "external_authority": "Conselho Nacional de Contabilidade (CNC)",
+      "external_validation_completed": false,
+      "restrictions_if_open": [
+        "HUMAN_REVIEW_OFFICIAL_STATEMENTS"
+      ],
+      "lineage_status": "OPEN"
+    },
+    {
+      "workstream_id": "EXT-VAL-VAT-004",
+      "domain": "VAT Exemption & Code Mapping Validation",
+      "previous_status": "SOURCE_COLLECTION_IN_PROGRESS",
+      "current_status": "SOURCE_COLLECTION_IN_PROGRESS",
+      "external_authority": "AGT Tax Audit Division",
+      "external_validation_completed": false,
+      "restrictions_if_open": [
+        "HUMAN_REVIEW_VAT_RETURNS"
+      ],
+      "lineage_status": "OPEN"
+    },
+    {
+      "workstream_id": "EXT-VAL-WHT-2PCT",
+      "domain": "Withholding Tax 2% Service Retentions Validation",
+      "previous_status": "SOURCE_COLLECTION_IN_PROGRESS",
+      "current_status": "SOURCE_COLLECTION_IN_PROGRESS",
+      "external_authority": "AGT Department of Legal Services",
+      "external_validation_completed": false,
+      "restrictions_if_open": [
+        "HUMAN_REVIEW_WHT_CERTIFICATES"
+      ],
+      "lineage_status": "OPEN"
+    }
+  ]
+}

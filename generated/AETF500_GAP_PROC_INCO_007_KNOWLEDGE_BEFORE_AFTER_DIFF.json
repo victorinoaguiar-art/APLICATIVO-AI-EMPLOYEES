@@ -1,0 +1,136 @@
+{
+  "gap_id": "GAP-PROC-INCO-007",
+  "domain": "Procurement",
+  "competency_id": "COMP-PROC-INCO",
+  "primary_employee_id": "EMP-PROC-001",
+  "knowledge_before": {
+    "concepts": [
+      "Basic purchase order creation"
+    ],
+    "rules": [
+      "Verify supplier tax ID"
+    ],
+    "procedures": [
+      "Create vendor profile"
+    ],
+    "knowledge_pack_version": "KP-PROC-PROCUREMENT-v1.0.0"
+  },
+  "missing_knowledge": {
+    "missing_concepts": [
+      "ICC Incoterms 2020 cost/risk allocation",
+      "EU Common Customs Tariff duty calculation"
+    ],
+    "missing_rules": [
+      "DDP vs DAP vs FOB responsibility split",
+      "Supplier conflict of interest screening > €10k"
+    ],
+    "missing_exceptions": [
+      "Inter-company transfer simplified customs procedure"
+    ],
+    "missing_procedures": [
+      "Incoterms duty & customs landed cost calculation"
+    ],
+    "missing_prohibited_actions": [
+      "Authorizing import orders without clear Incoterm assignment"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "SRC-PROC-001",
+      "exact_title": "ICC Incoterms® 2020 Rules",
+      "issuer": "International Chamber of Commerce",
+      "source_type": "PROFESSIONAL_STANDARD",
+      "document_number": "ICC Pub 723E",
+      "version": "2020-01-01",
+      "jurisdiction": "International",
+      "publication_date": "2020-01-01",
+      "effective_from": "2020-01-01",
+      "effective_to": "9999-12-31",
+      "file_or_url": "sources/standards/icc_incoterms_2020.pdf",
+      "sha256": null,
+      "hash_algorithm": "SHA256",
+      "hash_subject": "PHYSICAL_FILE_BYTES",
+      "verification_status": "SOURCE_FILE_NOT_AVAILABLE",
+      "legacy_logical_identifier_hash": "81711ca143f551744c5d325c6be5702e494a6d18b8bc8ac82b6bed295d035c2b"
+    }
+  ],
+  "exact_knowledge_added": {
+    "decision_rule_ids": [
+      "DR-068",
+      "DR-069",
+      "DR-070",
+      "DR-071",
+      "DR-072",
+      "DR-073",
+      "DR-074",
+      "DR-075",
+      "DR-076",
+      "DR-077",
+      "DR-078"
+    ],
+    "exception_rule_ids": [
+      "EX-021",
+      "EX-022",
+      "EX-023",
+      "EX-024"
+    ],
+    "procedure_ids": [
+      "PR-037",
+      "PR-038",
+      "PR-039",
+      "PR-040",
+      "PR-041",
+      "PR-042"
+    ],
+    "example_ids": [
+      "EXM-056",
+      "EXM-057",
+      "EXM-058",
+      "EXM-059",
+      "EXM-060",
+      "EXM-061",
+      "EXM-062",
+      "EXM-063",
+      "EXM-064"
+    ],
+    "prohibited_action_ids": [
+      "PA-017",
+      "PA-018"
+    ]
+  },
+  "knowledge_pack_change": {
+    "pack_id": "KP-PROC-PROCUREMENT",
+    "version_before": "KP-PROC-PROCUREMENT-v1.0.0",
+    "version_after": "KP-PROC-PROCUREMENT-v1.1.0"
+  },
+  "employees_affected": {
+    "directly_affected": [
+      "EMP-PROC-001"
+    ],
+    "indirectly_affected": [
+      "EMP-PROC-002",
+      "EMP-PROC-003",
+      "EMP-PROC-004",
+      "EMP-PROC-005"
+    ],
+    "total_affected": 5
+  },
+  "delivery_evidence": {
+    "retrieval_test_passed": true,
+    "rule_loading_test_passed": true,
+    "tool_policy_loaded": true,
+    "delivery_status": "DELIVERED"
+  },
+  "test_evidence": {
+    "unseen_test_cases_count": 25,
+    "test_run_ids": [
+      "RUN-PROC-001",
+      "RUN-PROC-002"
+    ],
+    "test_result": "PASS"
+  },
+  "certification_status": "INTERNALLY_CERTIFIED",
+  "readiness_level": "R6_READY_FOR_AUTONOMOUS_EXECUTION_WITHIN_SCOPE",
+  "restriction_action": "RESTRICTION_REMOVED",
+  "forensic_status": "FORENSICALLY_VERIFIED"
+}

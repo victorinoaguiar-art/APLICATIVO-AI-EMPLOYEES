@@ -1,0 +1,4152 @@
+[
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-001",
+    "rule": "Angola localized decision rule DR-001 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-002",
+    "rule": "Angola localized decision rule DR-002 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-003",
+    "rule": "Angola localized decision rule DR-003 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-004",
+    "rule": "Angola localized decision rule DR-004 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-005",
+    "rule": "Angola localized decision rule DR-005 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-006",
+    "rule": "Angola localized decision rule DR-006 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-007",
+    "rule": "Angola localized decision rule DR-007 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-008",
+    "rule": "Angola localized decision rule DR-008 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-009",
+    "rule": "Angola localized decision rule DR-009 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-010",
+    "rule": "Angola localized decision rule DR-010 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-001",
+    "rule": "Angola localized exception EX-001 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-002",
+    "rule": "Angola localized exception EX-002 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-003",
+    "rule": "Angola localized exception EX-003 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-001",
+    "rule": "Angola localized procedure PR-001 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-002",
+    "rule": "Angola localized procedure PR-002 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-003",
+    "rule": "Angola localized procedure PR-003 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-004",
+    "rule": "Angola localized procedure PR-004 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-005",
+    "rule": "Angola localized procedure PR-005 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-006",
+    "rule": "Angola localized procedure PR-006 aligned with Portaria 142/2022 Regulamento Sanitário Nacional",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-001",
+    "rule": "Angola localized example EXM-001 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-002",
+    "rule": "Angola localized example EXM-002 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-003",
+    "rule": "Angola localized example EXM-003 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-004",
+    "rule": "Angola localized example EXM-004 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-005",
+    "rule": "Angola localized example EXM-005 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-006",
+    "rule": "Angola localized example EXM-006 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-007",
+    "rule": "Angola localized example EXM-007 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-008",
+    "rule": "Angola localized example EXM-008 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-009",
+    "rule": "Angola localized example EXM-009 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-001",
+    "rule": "Angola localized prohibition PA-001 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-002",
+    "rule": "Angola localized prohibition PA-002 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HC-001",
+    "source_title": "Portaria 142/2022 Regulamento Sanitário Nacional",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-003",
+    "rule": "Angola localized prohibition PA-003 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Healthcare",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-011",
+    "rule": "Angola localized decision rule DR-011 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-012",
+    "rule": "Angola localized decision rule DR-012 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-013",
+    "rule": "Angola localized decision rule DR-013 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-014",
+    "rule": "Angola localized decision rule DR-014 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-015",
+    "rule": "Angola localized decision rule DR-015 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-016",
+    "rule": "Angola localized decision rule DR-016 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-017",
+    "rule": "Angola localized decision rule DR-017 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-018",
+    "rule": "Angola localized decision rule DR-018 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-019",
+    "rule": "Angola localized decision rule DR-019 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-020",
+    "rule": "Angola localized decision rule DR-020 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-021",
+    "rule": "Angola localized decision rule DR-021 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-022",
+    "rule": "Angola localized decision rule DR-022 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-004",
+    "rule": "Angola localized exception EX-004 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-005",
+    "rule": "Angola localized exception EX-005 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-006",
+    "rule": "Angola localized exception EX-006 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-007",
+    "rule": "Angola localized exception EX-007 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-007",
+    "rule": "Angola localized procedure PR-007 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-008",
+    "rule": "Angola localized procedure PR-008 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-009",
+    "rule": "Angola localized procedure PR-009 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-010",
+    "rule": "Angola localized procedure PR-010 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-011",
+    "rule": "Angola localized procedure PR-011 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-012",
+    "rule": "Angola localized procedure PR-012 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-013",
+    "rule": "Angola localized procedure PR-013 aligned with Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-010",
+    "rule": "Angola localized example EXM-010 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-011",
+    "rule": "Angola localized example EXM-011 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-012",
+    "rule": "Angola localized example EXM-012 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-013",
+    "rule": "Angola localized example EXM-013 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-014",
+    "rule": "Angola localized example EXM-014 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-015",
+    "rule": "Angola localized example EXM-015 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-016",
+    "rule": "Angola localized example EXM-016 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-017",
+    "rule": "Angola localized example EXM-017 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-018",
+    "rule": "Angola localized example EXM-018 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-019",
+    "rule": "Angola localized example EXM-019 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-004",
+    "rule": "Angola localized prohibition PA-004 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-005",
+    "rule": "Angola localized prohibition PA-005 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PA-001",
+    "source_title": "Código dos Contratos Públicos Angola (DL 111/B/17 / DL 78/22)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-006",
+    "rule": "Angola localized prohibition PA-006 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Public Admin",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-023",
+    "rule": "Angola localized decision rule DR-023 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-024",
+    "rule": "Angola localized decision rule DR-024 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-025",
+    "rule": "Angola localized decision rule DR-025 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-026",
+    "rule": "Angola localized decision rule DR-026 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-027",
+    "rule": "Angola localized decision rule DR-027 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-028",
+    "rule": "Angola localized decision rule DR-028 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-029",
+    "rule": "Angola localized decision rule DR-029 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-030",
+    "rule": "Angola localized decision rule DR-030 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-031",
+    "rule": "Angola localized decision rule DR-031 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-032",
+    "rule": "Angola localized decision rule DR-032 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-033",
+    "rule": "Angola localized decision rule DR-033 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-034",
+    "rule": "Angola localized decision rule DR-034 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EX-008",
+    "rule": "Angola localized exception EX-008 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EX-009",
+    "rule": "Angola localized exception EX-009 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EX-010",
+    "rule": "Angola localized exception EX-010 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-014",
+    "rule": "Angola localized procedure PR-014 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-015",
+    "rule": "Angola localized procedure PR-015 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-016",
+    "rule": "Angola localized procedure PR-016 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-017",
+    "rule": "Angola localized procedure PR-017 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-018",
+    "rule": "Angola localized procedure PR-018 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-019",
+    "rule": "Angola localized procedure PR-019 aligned with NIST SP 800-61 Rev 2 Incident Containment",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-020",
+    "rule": "Angola localized example EXM-020 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-021",
+    "rule": "Angola localized example EXM-021 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-022",
+    "rule": "Angola localized example EXM-022 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-023",
+    "rule": "Angola localized example EXM-023 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-024",
+    "rule": "Angola localized example EXM-024 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-025",
+    "rule": "Angola localized example EXM-025 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-026",
+    "rule": "Angola localized example EXM-026 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-027",
+    "rule": "Angola localized example EXM-027 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-028",
+    "rule": "Angola localized example EXM-028 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PA-007",
+    "rule": "Angola localized prohibition PA-007 under Angolan law/policy",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PA-008",
+    "rule": "Angola localized prohibition PA-008 under Angolan law/policy",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-SEC-001",
+    "source_title": "NIST SP 800-61 Rev 2 Incident Containment",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PA-009",
+    "rule": "Angola localized prohibition PA-009 under Angolan law/policy",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Cybersecurity",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-035",
+    "rule": "Angola localized decision rule DR-035 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-036",
+    "rule": "Angola localized decision rule DR-036 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-037",
+    "rule": "Angola localized decision rule DR-037 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-038",
+    "rule": "Angola localized decision rule DR-038 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-039",
+    "rule": "Angola localized decision rule DR-039 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-040",
+    "rule": "Angola localized decision rule DR-040 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-041",
+    "rule": "Angola localized decision rule DR-041 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-042",
+    "rule": "Angola localized decision rule DR-042 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-043",
+    "rule": "Angola localized decision rule DR-043 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-044",
+    "rule": "Angola localized decision rule DR-044 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-045",
+    "rule": "Angola localized decision rule DR-045 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EX-011",
+    "rule": "Angola localized exception EX-011 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EX-012",
+    "rule": "Angola localized exception EX-012 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EX-013",
+    "rule": "Angola localized exception EX-013 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-020",
+    "rule": "Angola localized procedure PR-020 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-021",
+    "rule": "Angola localized procedure PR-021 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-022",
+    "rule": "Angola localized procedure PR-022 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-023",
+    "rule": "Angola localized procedure PR-023 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-024",
+    "rule": "Angola localized procedure PR-024 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-025",
+    "rule": "Angola localized procedure PR-025 aligned with OWASP ASVS v4.0.3 API Security Controls",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-029",
+    "rule": "Angola localized example EXM-029 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-030",
+    "rule": "Angola localized example EXM-030 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-031",
+    "rule": "Angola localized example EXM-031 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-032",
+    "rule": "Angola localized example EXM-032 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-033",
+    "rule": "Angola localized example EXM-033 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-034",
+    "rule": "Angola localized example EXM-034 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-035",
+    "rule": "Angola localized example EXM-035 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-036",
+    "rule": "Angola localized example EXM-036 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-037",
+    "rule": "Angola localized example EXM-037 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PA-010",
+    "rule": "Angola localized prohibition PA-010 under Angolan law/policy",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-ENG-001",
+    "source_title": "OWASP ASVS v4.0.3 API Security Controls",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PA-011",
+    "rule": "Angola localized prohibition PA-011 under Angolan law/policy",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Software Eng",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-046",
+    "rule": "Angola localized decision rule DR-046 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-047",
+    "rule": "Angola localized decision rule DR-047 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-048",
+    "rule": "Angola localized decision rule DR-048 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-049",
+    "rule": "Angola localized decision rule DR-049 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-050",
+    "rule": "Angola localized decision rule DR-050 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-051",
+    "rule": "Angola localized decision rule DR-051 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-052",
+    "rule": "Angola localized decision rule DR-052 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-053",
+    "rule": "Angola localized decision rule DR-053 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-054",
+    "rule": "Angola localized decision rule DR-054 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-055",
+    "rule": "Angola localized decision rule DR-055 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-014",
+    "rule": "Angola localized exception EX-014 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-015",
+    "rule": "Angola localized exception EX-015 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-016",
+    "rule": "Angola localized exception EX-016 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-026",
+    "rule": "Angola localized procedure PR-026 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-027",
+    "rule": "Angola localized procedure PR-027 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-028",
+    "rule": "Angola localized procedure PR-028 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-029",
+    "rule": "Angola localized procedure PR-029 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-030",
+    "rule": "Angola localized procedure PR-030 aligned with Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-038",
+    "rule": "Angola localized example EXM-038 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-039",
+    "rule": "Angola localized example EXM-039 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-040",
+    "rule": "Angola localized example EXM-040 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-041",
+    "rule": "Angola localized example EXM-041 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-042",
+    "rule": "Angola localized example EXM-042 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-043",
+    "rule": "Angola localized example EXM-043 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-044",
+    "rule": "Angola localized example EXM-044 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-045",
+    "rule": "Angola localized example EXM-045 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-012",
+    "rule": "Angola localized prohibition PA-012 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-LEG-001",
+    "source_title": "Código das Sociedades Comerciais Angola (DL 262/86 / DL 49/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-013",
+    "rule": "Angola localized prohibition PA-013 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Legal / Reg",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-056",
+    "rule": "Angola localized decision rule DR-056 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-057",
+    "rule": "Angola localized decision rule DR-057 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-058",
+    "rule": "Angola localized decision rule DR-058 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-059",
+    "rule": "Angola localized decision rule DR-059 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-060",
+    "rule": "Angola localized decision rule DR-060 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-061",
+    "rule": "Angola localized decision rule DR-061 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-062",
+    "rule": "Angola localized decision rule DR-062 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-063",
+    "rule": "Angola localized decision rule DR-063 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-064",
+    "rule": "Angola localized decision rule DR-064 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-065",
+    "rule": "Angola localized decision rule DR-065 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-066",
+    "rule": "Angola localized decision rule DR-066 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-067",
+    "rule": "Angola localized decision rule DR-067 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-017",
+    "rule": "Angola localized exception EX-017 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-018",
+    "rule": "Angola localized exception EX-018 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-019",
+    "rule": "Angola localized exception EX-019 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-020",
+    "rule": "Angola localized exception EX-020 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-031",
+    "rule": "Angola localized procedure PR-031 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-032",
+    "rule": "Angola localized procedure PR-032 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-033",
+    "rule": "Angola localized procedure PR-033 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-034",
+    "rule": "Angola localized procedure PR-034 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-035",
+    "rule": "Angola localized procedure PR-035 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-036",
+    "rule": "Angola localized procedure PR-036 aligned with Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-046",
+    "rule": "Angola localized example EXM-046 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-047",
+    "rule": "Angola localized example EXM-047 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-048",
+    "rule": "Angola localized example EXM-048 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-049",
+    "rule": "Angola localized example EXM-049 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-050",
+    "rule": "Angola localized example EXM-050 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-051",
+    "rule": "Angola localized example EXM-051 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-052",
+    "rule": "Angola localized example EXM-052 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-053",
+    "rule": "Angola localized example EXM-053 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-054",
+    "rule": "Angola localized example EXM-054 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-055",
+    "rule": "Angola localized example EXM-055 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-014",
+    "rule": "Angola localized prohibition PA-014 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-015",
+    "rule": "Angola localized prohibition PA-015 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-HR-001",
+    "source_title": "Lei Geral do Trabalho de Angola (Lei n.º 12/23)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-016",
+    "rule": "Angola localized prohibition PA-016 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Human Resources",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-068",
+    "rule": "Angola localized decision rule DR-068 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-069",
+    "rule": "Angola localized decision rule DR-069 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-070",
+    "rule": "Angola localized decision rule DR-070 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-071",
+    "rule": "Angola localized decision rule DR-071 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-072",
+    "rule": "Angola localized decision rule DR-072 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-073",
+    "rule": "Angola localized decision rule DR-073 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-074",
+    "rule": "Angola localized decision rule DR-074 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-075",
+    "rule": "Angola localized decision rule DR-075 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-076",
+    "rule": "Angola localized decision rule DR-076 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-077",
+    "rule": "Angola localized decision rule DR-077 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-078",
+    "rule": "Angola localized decision rule DR-078 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EX-021",
+    "rule": "Angola localized exception EX-021 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EX-022",
+    "rule": "Angola localized exception EX-022 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EX-023",
+    "rule": "Angola localized exception EX-023 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EX-024",
+    "rule": "Angola localized exception EX-024 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-037",
+    "rule": "Angola localized procedure PR-037 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-038",
+    "rule": "Angola localized procedure PR-038 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-039",
+    "rule": "Angola localized procedure PR-039 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-040",
+    "rule": "Angola localized procedure PR-040 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-041",
+    "rule": "Angola localized procedure PR-041 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-042",
+    "rule": "Angola localized procedure PR-042 aligned with ICC Incoterms® 2020 Rules",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-056",
+    "rule": "Angola localized example EXM-056 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-057",
+    "rule": "Angola localized example EXM-057 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-058",
+    "rule": "Angola localized example EXM-058 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-059",
+    "rule": "Angola localized example EXM-059 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-060",
+    "rule": "Angola localized example EXM-060 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-061",
+    "rule": "Angola localized example EXM-061 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-062",
+    "rule": "Angola localized example EXM-062 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-063",
+    "rule": "Angola localized example EXM-063 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-064",
+    "rule": "Angola localized example EXM-064 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PA-017",
+    "rule": "Angola localized prohibition PA-017 under Angolan law/policy",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PROC-001",
+    "source_title": "ICC Incoterms® 2020 Rules",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PA-018",
+    "rule": "Angola localized prohibition PA-018 under Angolan law/policy",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Procurement",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-079",
+    "rule": "Angola localized decision rule DR-079 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-080",
+    "rule": "Angola localized decision rule DR-080 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-081",
+    "rule": "Angola localized decision rule DR-081 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-082",
+    "rule": "Angola localized decision rule DR-082 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-083",
+    "rule": "Angola localized decision rule DR-083 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-084",
+    "rule": "Angola localized decision rule DR-084 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-085",
+    "rule": "Angola localized decision rule DR-085 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-086",
+    "rule": "Angola localized decision rule DR-086 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-087",
+    "rule": "Angola localized decision rule DR-087 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "DR-088",
+    "rule": "Angola localized decision rule DR-088 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EX-025",
+    "rule": "Angola localized exception EX-025 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EX-026",
+    "rule": "Angola localized exception EX-026 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EX-027",
+    "rule": "Angola localized exception EX-027 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-043",
+    "rule": "Angola localized procedure PR-043 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-044",
+    "rule": "Angola localized procedure PR-044 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-045",
+    "rule": "Angola localized procedure PR-045 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-046",
+    "rule": "Angola localized procedure PR-046 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PR-047",
+    "rule": "Angola localized procedure PR-047 aligned with PMI PMBOK® Guide 7th Edition",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-065",
+    "rule": "Angola localized example EXM-065 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-066",
+    "rule": "Angola localized example EXM-066 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-067",
+    "rule": "Angola localized example EXM-067 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-068",
+    "rule": "Angola localized example EXM-068 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-069",
+    "rule": "Angola localized example EXM-069 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-070",
+    "rule": "Angola localized example EXM-070 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-071",
+    "rule": "Angola localized example EXM-071 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "EXM-072",
+    "rule": "Angola localized example EXM-072 in AOA/Angola context",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PA-019",
+    "rule": "Angola localized prohibition PA-019 under Angolan law/policy",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-PMO-001",
+    "source_title": "PMI PMBOK® Guide 7th Edition",
+    "jurisdiction": "INTERNATIONAL",
+    "knowledge_object_id": "PA-020",
+    "rule": "Angola localized prohibition PA-020 under Angolan law/policy",
+    "applicability_type": "INTERNATIONAL_BEST_PRACTICE",
+    "domain": "Project Mgmt",
+    "status": "VALID_INTERNATIONAL_STANDARD"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-089",
+    "rule": "Angola localized decision rule DR-089 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-090",
+    "rule": "Angola localized decision rule DR-090 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-091",
+    "rule": "Angola localized decision rule DR-091 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-092",
+    "rule": "Angola localized decision rule DR-092 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-093",
+    "rule": "Angola localized decision rule DR-093 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-094",
+    "rule": "Angola localized decision rule DR-094 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-095",
+    "rule": "Angola localized decision rule DR-095 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-096",
+    "rule": "Angola localized decision rule DR-096 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-097",
+    "rule": "Angola localized decision rule DR-097 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-098",
+    "rule": "Angola localized decision rule DR-098 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-099",
+    "rule": "Angola localized decision rule DR-099 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-100",
+    "rule": "Angola localized decision rule DR-100 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-028",
+    "rule": "Angola localized exception EX-028 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-029",
+    "rule": "Angola localized exception EX-029 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-030",
+    "rule": "Angola localized exception EX-030 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-031",
+    "rule": "Angola localized exception EX-031 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-048",
+    "rule": "Angola localized procedure PR-048 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-049",
+    "rule": "Angola localized procedure PR-049 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-050",
+    "rule": "Angola localized procedure PR-050 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-051",
+    "rule": "Angola localized procedure PR-051 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-052",
+    "rule": "Angola localized procedure PR-052 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-053",
+    "rule": "Angola localized procedure PR-053 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-054",
+    "rule": "Angola localized procedure PR-054 aligned with Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-073",
+    "rule": "Angola localized example EXM-073 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-074",
+    "rule": "Angola localized example EXM-074 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-075",
+    "rule": "Angola localized example EXM-075 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-076",
+    "rule": "Angola localized example EXM-076 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-077",
+    "rule": "Angola localized example EXM-077 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-078",
+    "rule": "Angola localized example EXM-078 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-079",
+    "rule": "Angola localized example EXM-079 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-080",
+    "rule": "Angola localized example EXM-080 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-081",
+    "rule": "Angola localized example EXM-081 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-082",
+    "rule": "Angola localized example EXM-082 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-021",
+    "rule": "Angola localized prohibition PA-021 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-022",
+    "rule": "Angola localized prohibition PA-022 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-DATA-001",
+    "source_title": "Lei da Protecção de Dados Pessoais de Angola (Lei n.º 22/11)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-023",
+    "rule": "Angola localized prohibition PA-023 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Data / Privacy",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-101",
+    "rule": "Angola localized decision rule DR-101 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-102",
+    "rule": "Angola localized decision rule DR-102 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-103",
+    "rule": "Angola localized decision rule DR-103 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-104",
+    "rule": "Angola localized decision rule DR-104 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-105",
+    "rule": "Angola localized decision rule DR-105 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-106",
+    "rule": "Angola localized decision rule DR-106 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-107",
+    "rule": "Angola localized decision rule DR-107 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-108",
+    "rule": "Angola localized decision rule DR-108 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-109",
+    "rule": "Angola localized decision rule DR-109 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-110",
+    "rule": "Angola localized decision rule DR-110 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-111",
+    "rule": "Angola localized decision rule DR-111 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EX-032",
+    "rule": "Angola localized exception EX-032 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EX-033",
+    "rule": "Angola localized exception EX-033 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EX-034",
+    "rule": "Angola localized exception EX-034 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-055",
+    "rule": "Angola localized procedure PR-055 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-056",
+    "rule": "Angola localized procedure PR-056 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-057",
+    "rule": "Angola localized procedure PR-057 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-058",
+    "rule": "Angola localized procedure PR-058 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-059",
+    "rule": "Angola localized procedure PR-059 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-060",
+    "rule": "Angola localized procedure PR-060 aligned with ITIL 4 Foundation IT Service Management",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-083",
+    "rule": "Angola localized example EXM-083 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-084",
+    "rule": "Angola localized example EXM-084 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-085",
+    "rule": "Angola localized example EXM-085 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-086",
+    "rule": "Angola localized example EXM-086 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-087",
+    "rule": "Angola localized example EXM-087 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-088",
+    "rule": "Angola localized example EXM-088 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-089",
+    "rule": "Angola localized example EXM-089 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-090",
+    "rule": "Angola localized example EXM-090 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-091",
+    "rule": "Angola localized example EXM-091 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PA-024",
+    "rule": "Angola localized prohibition PA-024 under Angolan law/policy",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-OPS-001",
+    "source_title": "ITIL 4 Foundation IT Service Management",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PA-025",
+    "rule": "Angola localized prohibition PA-025 under Angolan law/policy",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Ops",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-112",
+    "rule": "Angola localized decision rule DR-112 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-113",
+    "rule": "Angola localized decision rule DR-113 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-114",
+    "rule": "Angola localized decision rule DR-114 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-115",
+    "rule": "Angola localized decision rule DR-115 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-116",
+    "rule": "Angola localized decision rule DR-116 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-117",
+    "rule": "Angola localized decision rule DR-117 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-118",
+    "rule": "Angola localized decision rule DR-118 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-119",
+    "rule": "Angola localized decision rule DR-119 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-120",
+    "rule": "Angola localized decision rule DR-120 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-121",
+    "rule": "Angola localized decision rule DR-121 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EX-035",
+    "rule": "Angola localized exception EX-035 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EX-036",
+    "rule": "Angola localized exception EX-036 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EX-037",
+    "rule": "Angola localized exception EX-037 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-061",
+    "rule": "Angola localized procedure PR-061 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-062",
+    "rule": "Angola localized procedure PR-062 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-063",
+    "rule": "Angola localized procedure PR-063 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-064",
+    "rule": "Angola localized procedure PR-064 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-065",
+    "rule": "Angola localized procedure PR-065 aligned with Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-092",
+    "rule": "Angola localized example EXM-092 in AOA/Angola context",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-093",
+    "rule": "Angola localized example EXM-093 in AOA/Angola context",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-094",
+    "rule": "Angola localized example EXM-094 in AOA/Angola context",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-095",
+    "rule": "Angola localized example EXM-095 in AOA/Angola context",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-096",
+    "rule": "Angola localized example EXM-096 in AOA/Angola context",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-097",
+    "rule": "Angola localized example EXM-097 in AOA/Angola context",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-098",
+    "rule": "Angola localized example EXM-098 in AOA/Angola context",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-099",
+    "rule": "Angola localized example EXM-099 in AOA/Angola context",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-100",
+    "rule": "Angola localized example EXM-100 in AOA/Angola context",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PA-026",
+    "rule": "Angola localized prohibition PA-026 under Angolan law/policy",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PA-027",
+    "rule": "Angola localized prohibition PA-027 under Angolan law/policy",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-SALES-001",
+    "source_title": "Política Interna de Aprovação Comercial AETF (POL-SALES-2024)",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PA-028",
+    "rule": "Angola localized prohibition PA-028 under Angolan law/policy",
+    "applicability_type": "CLIENT_INTERNAL_POLICY",
+    "domain": "Sales",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-122",
+    "rule": "Angola localized decision rule DR-122 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-123",
+    "rule": "Angola localized decision rule DR-123 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-124",
+    "rule": "Angola localized decision rule DR-124 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-125",
+    "rule": "Angola localized decision rule DR-125 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-126",
+    "rule": "Angola localized decision rule DR-126 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-127",
+    "rule": "Angola localized decision rule DR-127 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-128",
+    "rule": "Angola localized decision rule DR-128 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-129",
+    "rule": "Angola localized decision rule DR-129 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-130",
+    "rule": "Angola localized decision rule DR-130 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "DR-131",
+    "rule": "Angola localized decision rule DR-131 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-038",
+    "rule": "Angola localized exception EX-038 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-039",
+    "rule": "Angola localized exception EX-039 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EX-040",
+    "rule": "Angola localized exception EX-040 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-066",
+    "rule": "Angola localized procedure PR-066 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-067",
+    "rule": "Angola localized procedure PR-067 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-068",
+    "rule": "Angola localized procedure PR-068 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-069",
+    "rule": "Angola localized procedure PR-069 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PR-070",
+    "rule": "Angola localized procedure PR-070 aligned with Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-101",
+    "rule": "Angola localized example EXM-101 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-102",
+    "rule": "Angola localized example EXM-102 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-103",
+    "rule": "Angola localized example EXM-103 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-104",
+    "rule": "Angola localized example EXM-104 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-105",
+    "rule": "Angola localized example EXM-105 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-106",
+    "rule": "Angola localized example EXM-106 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-107",
+    "rule": "Angola localized example EXM-107 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-108",
+    "rule": "Angola localized example EXM-108 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-109",
+    "rule": "Angola localized example EXM-109 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "EXM-110",
+    "rule": "Angola localized example EXM-110 in AOA/Angola context",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-029",
+    "rule": "Angola localized prohibition PA-029 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-MKT-001",
+    "source_title": "Lei de Defesa do Consumidor de Angola (Lei n.º 15/03)",
+    "jurisdiction": "AO",
+    "knowledge_object_id": "PA-030",
+    "rule": "Angola localized prohibition PA-030 under Angolan law/policy",
+    "applicability_type": "MANDATORY_IN_ANGOLA",
+    "domain": "Marketing",
+    "status": "VALID_FOR_ANGOLA"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-132",
+    "rule": "Angola localized decision rule DR-132 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-133",
+    "rule": "Angola localized decision rule DR-133 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-134",
+    "rule": "Angola localized decision rule DR-134 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-135",
+    "rule": "Angola localized decision rule DR-135 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-136",
+    "rule": "Angola localized decision rule DR-136 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-137",
+    "rule": "Angola localized decision rule DR-137 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-138",
+    "rule": "Angola localized decision rule DR-138 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-139",
+    "rule": "Angola localized decision rule DR-139 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "DR-140",
+    "rule": "Angola localized decision rule DR-140 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EX-041",
+    "rule": "Angola localized exception EX-041 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EX-042",
+    "rule": "Angola localized exception EX-042 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EX-043",
+    "rule": "Angola localized exception EX-043 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EX-044",
+    "rule": "Angola localized exception EX-044 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EX-045",
+    "rule": "Angola localized exception EX-045 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-071",
+    "rule": "Angola localized procedure PR-071 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-072",
+    "rule": "Angola localized procedure PR-072 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-073",
+    "rule": "Angola localized procedure PR-073 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-074",
+    "rule": "Angola localized procedure PR-074 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-075",
+    "rule": "Angola localized procedure PR-075 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-076",
+    "rule": "Angola localized procedure PR-076 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-077",
+    "rule": "Angola localized procedure PR-077 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PR-078",
+    "rule": "Angola localized procedure PR-078 aligned with Gainsight Customer Success Methodology Standard",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-111",
+    "rule": "Angola localized example EXM-111 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-112",
+    "rule": "Angola localized example EXM-112 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-113",
+    "rule": "Angola localized example EXM-113 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-114",
+    "rule": "Angola localized example EXM-114 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-115",
+    "rule": "Angola localized example EXM-115 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-116",
+    "rule": "Angola localized example EXM-116 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-117",
+    "rule": "Angola localized example EXM-117 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-118",
+    "rule": "Angola localized example EXM-118 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-119",
+    "rule": "Angola localized example EXM-119 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "EXM-120",
+    "rule": "Angola localized example EXM-120 in AOA/Angola context",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PA-031",
+    "rule": "Angola localized prohibition PA-031 under Angolan law/policy",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  },
+  {
+    "source_id": "SRC-CS-001",
+    "source_title": "Gainsight Customer Success Methodology Standard",
+    "jurisdiction": "INTERNAL",
+    "knowledge_object_id": "PA-032",
+    "rule": "Angola localized prohibition PA-032 under Angolan law/policy",
+    "applicability_type": "PLATFORM_INTERNAL_POLICY",
+    "domain": "Customer Success",
+    "status": "VALID_INTERNAL_POLICY"
+  }
+]

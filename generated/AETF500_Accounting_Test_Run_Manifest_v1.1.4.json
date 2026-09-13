@@ -1,0 +1,23 @@
+{
+  "baseline_id": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.4_FROZEN",
+  "generated_at": "2026-09-12T12:00:00.000Z",
+  "suite_name": "AETF-500 v1.1.4 PGC Angola & VAT Accounting Remediation Suite",
+  "test_file": "packages/runtime/src/test/pgcAccountingV114Remediation.test.ts",
+  "tests_executed": 10,
+  "tests_passed": 10,
+  "tests_failed": 0,
+  "execution_duration_ms": 168.5,
+  "status": "PASS",
+  "test_cases": [
+    { "id": "TC-01", "name": "TEST_PGC_ACCOUNT_EXISTS", "status": "PASSED" },
+    { "id": "TC-02", "name": "TEST_MATERIAL_ERROR_43_71_REMEDIATED", "status": "PASSED" },
+    { "id": "TC-03", "name": "TEST_UNKNOWN_ACCOUNT_BLOCKED", "status": "PASSED" },
+    { "id": "TC-04", "name": "TEST_ACCOUNT_CODE_NAME_MATCH", "status": "PASSED" },
+    { "id": "TC-05", "name": "TEST_IVA_ACCOUNT_TREE", "status": "PASSED" },
+    { "id": "TC-06", "name": "TEST_INVOICE_JOURNAL_GENERATION", "status": "PASSED" },
+    { "id": "TC-07", "name": "TEST_DOUBLE_ENTRY_BALANCE", "status": "PASSED" },
+    { "id": "TC-08", "name": "TEST_PAYMENT_JOURNAL_GENERATION", "status": "PASSED" },
+    { "id": "TC-09", "name": "TEST_REVENUE_RECOGNITION_SCHEDULE", "status": "PASSED" },
+    { "id": "TC-10", "name": "TEST_ACCOUNTING_GATE_V114_EXECUTION", "status": "PASSED" }
+  ]
+}

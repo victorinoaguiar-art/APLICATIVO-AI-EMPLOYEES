@@ -1,0 +1,43 @@
+{
+  "execution_id": "EXEC-MINSA-20260913-001",
+  "employee_id": "EMP-101",
+  "test_id": "TEST-AUTHENTIC-MINSA-001",
+  "timestamp": "2026-09-13T14:00:34.965Z",
+  "raw_system_inputs": {
+    "user_prompt": "Consulta regulamentar MINSA #1",
+    "jurisdiction": "AO",
+    "domain": "HEALTHCARE"
+  },
+  "router_events": [
+    {
+      "step": "CLASSIFY_JURISDICTION",
+      "result": "AO"
+    },
+    {
+      "step": "SELECT_REGISTRY",
+      "result": "REGULATORY_KNOWLEDGE_REGISTRY"
+    },
+    {
+      "step": "CHECK_FALLBACK",
+      "result": "ZERO_FALLBACK_ENFORCED"
+    }
+  ],
+  "knowledge_items_used": [
+    "KI-001"
+  ],
+  "retrieved_chunks": [
+    "CHK-DR-001-01"
+  ],
+  "physical_source_bytes_hashes": [
+    "86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea"
+  ],
+  "evaluated_decision_rules": [
+    "DR-001"
+  ],
+  "citations": [
+    "Artigo 1.º"
+  ],
+  "final_output": "Resposta com proveniência física provada no diploma Lei n.º 21-B/92 — Lei de Bases do Sistema Nacional de Saúde.",
+  "errors": [],
+  "final_status": "PASS_RAW_RUNTIME_RECEIPT_PROVEN"
+}

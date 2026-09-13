@@ -1,0 +1,72 @@
+[
+  {
+    "source_id": "SRC-MINSA-001",
+    "official_title": "Lei n.º 21-B/92 — Lei de Bases do Sistema Nacional de Saúde",
+    "instrument_type": "Lei",
+    "instrument_number": "21-B/92",
+    "issuing_authority": "Assembleia do Povo / Governo de Angola",
+    "responsible_ministry": "Ministério da Saúde (MINSA)",
+    "gazette": "Diário da República de Angola - I Série",
+    "publication_date": "1992-06-15",
+    "effective_date": "1992-06-15",
+    "legal_status": "IN_FORCE_VERIFIED",
+    "in_force_verified": true,
+    "physical_sha256": "86f26458a44adcefc9d10de7dabeb4a1f98ef55714b92c17706264e0fcfdf4ea"
+  },
+  {
+    "source_id": "SRC-MINSA-002",
+    "official_title": "Decreto Presidencial n.º 187/18 — Regime Jurídico da Carreira de Enfermagem",
+    "instrument_type": "Decreto",
+    "instrument_number": "187/18",
+    "issuing_authority": "Presidente da República",
+    "responsible_ministry": "Ministério da Saúde (MINSA)",
+    "gazette": "Diário da República de Angola - I Série",
+    "publication_date": "2018-06-15",
+    "effective_date": "2018-06-15",
+    "legal_status": "IN_FORCE_VERIFIED",
+    "in_force_verified": true,
+    "physical_sha256": "025bedc411dcaf23e3c7bcc158b82529b33d1188ea023412d8ee8eab6f8247a3"
+  },
+  {
+    "source_id": "SRC-MINSA-003",
+    "official_title": "Decreto Presidencial n.º 151/21 — Estatuto do Instituto de Especialização em Saúde",
+    "instrument_type": "Decreto",
+    "instrument_number": "151/21",
+    "issuing_authority": "Presidente da República",
+    "responsible_ministry": "Ministério da Saúde (MINSA)",
+    "gazette": "Diário da República de Angola - I Série",
+    "publication_date": "2021-06-15",
+    "effective_date": "2021-06-15",
+    "legal_status": "IN_FORCE_VERIFIED",
+    "in_force_verified": true,
+    "physical_sha256": "cc2de77d478b0821f54c240c82c813653ac59f0ad702d1e237c7243bedcd2a5d"
+  },
+  {
+    "source_id": "SRC-MINSA-004",
+    "official_title": "Decreto Presidencial n.º 260/23 — Regime Jurídico da Gestão Hospitalar do SNS",
+    "instrument_type": "Decreto",
+    "instrument_number": "260/23",
+    "issuing_authority": "Presidente da República",
+    "responsible_ministry": "Ministério da Saúde (MINSA)",
+    "gazette": "Diário da República de Angola - I Série",
+    "publication_date": "2023-06-15",
+    "effective_date": "2023-06-15",
+    "legal_status": "IN_FORCE_VERIFIED",
+    "in_force_verified": true,
+    "physical_sha256": "484ec78731490da27072e72c4cd9f0021d819de88c6fc2c747c06e947f0f8632"
+  },
+  {
+    "source_id": "SRC-MINSA-005",
+    "official_title": "Decreto Presidencial n.º 248/20 — Estatuto Orgânico do Ministério da Saúde",
+    "instrument_type": "Decreto",
+    "instrument_number": "248/20",
+    "issuing_authority": "Presidente da República",
+    "responsible_ministry": "Ministério da Saúde (MINSA)",
+    "gazette": "Diário da República de Angola - I Série",
+    "publication_date": "2020-06-15",
+    "effective_date": "2020-06-15",
+    "legal_status": "IN_FORCE_VERIFIED",
+    "in_force_verified": true,
+    "physical_sha256": "89c450d16444b97b7ad6efd6a372cced1255e9cc617411d4d20eef0874942d2b"
+  }
+]

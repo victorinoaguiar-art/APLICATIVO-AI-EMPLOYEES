@@ -1,0 +1,9 @@
+{
+  "cv_employee_country_records": 500,
+  "cv_knowledge_verification_records": 500,
+  "cv_knowledge_collection_records": 0,
+  "st_employee_country_records": 500,
+  "st_knowledge_verification_records": 500,
+  "st_knowledge_collection_records": 0,
+  "baseline_matrix_preserved": true
+}

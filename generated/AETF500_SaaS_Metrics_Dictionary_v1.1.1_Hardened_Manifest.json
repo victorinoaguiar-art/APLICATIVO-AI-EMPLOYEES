@@ -1,0 +1,72 @@
+{
+  "manifestVersion": "1.1.1",
+  "patchId": "AETF500-SAAS-METRICS-v1.1.1-FINANCIAL-TAX-LINEAGE-INTEGRITY-PATCH",
+  "patchName": "AETF-500 SaaS Metrics Dictionary v1.1.1 Financial, Tax & Lineage Integrity Patch",
+  "timestamp": "2026-09-12T11:45:00.000Z",
+  "previousBaseline": "AETF500_SAAS_METRICS_DICTIONARY_v1.1_FROZEN",
+  "patchState": "SAAS_METRICS_DICTIONARY_v1_1_1_PATCH_GATE_PASSED",
+  "newBaseline": "AETF500_SAAS_METRICS_DICTIONARY_v1.1.1_FROZEN",
+  "certificationState": "METRICS_FOUNDATION_CERTIFIED",
+  "commercialState": "READY_FOR_COMMERCIAL_PREDICTABILITY_WAVE_3",
+  "coreCorrections": {
+    "nrr": {
+      "metric": "NRR",
+      "previous": "120.0%",
+      "corrected": "124.1%",
+      "openingMRR": 1000000,
+      "expansionMRR": 300000,
+      "contractionMRR": 50000,
+      "churnMRR": 9000,
+      "closingMRR": 1241000,
+      "currency": "AOA",
+      "formula": "((Opening + Expansion - Contraction - Churn) / Opening) * 100"
+    },
+    "grr": {
+      "metric": "GRR",
+      "previous": "95.0%",
+      "corrected": "94.1%",
+      "openingMRR": 1000000,
+      "contractionMRR": 50000,
+      "churnMRR": 9000,
+      "retainedMRR": 941000,
+      "currency": "AOA",
+      "formula": "((Opening - Contraction - Churn) / Opening) * 100"
+    },
+    "settlementBridge": {
+      "billedTotal": 1320000,
+      "cashCollected": 1293600,
+      "variance": 26400,
+      "reclassificationCategory": "TAX_WITHHOLDING_ISR",
+      "taxJurisdiction": "AO",
+      "taxWithholdingRate": 0.02,
+      "reconciliationDifference": 0
+    },
+    "taxJurisdictionGuard": {
+      "jurisdiction": "AO",
+      "allowedTaxes": ["IVA", "IRT", "IS", "II", "IP"],
+      "rejectedTaxes": ["ISS", "ICMS", "PIS", "COFINS"],
+      "status": "APPROVED"
+    },
+    "dimensionRules": {
+      "prohibitedTemporalMaturity": "PROJECTED",
+      "enforcedTemporalMaturity": "PERIOD_OBSERVED",
+      "arrCalculationType": "DERIVED",
+      "arrFormula": "MRR * 12"
+    },
+    "auditLineage": {
+      "auditLogs": ["MetricCorrectionRecord", "MetricReclassificationRecord", "MetricReconciliationRecord"],
+      "sha256Format": "^[a-fA-F0-9]{64}$",
+      "placeholderDetection": "ENABLED",
+      "emptyHashProtection": "ENABLED"
+    }
+  },
+  "specificationsGenerated": [
+    "generated/AETF500_SaaS_Metrics_Dictionary_v1.1.1.md",
+    "generated/AETF500_Metric_Provenance_Protocol_v1.1.1.md",
+    "generated/AETF500_Metric_Formula_Registry_v1.1.1.json",
+    "generated/AETF500_Metric_Assurance_Guide_v1.1.1.md",
+    "generated/AETF500_Tax_Jurisdiction_Integrity_Spec_v1.0.md",
+    "generated/AETF500_Financial_Reconciliation_Spec_v1.0.md",
+    "generated/AETF500_Metric_Lineage_Spec_v1.1.1.md"
+  ]
+}
