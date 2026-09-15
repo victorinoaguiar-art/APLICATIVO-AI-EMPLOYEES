@@ -41,8 +41,14 @@ billing_store.json
 *.db
 *.db-journal
 *.db-wal
-data/
 packages/*/data/
+apps/*/data/
+data/*.db
+data/*.db-*
+!/data/
+!/data/*.json
+!schemas/data/
+!schemas/data/*.json
 generated/verification/
 .artifacts/
 reports/

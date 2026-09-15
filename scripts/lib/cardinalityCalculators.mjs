@@ -6,53 +6,135 @@ import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const ROOT_DIR = path.resolve(__dirname, '../../');
+export const ROOT_DIR = path.resolve(__dirname, '../../');
 
 const req = createRequire(import.meta.url);
-let Ajv = null;
+let DefaultAjv = null;
 try {
-  Ajv = req('ajv');
+  DefaultAjv = req('ajv');
 } catch {}
 
+export const ERROR_CODES = {
+  AJV_UNAVAILABLE: 'AJV_UNAVAILABLE',
+  SCHEMA_NOT_FOUND: 'SCHEMA_NOT_FOUND',
+  SCHEMA_INVALID: 'SCHEMA_INVALID',
+  SOURCE_NOT_FOUND: 'SOURCE_NOT_FOUND',
+  SOURCE_INVALID_JSON: 'SOURCE_INVALID_JSON',
+  SOURCE_SCHEMA_MISMATCH: 'SOURCE_SCHEMA_MISMATCH',
+  CARDINALITY_UNVERIFIABLE: 'CARDINALITY_UNVERIFIABLE'
+};
+
 export function getFileSha256(filePath) {
-  if (!fs.existsSync(filePath)) return null;
+  if (!filePath || !fs.existsSync(filePath)) return null;
   const buf = fs.readFileSync(filePath);
   return crypto.createHash('sha256').update(buf).digest('hex');
 }
 
-function validateWithAjv(data, schemaPath) {
-  if (!Ajv || !fs.existsSync(schemaPath)) return { valid: true, skipped: true };
+export function resolveDeterministicPath(targetPath) {
+  if (!targetPath) return null;
+  const direct = path.isAbsolute(targetPath) ? targetPath : path.resolve(ROOT_DIR, targetPath);
+  if (fs.existsSync(direct)) return direct;
+
+  // Fallback between camelCase and snake_case in same dir if applicable
+  const base = path.basename(direct);
+  const dir = path.dirname(direct);
+  const snake = base.replace(/([A-Z])/g, '_$1').toLowerCase().replace(/^_/, '');
+  const camel = base.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+  if (fs.existsSync(path.join(dir, snake))) return path.join(dir, snake);
+  if (fs.existsSync(path.join(dir, camel))) return path.join(dir, camel);
+
+  return direct;
+}
+
+/**
+ * Validates data against a JSON schema with strict fail-closed semantics.
+ * Never returns { valid: true, skipped: true }.
+ */
+export function validateWithAjv(data, schemaPath, options = {}) {
+  const ajvToUse = options.ajvInstance !== undefined
+    ? options.ajvInstance
+    : (options.ajvFactory ? options.ajvFactory() : DefaultAjv);
+
+  if (!ajvToUse) {
+    return {
+      valid: false,
+      code: ERROR_CODES.AJV_UNAVAILABLE,
+      error: 'AJV_UNAVAILABLE: Ajv schema validator engine is missing or unavailable'
+    };
+  }
+
+  const resolvedSchemaPath = resolveDeterministicPath(schemaPath);
+  if (!resolvedSchemaPath || !fs.existsSync(resolvedSchemaPath)) {
+    return {
+      valid: false,
+      code: ERROR_CODES.SCHEMA_NOT_FOUND,
+      error: `SCHEMA_NOT_FOUND: Schema file does not exist at ${schemaPath}`
+    };
+  }
+
+  let schema;
   try {
-    const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
-    const ajvInstance = new Ajv({ allErrors: true, strict: false });
+    const raw = fs.readFileSync(resolvedSchemaPath, 'utf8');
+    schema = JSON.parse(raw);
+  } catch (err) {
+    return {
+      valid: false,
+      code: ERROR_CODES.SCHEMA_INVALID,
+      error: `SCHEMA_INVALID: Failed to parse schema JSON: ${err.message}`
+    };
+  }
+
+  try {
+    const ajvInstance = typeof ajvToUse === 'function'
+      ? new ajvToUse({ allErrors: true, strict: false })
+      : ajvToUse;
     const validate = ajvInstance.compile(schema);
     const valid = validate(data);
-    return { valid, errors: validate.errors };
+    if (!valid) {
+      return {
+        valid: false,
+        code: ERROR_CODES.SOURCE_SCHEMA_MISMATCH,
+        errors: validate.errors,
+        error: 'SOURCE_SCHEMA_MISMATCH: Data payload violates required schema structure'
+      };
+    }
+    return { valid: true };
   } catch (err) {
-    return { valid: false, errors: [err.message] };
+    return {
+      valid: false,
+      code: ERROR_CODES.SCHEMA_INVALID,
+      error: `SCHEMA_INVALID: Failed to compile schema: ${err.message}`
+    };
   }
+}
+
+function parseOptions(optionsOrSchema) {
+  if (typeof optionsOrSchema === 'string') {
+    return { schemaOverridePath: optionsOrSchema };
+  }
+  return optionsOrSchema || {};
 }
 
 /**
  * 1. Physical Live Tasks Calculator (Pure Function)
  * Reads canonical storage and counts verified external client executions.
- * Distinguishes:
- * - MISSING_SOURCE: File does not exist (blocks gate)
- * - INVALID_JSON / INVALID_SCHEMA: Corrupted source (blocks gate)
- * - OK: Valid file analyzed (proven zero if tasks is empty)
  */
-export function calculatePhysicalLiveTasks(targetPath, schemaOverridePath) {
-  const resolved = path.resolve(targetPath);
+export function calculatePhysicalLiveTasks(targetPath, optionsOrSchema = {}) {
+  const options = parseOptions(optionsOrSchema);
+  const resolved = resolveDeterministicPath(targetPath);
+
   if (!fs.existsSync(resolved)) {
     return {
       count: 0,
       verifiedTasks: [],
       sourcePath: targetPath,
       sourceHash: null,
-      status: 'MISSING_SOURCE',
-      error: 'CANONICAL_SOURCE_MISSING: Live tasks evidence storage file does not exist on disk'
+      status: ERROR_CODES.SOURCE_NOT_FOUND,
+      code: ERROR_CODES.SOURCE_NOT_FOUND,
+      error: `CANONICAL_SOURCE_MISSING: Live tasks storage does not exist on disk: ${targetPath}`
     };
   }
+
   const sourceHash = getFileSha256(resolved);
   let raw;
   try {
@@ -63,26 +145,28 @@ export function calculatePhysicalLiveTasks(targetPath, schemaOverridePath) {
       verifiedTasks: [],
       sourcePath: targetPath,
       sourceHash,
-      status: 'INVALID_JSON',
+      status: ERROR_CODES.SOURCE_INVALID_JSON,
+      code: ERROR_CODES.SOURCE_INVALID_JSON,
       error: `JSON_SYNTAX_ERROR: ${err.message}`
     };
   }
 
-  // Schema validation
+  // Schema validation (fail-closed)
   const defaultSchema = path.resolve(ROOT_DIR, 'schemas/data/liveTasks.schema.json');
-  const schemaPath = schemaOverridePath || (fs.existsSync(defaultSchema) ? defaultSchema : null);
-  if (schemaPath) {
-    const schemaCheck = validateWithAjv(raw, schemaPath);
-    if (!schemaCheck.valid) {
-      return {
-        count: 0,
-        verifiedTasks: [],
-        sourcePath: targetPath,
-        sourceHash,
-        status: 'INVALID_SCHEMA',
-        schemaErrors: schemaCheck.errors
-      };
-    }
+  const schemaPath = options.schemaOverridePath || defaultSchema;
+  const schemaCheck = validateWithAjv(raw, schemaPath, options);
+
+  if (!schemaCheck.valid) {
+    return {
+      count: 0,
+      verifiedTasks: [],
+      sourcePath: targetPath,
+      sourceHash,
+      status: schemaCheck.code,
+      code: schemaCheck.code,
+      error: schemaCheck.error,
+      schemaErrors: schemaCheck.errors || []
+    };
   }
 
   const list = Array.isArray(raw) ? raw : (raw.tasks || raw.items || []);
@@ -118,6 +202,7 @@ export function calculatePhysicalLiveTasks(targetPath, schemaOverridePath) {
     sourcePath: targetPath,
     sourceHash,
     status: 'OK',
+    code: 'OK',
     isProvenZero: verified.length === 0,
     totalRecords: list.length,
     uniqueRecords: seen.size,
@@ -128,11 +213,11 @@ export function calculatePhysicalLiveTasks(targetPath, schemaOverridePath) {
 /**
  * 2. Legally Authorized Tenants Calculator (Pure Function)
  * Reads legal contracts and verifies binding third-party production authorizations.
- * Computes separately: technical tenants, demonstration tenants, physical contracts,
- * production authorized tenants, unique & valid tenants.
  */
-export function calculateLegallyAuthorizedTenants(targetPath, schemaOverridePath) {
-  const resolved = path.resolve(targetPath);
+export function calculateLegallyAuthorizedTenants(targetPath, optionsOrSchema = {}) {
+  const options = parseOptions(optionsOrSchema);
+  const resolved = resolveDeterministicPath(targetPath);
+
   if (!fs.existsSync(resolved)) {
     return {
       count: 0,
@@ -142,10 +227,12 @@ export function calculateLegallyAuthorizedTenants(targetPath, schemaOverridePath
       physicalContractCount: 0,
       sourcePath: targetPath,
       sourceHash: null,
-      status: 'MISSING_SOURCE',
-      error: 'CANONICAL_SOURCE_MISSING: Legal contracts storage file does not exist on disk'
+      status: ERROR_CODES.SOURCE_NOT_FOUND,
+      code: ERROR_CODES.SOURCE_NOT_FOUND,
+      error: `CANONICAL_SOURCE_MISSING: Legal contracts storage does not exist on disk: ${targetPath}`
     };
   }
+
   const sourceHash = getFileSha256(resolved);
   let raw;
   try {
@@ -159,29 +246,31 @@ export function calculateLegallyAuthorizedTenants(targetPath, schemaOverridePath
       physicalContractCount: 0,
       sourcePath: targetPath,
       sourceHash,
-      status: 'INVALID_JSON',
+      status: ERROR_CODES.SOURCE_INVALID_JSON,
+      code: ERROR_CODES.SOURCE_INVALID_JSON,
       error: `JSON_SYNTAX_ERROR: ${err.message}`
     };
   }
 
-  // Schema validation
+  // Schema validation (fail-closed)
   const defaultSchema = path.resolve(ROOT_DIR, 'schemas/data/legalContracts.schema.json');
-  const schemaPath = schemaOverridePath || (fs.existsSync(defaultSchema) ? defaultSchema : null);
-  if (schemaPath) {
-    const schemaCheck = validateWithAjv(raw, schemaPath);
-    if (!schemaCheck.valid) {
-      return {
-        count: 0,
-        authorizedTenants: [],
-        technicalTenantsCount: 0,
-        demonstrationCount: 0,
-        physicalContractCount: 0,
-        sourcePath: targetPath,
-        sourceHash,
-        status: 'INVALID_SCHEMA',
-        schemaErrors: schemaCheck.errors
-      };
-    }
+  const schemaPath = options.schemaOverridePath || defaultSchema;
+  const schemaCheck = validateWithAjv(raw, schemaPath, options);
+
+  if (!schemaCheck.valid) {
+    return {
+      count: 0,
+      authorizedTenants: [],
+      technicalTenantsCount: 0,
+      demonstrationCount: 0,
+      physicalContractCount: 0,
+      sourcePath: targetPath,
+      sourceHash,
+      status: schemaCheck.code,
+      code: schemaCheck.code,
+      error: schemaCheck.error,
+      schemaErrors: schemaCheck.errors || []
+    };
   }
 
   const list = Array.isArray(raw) ? raw : (raw.contracts || raw.tenants || []);
@@ -235,6 +324,7 @@ export function calculateLegallyAuthorizedTenants(targetPath, schemaOverridePath
     sourcePath: targetPath,
     sourceHash,
     status: 'OK',
+    code: 'OK',
     exclusions
   };
 }
@@ -242,10 +332,11 @@ export function calculateLegallyAuthorizedTenants(targetPath, schemaOverridePath
 /**
  * 3. Eligible Certification Evidence Calculator (Pure Function)
  * Distinguishes internal receipts from external eligible evidence.
- * Counts valid external third-party independent audit certifications.
  */
-export function calculateEligibleCertificationEvidence(targetPath, schemaOverridePath) {
-  const resolved = path.resolve(targetPath);
+export function calculateEligibleCertificationEvidence(targetPath, optionsOrSchema = {}) {
+  const options = parseOptions(optionsOrSchema);
+  const resolved = resolveDeterministicPath(targetPath);
+
   if (!fs.existsSync(resolved)) {
     return {
       count: 0,
@@ -255,10 +346,12 @@ export function calculateEligibleCertificationEvidence(targetPath, schemaOverrid
       physicalCertCount: 0,
       sourcePath: targetPath,
       sourceHash: null,
-      status: 'MISSING_SOURCE',
-      error: 'CANONICAL_SOURCE_MISSING: External audits certification storage file does not exist on disk'
+      status: ERROR_CODES.SOURCE_NOT_FOUND,
+      code: ERROR_CODES.SOURCE_NOT_FOUND,
+      error: `CANONICAL_SOURCE_MISSING: External audits storage does not exist on disk: ${targetPath}`
     };
   }
+
   const sourceHash = getFileSha256(resolved);
   let raw;
   try {
@@ -272,29 +365,31 @@ export function calculateEligibleCertificationEvidence(targetPath, schemaOverrid
       physicalCertCount: 0,
       sourcePath: targetPath,
       sourceHash,
-      status: 'INVALID_JSON',
+      status: ERROR_CODES.SOURCE_INVALID_JSON,
+      code: ERROR_CODES.SOURCE_INVALID_JSON,
       error: `JSON_SYNTAX_ERROR: ${err.message}`
     };
   }
 
-  // Schema validation
+  // Schema validation (fail-closed)
   const defaultSchema = path.resolve(ROOT_DIR, 'schemas/data/externalAudits.schema.json');
-  const schemaPath = schemaOverridePath || (fs.existsSync(defaultSchema) ? defaultSchema : null);
-  if (schemaPath) {
-    const schemaCheck = validateWithAjv(raw, schemaPath);
-    if (!schemaCheck.valid) {
-      return {
-        count: 0,
-        eligibleAudits: [],
-        internalReceiptsCount: 0,
-        declaredCertCount: 0,
-        physicalCertCount: 0,
-        sourcePath: targetPath,
-        sourceHash,
-        status: 'INVALID_SCHEMA',
-        schemaErrors: schemaCheck.errors
-      };
-    }
+  const schemaPath = options.schemaOverridePath || defaultSchema;
+  const schemaCheck = validateWithAjv(raw, schemaPath, options);
+
+  if (!schemaCheck.valid) {
+    return {
+      count: 0,
+      eligibleAudits: [],
+      internalReceiptsCount: 0,
+      declaredCertCount: 0,
+      physicalCertCount: 0,
+      sourcePath: targetPath,
+      sourceHash,
+      status: schemaCheck.code,
+      code: schemaCheck.code,
+      error: schemaCheck.error,
+      schemaErrors: schemaCheck.errors || []
+    };
   }
 
   const list = Array.isArray(raw) ? raw : (raw.evidence || raw.audits || []);
@@ -338,17 +433,16 @@ export function calculateEligibleCertificationEvidence(targetPath, schemaOverrid
     sourcePath: targetPath,
     sourceHash,
     status: 'OK',
+    code: 'OK',
     exclusions
   };
 }
 
 /**
  * 4. Readiness Risk & Autonomy Distribution Calculator (Pure Function)
- * Reads canonical baseline manifest employee authorization records and partitions
- * by risk classification into controlled pilot ready (LOW, MEDIUM, HIGH) vs HITL mandatory (CRITICAL).
  */
 export function calculateReadinessRiskDistribution(manifestPath) {
-  const resolved = path.resolve(manifestPath);
+  const resolved = resolveDeterministicPath(manifestPath);
   if (!fs.existsSync(resolved)) {
     throw new Error('CANONICAL_MANIFEST_NOT_FOUND: ' + manifestPath);
   }

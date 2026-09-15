@@ -1,0 +1,10 @@
+{
+  "$schema": "https://ai-employee.net/schemas/live-tasks-v1.json",
+  "metadata": {
+    "version": "1.0.0",
+    "scope": "EXTERNAL_CLIENT_PRODUCTION_TASKS",
+    "updated_at": "2026-09-15T22:00:00.000Z",
+    "description": "Canonical physical evidence repository for verified external client task executions."
+  },
+  "tasks": []
+}

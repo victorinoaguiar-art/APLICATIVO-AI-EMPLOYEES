@@ -1,0 +1,47 @@
+{
+  "total_suites": 32,
+  "total_tests": 388,
+  "passed_tests": 388,
+  "failed_tests": 0,
+  "skipped_tests": 0,
+  "exit_code": 0,
+  "breakdown": {
+    "rolepack": {
+      "suites": 1,
+      "tests": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    "runtime": {
+      "suites": 29,
+      "tests": 355,
+      "passed": 355,
+      "failed": 0
+    },
+    "policies": {
+      "suites": 1,
+      "tests": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    "marketplace_billing": {
+      "suites": 1,
+      "tests": 5,
+      "passed": 5,
+      "failed": 0
+    },
+    "tool_sdk": {
+      "suites": 1,
+      "tests": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "evaluation_sdk": {
+      "suites": 1,
+      "tests": 10,
+      "passed": 10,
+      "failed": 0
+    }
+  },
+  "timestamp": "2026-09-15T23:09:50.648Z"
+}

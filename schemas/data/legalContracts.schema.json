@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LegalContractsSchema",
+  "type": "object",
+  "required": ["$schema", "metadata", "contracts"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "metadata": {
+      "type": "object",
+      "required": ["version", "scope", "updated_at", "description"],
+      "properties": {
+        "version": { "type": "string" },
+        "scope": { "type": "string" },
+        "updated_at": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "contracts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tenant_id", "status"],
+        "properties": {
+          "tenant_id": { "type": "string" },
+          "tenant_name": { "type": "string" },
+          "tenant_type": { "type": "string" },
+          "authorization_type": { "type": "string" },
+          "is_pilot_demonstration": { "type": "boolean" },
+          "status": { "type": "string" },
+          "legal_signatory": { "type": "string" },
+          "contract_document_sha256": { "type": "string" }
+        }
+      }
+    }
+  }
+}

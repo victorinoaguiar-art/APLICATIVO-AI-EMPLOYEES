@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-09-15T23:09:50.799Z",
+  "live_tasks": {
+    "count": 0,
+    "verifiedTasks": [],
+    "sourcePath": "C:\\Users\\Victorino Aguiar\\OneDrive\\Desktop\\APLICATIVO AI EMPLOYEES\\data\\liveTasks.json",
+    "sourceHash": "13958edbb291b9a5238a3f4830685cfb41a44730401b994b4c734187db610879",
+    "status": "OK",
+    "code": "OK",
+    "isProvenZero": true,
+    "totalRecords": 0,
+    "uniqueRecords": 0,
+    "exclusions": []
+  },
+  "legal_contracts": {
+    "count": 0,
+    "authorizedTenants": [],
+    "technicalTenantsCount": 0,
+    "demonstrationCount": 3,
+    "physicalContractCount": 0,
+    "uniqueCount": 3,
+    "totalRecords": 3,
+    "sourcePath": "C:\\Users\\Victorino Aguiar\\OneDrive\\Desktop\\APLICATIVO AI EMPLOYEES\\data\\legalContracts.json",
+    "sourceHash": "7db4bd457a8c64032753254fa2bcdf845e0ffc916d8de2698ebedaaa59780498",
+    "status": "OK",
+    "code": "OK",
+    "exclusions": [
+      {
+        "reason": "DEMONSTRATION_PILOT_NOT_AUTHORIZED_PRODUCTION",
+        "tenant_id": "tenant_angola_telecom"
+      },
+      {
+        "reason": "DEMONSTRATION_PILOT_NOT_AUTHORIZED_PRODUCTION",
+        "tenant_id": "tenant_ban_angola"
+      },
+      {
+        "reason": "DEMONSTRATION_PILOT_NOT_AUTHORIZED_PRODUCTION",
+        "tenant_id": "tenant_sonangol_logistics"
+      }
+    ]
+  },
+  "external_audits": {
+    "count": 0,
+    "eligibleAudits": [],
+    "internalReceiptsCount": 0,
+    "declaredCertCount": 0,
+    "physicalCertCount": 0,
+    "isProvenZero": true,
+    "uniqueCount": 0,
+    "totalRecords": 0,
+    "sourcePath": "C:\\Users\\Victorino Aguiar\\OneDrive\\Desktop\\APLICATIVO AI EMPLOYEES\\data\\externalAudits.json",
+    "sourceHash": "63b50baade511e1213fd7bea7817c0f0fe17f51242b3bba711b8d5365811b40d",
+    "status": "OK",
+    "code": "OK",
+    "exclusions": []
+  },
+  "proven_zeros_summary": {
+    "live_tasks_proven_zero": true,
+    "legal_contracts_authorized_zero": true,
+    "external_audits_eligible_zero": true
+  }
+}

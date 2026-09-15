@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LiveTasksSchema",
+  "type": "object",
+  "required": ["$schema", "metadata", "tasks"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "metadata": {
+      "type": "object",
+      "required": ["version", "scope", "updated_at", "description"],
+      "properties": {
+        "version": { "type": "string" },
+        "scope": { "type": "string" },
+        "updated_at": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["task_id"],
+        "properties": {
+          "task_id": { "type": "string" },
+          "client_signature": { "type": "string" },
+          "external_system_confirmation": { "type": "string" },
+          "is_demonstration": { "type": "boolean" },
+          "is_test": { "type": "boolean" },
+          "simulated": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

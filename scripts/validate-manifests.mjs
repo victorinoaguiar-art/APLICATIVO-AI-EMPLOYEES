@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import * as crypto from 'node:crypto';
 import { execSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 import {
   calculatePhysicalLiveTasks,
   calculateLegallyAuthorizedTenants,
@@ -10,15 +11,19 @@ import {
   calculateReadinessRiskDistribution
 } from './lib/cardinalityCalculators.mjs';
 
-const req = createRequire(path.resolve('package.json'));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const ROOT_DIR = path.resolve(__dirname, '..');
+
+const req = createRequire(path.resolve(ROOT_DIR, 'package.json'));
 const Ajv = req('ajv');
 const addFormats = req('ajv-formats');
 
 const ajv = new Ajv({ allErrors: true, strict: false });
 addFormats(ajv);
 
-const verificationDir = path.resolve(process.cwd(), 'generated/verification');
-const generatedDir = path.resolve(process.cwd(), 'generated');
+const verificationDir = path.resolve(ROOT_DIR, 'generated/verification');
+const generatedDir = path.resolve(ROOT_DIR, 'generated');
 
 if (!fs.existsSync(verificationDir)) {
   fs.mkdirSync(verificationDir, { recursive: true });
@@ -48,7 +53,7 @@ const startedAt = new Date().toISOString();
 // 1. AJV JSON SCHEMAS FOR CORE MANIFESTS & REGISTERS (Point 7)
 // ============================================================================
 
-const schemasDir = path.resolve(process.cwd(), 'schemas/manifests');
+const schemasDir = path.resolve(ROOT_DIR, 'schemas/manifests');
 
 const readJsonNoBom = (filePath) => JSON.parse(fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, ''));
 
@@ -86,7 +91,7 @@ const evidencePaths = [];
 const evidenceSha256 = {};
 
 for (const item of manifestsToValidate) {
-  const fullPath = path.resolve(process.cwd(), item.relPath);
+  const fullPath = path.resolve(ROOT_DIR, item.relPath);
   if (!fs.existsSync(fullPath)) {
     schemaPassed = false;
     schemaResults.push({ file: item.relPath, status: 'MISSING_FILE', errors: ['File does not exist'] });
@@ -122,7 +127,8 @@ for (const item of manifestsToValidate) {
     schemaPassed = false;
     schemaResults.push({
       file: item.relPath,
-      status: 'INVALID_JSON',
+      status: 'JSON_SYNTAX_OR_SCHEMA_ERROR',
+      schema: item.name,
       errors: [err.message]
     });
   }
@@ -201,10 +207,10 @@ try {
 
 // Domain Check 2: tasks_declared = tasks_physical = tasks_valid (dynamically calculated from physical source)
 const freezeManifest = readJsonNoBom(
-  path.resolve(process.cwd(), 'generated/AETF500_CERTL3_Authenticity_ProductionFreeze_Manifest.json')
+  path.resolve(ROOT_DIR, 'generated/AETF500_CERTL3_Authenticity_ProductionFreeze_Manifest.json')
 );
 const declaredLiveTasks = freezeManifest.summary.authentic_verified_live_tasks; // 0
-const liveTasksStoragePath = path.resolve(process.cwd(), 'data/live_tasks.json');
+const liveTasksStoragePath = path.resolve(ROOT_DIR, 'data/liveTasks.json');
 const liveTasksCalc = calculatePhysicalLiveTasks(liveTasksStoragePath);
 const physicalLiveTasksInStorage = liveTasksCalc.count;
 const liveTasksCheckPassed = liveTasksCalc.status === 'OK' && declaredLiveTasks === physicalLiveTasksInStorage;
@@ -217,7 +223,7 @@ cardinalityChecks.push({
   unique_records: liveTasksCalc.uniqueRecords || 0,
   total_records: liveTasksCalc.totalRecords || 0,
   verified_tasks: liveTasksCalc.verifiedTasks,
-  source_path: path.relative(process.cwd(), liveTasksStoragePath).replace(/\\/g, '/'),
+  source_path: path.relative(ROOT_DIR, liveTasksStoragePath).replace(/\\/g, '/'),
   source_hash: liveTasksCalc.sourceHash,
   source_status: liveTasksCalc.status,
   is_proven_zero: liveTasksCalc.isProvenZero || false,
@@ -228,7 +234,7 @@ cardinalityChecks.push({
 
 // Domain Check 3: tenants_declared = tenants_authorized (dynamically calculated from legal contracts)
 const declaredTenantsCount = freezeManifest.summary?.tenant_reconciliation?.verified_companies?.length || 0;
-const contractsStoragePath = path.resolve(process.cwd(), 'data/legal_contracts.json');
+const contractsStoragePath = path.resolve(ROOT_DIR, 'data/legalContracts.json');
 const tenantsCalc = calculateLegallyAuthorizedTenants(contractsStoragePath);
 const legallyAuthorizedTenantsCount = tenantsCalc.count;
 const demonstrationTenantsCount = tenantsCalc.demonstrationCount;
@@ -244,7 +250,7 @@ cardinalityChecks.push({
   physical_contracts_count: tenantsCalc.physicalContractCount || 0,
   unique_tenants: tenantsCalc.uniqueCount || 0,
   total_tenants_in_source: tenantsCalc.totalRecords || 0,
-  source_path: path.relative(process.cwd(), contractsStoragePath).replace(/\\/g, '/'),
+  source_path: path.relative(ROOT_DIR, contractsStoragePath).replace(/\\/g, '/'),
   source_hash: tenantsCalc.sourceHash,
   source_status: tenantsCalc.status,
   exclusions: tenantsCalc.exclusions || [],
@@ -252,10 +258,10 @@ cardinalityChecks.push({
 });
 
 // Domain Check 4: certifications_declared = evidence_eligible_records (dynamically calculated)
-const baselineManifestPath = path.resolve(process.cwd(), 'generated/AETF500_CERTL3_FinalProductionBaseline_Manifest.json');
+const baselineManifestPath = path.resolve(ROOT_DIR, 'generated/AETF500_CERTL3_FinalProductionBaseline_Manifest.json');
 const baselineManifest = readJsonNoBom(baselineManifestPath);
 const certL3ApprovedDeclared = baselineManifest.cert_l3_count; // 0
-const auditEvidencePath = path.resolve(process.cwd(), 'data/external_audits.json');
+const auditEvidencePath = path.resolve(ROOT_DIR, 'data/externalAudits.json');
 const evidenceCalc = calculateEligibleCertificationEvidence(auditEvidencePath);
 const eligiblePhysicalEvidenceCount = evidenceCalc.count;
 
@@ -280,10 +286,10 @@ cardinalityChecks.push({
   hitl_mandatory_count,
   total_evaluated_employees: riskDistCalc.totalEmployees,
   unique_evaluated_employees: riskDistCalc.uniqueEmployees,
-  source_path: path.relative(process.cwd(), auditEvidencePath).replace(/\\/g, '/'),
+  source_path: path.relative(ROOT_DIR, auditEvidencePath).replace(/\\/g, '/'),
   source_hash: evidenceCalc.sourceHash,
   source_status: evidenceCalc.status,
-  baseline_manifest_path: path.relative(process.cwd(), baselineManifestPath).replace(/\\/g, '/'),
+  baseline_manifest_path: path.relative(ROOT_DIR, baselineManifestPath).replace(/\\/g, '/'),
   baseline_manifest_hash: riskDistCalc.sourceHash,
   exclusions: evidenceCalc.exclusions || [],
   status: certCheckPassed ? 'PASS' : 'FAIL'

@@ -1,0 +1,11 @@
+ M .gitignore
+ M apps/web/package.json
+ M package-lock.json
+ M packages/runtime/src/test/cardinalityCalculators.test.ts
+ M scripts/lib/cardinalityCalculators.mjs
+ M scripts/validate-manifests.mjs
+?? PROMPT_PATCH_CORRECTIVO_SCHEMAS_CARDINALIDADES_CI.md
+?? data/
+?? evidence/
+?? schemas/data/
+?? scripts/generate-evidence.mjs

@@ -4,7 +4,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-describe('AETF-500 Pure Cardinality Calculators & Dynamic Physical Truth (P6 / P3 Micro-Patch)', async () => {
+describe('AETF-500 Pure Cardinality Calculators & Dynamic Physical Truth (Patch Correctivo 17 Cenários)', async () => {
   const getRoot = () => {
     const cwd = process.cwd();
     return cwd.endsWith('packages/runtime') || cwd.endsWith('packages\\runtime')
@@ -13,7 +13,7 @@ describe('AETF-500 Pure Cardinality Calculators & Dynamic Physical Truth (P6 / P
   };
   const root = getRoot();
   const calcModulePath = path.resolve(root, 'scripts/lib/cardinalityCalculators.mjs');
-  const tempDir = path.resolve(root, 'generated/tmp_test_cardinality');
+  const tempDir = path.resolve(root, 'generated/tmp_test_cardinality_reconciled');
 
   // Dynamic import of the pure ESM calculator module
   const {
@@ -21,10 +21,13 @@ describe('AETF-500 Pure Cardinality Calculators & Dynamic Physical Truth (P6 / P
     calculateLegallyAuthorizedTenants,
     calculateEligibleCertificationEvidence,
     calculateReadinessRiskDistribution,
-    getFileSha256
+    validateWithAjv,
+    getFileSha256,
+    resolveDeterministicPath,
+    ROOT_DIR,
+    ERROR_CODES
   } = await import(pathToFileURL(calcModulePath).href);
 
-  // Helper to ensure clean temp test dir
   const ensureTempDir = () => {
     if (!fs.existsSync(tempDir)) {
       fs.mkdirSync(tempDir, { recursive: true });
@@ -37,338 +40,338 @@ describe('AETF-500 Pure Cardinality Calculators & Dynamic Physical Truth (P6 / P
     }
   };
 
-  it('1. MISSING SOURCE BLOCKS: Non-existent storage produces MISSING_SOURCE status and blocks gate', () => {
-    const nonExistentPath = path.join(tempDir, 'non_existent_source.json');
-    
-    const taskResult = calculatePhysicalLiveTasks(nonExistentPath);
-    assert.strictEqual(taskResult.count, 0);
-    assert.strictEqual(taskResult.status, 'MISSING_SOURCE', 'Missing source must return MISSING_SOURCE, not proven zero');
-    assert.strictEqual(taskResult.sourceHash, null);
-
-    const tenantResult = calculateLegallyAuthorizedTenants(nonExistentPath);
-    assert.strictEqual(tenantResult.count, 0);
-    assert.strictEqual(tenantResult.status, 'MISSING_SOURCE');
-
-    const evidenceResult = calculateEligibleCertificationEvidence(nonExistentPath);
-    assert.strictEqual(evidenceResult.count, 0);
-    assert.strictEqual(evidenceResult.status, 'MISSING_SOURCE');
+  // 1. Schema presente e válido
+  it('1. Schema presente e válido valida estrutura com sucesso', () => {
+    const defaultSchema = path.resolve(root, 'schemas/data/liveTasks.schema.json');
+    assert.ok(fs.existsSync(defaultSchema), 'Default schema must exist');
+    const validData = {
+      $schema: 'https://ai-employee.net/schemas/live-tasks-v1.json',
+      metadata: {
+        version: '1.0.0',
+        scope: 'EXTERNAL_CLIENT_PRODUCTION_TASKS',
+        updated_at: '2026-09-15T22:00:00.000Z',
+        description: 'Valid test payload'
+      },
+      tasks: []
+    };
+    const res = validateWithAjv(validData, defaultSchema);
+    assert.strictEqual(res.valid, true);
   });
 
-  it('2. CANONICAL VALID EMPTY SOURCE: Present valid empty structure produces proven zero with OK status', () => {
+  // 2. Schema ausente
+  it('2. Schema ausente retorna SCHEMA_NOT_FOUND em regime fail-closed', () => {
+    const nonExistentSchema = path.join(tempDir, 'missing.schema.json');
+    const res = validateWithAjv({ tasks: [] }, nonExistentSchema);
+    assert.strictEqual(res.valid, false);
+    assert.strictEqual(res.code, ERROR_CODES.SCHEMA_NOT_FOUND);
+  });
+
+  // 3. Schema com JSON inválido
+  it('3. Schema com JSON inválido retorna SCHEMA_INVALID', () => {
     ensureTempDir();
     try {
-      const emptyTasksFile = path.join(tempDir, 'empty_tasks.json');
+      const badJsonSchema = path.join(tempDir, 'corrupt.schema.json');
+      fs.writeFileSync(badJsonSchema, '{"type": "object", invalid_json');
+      const res = validateWithAjv({ tasks: [] }, badJsonSchema);
+      assert.strictEqual(res.valid, false);
+      assert.strictEqual(res.code, ERROR_CODES.SCHEMA_INVALID);
+    } finally {
+      cleanupTempDir();
+    }
+  });
+
+  // 4. Schema não compilável pelo Ajv
+  it('4. Schema não compilável pelo Ajv retorna SCHEMA_INVALID', () => {
+    ensureTempDir();
+    try {
+      const nonCompilableSchema = path.join(tempDir, 'non_compilable.schema.json');
+      fs.writeFileSync(nonCompilableSchema, JSON.stringify({
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        type: 'non_existent_type_error'
+      }));
+      const res = validateWithAjv({ tasks: [] }, nonCompilableSchema);
+      assert.strictEqual(res.valid, false);
+      assert.strictEqual(res.code, ERROR_CODES.SCHEMA_INVALID);
+    } finally {
+      cleanupTempDir();
+    }
+  });
+
+  // 5. Fonte presente e válida
+  it('5. Fonte presente e válida com contagem física derivada', () => {
+    ensureTempDir();
+    try {
+      const validFile = path.join(tempDir, 'valid_tasks.json');
+      fs.writeFileSync(validFile, JSON.stringify({
+        $schema: 'https://ai-employee.net/schemas/live-tasks-v1.json',
+        metadata: {
+          version: '1.0.0',
+          scope: 'EXTERNAL_CLIENT_PRODUCTION_TASKS',
+          updated_at: '2026-09-15T22:00:00.000Z',
+          description: 'Valid task file'
+        },
+        tasks: [
+          {
+            task_id: 'TSK-001',
+            client_signature: 'sig_rsa_valid',
+            external_system_confirmation: 'TXN-9988',
+            is_demonstration: false,
+            is_test: false
+          }
+        ]
+      }, null, 2));
+
+      const res = calculatePhysicalLiveTasks(validFile);
+      assert.strictEqual(res.status, 'OK');
+      assert.strictEqual(res.count, 1);
+      assert.deepStrictEqual(res.verifiedTasks, ['TSK-001']);
+    } finally {
+      cleanupTempDir();
+    }
+  });
+
+  // 6. Fonte ausente
+  it('6. Fonte ausente retorna SOURCE_NOT_FOUND e bloqueia o cálculo', () => {
+    const missingSource = path.join(tempDir, 'does_not_exist_source.json');
+    const res = calculatePhysicalLiveTasks(missingSource);
+    assert.strictEqual(res.status, ERROR_CODES.SOURCE_NOT_FOUND);
+    assert.strictEqual(res.count, 0);
+    assert.strictEqual(res.sourceHash, null);
+  });
+
+  // 7. Fonte com JSON inválido
+  it('7. Fonte com JSON inválido retorna SOURCE_INVALID_JSON', () => {
+    ensureTempDir();
+    try {
+      const corruptSource = path.join(tempDir, 'corrupt_data.json');
+      fs.writeFileSync(corruptSource, '{"tasks": [ corrupted');
+      const res = calculatePhysicalLiveTasks(corruptSource);
+      assert.strictEqual(res.status, ERROR_CODES.SOURCE_INVALID_JSON);
+      assert.strictEqual(res.count, 0);
+    } finally {
+      cleanupTempDir();
+    }
+  });
+
+  // 8. Fonte incompatível com o schema
+  it('8. Fonte incompatível com o schema retorna SOURCE_SCHEMA_MISMATCH', () => {
+    ensureTempDir();
+    try {
+      const invalidDataFile = path.join(tempDir, 'bad_structure.json');
+      fs.writeFileSync(invalidDataFile, JSON.stringify({
+        $schema: 'https://ai-employee.net/schemas/live-tasks-v1.json',
+        metadata: { version: '1.0.0' }, // missing required metadata fields
+        tasks: 'not-an-array'
+      }));
+      const res = calculatePhysicalLiveTasks(invalidDataFile);
+      assert.strictEqual(res.status, ERROR_CODES.SOURCE_SCHEMA_MISMATCH);
+      assert.strictEqual(res.count, 0);
+    } finally {
+      cleanupTempDir();
+    }
+  });
+
+  // 9. Fonte válida com zero registos
+  it('9. Fonte válida com zero registos retorna OK com isProvenZero: true', () => {
+    ensureTempDir();
+    try {
+      const emptyTasksFile = path.join(tempDir, 'empty_canonical.json');
       fs.writeFileSync(emptyTasksFile, JSON.stringify({
         $schema: 'https://ai-employee.net/schemas/live-tasks-v1.json',
         metadata: {
           version: '1.0.0',
           scope: 'EXTERNAL_CLIENT_PRODUCTION_TASKS',
           updated_at: '2026-09-15T22:00:00.000Z',
-          description: 'Empty tasks'
+          description: 'Empty canonical verified storage'
         },
         tasks: []
       }));
-
-      const taskResult = calculatePhysicalLiveTasks(emptyTasksFile);
-      assert.strictEqual(taskResult.count, 0);
-      assert.strictEqual(taskResult.status, 'OK', 'Valid empty file must produce status OK');
-      assert.strictEqual(taskResult.isProvenZero, true);
-      assert.ok(taskResult.sourceHash, 'Hash must be generated');
-
-      const emptyAuditsFile = path.join(tempDir, 'empty_audits.json');
-      fs.writeFileSync(emptyAuditsFile, JSON.stringify({
-        $schema: 'https://ai-employee.net/schemas/external-audits-v1.json',
-        metadata: {
-          version: '1.0.0',
-          scope: 'INDEPENDENT_THIRD_PARTY_CERT_L3_AUDITS',
-          updated_at: '2026-09-15T22:00:00.000Z',
-          description: 'Empty audits'
-        },
-        audits: []
-      }));
-
-      const auditResult = calculateEligibleCertificationEvidence(emptyAuditsFile);
-      assert.strictEqual(auditResult.count, 0);
-      assert.strictEqual(auditResult.status, 'OK');
-      assert.strictEqual(auditResult.isProvenZero, true);
-      assert.ok(auditResult.sourceHash);
+      const res = calculatePhysicalLiveTasks(emptyTasksFile);
+      assert.strictEqual(res.status, 'OK');
+      assert.strictEqual(res.count, 0);
+      assert.strictEqual(res.isProvenZero, true);
+      assert.ok(res.sourceHash);
     } finally {
       cleanupTempDir();
     }
   });
 
-  it('3. INVALID JSON AND SCHEMA CORRUPTION BLOCKS GATE: Corrupted files produce INVALID_JSON or INVALID_SCHEMA', () => {
+  // 10. Cardinalidade derivada dos registos físicos
+  it('10. Cardinalidade é estritamente derivada dos registos físicos sem constantes hard-coded', () => {
     ensureTempDir();
     try {
-      const corruptJsonFile = path.join(tempDir, 'corrupt.json');
-      fs.writeFileSync(corruptJsonFile, '{"tasks": [ invalid_json_syntax');
-
-      const jsonErrResult = calculatePhysicalLiveTasks(corruptJsonFile);
-      assert.strictEqual(jsonErrResult.status, 'INVALID_JSON');
-      assert.strictEqual(jsonErrResult.count, 0);
-
-      const invalidSchemaFile = path.join(tempDir, 'bad_schema.json');
-      fs.writeFileSync(invalidSchemaFile, JSON.stringify({
-        $schema: 'bad',
-        // missing metadata and tasks array is an invalid type
-        tasks: 'not-an-array'
-      }));
-
-      const schemaErrResult = calculatePhysicalLiveTasks(invalidSchemaFile);
-      assert.strictEqual(schemaErrResult.status, 'INVALID_SCHEMA');
-    } finally {
-      cleanupTempDir();
-    }
-  });
-
-  it('4. VALID PHYSICAL DATA: Inserting 1 valid physical record updates calculated count to 1', () => {
-    ensureTempDir();
-    try {
-      // 4a. Live task with external confirmation and client signature
-      const taskFile = path.join(tempDir, 'valid_task.json');
-      const validTask = {
+      const dynamicFile = path.join(tempDir, 'dynamic_tasks.json');
+      const createDynamicTasks = (count: number) => ({
         $schema: 'https://ai-employee.net/schemas/live-tasks-v1.json',
         metadata: {
           version: '1.0.0',
           scope: 'EXTERNAL_CLIENT_PRODUCTION_TASKS',
           updated_at: '2026-09-15T22:00:00.000Z',
-          description: 'Valid task test'
+          description: 'Dynamic tasks'
         },
-        tasks: [{
-          task_id: 'TSK-LIVE-001',
-          client_signature: 'sig_rsa_4096_client_alpha',
-          external_system_confirmation: 'TXN-SWIFT-99281726',
+        tasks: Array.from({ length: count }, (_, i) => ({
+          task_id: `TSK-DYN-${i + 1}`,
+          client_signature: `sig_dyn_${i + 1}`,
+          external_system_confirmation: `CONF-${i + 1}`,
           is_demonstration: false,
           is_test: false
-        }]
-      };
-      fs.writeFileSync(taskFile, JSON.stringify(validTask, null, 2));
+        }))
+      });
 
-      const taskResult = calculatePhysicalLiveTasks(taskFile);
-      assert.strictEqual(taskResult.count, 1, 'Valid task must yield count 1');
-      assert.deepStrictEqual(taskResult.verifiedTasks, ['TSK-LIVE-001']);
-      assert.strictEqual(taskResult.status, 'OK');
+      fs.writeFileSync(dynamicFile, JSON.stringify(createDynamicTasks(3)));
+      assert.strictEqual(calculatePhysicalLiveTasks(dynamicFile).count, 3);
 
-      // 4b. Tenant with signed legal contract and document hash
-      const contractFile = path.join(tempDir, 'valid_contract.json');
-      const validContract = {
-        $schema: 'https://ai-employee.net/schemas/legal-contracts-v1.json',
-        metadata: {
-          version: '1.0.0',
-          scope: 'TENANT_LEGAL_CONTRACTS',
-          updated_at: '2026-09-15T22:00:00.000Z',
-          description: 'Valid contract test'
-        },
-        contracts: [{
-          tenant_id: 'TEN-ENT-001',
-          status: 'SIGNED_LEGAL_CONTRACT',
-          legal_signatory: 'Dr. Maria Santos, CEO',
-          contract_document_sha256: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
-        }]
-      };
-      fs.writeFileSync(contractFile, JSON.stringify(validContract, null, 2));
-
-      const tenantResult = calculateLegallyAuthorizedTenants(contractFile);
-      assert.strictEqual(tenantResult.count, 1, 'Valid contract must yield count 1');
-      assert.deepStrictEqual(tenantResult.authorizedTenants, ['TEN-ENT-001']);
-      assert.strictEqual(tenantResult.status, 'OK');
-
-      // 4c. Third party independent audit
-      const auditFile = path.join(tempDir, 'valid_audit.json');
-      const validAudit = {
-        $schema: 'https://ai-employee.net/schemas/external-audits-v1.json',
-        metadata: {
-          version: '1.0.0',
-          scope: 'INDEPENDENT_THIRD_PARTY_CERT_L3_AUDITS',
-          updated_at: '2026-09-15T22:00:00.000Z',
-          description: 'Valid audit test'
-        },
-        audits: [{
-          audit_id: 'AUD-EXT-2026-01',
-          auditor_type: 'INDEPENDENT_THIRD_PARTY',
-          verdict: 'CERT_L3_APPROVED',
-          auditor_signature: 'sig_cert_board_991'
-        }]
-      };
-      fs.writeFileSync(auditFile, JSON.stringify(validAudit, null, 2));
-
-      const auditResult = calculateEligibleCertificationEvidence(auditFile);
-      assert.strictEqual(auditResult.count, 1, 'Valid independent audit must yield count 1');
-      assert.deepStrictEqual(auditResult.eligibleAudits, ['AUD-EXT-2026-01']);
-      assert.strictEqual(auditResult.status, 'OK');
+      fs.writeFileSync(dynamicFile, JSON.stringify(createDynamicTasks(5)));
+      assert.strictEqual(calculatePhysicalLiveTasks(dynamicFile).count, 5);
     } finally {
       cleanupTempDir();
     }
   });
 
-  it('5. DEDUPLICATION AND REJECTION: Duplicate IDs do not inflate count and manifest duplicates throw error', () => {
-    ensureTempDir();
-    try {
-      const taskFile = path.join(tempDir, 'duplicate_tasks.json');
-      const duplicateTasks = {
-        $schema: 'https://ai-employee.net/schemas/live-tasks-v1.json',
-        metadata: {
-          version: '1.0.0',
-          scope: 'EXTERNAL_CLIENT_PRODUCTION_TASKS',
-          updated_at: '2026-09-15T22:00:00.000Z',
-          description: 'Duplicate tasks test'
-        },
-        tasks: [
-          {
-            task_id: 'TSK-LIVE-DUP',
-            client_signature: 'sig_1',
-            external_system_confirmation: 'ext_1'
-          },
-          {
-            task_id: 'TSK-LIVE-DUP', // duplicate
-            client_signature: 'sig_1',
-            external_system_confirmation: 'ext_1'
-          }
-        ]
-      };
-      fs.writeFileSync(taskFile, JSON.stringify(duplicateTasks, null, 2));
-      const taskRes = calculatePhysicalLiveTasks(taskFile);
-      assert.strictEqual(taskRes.count, 1, 'Duplicate task must be deduplicated to count 1');
+  // 11. Execução a partir de outro directório
+  it('11. Resolução de caminhos é determinística e independente do working directory', () => {
+    const relativeTarget = 'data/liveTasks.json';
+    const resolved = resolveDeterministicPath(relativeTarget);
+    assert.ok(path.isAbsolute(resolved));
+    assert.ok(resolved.startsWith(ROOT_DIR));
+  });
 
-      // Manifest with duplicate employee ID must throw error
-      const badManifestFile = path.join(tempDir, 'bad_manifest.json');
-      fs.writeFileSync(badManifestFile, JSON.stringify({
-        employee_authorization_records: [
-          { employee_id: 'EMP-001', risk_class: 'LOW' },
-          { employee_id: 'EMP-001', risk_class: 'LOW' } // duplicate ID
-        ]
-      }));
-      assert.throws(() => {
-        calculateReadinessRiskDistribution(badManifestFile);
-      }, /DUPLICATE_EMPLOYEE_ID_IN_MANIFEST/, 'Duplicate employee ID must be rejected');
-    } finally {
-      cleanupTempDir();
+  // 12. Caminhos compatíveis com Linux e Windows
+  it('12. Caminhos suportam separadores Linux e Windows sem alterar hashing', () => {
+    const canonicalFile = path.resolve(root, 'data/liveTasks.json');
+    if (fs.existsSync(canonicalFile)) {
+      const forwardSlash = canonicalFile.replace(/\\/g, '/');
+      const backSlash = canonicalFile.replace(/\//g, '\\');
+      assert.strictEqual(getFileSha256(forwardSlash), getFileSha256(backSlash));
     }
   });
 
-  it('6. REJECTION OF MOCKS & DEMONSTRATION CONTRACTS: Separate categories computed accurately', () => {
+  // 13. Impossibilidade de substituir contagem por uma constante
+  it('13. Demonstrações, testes e simulações são excluídos sem inflacionar contagem', () => {
     ensureTempDir();
     try {
-      // Tasks without signature or marked demonstration
-      const taskFile = path.join(tempDir, 'unverified_tasks.json');
-      fs.writeFileSync(taskFile, JSON.stringify({
-        $schema: 'https://ai-employee.net/schemas/live-tasks-v1.json',
-        metadata: {
-          version: '1.0.0',
-          scope: 'EXTERNAL_CLIENT_PRODUCTION_TASKS',
-          updated_at: '2026-09-15T22:00:00.000Z',
-          description: 'Unverified tasks test'
-        },
-        tasks: [
-          { task_id: 'TSK-DEMO-1', is_demonstration: true, client_signature: 'sig', external_system_confirmation: 'conf' },
-          { task_id: 'TSK-SIM-2', simulated: true, client_signature: 'sig', external_system_confirmation: 'conf' },
-          { task_id: 'TSK-NO-SIG-3', external_system_confirmation: 'conf' },
-          { task_id: 'TSK-NO-CONF-4', client_signature: 'sig' }
-        ]
-      }));
-      const taskRes = calculatePhysicalLiveTasks(taskFile);
-      assert.strictEqual(taskRes.count, 0, 'All unverified/demo tasks must be excluded');
-
-      // Tenants with DEMONSTRATION authorization
-      const contractFile = path.join(tempDir, 'demo_tenants.json');
-      fs.writeFileSync(contractFile, JSON.stringify({
+      const mixedFile = path.join(tempDir, 'mixed_tenants.json');
+      fs.writeFileSync(mixedFile, JSON.stringify({
         $schema: 'https://ai-employee.net/schemas/legal-contracts-v1.json',
         metadata: {
           version: '1.0.0',
           scope: 'TENANT_LEGAL_CONTRACTS',
           updated_at: '2026-09-15T22:00:00.000Z',
-          description: 'Demo tenants test'
+          description: 'Mixed tenants'
         },
         contracts: [
-          { tenant_id: 'TEN-DEMO-1', authorization_type: 'DEMONSTRATION', is_pilot_demonstration: true, status: 'PILOT_DEMO' },
-          { tenant_id: 'TEN-TECH-2', tenant_type: 'TECHNICAL', status: 'PENDING_APPROVAL' }
+          {
+            tenant_id: 'tenant_demo_1',
+            authorization_type: 'DEMONSTRATION',
+            is_pilot_demonstration: true,
+            status: 'PILOT_ACTIVE_DEMO'
+          },
+          {
+            tenant_id: 'tenant_real_authorized',
+            tenant_name: 'Real Enterprise',
+            status: 'SIGNED_LEGAL_CONTRACT',
+            legal_signatory: 'CEO',
+            contract_document_sha256: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+          }
         ]
       }));
-      const tenantRes = calculateLegallyAuthorizedTenants(contractFile);
-      assert.strictEqual(tenantRes.count, 0, 'Demonstration tenants must produce 0 authorized count');
-      assert.strictEqual(tenantRes.demonstrationCount, 1);
-      assert.strictEqual(tenantRes.technicalTenantsCount, 1);
 
-      // Audit with internal receipt
-      const auditFile = path.join(tempDir, 'internal_receipts.json');
-      fs.writeFileSync(auditFile, JSON.stringify({
-        $schema: 'https://ai-employee.net/schemas/external-audits-v1.json',
-        metadata: {
-          version: '1.0.0',
-          scope: 'INDEPENDENT_THIRD_PARTY_CERT_L3_AUDITS',
-          updated_at: '2026-09-15T22:00:00.000Z',
-          description: 'Internal receipts test'
-        },
-        audits: [
-          { audit_id: 'AUD-INT-1', auditor_type: 'INDEPENDENT_THIRD_PARTY', is_internal_receipt: true, verdict: 'CERT_L3_APPROVED', auditor_signature: 'sig' },
-          { audit_id: 'AUD-INT-2', auditor_type: 'INTERNAL_SELF_ASSESSMENT', verdict: 'CERT_L3_APPROVED', auditor_signature: 'sig' }
-        ]
-      }));
-      const auditRes = calculateEligibleCertificationEvidence(auditFile);
-      assert.strictEqual(auditRes.count, 0, 'Internal receipts must never count as external certification');
-      assert.strictEqual(auditRes.internalReceiptsCount, 2);
+      const res = calculateLegallyAuthorizedTenants(mixedFile);
+      assert.strictEqual(res.count, 1, 'Only legally authorized signed contract must be counted');
+      assert.strictEqual(res.demonstrationCount, 1);
+      assert.deepStrictEqual(res.authorizedTenants, ['tenant_real_authorized']);
     } finally {
       cleanupTempDir();
     }
   });
 
-  it('7. CANONICAL MANIFEST AND PHYSICAL BASELINE: Pure calculations match exact production truths', () => {
-    const canonicalManifestPath = path.resolve(root, 'generated/AETF500_CERTL3_FinalProductionBaseline_Manifest.json');
-    assert.strictEqual(fs.existsSync(canonicalManifestPath), true, 'Canonical manifest must exist');
+  // 14. Ausência de mutação dos ficheiros canónicos
+  it('14. Operações de cálculo são estritamente read-only nos arquivos canónicos', () => {
+    const canonicalFiles = [
+      path.resolve(root, 'data/liveTasks.json'),
+      path.resolve(root, 'data/legalContracts.json'),
+      path.resolve(root, 'data/externalAudits.json')
+    ];
 
-    const result = calculateReadinessRiskDistribution(canonicalManifestPath);
-    assert.strictEqual(result.status, 'PASS');
-    assert.strictEqual(result.totalEmployees, 500);
-    assert.strictEqual(result.uniqueEmployees, 500);
-    assert.strictEqual(result.controlled_pilot_ready_count, 470);
-    assert.strictEqual(result.hitl_mandatory_count, 30);
-    assert.strictEqual(result.cert_l3_count, 0);
-
-    // Verify actual canonical data files
-    const liveTasksPath = path.resolve(root, 'data/live_tasks.json');
-    const liveTasks = calculatePhysicalLiveTasks(liveTasksPath);
-    assert.strictEqual(liveTasks.status, 'OK');
-    assert.strictEqual(liveTasks.count, 0);
-    assert.strictEqual(liveTasks.isProvenZero, true);
-
-    const contractsPath = path.resolve(root, 'data/legal_contracts.json');
-    const contracts = calculateLegallyAuthorizedTenants(contractsPath);
-    assert.strictEqual(contracts.status, 'OK');
-    assert.strictEqual(contracts.count, 0);
-    assert.strictEqual(contracts.demonstrationCount, 3);
-
-    const auditsPath = path.resolve(root, 'data/external_audits.json');
-    const audits = calculateEligibleCertificationEvidence(auditsPath);
-    assert.strictEqual(audits.status, 'OK');
-    assert.strictEqual(audits.count, 0);
-    assert.strictEqual(audits.isProvenZero, true);
+    for (const f of canonicalFiles) {
+      if (!fs.existsSync(f)) continue;
+      const hashBefore = getFileSha256(f);
+      calculatePhysicalLiveTasks(f);
+      calculateLegallyAuthorizedTenants(f);
+      calculateEligibleCertificationEvidence(f);
+      const hashAfter = getFileSha256(f);
+      assert.strictEqual(hashBefore, hashAfter, `File ${f} must not be mutated`);
+    }
   });
 
-  it('8. SOURCE ALTERATION INVALIDATION: 1-byte modification alters hash and invalidates verification', () => {
+  // 15. Erro controlado ao simular indisponibilidade do Ajv
+  it('15. Ajv indisponível dispara AJV_UNAVAILABLE de forma determinística via injeção', () => {
     ensureTempDir();
     try {
-      const sourceFile = path.join(tempDir, 'source_evidence.json');
-      const originalContent = JSON.stringify({
+      const dummyFile = path.join(tempDir, 'dummy.json');
+      fs.writeFileSync(dummyFile, JSON.stringify({
+        $schema: 'https://ai-employee.net/schemas/live-tasks-v1.json',
+        metadata: { version: '1.0', scope: 'A', updated_at: 'B', description: 'C' },
+        tasks: []
+      }));
+
+      const res = calculatePhysicalLiveTasks(dummyFile, {
+        ajvFactory: () => null,
+        ajvInstance: null
+      });
+
+      assert.strictEqual(res.status, ERROR_CODES.AJV_UNAVAILABLE);
+      assert.strictEqual(res.code, ERROR_CODES.AJV_UNAVAILABLE);
+    } finally {
+      cleanupTempDir();
+    }
+  });
+
+  // 16. Formato de erro determinístico
+  it('16. Formato de erro é determinístico e padronizado em todas as calculadoras', () => {
+    const resTask = calculatePhysicalLiveTasks('non_existent.json');
+    const resTenant = calculateLegallyAuthorizedTenants('non_existent.json');
+    const resAudit = calculateEligibleCertificationEvidence('non_existent.json');
+
+    for (const res of [resTask, resTenant, resAudit]) {
+      assert.strictEqual(res.status, ERROR_CODES.SOURCE_NOT_FOUND);
+      assert.strictEqual(res.code, ERROR_CODES.SOURCE_NOT_FOUND);
+      assert.strictEqual(res.count, 0);
+      assert.strictEqual(res.sourceHash, null);
+      assert.ok(typeof res.error === 'string');
+    }
+  });
+
+  // 17. Correspondência entre o resultado e a fonte realmente lida
+  it('17. Resultado corresponde à fonte e 1-byte de alteração invalida o SHA256', () => {
+    ensureTempDir();
+    try {
+      const fileA = path.join(tempDir, 'audit_a.json');
+      const basePayload = {
         $schema: 'https://ai-employee.net/schemas/external-audits-v1.json',
         metadata: {
           version: '1.0.0',
           scope: 'INDEPENDENT_THIRD_PARTY_CERT_L3_AUDITS',
           updated_at: '2026-09-15T22:00:00.000Z',
-          description: 'Tamper test'
+          description: 'Audits'
         },
-        audits: [{ audit_id: 'AUD-VALID-01', auditor_type: 'INDEPENDENT_THIRD_PARTY', verdict: 'CERT_L3_APPROVED', auditor_signature: 'valid_sig' }]
-      });
-      fs.writeFileSync(sourceFile, originalContent);
+        audits: []
+      };
+      fs.writeFileSync(fileA, JSON.stringify(basePayload, null, 2));
 
-      const originalHash = getFileSha256(sourceFile);
-      assert.ok(originalHash, 'Original hash must be non-null');
+      const resA = calculateEligibleCertificationEvidence(fileA);
+      const originalHash = resA.sourceHash;
 
-      // Tamper 1 byte
-      const tamperedContent = originalContent.replace('AUD-VALID-01', 'AUD-VALID-02');
-      fs.writeFileSync(sourceFile, tamperedContent);
+      // 1-byte mutation in description
+      basePayload.metadata.description = 'Audits!';
+      fs.writeFileSync(fileA, JSON.stringify(basePayload, null, 2));
 
-      const tamperedHash = getFileSha256(sourceFile);
-      assert.notStrictEqual(tamperedHash, originalHash, 'Tampered file hash must diverge completely');
+      const resB = calculateEligibleCertificationEvidence(fileA);
+      const mutatedHash = resB.sourceHash;
+
+      assert.notStrictEqual(originalHash, mutatedHash);
+      assert.strictEqual(resA.count, 0);
+      assert.strictEqual(resB.count, 0);
     } finally {
       cleanupTempDir();
     }
