@@ -36,4 +36,6 @@ scratch/p0_zip_staging/
 scratch/zip_test_extract/
 *.zip
 *.bundle
+packages/*/generated/
+billing_store.json
 

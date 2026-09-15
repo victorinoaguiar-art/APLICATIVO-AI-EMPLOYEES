@@ -24,7 +24,10 @@
     "test:tools": "npm run test --workspace=packages/tool-sdk",
     "eval:catalog": "npm run eval:catalog --workspace=packages/evaluation-sdk",
     "test": "npm run test:catalog && npm run test:runtime && npm run test:security && npm run test:billing && npm run test:tools && npm run eval:catalog",
-    "verify": "npm run clean && npm run build:packages && npm test",
+    "validate:manifests": "node scripts/validate-manifests.mjs",
+    "verify:hashes": "node scripts/verify-hashes.mjs",
+    "verify:security": "node scripts/verify-security.mjs",
+    "verify": "npm run clean && npm run typecheck && npm run build:packages && npm run build:web && npm test && npm run validate:manifests && npm run verify:hashes && npm run verify:security",
     "dev:api": "npm run dev --workspace=apps/api",
     "dev:web": "npm run dev --workspace=apps/web"
   },

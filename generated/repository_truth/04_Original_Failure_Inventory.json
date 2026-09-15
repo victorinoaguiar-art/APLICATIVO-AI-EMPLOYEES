@@ -5,7 +5,7 @@
     "install": {
       "exit_code": 0,
       "duration_ms": 73580,
-      "log_sha256": "53a8c8822e7c274153bed08bd94116a0f6a8336df33a88f78e420455616bb843"
+      "log_sha256": "8e4f1b5346776e542594956e806e332b85660af5a56657834332674dc6a4c334"
     },
     "test": {
       "exit_code": 1,

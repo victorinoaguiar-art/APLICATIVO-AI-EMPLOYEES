@@ -6,11 +6,12 @@ describe('AETF-500 Master Truth Reconciliation & Production Readiness Audit', ()
   const engine = MasterTruthReconciliationEngine.getInstance();
   const report = engine.evaluateMasterReadiness();
 
-  it('1. Emits strictly CONTROLLED_PILOT_READY decision with critical blockers acknowledged', () => {
-    assert.strictEqual(report.decision, 'CONTROLLED_PILOT_READY');
+  it('1. Emits strictly PATCH_VERIFIED_CONTROLLED_PILOT_READY decision with critical blockers acknowledged', () => {
+    assert.strictEqual(report.decision, 'PATCH_VERIFIED_CONTROLLED_PILOT_READY');
     assert.strictEqual(report.critical_gates_failed >= 2, true);
     assert.ok(report.blocking_findings.length >= 2);
     assert.ok(report.restrictions.length >= 3);
+    assert.ok(report.git_commit_baseline && report.git_commit_baseline !== 'UNKNOWN');
   });
 
   it('2. Enforces Task Reconciliation & Suspends 68,500 live task claim', () => {
@@ -46,6 +47,7 @@ describe('AETF-500 Master Truth Reconciliation & Production Readiness Audit', ()
     assert.strictEqual(gateMap.get('MANIFEST_SCHEMA_GATE'), 'PASS');
     assert.strictEqual(gateMap.get('MANIFEST_CARDINALITY_GATE'), 'PASS');
     assert.strictEqual(gateMap.get('PHYSICAL_HASH_GATE'), 'PASS');
+    assert.strictEqual(gateMap.get('ANTI_CONTRADICTION_GATE'), 'PASS');
 
     // Expected failing gates due to absence of external customer evidence
     assert.strictEqual(gateMap.get('TASK_EVIDENCE_GATE'), 'FAIL');

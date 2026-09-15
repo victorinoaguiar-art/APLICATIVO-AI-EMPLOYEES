@@ -1,0 +1,13 @@
+{
+  "receipt_id": "RCPT-CONTRADICTION-1789489571282",
+  "gate_name": "ANTI_CONTRADICTION_GATE",
+  "verifier_name": "ContradictoryClaimsScanner",
+  "generated_at": "2026-09-15T16:26:11.282Z",
+  "status": "PASS",
+  "checked_items_count": 4,
+  "failure_count": 0,
+  "details": {
+    "findings": [],
+    "conclusion": "ZERO_CONTRADICTORY_CLAIMS"
+  }
+}

@@ -2,34 +2,34 @@
   "manifest_id": "AETF500_CONTINUOUS_OPERATIONS_GOVERNANCE_2026",
   "baseline_id": "AETF-500-CERTL3-PRODUCTION-BASELINE-2026.09.11",
   "baseline_status": "FROZEN_AND_VERSIONED",
-  "initial_certification_status": "COMPLETE",
-  "continuous_operations_status": "ACTIVE",
+  "initial_certification_status": "BLOCKED_PENDING_EXTERNAL_AUDIT",
+  "continuous_operations_status": "CONTROLLED_PILOT_ONLY",
   "continuous_governance_status": "ACTIVE",
   "targeted_recertification_status": "ACTIVE",
-  "commercial_operations_status": "ACTIVE",
+  "commercial_operations_status": "CONTROLLED_PILOT_ONLY",
   "total_employees": 500,
-  "cert_l3_full_count": 490,
-  "cert_l3_restricted_count": 10,
+  "cert_l3_full_count": 0,
+  "cert_l3_restricted_count": 0,
   "wave_breakdown": {
     "wave_a": {
       "total": 100,
-      "full": 100,
+      "full": 0,
       "restricted": 0
     },
     "wave_b": {
       "total": 150,
-      "full": 150,
+      "full": 0,
       "restricted": 0
     },
     "wave_c": {
       "total": 150,
-      "full": 150,
+      "full": 0,
       "restricted": 0
     },
     "wave_d": {
       "total": 100,
-      "full": 90,
-      "restricted": 10
+      "full": 0,
+      "restricted": 0
     }
   },
   "canonical_restricted_list": [
@@ -258,6 +258,6 @@
     "authorization_expiry",
     "PRIMAVERA_REAL_INTEGRATION_AVAILABLE"
   ],
-  "integrity_hash": "35a3b3c3efba30ff25e67cc425a230c3efba30ff35a3b3c325a230c325e67cc4",
+  "integrity_hash": "639e020674a9becec72a2f8d5749798d77059f668f88a1ef1490af09007d5575",
   "timestamp": "2026-09-11T23:00:00Z"
 }

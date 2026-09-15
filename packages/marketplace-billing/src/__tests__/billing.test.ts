@@ -93,42 +93,101 @@ describe('Marketplace & Billing Engine (P06)', () => {
     assert.strictEqual(taxSimp.taxRate, 0.07);
     assert.strictEqual(taxSimp.taxAmount, 7000);
 
+    const runId = Date.now() + '_' + Math.random().toString(36).slice(2);
+
     // 4. Settle Invoice rejects fraudulent webhook signatures
     const fakeProof = {
       providerTransactionId: 'txn_fake_99',
       webhookSignature: 'invalid_sha256_sig',
-      webhookSecret: 'secret_123',
       webhookPayloadRaw: 'payload_body_raw',
       amountPaid: 114000,
       currency: 'AOA' as const,
       tenantId: 'tenant_sandbox_test',
-      idempotencyKey: 'idem_settle_01'
+      idempotencyKey: `idem_fake_${runId}`
     };
 
     assert.throws(() => {
       gateway.settleInvoice(invoice.invoiceId, fakeProof);
     }, /WEBHOOK_SIGNATURE_INVALID/);
 
-    // 5. Settle Invoice accepts genuine signed webhook
-    const { createHash } = await import('node:crypto');
-    const genuinePayload = '{"provider":"multicaixa_express","event":"payment.confirmed"}';
-    const genuineSecret = 'my_secure_webhook_secret_key';
-    const genuineSig = createHash('sha256').update(genuineSecret + ':' + genuinePayload).digest('hex');
+    // Negative Test: Client attempts to forge signature by passing its own webhookSecret in body
+    const { createHmac } = await import('crypto');
+    const attackerSecret = 'attacker_secret_in_body';
+    const attackerPayload = '{"provider":"multicaixa_express","event":"payment.confirmed"}';
+    const attackerSig = createHmac('sha256', attackerSecret).update(attackerPayload).digest('hex');
+    assert.throws(() => {
+      gateway.settleInvoice(invoice.invoiceId, {
+        providerTransactionId: 'txn_attacker',
+        webhookSignature: attackerSig,
+        webhookSecret: attackerSecret, // Server strictly ignores this; uses process.env
+        webhookPayloadRaw: attackerPayload,
+        amountPaid: 114000,
+        currency: 'AOA' as const,
+        tenantId: 'tenant_sandbox_test',
+        idempotencyKey: `idem_attacker_${runId}`
+      });
+    }, /WEBHOOK_SIGNATURE_INVALID/);
 
+    // Negative Test: Tampered payload (signature valid for original, but payload altered)
+    const serverSecret = process.env.EXPRESSPAY_WEBHOOK_SECRET || process.env.WEBHOOK_SECRET || 'test_webhook_secret_expresspay_2026';
+    const genuinePayload = '{"provider":"multicaixa_express","event":"payment.confirmed","amount":114000}';
+    const validSig = createHmac('sha256', serverSecret).update(genuinePayload).digest('hex');
+    const tamperedPayload = '{"provider":"multicaixa_express","event":"payment.confirmed","amount":999999}';
+
+    assert.throws(() => {
+      gateway.settleInvoice(invoice.invoiceId, {
+        providerTransactionId: 'txn_tampered',
+        webhookSignature: validSig, // Signature matches genuinePayload, not tamperedPayload
+        webhookPayloadRaw: tamperedPayload,
+        amountPaid: 114000,
+        currency: 'AOA' as const,
+        tenantId: 'tenant_sandbox_test',
+        idempotencyKey: `idem_tampered_${runId}`
+      });
+    }, /WEBHOOK_SIGNATURE_INVALID/);
+
+    // Negative Test: Amount mismatch
+    assert.throws(() => {
+      gateway.settleInvoice(invoice.invoiceId, {
+        providerTransactionId: 'txn_amt_mismatch',
+        webhookSignature: validSig,
+        webhookPayloadRaw: genuinePayload,
+        amountPaid: 50000, // invoice requires 114000
+        currency: 'AOA' as const,
+        tenantId: 'tenant_sandbox_test',
+        idempotencyKey: `idem_amt_mismatch_${runId}`
+      });
+    }, /AMOUNT_MISMATCH/);
+
+    // 5. Settle Invoice accepts genuine signed webhook using server secret
     const validProof = {
       providerTransactionId: 'txn_valid_7788',
-      webhookSignature: genuineSig,
-      webhookSecret: genuineSecret,
+      webhookSignature: validSig,
       webhookPayloadRaw: genuinePayload,
       amountPaid: 114000,
       currency: 'AOA' as const,
       tenantId: 'tenant_sandbox_test',
-      idempotencyKey: 'idem_settle_01'
+      idempotencyKey: `idem_settle_${runId}`
     };
 
     const settledInvoice = gateway.settleInvoice(invoice.invoiceId, validProof);
     assert.strictEqual(settledInvoice.status, 'PAID');
     assert.strictEqual(typeof settledInvoice.paidAt, 'string');
     assert.strictEqual(settledInvoice.settlementEvidence?.webhookSignatureVerified, true);
+
+    // Negative Test: Replay attack (duplicate idempotencyKey)
+    const invoice2 = await gateway.generateInvoice('tenant_sandbox_test', 'PLAN_500_PILOT', 100000, 'AOA', 'AO', 'REGIME_GERAL');
+    assert.throws(() => {
+      // Attempting to settle another invoice with already-used idempotencyKey
+      gateway.settleInvoice(invoice2.invoiceId, {
+        ...validProof,
+        providerTransactionId: 'txn_replay'
+      });
+    }, /IDEMPOTENCY_CONFLICT/);
+
+    // Verify transactional persistence by reading directly from storage
+    const reloadedInvoice = gateway.getInvoice(invoice.invoiceId);
+    assert.strictEqual(reloadedInvoice?.status, 'PAID');
+    assert.strictEqual(reloadedInvoice?.settlementEvidence?.providerTransactionId, 'txn_valid_7788');
   });
 });

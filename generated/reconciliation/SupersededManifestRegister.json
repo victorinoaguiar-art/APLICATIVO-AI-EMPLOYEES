@@ -1,0 +1,48 @@
+{
+  "register_id": "AETF500_SUPERSEDED_MANIFEST_REGISTER_v1.0",
+  "generated_at": "2026-09-15T15:45:00.000Z",
+  "audit_standard": "AETF-500 Master Forensic Prompt & Final Corrective Patch",
+  "reconciliation_summary": {
+    "total_superseded_manifests": 3,
+    "verified_live_tasks": 0,
+    "cert_l3_approved_count": 0,
+    "externally_verified_tenants": 0,
+    "general_production_status": "BLOCKED",
+    "controlled_pilot_status": "PATCH_VERIFIED_CONTROLLED_PILOT_READY"
+  },
+  "superseded_manifests": [
+    {
+      "legacy_path": "generated/AETF500_CERTL3_Authenticity_ProductionFreeze_Manifest.json",
+      "reason": "Claims sintéticos de 68.500 live tasks e aprovações CERT-L3 sem comprovação física externa independente em clientes reais.",
+      "canonical_successor": "generated/AETF500_CERTL3_ReconciledTruth_Manifest.json",
+      "superseded_at": "2026-09-15T15:45:00.000Z",
+      "reconciled_state": {
+        "verified_live_tasks": 0,
+        "cert_l3_approved": 0,
+        "status": "SUPERSEDED_AND_RECONCILED"
+      }
+    },
+    {
+      "legacy_path": "generated/AETF500_CERTL3_LiveSampleExpansion_Manifest.json",
+      "reason": "Claims sintéticos de expansão de 68.500 live tasks não verificadas fisicamente em ambiente externo.",
+      "canonical_successor": "generated/AETF500_CERTL3_LiveSampleExpansion_Reconciled_Manifest.json",
+      "superseded_at": "2026-09-15T15:45:00.000Z",
+      "reconciled_state": {
+        "verified_live_tasks": 0,
+        "cert_l3_approved": 0,
+        "status": "SUPERSEDED_AND_RECONCILED"
+      }
+    },
+    {
+      "legacy_path": "generated/AETF500_CERTL3_FinalProductionBaseline_Manifest.json",
+      "reason": "Afirmação de 500 certificações CERT-L3 (490 full, 10 restritas) e produção plena sem auditoria jurídica e contratual externa.",
+      "canonical_successor": "generated/AETF500_CERTL3_ProductionBaseline_Reconciled_Manifest.json",
+      "superseded_at": "2026-09-15T15:45:00.000Z",
+      "reconciled_state": {
+        "verified_live_tasks": 0,
+        "cert_l3_approved": 0,
+        "status": "SUPERSEDED_AND_RECONCILED"
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "receipt_id": "RCPT-CARDINALITY-1789489571269",
+  "gate_name": "MANIFEST_CARDINALITY_GATE",
+  "verifier_name": "ManifestCardinalityVerifier",
+  "generated_at": "2026-09-15T16:26:11.269Z",
+  "status": "PASS",
+  "checked_items_count": 500,
+  "failure_count": 0,
+  "details": {
+    "actual_count": 500,
+    "expected_count": 500,
+    "errors": [],
+    "message": "ROLEPACK CATALOG: 500/500 VALID"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "receipt_id": "RCPT-SCHEMA-1789489571176",
+  "gate_name": "MANIFEST_SCHEMA_GATE",
+  "verifier_name": "ManifestSchemaVerifier",
+  "generated_at": "2026-09-15T16:26:11.176Z",
+  "status": "PASS",
+  "checked_items_count": 4,
+  "failure_count": 0,
+  "details": {
+    "results": [
+      {
+        "file": "generated/reconciliation/SupersededManifestRegister.json",
+        "status": "VALID_SCHEMA",
+        "keys_count": 5
+      },
+      {
+        "file": "generated/AETF500_CERTL3_Authenticity_ProductionFreeze_Manifest.json",
+        "status": "VALID_SCHEMA",
+        "keys_count": 4
+      },
+      {
+        "file": "generated/AETF500_CERTL3_LiveSampleExpansion_Manifest.json",
+        "status": "VALID_SCHEMA",
+        "keys_count": 4
+      },
+      {
+        "file": "generated/AETF500_CERTL3_FinalProductionBaseline_Manifest.json",
+        "status": "VALID_SCHEMA",
+        "keys_count": 22
+      }
+    ]
+  }
+}

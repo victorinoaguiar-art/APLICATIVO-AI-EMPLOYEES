@@ -35,26 +35,11 @@ jobs:
       - name: Deterministic Install (npm ci)
         run: npm ci
 
-      - name: Monorepo Clean
-        run: npm run clean
+      - name: Deterministic Pipeline Verification (Clean, Typecheck, Build Packages, Build Web, Test, Manifests, Hashes, Security)
+        run: npm run verify
 
-      - name: Typecheck (Strict Project References)
-        run: npm run typecheck
-
-      - name: Compile Monorepo Packages
-        run: npm run build:packages
-
-      - name: Build Web Application
-        run: npm run build:web
-
-      - name: Full Test Suite
-        run: npm test
-
-      - name: Master Truth Reconciliation & Gates Verification
-        run: node --test packages/runtime/dist/test/masterTruthReconciliation.test.js
-
-      - name: Verify Cryptographic Integrity
-        run: node -e "const crypto = require('crypto'); console.log('[CI] Cryptographic Engine Active. SHA-256 Self-Test:', crypto.createHash('sha256').update('AETF500').digest('hex'));"
+      - name: Ensure Clean Working Tree
+        run: git diff --exit-code
 
       - name: Upload Build Artifacts
         if: always()

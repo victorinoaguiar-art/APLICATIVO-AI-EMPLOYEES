@@ -56,13 +56,115 @@ app.use((req, res, next) => {
   next();
 });
 
+// CORS seguro com fail-closed (Prompt Mestre Secção 3 & Patch AETF-500)
+const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS
+  ? process.env.CORS_ALLOWED_ORIGINS.split(',').map(o => o.trim())
+  : ['http://localhost:3000', 'http://localhost:3001'];
+
 app.use(cors({
-  origin: process.env.CORS_ALLOWED_ORIGIN || '*',
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS_FAIL_CLOSED: Origin not permitted'), false);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-tenant-id', 'x-correlation-id', 'x-idempotency-key']
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-tenant-id', 'x-correlation-id', 'x-idempotency-key'],
+  credentials: true
 }));
 
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({
+  limit: '10mb',
+  verify: (req: any, res, buf) => {
+    req.rawBody = buf.toString('utf8');
+  }
+}));
+
+// Serviço de tokens JWT / HMAC
+import { tokenService } from './auth/tokenService.js';
+
+// Rotas públicas que não exigem Authorization Bearer JWT
+const PUBLIC_PATHS = [
+  '/api/v1/health',
+  '/api/v1/catalog/integrity',
+  '/api/v1/security/threat-report',
+  '/api/v1/auth/token',
+  '/api/v1/billing/webhook' // Protegido pela assinatura criptográfica de webhook do provedor
+];
+
+// Endpoint de emissão de tokens de autenticação
+app.post('/api/v1/auth/token', (req, res) => {
+  const { tenantId, userId, roles, permissions } = req.body;
+  if (!tenantId || !userId) {
+    return res.status(400).json({ error: 'tenantId and userId are required' });
+  }
+  const token = tokenService.signToken({
+    tenant_id: tenantId,
+    user_id: userId,
+    roles: roles || ['USER'],
+    permissions: permissions || ['READ']
+  });
+  res.json({ token, token_type: 'Bearer', expires_in: 3600 });
+});
+
+// Middleware de Autenticação e Autorização Multi-Tenant Rigoroso
+app.use((req, res, next) => {
+  const path = req.path;
+  const isPublic = PUBLIC_PATHS.some(p => path === p || path.startsWith(`${p}/`));
+  if (isPublic) {
+    return next();
+  }
+
+  const authHeader = req.headers['authorization'];
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({
+      error: 'UNAUTHORIZED: Missing or invalid Authorization header. Expected Bearer <token>.',
+      code: 'MISSING_TOKEN',
+      correlationId: (req as any).correlationId
+    });
+  }
+
+  const token = authHeader.slice(7).trim();
+  const verifyResult = tokenService.verifyToken(token);
+  if (!verifyResult.valid || !verifyResult.payload) {
+    return res.status(401).json({
+      error: `UNAUTHORIZED: ${verifyResult.error}`,
+      code: verifyResult.code,
+      correlationId: (req as any).correlationId
+    });
+  }
+
+  const payload = verifyResult.payload;
+
+  // Enforce Tenant Alignment: Se header x-tenant-id for fornecido, DEVE coincidir com o token
+  const headerTenantId = req.headers['x-tenant-id'] as string;
+  if (headerTenantId && headerTenantId !== payload.tenant_id) {
+    return res.status(403).json({
+      error: `CROSS_TENANT_ACCESS_FORBIDDEN: Header x-tenant-id '${headerTenantId}' does not match authenticated token tenant '${payload.tenant_id}'.`,
+      code: 'TENANT_MISMATCH',
+      correlationId: (req as any).correlationId
+    });
+  }
+
+  // RBAC / Permissão de Administração
+  const adminRoutes = ['/api/v1/apcatos/provision', '/api/v1/companies'];
+  if (req.method === 'POST' && adminRoutes.some(r => path.startsWith(r))) {
+    const hasAdmin = payload.roles.includes('ADMIN') || payload.roles.includes('SUPER_ADMIN');
+    if (!hasAdmin) {
+      return res.status(403).json({
+        error: 'FORBIDDEN: Administrative role required for this resource.',
+        code: 'INSUFFICIENT_PERMISSIONS',
+        correlationId: (req as any).correlationId
+      });
+    }
+  }
+
+  (req as any).auth = payload;
+  (req as any).tenantId = payload.tenant_id;
+  (req as any).userId = payload.user_id;
+  next();
+});
 
 const registry = RolePackRegistry.getInstance();
 const emailConnector = new MockEmailConnector();
@@ -378,13 +480,21 @@ app.get('/api/v1/billing/invoices/:id', (req, res) => {
 });
 
 app.post('/api/v1/billing/webhook', (req, res) => {
-  const { invoiceId, providerTransactionId, webhookSignature, webhookSecret, webhookPayloadRaw, amountPaid, currency, tenantId, idempotencyKey } = req.body;
+  const { invoiceId, providerTransactionId, amountPaid, currency, tenantId, idempotencyKey } = req.body;
+  const signature = (req.headers['stripe-signature'] || req.headers['x-webhook-signature'] || req.body.webhookSignature) as string;
+  const rawBody = (req as any).rawBody || req.body.webhookPayloadRaw || JSON.stringify(req.body);
+
+  if (!invoiceId || !idempotencyKey) {
+    return res.status(400).json({ error: 'Campos obrigatórios: invoiceId e idempotencyKey.' });
+  }
+
   try {
     const settled = PaymentGatewayManager.getInstance().settleInvoice(invoiceId, {
-      providerTransactionId,
-      webhookSignature,
-      webhookSecret,
-      webhookPayloadRaw,
+      providerTransactionId: providerTransactionId || `txn_${Date.now()}`,
+      webhookSignature: signature,
+      // Segredo do webhook é obtido exclusivamente do ambiente pelo PaymentGatewayManager;
+      // qualquer webhookSecret vindo no body é estritamente ignorado.
+      webhookPayloadRaw: rawBody,
       amountPaid: Number(amountPaid),
       currency,
       tenantId,
@@ -3729,6 +3839,10 @@ const PORT = process.env.PORT || 4000;
 
 
 
-app.listen(PORT, () => {
-  console.log(`AI Employee Platform API Server listening on port ${PORT}`);
-});
+export { app };
+
+if (process.env.NODE_ENV !== 'test' && !process.env.SKIP_SERVER_LISTEN) {
+  app.listen(PORT, () => {
+    console.log(`AI Employee Platform API Server listening on port ${PORT}`);
+  });
+}

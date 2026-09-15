@@ -92,47 +92,37 @@ export class CertL3LiveSampleExpansionEngine {
       const totalActual = creditedInitial + expandedLive;
 
       totalRequiredLive += finalRequired;
-      totalCreditedInitial += creditedInitial;
-      totalExpandedLive += expandedLive;
+      totalCreditedInitial += 0; // Creditação suspensa por falta de prova física
+      totalExpandedLive += 0;
 
-      const isRestricted = i > 490;
-      const certDecision = isRestricted ? 'CERT_L3_WITH_RESTRICTIONS' : 'CERT_L3_APPROVED';
-
-      if (isRestricted) {
-        approvedRestrictedCount++;
-      } else {
-        approvedFullCount++;
-      }
-
-      const restrictionsList = isRestricted
-        ? ['BLOCKED: Módulo de Escrita & Importação ERP PRIMAVERA v10.5 (Cliente ausente)']
-        : [];
+      const restrictionsList = [
+        'BLOCKED: Ausência de evidência física de execução em ambiente live externo de cliente',
+        'CERT_L3_BLOCKED_PENDING_EXTERNAL_AUDIT'
+      ];
 
       const reqRecord: EmployeeLiveSampleRequirement = {
         employee_id: empId,
         role: roleName,
         department,
         risk_class: riskClass,
-        critical_workflows: isRestricted
-          ? ['Análise Documental', 'Relatórios Excel/PDF', 'Consulta Fiscal AGT']
-          : ['Execução Completa de Workflow', 'Integração de Sistemas', 'Processamento Live'],
+        critical_workflows: ['Análise Documental', 'Validação Supervisionada em Piloto Controlado'],
         workflow_count: 5,
         financial_exposure: riskClass === 'LOW' ? 'LOW' : riskClass === 'MEDIUM' ? 'MEDIUM' : riskClass === 'HIGH' ? 'HIGH' : 'CRITICAL',
         regulatory_exposure: riskClass === 'LOW' ? 'LOW' : riskClass === 'MEDIUM' ? 'MEDIUM' : riskClass === 'HIGH' ? 'HIGH' : 'CRITICAL',
         data_sensitivity: riskClass === 'CRITICAL' ? 'HIGHLY_RESTRICTED' : riskClass === 'HIGH' ? 'CONFIDENTIAL' : 'STANDARD',
         irreversibility: riskClass === 'LOW' ? 'LOW' : riskClass === 'MEDIUM' ? 'MEDIUM' : 'HIGH',
-        autonomy_level: riskClass === 'CRITICAL' ? 'DUAL_APPROVAL_REQUIRED' : riskClass === 'HIGH' ? 'HITL_REQUIRED' : 'FULL_AUTOMATION',
+        autonomy_level: 'HITL_REQUIRED',
         baseline_required_live_tasks: baselineRequired,
         adjustment_factor: adjustmentFactor,
         final_required_live_tasks: finalRequired,
-        credited_initial_live_tasks: creditedInitial,
-        expanded_live_tasks: expandedLive,
-        total_actual_live_tasks: totalActual,
-        remaining_live_tasks: 0,
-        unique_business_case_ratio: 100,
-        justification: `Amostra live expandida e verificada segundo o modelo de risco (150 Low@50, 180 Medium@100, 140 High@200, 30 Critical@500). Creditação inicial de 2,450 tarefas preservada.`,
-        sample_status: 'SUFFICIENT',
-        cert_l3_decision: certDecision,
+        credited_initial_live_tasks: 0,
+        expanded_live_tasks: 0,
+        total_actual_live_tasks: 0,
+        remaining_live_tasks: finalRequired,
+        unique_business_case_ratio: 0,
+        justification: `Amostra live requerida (${finalRequired} tarefas) suspensa pendente de integração e piloto em clientes reais externos com prova documental.`,
+        sample_status: 'INSUFFICIENT',
+        cert_l3_decision: 'CERT_L3_BLOCKED_PENDING_EXTERNAL_AUDIT' as any,
         restrictions: restrictionsList
       };
 
@@ -140,7 +130,7 @@ export class CertL3LiveSampleExpansionEngine {
     }
 
     const summary: LiveSampleExpansionSummary = {
-      program_version: 'AETF-500-CERT-L3-EXPANSION-v2.0',
+      program_version: 'AETF-500-CERT-L3-EXPANSION-v2.0-RECONCILED',
       total_employees: 500,
       risk_distribution: {
         low_risk_count: 150,
@@ -150,38 +140,38 @@ export class CertL3LiveSampleExpansionEngine {
       },
       sample_totals: {
         total_required_live_tasks: totalRequiredLive,
-        credited_initial_live_tasks: totalCreditedInitial,
-        expanded_live_tasks: totalExpandedLive,
-        total_actual_verified_live_tasks: totalRequiredLive,
-        remaining_live_tasks_gap: 0,
-        sample_completion_percentage: 100
+        credited_initial_live_tasks: 0,
+        expanded_live_tasks: 0,
+        total_actual_verified_live_tasks: 0,
+        remaining_live_tasks_gap: totalRequiredLive,
+        sample_completion_percentage: 0
       },
       by_risk_class_breakdown: {
-        low_risk: { required: lowRequired, actual: lowActual, status: 'SUFFICIENT' },
-        medium_risk: { required: mediumRequired, actual: mediumActual, status: 'SUFFICIENT' },
-        high_risk: { required: highRequired, actual: highActual, status: 'SUFFICIENT' },
-        critical_risk: { required: criticalRequired, actual: criticalActual, status: 'SUFFICIENT' }
+        low_risk: { required: lowRequired, actual: 0, status: 'INSUFFICIENT' },
+        medium_risk: { required: mediumRequired, actual: 0, status: 'INSUFFICIENT' },
+        high_risk: { required: highRequired, actual: 0, status: 'INSUFFICIENT' },
+        critical_risk: { required: criticalRequired, actual: 0, status: 'INSUFFICIENT' }
       },
-      sample_sufficiency_gate: 'PASSED_100_PERCENT',
-      employees_sample_sufficient: 500,
-      employees_sample_insufficient: 0,
+      sample_sufficiency_gate: 'BLOCKED_PENDING_EXTERNAL_EVIDENCE' as any,
+      employees_sample_sufficient: 0,
+      employees_sample_insufficient: 500,
       cert_l3_decisions: {
-        approved_full: approvedFullCount,
-        approved_restricted: approvedRestrictedCount,
-        continue_pilot: 0,
-        blocked: 0,
+        approved_full: 0,
+        approved_restricted: 0,
+        continue_pilot: 500,
+        blocked: 500,
         total_coverage: 500
       },
       quality_metrics: {
-        target_effect_verification_rate: 100,
+        target_effect_verification_rate: 0,
         false_success_rate: 0,
-        unique_business_case_ratio: 100,
+        unique_business_case_ratio: 0,
         critical_security_incidents: 0,
         cross_tenant_breaches: 0,
         unresolved_regulatory_errors: 0
       },
-      generated_at: '2026-09-11T22:38:00Z',
-      expansion_hash: simpleHash('AETF-500-CERT-L3-LIVE-SAMPLE-EXPANSION-68500')
+      generated_at: new Date().toISOString(),
+      expansion_hash: simpleHash('AETF-500-CERT-L3-RECONCILED-LIVE-TASKS-ZERO')
     };
 
     this.cachedSummary = summary;
@@ -199,9 +189,17 @@ export class CertL3LiveSampleExpansionEngine {
           fs.mkdirSync(dir, { recursive: true });
         }
         const filePath = path.join(dir, 'AETF500_CERTL3_LiveSampleExpansion_Manifest.json');
-        fs.writeFileSync(filePath, JSON.stringify({ summary, sample_requirements: requirements.slice(0, 50) }, null, 2), 'utf-8');
+        const reconciledPath = path.join(dir, 'AETF500_CERTL3_LiveSampleExpansion_Reconciled_Manifest.json');
+        const payload = {
+          manifest_status: 'SUPERSEDED_AND_RECONCILED',
+          reconciliation_note: 'Amostras de 68.500 live tasks reclassificadas como 0 verificadas em clientes reais.',
+          summary,
+          sample_requirements: requirements.slice(0, 50)
+        };
+        fs.writeFileSync(filePath, JSON.stringify(payload, null, 2), 'utf-8');
+        fs.writeFileSync(reconciledPath, JSON.stringify(payload, null, 2), 'utf-8');
       } catch (err) {
-        console.warn('Non-fatal: could not write AETF500_CERTL3_LiveSampleExpansion_Manifest.json', err);
+        console.warn('Non-fatal: could not write live sample expansion manifest files', err);
       }
     }
   }

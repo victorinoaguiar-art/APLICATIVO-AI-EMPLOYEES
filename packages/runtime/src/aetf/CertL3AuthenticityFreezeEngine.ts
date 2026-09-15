@@ -285,7 +285,7 @@ export class CertL3AuthenticityFreezeEngine {
       records.push({
         employee_id: empId,
         employee_name: (roleObj as any).display_name || (roleObj as any).name || `AI Employee ${empId}`,
-        cert_l3_status: isRestricted ? 'CERT_L3_WITH_RESTRICTIONS' : 'CERT_L3_APPROVED',
+        cert_l3_status: 'CERT_L3_BLOCKED_PENDING_EXTERNAL_AUDIT' as any,
         risk_class: riskClass,
         wave_group: waveGroup,
         tenant_scope: [tenantId],
@@ -299,7 +299,7 @@ export class CertL3AuthenticityFreezeEngine {
         },
         jurisdiction_scope: ['ANGOLA_LUANDA', 'AO_TAX_JURISDICTION'],
         hitl_scope: {
-          mandatory_for_high_risk: riskClass === 'HIGH' || riskClass === 'CRITICAL',
+          mandatory_for_high_risk: true,
           mandatory_for_financial_payouts: true,
           primavera_write_blocked: isRestricted
         },
@@ -330,22 +330,22 @@ export class CertL3AuthenticityFreezeEngine {
     const summary: AuthenticityFreezeSummary = {
       artifact_id: 'AETF500_CERTL3_PRODUCTION_FREEZE_2026_09_11',
       baseline_id: 'AETF-500-CERTL3-PRODUCTION-BASELINE-2026.09.11',
-      freeze_version: 'AETF-500-CERTL3-PRODUCTION-BASELINE-2026.09.11',
+      freeze_version: 'AETF-500-CERTL3-PRODUCTION-BASELINE-2026.09.11-RECONCILED',
       norma_interna: 'Norma Interna de Certificação AETF-500 v2.0',
       hash_algorithm: 'SHA-256',
-      total_claimed_live_tasks: 68500,
-      authentic_verified_live_tasks: 68500,
-      authenticity_rate_pct: 100,
-      internal_authenticity_audit: 'PASS',
-      sandbox_tasks_count: 0,
+      total_claimed_live_tasks: 0,
+      authentic_verified_live_tasks: 0,
+      authenticity_rate_pct: 0,
+      internal_authenticity_audit: 'PASS_WITH_RESTRICTIONS' as any,
+      sandbox_tasks_count: 1250,
       staging_tasks_count: 0,
-      simulated_tasks_count: 0,
+      simulated_tasks_count: 1250,
       duplicate_metrics: {
         exact_duplicates: 0,
         near_duplicates: 0,
         semantic_clusters: 500,
-        unique_business_cases: 68500,
-        unique_business_case_ratio_pct: 100
+        unique_business_cases: 0,
+        unique_business_case_ratio_pct: 0
       },
       tenant_reconciliation: {
         verified_companies: verifiedCompanies,
@@ -354,10 +354,10 @@ export class CertL3AuthenticityFreezeEngine {
         name_reconciliation_status: 'RESOLVED_BANCO_ANGOLANO_DE_INVESTIMENTOS'
       },
       target_effects: {
-        tasks_requiring_effect: 68500,
-        target_effect_verified: 68500,
+        tasks_requiring_effect: 0,
+        target_effect_verified: 0,
         target_effect_not_verified: 0,
-        verification_rate_pct: 100
+        verification_rate_pct: 0
       },
       security_metrics: securityMetrics,
       security_audit: {
@@ -429,13 +429,13 @@ export class CertL3AuthenticityFreezeEngine {
           integrity_hash: summary.integrity_hash,
           created_at: summary.freeze_timestamp,
           total_employees: 500,
-          cert_l3_count: 500,
-          production_ready_full: 490,
-          production_ready_with_restrictions: 10,
-          verified_live_business_tasks: 68500,
-          sample_sufficiency_status: '500 / 500 PASS',
-          internal_authenticity_audit: 'PASS',
-          production_freeze_status: 'ACTIVE',
+          cert_l3_count: 0,
+          production_ready_full: 0,
+          production_ready_with_restrictions: 0,
+          verified_live_business_tasks: 0,
+          sample_sufficiency_status: 'BLOCKED_PENDING_EXTERNAL_EVIDENCE',
+          internal_authenticity_audit: 'PASS_WITH_RESTRICTIONS',
+          production_freeze_status: 'CONTROLLED_PILOT_ONLY',
           norma_interna: summary.norma_interna,
           wave_distribution: summary.wave_distribution,
           verified_tenants: summary.tenant_reconciliation.verified_authorizations,
@@ -445,26 +445,33 @@ export class CertL3AuthenticityFreezeEngine {
         };
 
         const filePath = path.join(dir, 'AETF500_CERTL3_FinalProductionBaseline_Manifest.json');
-        fs.writeFileSync(filePath, JSON.stringify(baselineManifest, null, 2), 'utf-8');
+        const reconciledBaselinePath = path.join(dir, 'AETF500_CERTL3_ProductionBaseline_Reconciled_Manifest.json');
+        const baselinePayload = {
+          manifest_status: 'SUPERSEDED_AND_RECONCILED',
+          reconciliation_note: 'Produção geral bloqueada. 0 colaboradores certificados para autonomia sem supervisão.',
+          ...baselineManifest
+        };
+        fs.writeFileSync(filePath, JSON.stringify(baselinePayload, null, 2), 'utf-8');
+        fs.writeFileSync(reconciledBaselinePath, JSON.stringify(baselinePayload, null, 2), 'utf-8');
 
         // Continuous Operations & Governance Manifest
         const continuousOpsManifest: ContinuousOperationsGovernanceManifest = {
           manifest_id: 'AETF500_CONTINUOUS_OPERATIONS_GOVERNANCE_2026',
           baseline_id: 'AETF-500-CERTL3-PRODUCTION-BASELINE-2026.09.11',
           baseline_status: 'FROZEN_AND_VERSIONED',
-          initial_certification_status: 'COMPLETE',
-          continuous_operations_status: 'ACTIVE',
+          initial_certification_status: 'BLOCKED_PENDING_EXTERNAL_AUDIT',
+          continuous_operations_status: 'CONTROLLED_PILOT_ONLY',
           continuous_governance_status: 'ACTIVE',
           targeted_recertification_status: 'ACTIVE',
-          commercial_operations_status: 'ACTIVE',
+          commercial_operations_status: 'CONTROLLED_PILOT_ONLY',
           total_employees: 500,
-          cert_l3_full_count: 490,
-          cert_l3_restricted_count: 10,
+          cert_l3_full_count: 0,
+          cert_l3_restricted_count: 0,
           wave_breakdown: {
-            wave_a: { total: 100, full: 100, restricted: 0 },
-            wave_b: { total: 150, full: 150, restricted: 0 },
-            wave_c: { total: 150, full: 150, restricted: 0 },
-            wave_d: { total: 100, full: 90, restricted: 10 }
+            wave_a: { total: 100, full: 0, restricted: 0 },
+            wave_b: { total: 150, full: 0, restricted: 0 },
+            wave_c: { total: 150, full: 0, restricted: 0 },
+            wave_d: { total: 100, full: 0, restricted: 0 }
           },
           canonical_restricted_list: restrictedList,
           active_tenants_count: 3,
@@ -476,9 +483,17 @@ export class CertL3AuthenticityFreezeEngine {
         const opsFilePath = path.join(dir, 'AETF500_ContinuousOperations_Governance_Manifest.json');
         fs.writeFileSync(opsFilePath, JSON.stringify(continuousOpsManifest, null, 2), 'utf-8');
 
-        // Legacy compatibility file write
+        // Reconciled Truth Manifest write
+        const reconciledTruthPath = path.join(dir, 'AETF500_CERTL3_ReconciledTruth_Manifest.json');
         const legacyPath = path.join(dir, 'AETF500_CERTL3_Authenticity_ProductionFreeze_Manifest.json');
-        fs.writeFileSync(legacyPath, JSON.stringify({ summary, timestamp: summary.freeze_timestamp }, null, 2), 'utf-8');
+        const payload = {
+          manifest_status: 'SUPERSEDED_AND_RECONCILED',
+          reconciliation_note: 'Amostras de 68.500 live tasks e aprovação CERT-L3 reclassificadas: 0 tarefas live verificadas, produção geral BLOQUEADA.',
+          summary,
+          timestamp: summary.freeze_timestamp
+        };
+        fs.writeFileSync(reconciledTruthPath, JSON.stringify(payload, null, 2), 'utf-8');
+        fs.writeFileSync(legacyPath, JSON.stringify(payload, null, 2), 'utf-8');
 
       } catch (err) {
         console.warn('Non-fatal: could not write baseline manifest files', err);

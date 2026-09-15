@@ -1,0 +1,38 @@
+{
+  "receipt_id": "RCPT-HASH-1789489572007",
+  "gate_name": "PHYSICAL_HASH_GATE",
+  "verifier_name": "PhysicalHashVerifier",
+  "generated_at": "2026-09-15T16:26:12.007Z",
+  "status": "PASS",
+  "checked_items_count": 3,
+  "failure_count": 0,
+  "details": {
+    "truth_directory": "generated/repository_truth",
+    "results": [
+      {
+        "target_object": "npm_install_log",
+        "file_name": "02_Original_Install_Log.txt",
+        "status": "MATCH",
+        "expected_sha256": "8e4f1b5346776e542594956e806e332b85660af5a56657834332674dc6a4c334",
+        "computed_sha256": "8e4f1b5346776e542594956e806e332b85660af5a56657834332674dc6a4c334",
+        "byte_length": 224
+      },
+      {
+        "target_object": "npm_test_log",
+        "file_name": "03_Original_Test_Log.txt",
+        "status": "MATCH",
+        "expected_sha256": "3211e10c027ff94e616e115db0c8dd393226d8f65394f0d4672b889ad315b29f",
+        "computed_sha256": "3211e10c027ff94e616e115db0c8dd393226d8f65394f0d4672b889ad315b29f",
+        "byte_length": 978
+      },
+      {
+        "target_object": "npm_run_build_log",
+        "file_name": "02_Original_Build_Log.txt",
+        "status": "MATCH",
+        "expected_sha256": "712de5212d40c7b4aabe702815e889bc3f956042b486631db875a5d99bf73298",
+        "computed_sha256": "712de5212d40c7b4aabe702815e889bc3f956042b486631db875a5d99bf73298",
+        "byte_length": 74846
+      }
+    ]
+  }
+}

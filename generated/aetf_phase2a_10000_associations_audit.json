@@ -5,7 +5,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_001_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000002",
@@ -13,7 +13,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_001_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000003",
@@ -21,7 +21,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_001_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000004",
@@ -29,7 +29,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_001_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000005",
@@ -37,7 +37,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_001_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000006",
@@ -45,7 +45,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_001_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000007",
@@ -53,7 +53,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_001_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000008",
@@ -61,7 +61,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_001_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000009",
@@ -69,7 +69,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_001_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000010",
@@ -77,7 +77,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_001_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000011",
@@ -85,7 +85,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_001_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000012",
@@ -93,7 +93,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_001_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000013",
@@ -101,7 +101,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_001_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000014",
@@ -109,7 +109,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_001_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000015",
@@ -117,7 +117,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_001_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000016",
@@ -125,7 +125,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_001_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000017",
@@ -133,7 +133,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_001_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000018",
@@ -141,7 +141,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_001_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000019",
@@ -149,7 +149,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_001_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000020",
@@ -157,7 +157,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_001_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000021",
@@ -165,7 +165,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_002_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000022",
@@ -173,7 +173,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_002_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000023",
@@ -181,7 +181,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_002_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000024",
@@ -189,7 +189,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_002_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000025",
@@ -197,7 +197,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_002_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000026",
@@ -205,7 +205,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_002_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000027",
@@ -213,7 +213,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_002_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000028",
@@ -221,7 +221,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_002_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000029",
@@ -229,7 +229,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_002_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000030",
@@ -237,7 +237,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_002_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000031",
@@ -245,7 +245,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_002_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000032",
@@ -253,7 +253,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_002_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000033",
@@ -261,7 +261,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_002_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000034",
@@ -269,7 +269,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_002_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000035",
@@ -277,7 +277,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_002_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000036",
@@ -285,7 +285,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_002_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000037",
@@ -293,7 +293,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_002_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000038",
@@ -301,7 +301,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_002_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000039",
@@ -309,7 +309,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_002_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000040",
@@ -317,7 +317,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_002_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000041",
@@ -325,7 +325,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_003_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000042",
@@ -333,7 +333,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_003_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000043",
@@ -341,7 +341,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_003_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000044",
@@ -349,7 +349,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_003_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000045",
@@ -357,7 +357,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_003_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000046",
@@ -365,7 +365,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_003_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000047",
@@ -373,7 +373,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_003_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000048",
@@ -381,7 +381,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_003_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000049",
@@ -389,7 +389,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_003_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000050",
@@ -397,7 +397,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_003_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000051",
@@ -405,7 +405,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_003_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000052",
@@ -413,7 +413,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_003_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000053",
@@ -421,7 +421,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_003_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000054",
@@ -429,7 +429,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_003_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000055",
@@ -437,7 +437,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_003_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000056",
@@ -445,7 +445,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_003_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000057",
@@ -453,7 +453,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_003_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000058",
@@ -461,7 +461,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_003_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000059",
@@ -469,7 +469,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_003_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000060",
@@ -477,7 +477,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_003_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000061",
@@ -485,7 +485,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_004_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000062",
@@ -493,7 +493,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_004_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000063",
@@ -501,7 +501,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_004_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000064",
@@ -509,7 +509,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_004_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000065",
@@ -517,7 +517,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_004_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000066",
@@ -525,7 +525,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_004_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000067",
@@ -533,7 +533,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_004_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000068",
@@ -541,7 +541,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_004_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000069",
@@ -549,7 +549,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_004_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000070",
@@ -557,7 +557,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_004_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000071",
@@ -565,7 +565,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_004_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000072",
@@ -573,7 +573,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_004_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000073",
@@ -581,7 +581,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_004_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000074",
@@ -589,7 +589,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_004_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000075",
@@ -597,7 +597,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_004_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000076",
@@ -605,7 +605,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_004_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000077",
@@ -613,7 +613,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_004_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000078",
@@ -621,7 +621,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_004_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000079",
@@ -629,7 +629,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_004_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000080",
@@ -637,7 +637,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_004_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000081",
@@ -645,7 +645,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_005_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000082",
@@ -653,7 +653,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_005_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000083",
@@ -661,7 +661,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_005_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000084",
@@ -669,7 +669,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_005_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000085",
@@ -677,7 +677,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_005_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000086",
@@ -685,7 +685,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_005_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000087",
@@ -693,7 +693,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_005_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000088",
@@ -701,7 +701,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_005_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000089",
@@ -709,7 +709,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_005_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000090",
@@ -717,7 +717,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_005_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000091",
@@ -725,7 +725,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_005_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000092",
@@ -733,7 +733,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_005_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000093",
@@ -741,7 +741,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_005_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000094",
@@ -749,7 +749,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_005_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000095",
@@ -757,7 +757,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_005_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000096",
@@ -765,7 +765,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_005_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000097",
@@ -773,7 +773,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_005_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000098",
@@ -781,7 +781,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_005_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000099",
@@ -789,7 +789,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_005_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000100",
@@ -797,7 +797,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_005_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000101",
@@ -805,7 +805,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_006_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000102",
@@ -813,7 +813,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_006_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000103",
@@ -821,7 +821,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_006_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000104",
@@ -829,7 +829,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_006_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000105",
@@ -837,7 +837,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_006_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000106",
@@ -845,7 +845,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_006_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000107",
@@ -853,7 +853,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_006_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000108",
@@ -861,7 +861,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_006_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000109",
@@ -869,7 +869,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_006_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000110",
@@ -877,7 +877,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_006_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000111",
@@ -885,7 +885,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_006_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000112",
@@ -893,7 +893,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_006_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000113",
@@ -901,7 +901,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_006_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000114",
@@ -909,7 +909,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_006_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000115",
@@ -917,7 +917,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_006_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000116",
@@ -925,7 +925,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_006_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000117",
@@ -933,7 +933,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_006_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000118",
@@ -941,7 +941,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_006_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000119",
@@ -949,7 +949,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_006_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000120",
@@ -957,7 +957,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_006_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000121",
@@ -965,7 +965,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_007_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000122",
@@ -973,7 +973,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_007_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000123",
@@ -981,7 +981,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_007_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000124",
@@ -989,7 +989,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_007_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000125",
@@ -997,7 +997,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_007_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000126",
@@ -1005,7 +1005,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_007_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000127",
@@ -1013,7 +1013,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_007_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000128",
@@ -1021,7 +1021,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_007_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000129",
@@ -1029,7 +1029,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_007_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000130",
@@ -1037,7 +1037,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_007_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000131",
@@ -1045,7 +1045,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_007_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000132",
@@ -1053,7 +1053,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_007_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000133",
@@ -1061,7 +1061,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_007_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000134",
@@ -1069,7 +1069,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_007_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000135",
@@ -1077,7 +1077,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_007_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000136",
@@ -1085,7 +1085,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_007_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000137",
@@ -1093,7 +1093,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_007_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000138",
@@ -1101,7 +1101,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_007_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000139",
@@ -1109,7 +1109,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_007_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000140",
@@ -1117,7 +1117,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_007_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000141",
@@ -1125,7 +1125,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_008_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000142",
@@ -1133,7 +1133,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_008_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000143",
@@ -1141,7 +1141,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_008_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000144",
@@ -1149,7 +1149,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_008_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000145",
@@ -1157,7 +1157,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_008_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000146",
@@ -1165,7 +1165,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_008_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000147",
@@ -1173,7 +1173,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_008_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000148",
@@ -1181,7 +1181,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_008_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000149",
@@ -1189,7 +1189,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_008_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000150",
@@ -1197,7 +1197,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_008_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000151",
@@ -1205,7 +1205,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_008_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000152",
@@ -1213,7 +1213,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_008_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000153",
@@ -1221,7 +1221,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_008_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000154",
@@ -1229,7 +1229,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_008_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000155",
@@ -1237,7 +1237,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_008_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000156",
@@ -1245,7 +1245,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_008_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000157",
@@ -1253,7 +1253,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_008_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000158",
@@ -1261,7 +1261,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_008_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000159",
@@ -1269,7 +1269,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_008_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000160",
@@ -1277,7 +1277,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_008_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000161",
@@ -1285,7 +1285,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_009_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000162",
@@ -1293,7 +1293,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_009_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000163",
@@ -1301,7 +1301,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_009_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000164",
@@ -1309,7 +1309,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_009_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000165",
@@ -1317,7 +1317,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_009_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000166",
@@ -1325,7 +1325,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_009_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000167",
@@ -1333,7 +1333,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_009_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000168",
@@ -1341,7 +1341,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_009_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000169",
@@ -1349,7 +1349,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_009_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000170",
@@ -1357,7 +1357,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_009_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000171",
@@ -1365,7 +1365,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_009_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000172",
@@ -1373,7 +1373,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_009_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000173",
@@ -1381,7 +1381,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_009_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000174",
@@ -1389,7 +1389,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_009_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000175",
@@ -1397,7 +1397,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_009_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000176",
@@ -1405,7 +1405,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_009_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000177",
@@ -1413,7 +1413,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_009_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000178",
@@ -1421,7 +1421,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_009_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000179",
@@ -1429,7 +1429,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_009_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000180",
@@ -1437,7 +1437,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_009_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000181",
@@ -1445,7 +1445,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_010_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000182",
@@ -1453,7 +1453,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_010_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000183",
@@ -1461,7 +1461,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_010_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000184",
@@ -1469,7 +1469,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_010_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000185",
@@ -1477,7 +1477,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_010_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000186",
@@ -1485,7 +1485,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_010_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000187",
@@ -1493,7 +1493,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_010_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000188",
@@ -1501,7 +1501,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_010_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000189",
@@ -1509,7 +1509,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_010_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000190",
@@ -1517,7 +1517,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_010_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000191",
@@ -1525,7 +1525,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_010_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000192",
@@ -1533,7 +1533,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_010_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000193",
@@ -1541,7 +1541,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_010_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000194",
@@ -1549,7 +1549,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_010_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000195",
@@ -1557,7 +1557,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_010_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000196",
@@ -1565,7 +1565,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_010_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000197",
@@ -1573,7 +1573,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_010_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000198",
@@ -1581,7 +1581,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_010_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000199",
@@ -1589,7 +1589,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_010_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000200",
@@ -1597,7 +1597,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_010_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000201",
@@ -1605,7 +1605,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_011_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000202",
@@ -1613,7 +1613,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_011_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000203",
@@ -1621,7 +1621,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_011_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000204",
@@ -1629,7 +1629,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_011_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000205",
@@ -1637,7 +1637,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_011_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000206",
@@ -1645,7 +1645,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_011_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000207",
@@ -1653,7 +1653,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_011_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000208",
@@ -1661,7 +1661,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_011_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000209",
@@ -1669,7 +1669,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_011_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000210",
@@ -1677,7 +1677,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_011_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000211",
@@ -1685,7 +1685,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_011_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000212",
@@ -1693,7 +1693,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_011_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000213",
@@ -1701,7 +1701,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_011_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000214",
@@ -1709,7 +1709,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_011_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000215",
@@ -1717,7 +1717,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_011_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000216",
@@ -1725,7 +1725,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_011_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000217",
@@ -1733,7 +1733,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_011_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000218",
@@ -1741,7 +1741,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_011_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000219",
@@ -1749,7 +1749,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_011_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000220",
@@ -1757,7 +1757,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_011_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000221",
@@ -1765,7 +1765,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_012_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000222",
@@ -1773,7 +1773,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_012_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.413Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000223",
@@ -1781,7 +1781,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_012_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000224",
@@ -1789,7 +1789,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_012_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000225",
@@ -1797,7 +1797,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_012_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000226",
@@ -1805,7 +1805,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_012_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000227",
@@ -1813,7 +1813,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_012_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000228",
@@ -1821,7 +1821,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_012_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000229",
@@ -1829,7 +1829,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_012_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000230",
@@ -1837,7 +1837,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_012_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000231",
@@ -1845,7 +1845,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_012_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000232",
@@ -1853,7 +1853,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_012_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000233",
@@ -1861,7 +1861,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_012_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000234",
@@ -1869,7 +1869,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_012_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000235",
@@ -1877,7 +1877,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_012_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000236",
@@ -1885,7 +1885,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_012_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000237",
@@ -1893,7 +1893,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_012_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000238",
@@ -1901,7 +1901,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_012_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000239",
@@ -1909,7 +1909,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_012_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000240",
@@ -1917,7 +1917,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_012_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000241",
@@ -1925,7 +1925,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_013_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000242",
@@ -1933,7 +1933,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_013_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000243",
@@ -1941,7 +1941,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_013_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000244",
@@ -1949,7 +1949,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_013_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000245",
@@ -1957,7 +1957,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_013_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000246",
@@ -1965,7 +1965,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_013_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000247",
@@ -1973,7 +1973,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_013_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000248",
@@ -1981,7 +1981,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_013_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000249",
@@ -1989,7 +1989,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_013_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000250",
@@ -1997,7 +1997,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_013_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000251",
@@ -2005,7 +2005,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_013_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000252",
@@ -2013,7 +2013,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_013_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000253",
@@ -2021,7 +2021,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_013_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000254",
@@ -2029,7 +2029,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_013_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000255",
@@ -2037,7 +2037,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_013_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000256",
@@ -2045,7 +2045,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_013_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000257",
@@ -2053,7 +2053,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_013_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000258",
@@ -2061,7 +2061,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_013_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000259",
@@ -2069,7 +2069,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_013_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000260",
@@ -2077,7 +2077,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_013_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000261",
@@ -2085,7 +2085,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_014_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000262",
@@ -2093,7 +2093,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_014_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000263",
@@ -2101,7 +2101,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_014_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000264",
@@ -2109,7 +2109,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_014_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000265",
@@ -2117,7 +2117,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_014_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000266",
@@ -2125,7 +2125,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_014_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000267",
@@ -2133,7 +2133,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_014_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000268",
@@ -2141,7 +2141,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_014_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000269",
@@ -2149,7 +2149,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_014_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000270",
@@ -2157,7 +2157,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_014_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000271",
@@ -2165,7 +2165,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_014_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000272",
@@ -2173,7 +2173,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_014_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000273",
@@ -2181,7 +2181,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_014_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000274",
@@ -2189,7 +2189,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_014_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000275",
@@ -2197,7 +2197,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_014_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000276",
@@ -2205,7 +2205,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_014_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000277",
@@ -2213,7 +2213,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_014_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000278",
@@ -2221,7 +2221,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_014_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000279",
@@ -2229,7 +2229,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_014_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000280",
@@ -2237,7 +2237,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_014_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000281",
@@ -2245,7 +2245,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_015_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000282",
@@ -2253,7 +2253,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_015_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000283",
@@ -2261,7 +2261,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_015_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000284",
@@ -2269,7 +2269,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_015_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000285",
@@ -2277,7 +2277,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_015_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000286",
@@ -2285,7 +2285,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_015_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000287",
@@ -2293,7 +2293,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_015_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000288",
@@ -2301,7 +2301,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_015_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000289",
@@ -2309,7 +2309,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_015_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000290",
@@ -2317,7 +2317,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_015_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000291",
@@ -2325,7 +2325,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_015_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000292",
@@ -2333,7 +2333,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_015_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000293",
@@ -2341,7 +2341,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_015_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000294",
@@ -2349,7 +2349,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_015_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000295",
@@ -2357,7 +2357,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_015_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000296",
@@ -2365,7 +2365,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_015_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000297",
@@ -2373,7 +2373,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_015_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000298",
@@ -2381,7 +2381,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_015_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000299",
@@ -2389,7 +2389,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_015_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000300",
@@ -2397,7 +2397,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_015_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000301",
@@ -2405,7 +2405,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_016_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000302",
@@ -2413,7 +2413,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_016_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000303",
@@ -2421,7 +2421,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_016_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000304",
@@ -2429,7 +2429,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_016_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000305",
@@ -2437,7 +2437,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_016_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000306",
@@ -2445,7 +2445,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_016_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000307",
@@ -2453,7 +2453,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_016_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000308",
@@ -2461,7 +2461,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_016_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000309",
@@ -2469,7 +2469,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_016_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000310",
@@ -2477,7 +2477,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_016_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000311",
@@ -2485,7 +2485,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_016_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000312",
@@ -2493,7 +2493,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_016_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000313",
@@ -2501,7 +2501,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_016_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000314",
@@ -2509,7 +2509,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_016_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000315",
@@ -2517,7 +2517,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_016_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000316",
@@ -2525,7 +2525,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_016_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000317",
@@ -2533,7 +2533,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_016_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000318",
@@ -2541,7 +2541,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_016_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000319",
@@ -2549,7 +2549,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_016_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000320",
@@ -2557,7 +2557,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_016_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000321",
@@ -2565,7 +2565,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_017_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000322",
@@ -2573,7 +2573,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_017_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000323",
@@ -2581,7 +2581,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_017_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000324",
@@ -2589,7 +2589,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_017_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000325",
@@ -2597,7 +2597,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_017_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000326",
@@ -2605,7 +2605,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_017_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000327",
@@ -2613,7 +2613,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_017_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000328",
@@ -2621,7 +2621,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_017_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000329",
@@ -2629,7 +2629,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_017_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000330",
@@ -2637,7 +2637,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_017_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000331",
@@ -2645,7 +2645,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_017_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000332",
@@ -2653,7 +2653,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_017_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000333",
@@ -2661,7 +2661,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_017_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000334",
@@ -2669,7 +2669,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_017_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000335",
@@ -2677,7 +2677,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_017_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000336",
@@ -2685,7 +2685,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_017_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000337",
@@ -2693,7 +2693,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_017_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000338",
@@ -2701,7 +2701,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_017_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000339",
@@ -2709,7 +2709,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_017_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000340",
@@ -2717,7 +2717,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_017_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000341",
@@ -2725,7 +2725,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_018_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000342",
@@ -2733,7 +2733,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_018_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000343",
@@ -2741,7 +2741,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_018_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000344",
@@ -2749,7 +2749,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_018_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000345",
@@ -2757,7 +2757,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_018_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000346",
@@ -2765,7 +2765,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_018_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000347",
@@ -2773,7 +2773,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_018_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000348",
@@ -2781,7 +2781,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_018_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000349",
@@ -2789,7 +2789,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_018_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000350",
@@ -2797,7 +2797,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_018_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000351",
@@ -2805,7 +2805,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_018_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000352",
@@ -2813,7 +2813,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_018_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000353",
@@ -2821,7 +2821,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_018_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000354",
@@ -2829,7 +2829,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_018_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000355",
@@ -2837,7 +2837,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_018_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000356",
@@ -2845,7 +2845,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_018_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000357",
@@ -2853,7 +2853,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_018_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000358",
@@ -2861,7 +2861,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_018_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000359",
@@ -2869,7 +2869,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_018_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000360",
@@ -2877,7 +2877,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_018_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000361",
@@ -2885,7 +2885,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_019_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000362",
@@ -2893,7 +2893,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_019_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000363",
@@ -2901,7 +2901,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_019_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000364",
@@ -2909,7 +2909,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_019_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000365",
@@ -2917,7 +2917,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_019_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000366",
@@ -2925,7 +2925,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_019_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000367",
@@ -2933,7 +2933,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_019_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000368",
@@ -2941,7 +2941,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_019_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000369",
@@ -2949,7 +2949,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_019_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000370",
@@ -2957,7 +2957,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_019_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000371",
@@ -2965,7 +2965,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_019_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000372",
@@ -2973,7 +2973,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_019_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000373",
@@ -2981,7 +2981,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_019_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000374",
@@ -2989,7 +2989,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_019_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000375",
@@ -2997,7 +2997,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_019_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000376",
@@ -3005,7 +3005,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_019_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000377",
@@ -3013,7 +3013,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_019_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000378",
@@ -3021,7 +3021,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_019_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000379",
@@ -3029,7 +3029,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_019_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000380",
@@ -3037,7 +3037,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_019_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000381",
@@ -3045,7 +3045,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_020_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000382",
@@ -3053,7 +3053,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_020_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000383",
@@ -3061,7 +3061,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_020_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000384",
@@ -3069,7 +3069,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_020_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000385",
@@ -3077,7 +3077,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_020_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000386",
@@ -3085,7 +3085,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_020_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000387",
@@ -3093,7 +3093,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_020_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000388",
@@ -3101,7 +3101,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_020_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000389",
@@ -3109,7 +3109,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_020_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000390",
@@ -3117,7 +3117,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_020_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000391",
@@ -3125,7 +3125,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_020_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000392",
@@ -3133,7 +3133,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_020_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000393",
@@ -3141,7 +3141,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_020_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000394",
@@ -3149,7 +3149,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_020_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000395",
@@ -3157,7 +3157,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_020_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000396",
@@ -3165,7 +3165,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_020_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000397",
@@ -3173,7 +3173,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_020_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000398",
@@ -3181,7 +3181,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_020_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000399",
@@ -3189,7 +3189,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_020_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000400",
@@ -3197,7 +3197,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_020_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000401",
@@ -3205,7 +3205,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_021_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000402",
@@ -3213,7 +3213,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_021_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000403",
@@ -3221,7 +3221,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_021_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000404",
@@ -3229,7 +3229,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_021_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000405",
@@ -3237,7 +3237,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_021_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000406",
@@ -3245,7 +3245,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_021_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000407",
@@ -3253,7 +3253,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_021_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000408",
@@ -3261,7 +3261,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_021_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000409",
@@ -3269,7 +3269,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_021_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000410",
@@ -3277,7 +3277,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_021_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000411",
@@ -3285,7 +3285,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_021_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000412",
@@ -3293,7 +3293,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_021_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000413",
@@ -3301,7 +3301,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_021_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000414",
@@ -3309,7 +3309,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_021_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000415",
@@ -3317,7 +3317,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_021_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000416",
@@ -3325,7 +3325,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_021_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000417",
@@ -3333,7 +3333,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_021_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000418",
@@ -3341,7 +3341,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_021_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000419",
@@ -3349,7 +3349,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_021_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000420",
@@ -3357,7 +3357,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_021_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000421",
@@ -3365,7 +3365,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_022_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000422",
@@ -3373,7 +3373,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_022_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000423",
@@ -3381,7 +3381,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_022_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000424",
@@ -3389,7 +3389,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_022_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000425",
@@ -3397,7 +3397,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_022_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000426",
@@ -3405,7 +3405,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_022_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000427",
@@ -3413,7 +3413,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_022_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000428",
@@ -3421,7 +3421,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_022_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000429",
@@ -3429,7 +3429,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_022_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000430",
@@ -3437,7 +3437,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_022_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000431",
@@ -3445,7 +3445,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_022_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000432",
@@ -3453,7 +3453,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_022_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000433",
@@ -3461,7 +3461,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_022_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000434",
@@ -3469,7 +3469,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_022_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000435",
@@ -3477,7 +3477,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_022_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000436",
@@ -3485,7 +3485,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_022_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000437",
@@ -3493,7 +3493,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_022_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000438",
@@ -3501,7 +3501,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_022_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000439",
@@ -3509,7 +3509,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_022_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000440",
@@ -3517,7 +3517,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_022_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000441",
@@ -3525,7 +3525,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_023_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000442",
@@ -3533,7 +3533,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_023_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000443",
@@ -3541,7 +3541,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_023_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000444",
@@ -3549,7 +3549,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_023_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000445",
@@ -3557,7 +3557,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_023_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000446",
@@ -3565,7 +3565,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_023_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000447",
@@ -3573,7 +3573,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_023_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000448",
@@ -3581,7 +3581,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_023_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000449",
@@ -3589,7 +3589,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_023_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000450",
@@ -3597,7 +3597,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_023_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000451",
@@ -3605,7 +3605,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_023_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000452",
@@ -3613,7 +3613,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_023_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000453",
@@ -3621,7 +3621,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_023_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000454",
@@ -3629,7 +3629,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_023_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000455",
@@ -3637,7 +3637,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_023_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000456",
@@ -3645,7 +3645,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_023_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000457",
@@ -3653,7 +3653,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_023_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000458",
@@ -3661,7 +3661,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_023_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000459",
@@ -3669,7 +3669,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_023_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000460",
@@ -3677,7 +3677,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_023_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000461",
@@ -3685,7 +3685,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_024_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000462",
@@ -3693,7 +3693,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_024_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000463",
@@ -3701,7 +3701,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_024_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000464",
@@ -3709,7 +3709,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_024_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000465",
@@ -3717,7 +3717,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_024_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000466",
@@ -3725,7 +3725,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_024_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000467",
@@ -3733,7 +3733,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_024_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000468",
@@ -3741,7 +3741,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_024_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000469",
@@ -3749,7 +3749,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_024_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000470",
@@ -3757,7 +3757,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_024_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000471",
@@ -3765,7 +3765,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_024_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000472",
@@ -3773,7 +3773,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_024_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000473",
@@ -3781,7 +3781,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_024_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000474",
@@ -3789,7 +3789,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_024_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000475",
@@ -3797,7 +3797,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_024_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000476",
@@ -3805,7 +3805,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_024_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000477",
@@ -3813,7 +3813,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_024_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000478",
@@ -3821,7 +3821,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_024_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000479",
@@ -3829,7 +3829,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_024_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000480",
@@ -3837,7 +3837,7 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_024_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000481",
@@ -3845,7 +3845,7 @@
     "evaluation_axis": "TECHNICAL_KNOWLEDGE",
     "test_case_id": "TC_EVAL_025_TECHNICAL_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000482",
@@ -3853,7 +3853,7 @@
     "evaluation_axis": "REGULATORY_KNOWLEDGE",
     "test_case_id": "TC_EVAL_025_REGULATORY_KNOWLEDGE",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000483",
@@ -3861,7 +3861,7 @@
     "evaluation_axis": "TEMPORAL_REASONING",
     "test_case_id": "TC_EVAL_025_TEMPORAL_REASONING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000484",
@@ -3869,7 +3869,7 @@
     "evaluation_axis": "CALCULATION",
     "test_case_id": "TC_EVAL_025_CALCULATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000485",
@@ -3877,7 +3877,7 @@
     "evaluation_axis": "WORKFLOW",
     "test_case_id": "TC_EVAL_025_WORKFLOW",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000486",
@@ -3885,7 +3885,7 @@
     "evaluation_axis": "DOCUMENT_UNDERSTANDING",
     "test_case_id": "TC_EVAL_025_DOCUMENT_UNDERSTANDING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000487",
@@ -3893,7 +3893,7 @@
     "evaluation_axis": "TOOL_SELECTION",
     "test_case_id": "TC_EVAL_025_TOOL_SELECTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000488",
@@ -3901,7 +3901,7 @@
     "evaluation_axis": "TOOL_EXECUTION",
     "test_case_id": "TC_EVAL_025_TOOL_EXECUTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000489",
@@ -3909,7 +3909,7 @@
     "evaluation_axis": "PERMISSION_HANDLING",
     "test_case_id": "TC_EVAL_025_PERMISSION_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000490",
@@ -3917,7 +3917,7 @@
     "evaluation_axis": "HITL",
     "test_case_id": "TC_EVAL_025_HITL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000491",
@@ -3925,7 +3925,7 @@
     "evaluation_axis": "ERROR_HANDLING",
     "test_case_id": "TC_EVAL_025_ERROR_HANDLING",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000492",
@@ -3933,7 +3933,7 @@
     "evaluation_axis": "AMBIGUITY",
     "test_case_id": "TC_EVAL_025_AMBIGUITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000493",
@@ -3941,7 +3941,7 @@
     "evaluation_axis": "CONTRADICTION",
     "test_case_id": "TC_EVAL_025_CONTRADICTION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000494",
@@ -3949,7 +3949,7 @@
     "evaluation_axis": "REFUSAL",
     "test_case_id": "TC_EVAL_025_REFUSAL",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000495",
@@ -3957,7 +3957,7 @@
     "evaluation_axis": "SECURITY",
     "test_case_id": "TC_EVAL_025_SECURITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000496",
@@ -3965,7 +3965,7 @@
     "evaluation_axis": "PRIVACY",
     "test_case_id": "TC_EVAL_025_PRIVACY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000497",
@@ -3973,7 +3973,7 @@
     "evaluation_axis": "AUDITABILITY",
     "test_case_id": "TC_EVAL_025_AUDITABILITY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000498",
@@ -3981,7 +3981,7 @@
     "evaluation_axis": "RECOVERY",
     "test_case_id": "TC_EVAL_025_RECOVERY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000499",
@@ -3989,7 +3989,7 @@
     "evaluation_axis": "ISOLATION",
     "test_case_id": "TC_EVAL_025_ISOLATION",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   },
   {
     "association_id": "ASSOC_000500",
@@ -3997,6 +3997,6 @@
     "evaluation_axis": "IDEMPOTENCY",
     "test_case_id": "TC_EVAL_025_IDEMPOTENCY",
     "status": "PASSED",
-    "last_evaluated_at": "2026-09-12T22:02:29.414Z"
+    "last_evaluated_at": "2026-09-15T15:41:08.578Z"
   }
 ]

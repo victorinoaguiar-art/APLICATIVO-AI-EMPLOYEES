@@ -1177,11 +1177,11 @@ export interface EmployeeLiveSampleRequirement {
   credited_initial_live_tasks: number;
   expanded_live_tasks: number;
   total_actual_live_tasks: number;
-  remaining_live_tasks: 0;
-  unique_business_case_ratio: 100; // %
+  remaining_live_tasks: number;
+  unique_business_case_ratio: number; // %
   justification: string;
   sample_status: 'SUFFICIENT' | 'INSUFFICIENT' | 'EXCEEDED' | 'BLOCKED_BY_EXTERNAL_DEPENDENCY';
-  cert_l3_decision: 'CERT_L3_APPROVED' | 'CERT_L3_WITH_RESTRICTIONS';
+  cert_l3_decision: 'CERT_L3_APPROVED' | 'CERT_L3_WITH_RESTRICTIONS' | 'CERT_L3_BLOCKED_PENDING_EXTERNAL_AUDIT' | 'CONTINUE_PILOT';
   restrictions: string[];
 }
 
@@ -1385,19 +1385,19 @@ export interface ContinuousOperationsGovernanceManifest {
   manifest_id: 'AETF500_CONTINUOUS_OPERATIONS_GOVERNANCE_2026';
   baseline_id: 'AETF-500-CERTL3-PRODUCTION-BASELINE-2026.09.11';
   baseline_status: 'FROZEN_AND_VERSIONED';
-  initial_certification_status: 'COMPLETE';
-  continuous_operations_status: 'ACTIVE';
-  continuous_governance_status: 'ACTIVE';
-  targeted_recertification_status: 'ACTIVE';
-  commercial_operations_status: 'ACTIVE';
-  total_employees: 500;
-  cert_l3_full_count: 490;
-  cert_l3_restricted_count: 10;
+  initial_certification_status: string;
+  continuous_operations_status: string;
+  continuous_governance_status: string;
+  targeted_recertification_status: string;
+  commercial_operations_status: string;
+  total_employees: number;
+  cert_l3_full_count: number;
+  cert_l3_restricted_count: number;
   wave_breakdown: {
-    wave_a: { total: 100; full: 100; restricted: 0 };
-    wave_b: { total: 150; full: 150; restricted: 0 };
-    wave_c: { total: 150; full: 150; restricted: 0 };
-    wave_d: { total: 100; full: 90; restricted: 10 };
+    wave_a: { total: number; full: number; restricted: number };
+    wave_b: { total: number; full: number; restricted: number };
+    wave_c: { total: number; full: number; restricted: number };
+    wave_d: { total: number; full: number; restricted: number };
   };
   canonical_restricted_list: CanonicalRestrictedEmployeeRecord[];
   active_tenants_count: number;
@@ -1472,15 +1472,15 @@ export interface TaskAuthenticityRecord {
 }
 
 export interface AuthenticityFreezeSummary {
-  artifact_id: 'AETF500_CERTL3_PRODUCTION_FREEZE_2026_09_11';
-  baseline_id: 'AETF-500-CERTL3-PRODUCTION-BASELINE-2026.09.11';
-  freeze_version: 'AETF-500-CERTL3-PRODUCTION-BASELINE-2026.09.11';
-  norma_interna: 'Norma Interna de Certificação AETF-500 v2.0';
+  artifact_id: string;
+  baseline_id: string;
+  freeze_version: string;
+  norma_interna: string;
   hash_algorithm: 'SHA-256';
   total_claimed_live_tasks: number;
   authentic_verified_live_tasks: number;
   authenticity_rate_pct: number;
-  internal_authenticity_audit: 'PASS';
+  internal_authenticity_audit: 'PASS' | 'PASS_WITH_RESTRICTIONS' | 'FAIL' | 'BLOCKED';
   sandbox_tasks_count: number;
   staging_tasks_count: number;
   simulated_tasks_count: number;
@@ -1529,28 +1529,28 @@ export interface AuthenticityFreezeSummary {
     wave_d_count: number;
   };
   recertification_triggers: string[];
-  production_freeze_status: 'ACTIVE';
+  production_freeze_status: 'ACTIVE' | 'CONTROLLED_PILOT_ONLY' | 'BLOCKED';
   freeze_timestamp: string;
   integrity_hash: string;
   freeze_manifest_sha256: string;
 }
 
 export interface FinalProductionBaselineManifest {
-  artifact_id: 'AETF500_CERTL3_PRODUCTION_FREEZE_2026_09_11';
-  baseline_id: 'AETF-500-CERTL3-PRODUCTION-BASELINE-2026.09.11';
+  artifact_id: string;
+  baseline_id: string;
   baseline_version: string;
   hash_algorithm: 'SHA-256';
   integrity_hash: string;
   created_at: string;
-  total_employees: 500;
-  cert_l3_count: 500;
-  production_ready_full: 490;
-  production_ready_with_restrictions: 10;
-  verified_live_business_tasks: 68500;
-  sample_sufficiency_status: '500 / 500 PASS';
-  internal_authenticity_audit: 'PASS';
-  production_freeze_status: 'ACTIVE';
-  norma_interna: 'Norma Interna de Certificação AETF-500 v2.0';
+  total_employees: number;
+  cert_l3_count: number;
+  production_ready_full: number;
+  production_ready_with_restrictions: number;
+  verified_live_business_tasks: number;
+  sample_sufficiency_status: string;
+  internal_authenticity_audit: string;
+  production_freeze_status: string;
+  norma_interna: string;
   wave_distribution: {
     wave_a_count: number;
     wave_b_count: number;

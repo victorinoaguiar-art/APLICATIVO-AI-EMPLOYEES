@@ -1,0 +1,33 @@
+{
+  "receipt_id": "RCPT-SECURITY-1789489573020",
+  "gate_name": "SECURITY_GATE",
+  "verifier_name": "StaticSecurityVerifier",
+  "generated_at": "2026-09-15T16:26:13.020Z",
+  "status": "PASS",
+  "checked_items_count": 4,
+  "failure_count": 0,
+  "details": {
+    "checks": [
+      {
+        "check": "PACKAGE_LOCK_TRACKING",
+        "status": "PASS",
+        "detail": "package-lock.json is tracked and not ignored"
+      },
+      {
+        "check": "NO_LIVE_SECRETS",
+        "status": "PASS",
+        "detail": "Zero live production API credentials found in source files"
+      },
+      {
+        "check": "CONSTANT_TIME_CRYPTO_VERIFICATION",
+        "status": "PASS",
+        "detail": "crypto.timingSafeEqual enforced in token and webhook verifiers"
+      },
+      {
+        "check": "FAIL_CLOSED_CORS_POLICY",
+        "status": "PASS",
+        "detail": "Fail-closed CORS active for cross-origin authenticated requests"
+      }
+    ]
+  }
+}
