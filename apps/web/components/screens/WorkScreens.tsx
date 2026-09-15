@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ScreenLayout, COLORS, useIsDark } from '../ui/DesignSystem';
-import { CheckSquare, Plus, X, Play, Clock, AlertCircle, FileText, Search, UserCheck, MessageSquare } from 'lucide-react';
+import { CheckSquare, X, Search, UserCheck } from 'lucide-react';
 import { CANONICAL_500_ROLES } from '@ai-employee/rolepack';
 import { ChatboxWorkspace } from '../ui/ChatboxWorkspace';
 import { useNavigation } from '../NavigationContext';
@@ -26,8 +26,8 @@ export const WorkCenterScreen: React.FC = () => {
   const [instruction, setInstruction] = useState('');
   const [priority, setPriority] = useState('Alta');
 
-  const handleCreateTask = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCreateTask = (e?: React.FormEvent) => {
+    e?.preventDefault();
     if (!taskTitle.trim()) return;
 
     const newTask = {
@@ -148,8 +148,9 @@ export const WorkCenterScreen: React.FC = () => {
             onClick: () => {
               const input = document.createElement('input');
               input.type = 'file';
-              input.onchange = (e: any) => {
-                const file = e.target?.files?.[0];
+              input.onchange = (e: Event) => {
+                const target = e.target as HTMLInputElement;
+                const file = target?.files?.[0];
                 if (file) alert(`Ficheiro "${file.name}" anexado com sucesso.`);
               };
               input.click();
@@ -199,19 +200,19 @@ export const WorkCenterScreen: React.FC = () => {
 function getBoxesForWorkCenter(
   activeTab: string,
   isDark: boolean,
-  filteredTasks: any[],
-  handleCreateTask: any,
+  filteredTasks: Array<{ id: string; title: string; employee: string; priority: string; status: string; progress: string; deadline: string }>,
+  handleCreateTask: (e?: React.FormEvent) => void,
   taskTitle: string,
-  setTaskTitle: any,
+  setTaskTitle: (v: string) => void,
   selectedRole: string,
-  setSelectedRole: any,
+  setSelectedRole: (v: string) => void,
   priority: string,
-  setPriority: any,
+  setPriority: (v: string) => void,
   instruction: string,
-  setInstruction: any,
+  setInstruction: (v: string) => void,
   filterText: string,
-  setFilterText: any,
-  nav: any
+  setFilterText: (v: string) => void,
+  nav: ReturnType<typeof useNavigation>
 ) {
   if (activeTab === 'Workspace de Conversa CHAT-01') {
     return [
@@ -590,7 +591,7 @@ export const TaskDetailScreen: React.FC = () => {
   );
 };
 
-function getBoxesForTaskDetail(activeTab: string, isDark: boolean, nav: any) {
+function getBoxesForTaskDetail(activeTab: string, isDark: boolean, nav: ReturnType<typeof useNavigation>) {
   if (activeTab === 'Inputs') {
     return [
       {
@@ -1062,17 +1063,29 @@ export const ApprovalsCenterScreen: React.FC = () => {
   );
 };
 
+interface ApprovalItem {
+  id: string;
+  title: string;
+  employee: string;
+  requestedBy?: string;
+  risk: string;
+  value: string;
+  deadline: string;
+  isMine?: boolean;
+  status: string;
+}
+
 function getBoxesForApprovals(
   activeTab: string,
   isDark: boolean,
-  pendingItems: any[],
-  criticalItems: any[],
-  myItems: any[],
-  historyItems: any[],
+  pendingItems: ApprovalItem[],
+  criticalItems: ApprovalItem[],
+  myItems: ApprovalItem[],
+  historyItems: ApprovalItem[],
   handleApprove: (id: string) => void,
   handleReject: (id: string) => void
 ) {
-  let displayList: any[] = [];
+  let displayList: ApprovalItem[] = [];
   let title = '';
   let tag = '';
 

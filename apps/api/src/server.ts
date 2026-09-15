@@ -174,7 +174,8 @@ app.use((req, res, next) => {
   const token = authHeader.slice(7).trim();
   const verifyResult = tokenService.verifyToken(token);
   if (!verifyResult.valid || !verifyResult.payload) {
-    return res.status(401).json({
+    const isServiceUnavailable = verifyResult.code === 'REVOCATION_CHECK_UNAVAILABLE';
+    return res.status(isServiceUnavailable ? 503 : 401).json({
       error: `UNAUTHORIZED: ${verifyResult.error}`,
       code: verifyResult.code,
       correlationId: (req as any).correlationId
@@ -183,14 +184,14 @@ app.use((req, res, next) => {
 
   const payload = verifyResult.payload;
 
-  // Verificação de conta persistente (B6 / P5)
+  // Verificação de conta persistente (B6 / P5 / P2)
   let account: any = null;
   try {
     account = tokenService.getAccount(payload.user_id);
   } catch (err: any) {
-    return res.status(500).json({
-      error: `IDENTITY_QUERY_FAILED: Failed to query persistent account: ${err.message}`,
-      code: 'IDENTITY_QUERY_FAILED',
+    return res.status(503).json({
+      error: 'IDENTITY_STORE_UNAVAILABLE: Identity verification service is temporarily unavailable.',
+      code: 'IDENTITY_STORE_UNAVAILABLE',
       correlationId: (req as any).correlationId
     });
   }

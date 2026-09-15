@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import { createContext, useContext } from 'react';
 
 export const AREA_TO_TAB_MAP: Record<string, string> = {
   'APP-01': 'dashboard',

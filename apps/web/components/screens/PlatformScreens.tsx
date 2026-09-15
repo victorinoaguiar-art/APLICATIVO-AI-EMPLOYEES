@@ -53,7 +53,7 @@ export const IntegrationsConnectorsScreen: React.FC = () => {
   );
 };
 
-function getBoxesForIntegrations(activeTab: string, isDark: boolean, nav: any) {
+function getBoxesForIntegrations(activeTab: string, isDark: boolean, _nav?: ReturnType<typeof useNavigation>) {
   const allConnectors = [
     { id: 'CON-01', name: 'WhatsApp Business Cloud API', category: 'Mensageria', type: 'Cloud', latency: '42ms', status: 'Online', lastSync: 'Há 1 min', auth: 'Bearer Token (Meta Graph v20.0)' },
     { id: 'CON-02', name: 'Primavera ERP v10 SQL Connector', category: 'ERP', type: 'Local', latency: '68ms', status: 'Online', lastSync: 'Há 3 min', auth: 'SQL Server Trusted Connection' },
@@ -224,7 +224,7 @@ export const SecurityPermissionsScreen: React.FC = () => {
   );
 };
 
-function getBoxesForSecurityPermissions(activeTab: string, isDark: boolean, nav: any) {
+function getBoxesForSecurityPermissions(activeTab: string, isDark: boolean, _nav?: ReturnType<typeof useNavigation>) {
   if (activeTab === 'Policies') {
     const policies = [
       { id: 'POL-001', name: 'Dupla Aprovação Financeira', scope: 'Transacções > Kz 500.000', enforcement: 'Obrigatória', status: 'Ativa' },
@@ -549,7 +549,7 @@ export const AuditEvidenceReceiptsScreen: React.FC = () => {
   );
 };
 
-function getBoxesForAuditEvidence(activeTab: string, isDark: boolean, nav: any) {
+function getBoxesForAuditEvidence(activeTab: string, isDark: boolean, _nav?: ReturnType<typeof useNavigation>) {
   if (activeTab === 'Lineage') {
     return [
       {
@@ -756,7 +756,7 @@ export const SettingsSchedulerScreen: React.FC = () => {
   );
 };
 
-function getBoxesForSettingsScheduler(activeTab: string, isDark: boolean, nav: any) {
+function getBoxesForSettingsScheduler(activeTab: string, isDark: boolean, _nav?: ReturnType<typeof useNavigation>) {
   if (activeTab === 'Scheduler') {
     const schedules = [
       { id: 'CRON-01', task: 'Fecho Diário de Caixa & Facturação', cron: '0 18 * * 1-5', freq: 'Dias úteis às 18:00', nextRun: 'Hoje 18:00', status: 'Activo' },
@@ -964,7 +964,7 @@ export const MasterPromptRegistryScreen: React.FC = () => {
   );
 };
 
-function getBoxesForPromptRegistry(activeTab: string, isDark: boolean, nav: any) {
+function getBoxesForPromptRegistry(activeTab: string, isDark: boolean, _nav?: ReturnType<typeof useNavigation>) {
   const prompts = [
     { code: 'MPR-001', title: 'Operational Center & Global Shell', version: 'v2.1', category: 'Overview', status: 'Ativo' },
     { code: 'MPR-002', title: 'Employee Workforce & 500 Role Catalog', version: 'v2.1', category: 'Workforce', status: 'Ativo' },

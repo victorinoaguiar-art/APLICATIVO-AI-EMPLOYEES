@@ -1,30 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
   ChevronRight,
-  Check,
-  AlertTriangle,
-  Info,
-  Shield,
-  Zap,
-  Activity,
-  Cpu,
-  BookOpen,
-  FileText,
-  Clock,
-  Layers,
-  Settings,
-  HelpCircle,
-  Bell,
-  User,
-  Search,
   X,
   CheckCircle2,
-  Sparkles,
-  ShieldCheck,
-  UserCheck,
-  Filter
+  Sparkles
 } from 'lucide-react';
-import { CANONICAL_500_ROLES } from '@ai-employee/rolepack';
 import { useNavigation } from '../NavigationContext';
 
 export const COLORS = {
@@ -229,7 +209,6 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
 }) => {
   const isDark = useIsDark(overrideIsDark);
   const nav = useNavigation();
-  const [showDrawer, setShowDrawer] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [resumeModalTarget, setResumeModalTarget] = useState<string | null>(null);
   const [pauseModalTarget, setPauseModalTarget] = useState<string | null>(null);
@@ -345,8 +324,9 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
       fileInput.accept = '.csv,.json,.pdf,.xlsx,.doc,.docx';
-      fileInput.onchange = (e: any) => {
-        const file = e.target?.files?.[0];
+      fileInput.onchange = (e: Event) => {
+        const target = e.target as HTMLInputElement;
+        const file = target?.files?.[0];
         if (file) {
           alert(`Ficheiro "${file.name}" carregado com sucesso.`);
         }

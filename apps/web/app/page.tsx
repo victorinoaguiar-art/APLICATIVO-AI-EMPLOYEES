@@ -3,54 +3,39 @@
 import React, { useState, useEffect } from 'react';
 import {
   Users,
-  ShieldAlert,
   CheckCircle2,
   Cpu,
   Search,
   Activity,
   AlertTriangle,
   Lock,
-  ChevronRight,
   ShieldCheck,
   Award,
   X,
   ShoppingCart,
-  CreditCard,
-  TrendingUp,
   Coins,
   Shield,
-  FileText,
   Sun,
   Moon,
-  Globe,
   Network,
   Database,
   Link as LinkIcon,
-  FileSpreadsheet,
-  CheckCircle,
-  Clock,
   Layers,
   CheckSquare,
   Zap,
-  Play,
-  Share2,
-  Workflow,
   Sliders,
   Settings,
-  Radio,
   FileCode,
-  Terminal,
   BookOpen,
-  GraduationCap,
   BarChart3,
   Sparkles,
   ChevronDown,
   Building,
   HelpCircle,
   Bell,
-  FileCheck,
   SlidersHorizontal,
-  MessageSquare
+  MessageSquare,
+  FlaskConical
 } from 'lucide-react';
 import { CANONICAL_500_ROLES } from '@ai-employee/rolepack';
 import { NavigationContext, AREA_TO_TAB_MAP } from '../components/NavigationContext';
@@ -501,7 +486,7 @@ export default function PlatformMasterPage() {
                   <button onClick={() => setActiveTab('knowledge_necessity')} style={navItemStyle('knowledge_necessity')}><Sliders size={14} /> Necessity Engine (KNO-04)</button>
                   <button onClick={() => setActiveTab('passports_eligibility')} style={navItemStyle('passports_eligibility')}><Award size={14} /> Passaportes (KNO-06)</button>
                   <button onClick={() => setActiveTab('reliability_measurement')} style={navItemStyle('reliability_measurement')}><AlertTriangle size={14} /> EREMS / Error Rate (QUAL-02)</button>
-                  <button onClick={() => setActiveTab('otctec_lab')} style={navItemStyle('otctec_lab')}><FlaskConicalIcon size={14} /> Laboratório OTCTEC (QUAL-05)</button>
+                  <button onClick={() => setActiveTab('otctec_lab')} style={navItemStyle('otctec_lab')}><FlaskConical size={14} /> Laboratório OTCTEC (QUAL-05)</button>
                   <button onClick={() => setActiveTab('master_prompt_registry')} style={navItemStyle('master_prompt_registry')}><Database size={14} /> Master Prompt Registry (INT-05)</button>
                 </>
               )}
@@ -702,23 +687,3 @@ export default function PlatformMasterPage() {
   );
 }
 
-function FlaskConicalIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2" />
-      <path d="M8.5 2h7" />
-      <path d="M7 16h10" />
-    </svg>
-  );
-}

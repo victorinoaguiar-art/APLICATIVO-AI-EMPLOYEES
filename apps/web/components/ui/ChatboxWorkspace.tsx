@@ -2,9 +2,8 @@
 
 import React, { useState } from 'react';
 import { 
-  MessageSquare, Send, Paperclip, ShieldCheck, Database, FileText, 
-  Clock, AlertTriangle, CheckCircle2, User, Cpu, Sparkles, Filter, 
-  CornerDownRight, FileSpreadsheet, Lock, ChevronRight, X, ArrowUpRight
+  Send, Paperclip, ShieldCheck, Database, FileText, 
+  AlertTriangle, Cpu, FileSpreadsheet, Lock
 } from 'lucide-react';
 
 interface ChatMessage {
@@ -13,7 +12,7 @@ interface ChatMessage {
   text: string;
   timestamp: string;
   type?: 'text' | 'event' | 'approval' | 'output';
-  details?: any;
+  details?: Record<string, unknown>;
 }
 
 interface ChatboxWorkspaceProps {
@@ -28,7 +27,7 @@ export const ChatboxWorkspace: React.FC<ChatboxWorkspaceProps> = ({
   isDark = true,
   employeeName = 'Contabilista Sénior & Fiscalista',
   employeeCode = 'AEI-000001',
-  employeeRole = 'Contabilidade & Legislação Fiscal',
+  employeeRole: _employeeRole = 'Contabilidade & Legislação Fiscal',
   tenantName = 'MARVINE, LDA'
 }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -66,7 +65,7 @@ export const ChatboxWorkspace: React.FC<ChatboxWorkspaceProps> = ({
   const [priority, setPriority] = useState('NORMAL');
   const [sendAs, setSendAs] = useState('mensagem');
   const [selectedOutput, setSelectedOutput] = useState('PDF');
-  const [selectedSource, setSelectedSource] = useState('ERP Primavera + Banco RO');
+  const [selectedSource] = useState('ERP Primavera + Banco RO');
 
   const handleSendMessage = (e?: React.FormEvent) => {
     if (e) e.preventDefault();

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScreenLayout, COLORS, useIsDark } from '../ui/DesignSystem';
 import { useNavigation } from '../NavigationContext';
-import { BookOpen, Plus, X, FileText, Search, CheckCircle2, Shield, Upload } from 'lucide-react';
+import { BookOpen, X, FileText, Search, Upload } from 'lucide-react';
 
 export const KnowledgeCenterScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState('Biblioteca');
@@ -155,14 +155,23 @@ export const KnowledgeCenterScreen: React.FC = () => {
   );
 };
 
+interface KnowledgeDoc {
+  id: string;
+  title: string;
+  category: string;
+  scope: string;
+  status: string;
+  hash: string;
+}
+
 function getBoxesForKnowledgeCenter(
   activeTab: string,
   isDark: boolean,
-  filteredDocs: any[],
+  filteredDocs: KnowledgeDoc[],
   filterText: string,
-  setFilterText: any,
-  nav: any,
-  setShowModal: any
+  setFilterText: (text: string) => void,
+  nav: ReturnType<typeof useNavigation>,
+  setShowModal: (show: boolean) => void
 ) {
   if (activeTab === 'Fontes') {
     const sources = [
@@ -377,8 +386,9 @@ export const AddKnowledgeWizardScreen: React.FC = () => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.pdf,.docx,.xlsx,.csv,.txt';
-    input.onchange = (e: any) => {
-      const f = e.target?.files?.[0];
+    input.onchange = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      const f = target?.files?.[0];
       if (f) {
         setSelectedFileName(f.name);
         setWizardTitle(f.name.replace(/\.[^/.]+$/, ''));
@@ -560,7 +570,7 @@ export const SourceExplorerScreen: React.FC = () => {
   );
 };
 
-function getBoxesForSourceExplorer(activeTab: string, isDark: boolean, nav: any) {
+function getBoxesForSourceExplorer(activeTab: string, isDark: boolean, _nav?: ReturnType<typeof useNavigation>) {
   if (activeTab === 'Physical File') {
     return [
       {
@@ -792,7 +802,6 @@ export const KnowledgeNecessityScreen: React.FC = () => {
 
 export const Mnca500Screen: React.FC = () => {
   const [activeTab, setActiveTab] = useState('Competências');
-  const nav = useNavigation();
 
   return (
     <ScreenLayout
@@ -874,7 +883,6 @@ export const PassportsEligibilityScreen: React.FC = () => {
 
 export const RegulatoryWatchScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState('Overview');
-  const nav = useNavigation();
 
   return (
     <ScreenLayout

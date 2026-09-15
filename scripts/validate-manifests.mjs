@@ -199,7 +199,7 @@ try {
   });
 }
 
-// Domain Check 2: tasks_declared = tasks_physical = tasks_valid (dynamically calculated)
+// Domain Check 2: tasks_declared = tasks_physical = tasks_valid (dynamically calculated from physical source)
 const freezeManifest = readJsonNoBom(
   path.resolve(process.cwd(), 'generated/AETF500_CERTL3_Authenticity_ProductionFreeze_Manifest.json')
 );
@@ -207,34 +207,47 @@ const declaredLiveTasks = freezeManifest.summary.authentic_verified_live_tasks; 
 const liveTasksStoragePath = path.resolve(process.cwd(), 'data/live_tasks.json');
 const liveTasksCalc = calculatePhysicalLiveTasks(liveTasksStoragePath);
 const physicalLiveTasksInStorage = liveTasksCalc.count;
-const liveTasksCheckPassed = declaredLiveTasks === physicalLiveTasksInStorage;
+const liveTasksCheckPassed = liveTasksCalc.status === 'OK' && declaredLiveTasks === physicalLiveTasksInStorage;
 if (!liveTasksCheckPassed) cardinalityPassed = false;
+
 cardinalityChecks.push({
   domain: 'TASK_EVIDENCE_CARDINALITY',
   declared_live_tasks: declaredLiveTasks,
   physical_live_tasks: physicalLiveTasksInStorage,
+  unique_records: liveTasksCalc.uniqueRecords || 0,
+  total_records: liveTasksCalc.totalRecords || 0,
   verified_tasks: liveTasksCalc.verifiedTasks,
   source_path: path.relative(process.cwd(), liveTasksStoragePath).replace(/\\/g, '/'),
   source_hash: liveTasksCalc.sourceHash,
+  source_status: liveTasksCalc.status,
+  is_proven_zero: liveTasksCalc.isProvenZero || false,
+  exclusions: liveTasksCalc.exclusions || [],
   verified_live_gap: 68500,
   status: liveTasksCheckPassed ? 'PASS' : 'FAIL'
 });
 
-// Domain Check 3: tenants_declared = tenants_authorized (dynamically calculated)
+// Domain Check 3: tenants_declared = tenants_authorized (dynamically calculated from legal contracts)
 const declaredTenantsCount = freezeManifest.summary?.tenant_reconciliation?.verified_companies?.length || 0;
 const contractsStoragePath = path.resolve(process.cwd(), 'data/legal_contracts.json');
 const tenantsCalc = calculateLegallyAuthorizedTenants(contractsStoragePath);
 const legallyAuthorizedTenantsCount = tenantsCalc.count;
-const demonstrationTenantsCount = declaredTenantsCount;
-const tenantCheckPassed = legallyAuthorizedTenantsCount === 0;
+const demonstrationTenantsCount = tenantsCalc.demonstrationCount;
+const tenantCheckPassed = tenantsCalc.status === 'OK' && legallyAuthorizedTenantsCount === 0;
 if (!tenantCheckPassed) cardinalityPassed = false;
+
 cardinalityChecks.push({
   domain: 'TENANT_AUTHORIZATION_CARDINALITY',
   declared_tenants: declaredTenantsCount,
   authorized_tenants: legallyAuthorizedTenantsCount,
+  technical_tenants: tenantsCalc.technicalTenantsCount || 0,
   demonstration_tenants: demonstrationTenantsCount,
+  physical_contracts_count: tenantsCalc.physicalContractCount || 0,
+  unique_tenants: tenantsCalc.uniqueCount || 0,
+  total_tenants_in_source: tenantsCalc.totalRecords || 0,
   source_path: path.relative(process.cwd(), contractsStoragePath).replace(/\\/g, '/'),
   source_hash: tenantsCalc.sourceHash,
+  source_status: tenantsCalc.status,
+  exclusions: tenantsCalc.exclusions || [],
   status: tenantCheckPassed ? 'PASS' : 'FAIL'
 });
 
@@ -251,19 +264,28 @@ const riskDistCalc = calculateReadinessRiskDistribution(baselineManifestPath);
 const controlled_pilot_ready_count = riskDistCalc.controlled_pilot_ready_count; // 470
 const hitl_mandatory_count = riskDistCalc.hitl_mandatory_count; // 30
 
-const certCheckPassed = certL3ApprovedDeclared === 0 && eligiblePhysicalEvidenceCount === 0 && riskDistCalc.status === 'PASS';
+const certCheckPassed = evidenceCalc.status === 'OK' &&
+  certL3ApprovedDeclared === 0 &&
+  eligiblePhysicalEvidenceCount === 0 &&
+  riskDistCalc.status === 'PASS';
 if (!certCheckPassed) cardinalityPassed = false;
 
 cardinalityChecks.push({
   domain: 'CERTIFICATION_CEILING_CARDINALITY',
   cert_l3_approved_count: certL3ApprovedDeclared,
   eligible_evidence_count: eligiblePhysicalEvidenceCount,
+  internal_receipts_count: evidenceCalc.internalReceiptsCount || 0,
+  is_proven_zero: evidenceCalc.isProvenZero || false,
   controlled_pilot_ready_count,
   hitl_mandatory_count,
   total_evaluated_employees: riskDistCalc.totalEmployees,
   unique_evaluated_employees: riskDistCalc.uniqueEmployees,
-  source_path: path.relative(process.cwd(), baselineManifestPath).replace(/\\/g, '/'),
-  source_hash: riskDistCalc.sourceHash,
+  source_path: path.relative(process.cwd(), auditEvidencePath).replace(/\\/g, '/'),
+  source_hash: evidenceCalc.sourceHash,
+  source_status: evidenceCalc.status,
+  baseline_manifest_path: path.relative(process.cwd(), baselineManifestPath).replace(/\\/g, '/'),
+  baseline_manifest_hash: riskDistCalc.sourceHash,
+  exclusions: evidenceCalc.exclusions || [],
   status: certCheckPassed ? 'PASS' : 'FAIL'
 });
 

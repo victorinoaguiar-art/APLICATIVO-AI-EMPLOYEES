@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import { ScreenLayout, COLORS, useIsDark } from '../ui/DesignSystem';
 import { useNavigation } from '../NavigationContext';
 import {
-  ShoppingCart, Search, UserPlus, CheckCircle2, X, ShieldCheck, Award, Star, Cpu,
-  Users, Layers, Activity, DollarSign, AlertTriangle, BarChart3, Clock, ArrowRight,
-  Pause, Play, TrendingUp, Building, FileText, Check
+  Search, UserPlus, CheckCircle2, X, ShieldCheck,
+  AlertTriangle, ArrowRight, Pause, Play, Building
 } from 'lucide-react';
 import { CANONICAL_500_ROLES } from '@ai-employee/rolepack';
 
 export const WorkforceCommandCenterScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState('Visão Geral');
-  const [selectedDeptFilter, setSelectedDeptFilter] = useState('Todos');
+  const [_selectedDeptFilter, _setSelectedDeptFilter] = useState('Todos');
   const [pausedEmployees, setPausedEmployees] = useState<string[]>([]);
   const nav = useNavigation();
   const isDark = useIsDark();
@@ -599,7 +598,7 @@ export const MarketplaceScreen: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('Todas as Áreas');
   const [displayLimit, setDisplayLimit] = useState(60);
-  const [selectedRoleForHire, setSelectedRoleForHire] = useState<any | null>(null);
+  const [selectedRoleForHire, setSelectedRoleForHire] = useState<(typeof CANONICAL_500_ROLES)[number] | null>(null);
   const [hiredRoles, setHiredRoles] = useState<string[]>(['Contabilista Sénior PGC', 'Perito Fiscal & IVA']);
   const isDark = useIsDark();
   const nav = useNavigation();

@@ -57,7 +57,7 @@ export const OmnichannelScreen: React.FC = () => {
   );
 };
 
-function getBoxesForOmnichannel(activeTab: string, isDark: boolean, nav: any) {
+function getBoxesForOmnichannel(activeTab: string, isDark: boolean, _nav?: ReturnType<typeof useNavigation>) {
   if (activeTab === 'Inbox') {
     const messages = [
       { id: 'MSG-01', channel: 'WhatsApp', sender: '+244 923 111 222 (Cliente Luanda)', text: 'Boa tarde, poderiam enviar o catálogo atualizado dos serviços?', time: 'Há 5 min', handledBy: 'SDR Leads Inbound', status: 'Respondido por AI' },
@@ -228,7 +228,7 @@ export const WhatsappOperationsScreen: React.FC = () => {
   );
 };
 
-function getBoxesForWhatsapp(activeTab: string, isDark: boolean, nav: any) {
+function getBoxesForWhatsapp(activeTab: string, isDark: boolean, _nav?: ReturnType<typeof useNavigation>) {
   if (activeTab === 'Comandos') {
     const commands = [
       { id: 'CMD-01', from: '+244 923 000 000 (Victorino Aguiar)', text: 'Envia o balanço do IVA apurado para este mês', parsedIntent: 'TASK_QUERY_IVA_BALANCE', status: 'Executado', result: 'PDF enviado via WhatsApp' },

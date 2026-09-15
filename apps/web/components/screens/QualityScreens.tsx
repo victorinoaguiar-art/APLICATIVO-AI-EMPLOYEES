@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ScreenLayout, COLORS } from '../ui/DesignSystem';
-import { useNavigation } from '../NavigationContext';
 
 export const TrainingCompetencyScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState('Curriculum');

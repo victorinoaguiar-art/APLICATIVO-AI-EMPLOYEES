@@ -30,7 +30,8 @@ export interface VerifyTokenResult {
     | 'INVALID_ISSUER'
     | 'INVALID_AUDIENCE'
     | 'KEY_ROTATED_OR_UNKNOWN'
-    | 'INVALID_PAYLOAD';
+    | 'INVALID_PAYLOAD'
+    | 'REVOCATION_CHECK_UNAVAILABLE';
 }
 
 function base64UrlEncode(str: string): string {
@@ -71,6 +72,12 @@ export interface AccountRecord {
   status: 'ACTIVE' | 'SUSPENDED' | 'REVOKED';
 }
 
+export interface TokenServiceOptions {
+  dbPath?: string;
+  dbFactory?: (resolvedPath: string) => DatabaseSync;
+  dbInstance?: DatabaseSync;
+}
+
 export class TokenService {
   private static instance: TokenService;
   private currentKid: string = 'k1';
@@ -78,6 +85,7 @@ export class TokenService {
   private readonly revokedJtis: Set<string> = new Set();
   private db: DatabaseSync | null = null;
   private resolvedDbPath: string | null = null;
+  private dbFactory?: (resolvedPath: string) => DatabaseSync;
   public readonly expectedIssuer: string = 'ai-employee-platform';
   public readonly expectedAudience: string = 'ai-employee-api';
 
@@ -85,7 +93,7 @@ export class TokenService {
     return this.resolvedDbPath;
   }
 
-  public constructor(customSecret?: string, dbPath?: string) {
+  public constructor(customSecret?: string, dbPathOrOptions?: string | TokenServiceOptions) {
     const isProd = process.env.NODE_ENV === 'production';
     const envSecret = customSecret || process.env.AUTH_SECRET || process.env.JWT_SECRET;
 
@@ -99,7 +107,22 @@ export class TokenService {
       this.keys.set(this.currentKid, activeSecret);
     }
 
-    this.initDatabase(dbPath);
+    let customPath: string | undefined;
+    if (typeof dbPathOrOptions === 'string') {
+      customPath = dbPathOrOptions;
+    } else if (dbPathOrOptions && typeof dbPathOrOptions === 'object') {
+      customPath = dbPathOrOptions.dbPath;
+      this.dbFactory = dbPathOrOptions.dbFactory;
+      if (dbPathOrOptions.dbInstance) {
+        this.db = dbPathOrOptions.dbInstance;
+      }
+    }
+
+    if (!this.db) {
+      this.initDatabase(customPath);
+    } else {
+      this.initSchema();
+    }
   }
 
   private initDatabase(customPath?: string): void {
@@ -109,10 +132,11 @@ export class TokenService {
         resolvedPath = customPath;
       } else if (process.env.AUTH_DB_PATH) {
         resolvedPath = process.env.AUTH_DB_PATH;
-      } else if (process.env.NODE_ENV === 'test') {
-        resolvedPath = path.join(os.tmpdir(), `aetf_auth_test_${process.pid}.db`);
+      } else if (process.env.NODE_ENV === 'test' || process.env.npm_lifecycle_event === 'test' || process.argv.includes('--test')) {
+        resolvedPath = path.join(os.tmpdir(), `aetf_auth_test_${process.pid}_${Date.now()}.db`);
       } else {
-        const dataDir = path.resolve(process.cwd(), 'data');
+        const rootDir = process.env.REPO_ROOT || process.cwd();
+        const dataDir = path.resolve(rootDir, 'data');
         if (!fs.existsSync(dataDir)) {
           fs.mkdirSync(dataDir, { recursive: true });
         }
@@ -120,34 +144,52 @@ export class TokenService {
       }
 
       this.resolvedDbPath = resolvedPath;
-      this.db = new DatabaseSync(resolvedPath);
-      this.db.exec(`
-        CREATE TABLE IF NOT EXISTS token_revocations (
-          jti TEXT PRIMARY KEY,
-          revoked_at TEXT NOT NULL,
-          reason TEXT
-        );
-        CREATE TABLE IF NOT EXISTS account_authorizations (
-          user_id TEXT PRIMARY KEY,
-          tenant_id TEXT NOT NULL,
-          roles TEXT NOT NULL,
-          permissions TEXT NOT NULL,
-          status TEXT NOT NULL
-        );
-      `);
-
-      // Load active revocations into in-memory fast set
-      const rows = this.db.prepare('SELECT jti FROM token_revocations').all() as Array<{ jti: string }>;
-      for (const row of rows) {
-        this.revokedJtis.add(row.jti);
+      if (this.dbFactory) {
+        this.db = this.dbFactory(resolvedPath);
+      } else {
+        this.db = new DatabaseSync(resolvedPath);
       }
+      this.initSchema();
     } catch (err: any) {
       if (process.env.NODE_ENV === 'production') {
         throw new Error(`FATAL_DATABASE_INIT_FAILURE: Identity persistence SQLite startup failed in production: ${err.message}`);
       }
-      if (customPath) {
+      if (customPath || this.dbFactory) {
         throw err;
       }
+    }
+  }
+
+  private initSchema(): void {
+    if (!this.db) return;
+    this.db.exec(`
+      CREATE TABLE IF NOT EXISTS token_revocations (
+        jti TEXT PRIMARY KEY,
+        revoked_at TEXT NOT NULL,
+        reason TEXT
+      );
+      CREATE TABLE IF NOT EXISTS account_authorizations (
+        user_id TEXT PRIMARY KEY,
+        tenant_id TEXT NOT NULL,
+        roles TEXT NOT NULL,
+        permissions TEXT NOT NULL,
+        status TEXT NOT NULL
+      );
+    `);
+
+    // Load active revocations into in-memory fast set
+    const rows = this.db.prepare('SELECT jti FROM token_revocations').all() as Array<{ jti: string }>;
+    for (const row of rows) {
+      this.revokedJtis.add(row.jti);
+    }
+  }
+
+  public close(): void {
+    if (this.db) {
+      try {
+        this.db.close();
+      } catch {}
+      this.db = null;
     }
   }
 
@@ -169,11 +211,17 @@ export class TokenService {
   public revokeToken(jti: string, reason?: string): void {
     if (jti) {
       if (this.db) {
-        const stmt = this.db.prepare(`
-          INSERT OR REPLACE INTO token_revocations (jti, revoked_at, reason)
-          VALUES (?, ?, ?)
-        `);
-        stmt.run(jti, new Date().toISOString(), reason || null);
+        try {
+          const stmt = this.db.prepare(`
+            INSERT OR REPLACE INTO token_revocations (jti, revoked_at, reason)
+            VALUES (?, ?, ?)
+          `);
+          stmt.run(jti, new Date().toISOString(), reason || null);
+        } catch (err: any) {
+          if (process.env.NODE_ENV === 'production') {
+            throw new Error(`REVOCATION_PERSISTENCE_FAILURE: Failed to persist token revocation: ${err.message}`);
+          }
+        }
       } else if (process.env.NODE_ENV === 'production') {
         throw new Error('REVOCATION_PERSISTENCE_FAILURE: Cannot persist revocation without database in production');
       }
@@ -191,26 +239,36 @@ export class TokenService {
           this.revokedJtis.add(jti);
           return true;
         }
-      } catch {
-        // Return memory state
+      } catch (err: any) {
+        if (process.env.NODE_ENV === 'production') {
+          throw new Error(`REVOCATION_CHECK_UNAVAILABLE: Database error querying token revocation: ${err.message}`);
+        }
       }
+    } else if (process.env.NODE_ENV === 'production') {
+      throw new Error('REVOCATION_CHECK_UNAVAILABLE: Database connection is not available in production');
     }
     return false;
   }
 
   public upsertAccount(account: AccountRecord): void {
     if (this.db) {
-      const stmt = this.db.prepare(`
-        INSERT OR REPLACE INTO account_authorizations (user_id, tenant_id, roles, permissions, status)
-        VALUES (?, ?, ?, ?, ?)
-      `);
-      stmt.run(
-        account.user_id,
-        account.tenant_id,
-        JSON.stringify(account.roles),
-        JSON.stringify(account.permissions),
-        account.status
-      );
+      try {
+        const stmt = this.db.prepare(`
+          INSERT OR REPLACE INTO account_authorizations (user_id, tenant_id, roles, permissions, status)
+          VALUES (?, ?, ?, ?, ?)
+        `);
+        stmt.run(
+          account.user_id,
+          account.tenant_id,
+          JSON.stringify(account.roles),
+          JSON.stringify(account.permissions),
+          account.status
+        );
+      } catch (err: any) {
+        if (process.env.NODE_ENV === 'production') {
+          throw new Error(`IDENTITY_STORE_UNAVAILABLE: Failed to persist account authorization: ${err.message}`);
+        }
+      }
     } else if (process.env.NODE_ENV === 'production') {
       throw new Error('IDENTITY_STORE_UNAVAILABLE: Cannot upsert account without database in production');
     }
@@ -218,18 +276,25 @@ export class TokenService {
 
   public getAccount(userId: string): AccountRecord | null {
     if (this.db) {
-      const stmt = this.db.prepare('SELECT * FROM account_authorizations WHERE user_id = ?');
-      const row = stmt.get(userId) as any;
-      if (row) {
-        return {
-          user_id: row.user_id,
-          tenant_id: row.tenant_id,
-          roles: JSON.parse(row.roles),
-          permissions: JSON.parse(row.permissions),
-          status: row.status as any
-        };
+      try {
+        const stmt = this.db.prepare('SELECT * FROM account_authorizations WHERE user_id = ?');
+        const row = stmt.get(userId) as any;
+        if (row) {
+          return {
+            user_id: row.user_id,
+            tenant_id: row.tenant_id,
+            roles: JSON.parse(row.roles),
+            permissions: JSON.parse(row.permissions),
+            status: row.status as any
+          };
+        }
+        return null;
+      } catch (err: any) {
+        if (process.env.NODE_ENV === 'production') {
+          throw new Error(`IDENTITY_STORE_UNAVAILABLE: Failed to query persistent account: ${err.message}`);
+        }
+        return null;
       }
-      return null;
     }
     if (process.env.NODE_ENV === 'production') {
       throw new Error('IDENTITY_STORE_UNAVAILABLE: Database connection is not available in production');
@@ -368,8 +433,20 @@ export class TokenService {
     }
 
     // Revocation check
-    if (payload.jti && this.isRevoked(payload.jti)) {
-      return { valid: false, error: `Token with jti ${payload.jti} has been revoked`, code: 'TOKEN_REVOKED' };
+    if (payload.jti) {
+      try {
+        if (this.isRevoked(payload.jti)) {
+          return { valid: false, error: `Token with jti ${payload.jti} has been revoked`, code: 'TOKEN_REVOKED' };
+        }
+      } catch (err: any) {
+        if (process.env.NODE_ENV === 'production') {
+          return {
+            valid: false,
+            error: 'REVOCATION_CHECK_UNAVAILABLE: Identity verification service is unable to confirm revocation status.',
+            code: 'REVOCATION_CHECK_UNAVAILABLE'
+          };
+        }
+      }
     }
 
     return { valid: true, payload };

@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 import { ScreenLayout, COLORS, useIsDark } from '../ui/DesignSystem';
 import { useNavigation } from '../NavigationContext';
-import { Building, Plus, CheckCircle2, X, AlertTriangle, ShieldCheck, Search, Users, ExternalLink, UserPlus, ChevronRight, UserCheck } from 'lucide-react';
-import { CANONICAL_500_ROLES } from '@ai-employee/rolepack';
+import { Building, X, ShieldCheck, Search, ChevronRight, UserCheck } from 'lucide-react';
+
+interface CompanyItem {
+  id: string;
+  name: string;
+  nif: string;
+  sector: string;
+  status: string;
+  employees: number;
+  readiness: string;
+}
 
 export const CompaniesTenantsScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState('Todas');
@@ -14,7 +23,7 @@ export const CompaniesTenantsScreen: React.FC = () => {
   const nav = useNavigation();
   
   // Real interactive state for companies
-  const [companies, setCompanies] = useState([
+  const [companies, setCompanies] = useState<CompanyItem[]>([
     { id: 'ORG-001', name: 'MARVINE, LDA', nif: '541800912', sector: 'Tecnologia & Consultoria', status: 'Activa', employees: 18, readiness: '100%' },
     { id: 'ORG-002', name: 'MINSA — Ministério da Saúde', nif: '500129384', sector: 'Saúde Pública', status: 'Activa', employees: 42, readiness: '100%' },
     { id: 'ORG-003', name: 'BANCO COMERCIAL ANGOLANO', nif: '540192831', sector: 'Banca & Serviços Financeiros', status: 'Em configuração', employees: 6, readiness: '85%' },
@@ -40,20 +49,14 @@ export const CompaniesTenantsScreen: React.FC = () => {
   const [nif, setNif] = useState('');
   const [country, setCountry] = useState('Angola');
   const [province, setProvince] = useState('Luanda');
-  const [city, setCity] = useState('Luanda');
   const [sector, setSector] = useState('Tecnologia & Consultoria');
-  const [mainActivity, setMainActivity] = useState('');
 
   // Wizard Step 2 Form State
   const [companyEmail, setCompanyEmail] = useState('');
   const [companyPhone, setCompanyPhone] = useState('');
-  const [companyAddress, setCompanyAddress] = useState('');
-  const [companyWebsite, setCompanyWebsite] = useState('');
 
   const [adminName, setAdminName] = useState('');
   const [adminEmail, setAdminEmail] = useState('');
-  const [adminPhone, setAdminPhone] = useState('');
-  const [adminRole, setAdminRole] = useState('Director Geral');
 
   // Wizard Step 3 Form State
   const [language, setLanguage] = useState('Português');
@@ -66,8 +69,6 @@ export const CompaniesTenantsScreen: React.FC = () => {
   const handleUseMyData = () => {
     setAdminName('Victorino Aguiar');
     setAdminEmail('victorino.aguiar@marvine.co.ao');
-    setAdminPhone('+244 923 000 000');
-    setAdminRole('Administrador de Sistemas');
   };
 
   const handleCreateCompany = (e: React.FormEvent) => {
@@ -108,7 +109,7 @@ export const CompaniesTenantsScreen: React.FC = () => {
       {/* 3-STEP COMPANY CREATION WIZARD MODAL */}
       {showModal && (
         <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000, background: 'rgba(15, 23, 42, 0.55)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-          <form onSubmit={wizardStep === 3 ? handleCreateCompany : (e) => { e.preventDefault(); setWizardStep((wizardStep + 1) as any); }} style={{ background: isDark ? '#0f172a' : '#ffffff', color: isDark ? '#f8fafc' : '#0f172a', border: isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid #cbd5e1', borderRadius: '16px', padding: '28px', maxWidth: '640px', width: '100%', boxShadow: isDark ? '0 20px 40px rgba(0,0,0,0.6)' : '0 10px 30px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+          <form onSubmit={wizardStep === 3 ? handleCreateCompany : (e) => { e.preventDefault(); setWizardStep((wizardStep + 1) as 1 | 2 | 3); }} style={{ background: isDark ? '#0f172a' : '#ffffff', color: isDark ? '#f8fafc' : '#0f172a', border: isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid #cbd5e1', borderRadius: '16px', padding: '28px', maxWidth: '640px', width: '100%', boxShadow: isDark ? '0 20px 40px rgba(0,0,0,0.6)' : '0 10px 30px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', gap: '18px' }}>
             
             {/* WIZARD HEADER */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -366,7 +367,7 @@ export const CompaniesTenantsScreen: React.FC = () => {
             {/* WIZARD ACTIONS */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
               {wizardStep > 1 ? (
-                <button type="button" onClick={() => setWizardStep((wizardStep - 1) as any)} style={{ padding: '9px 18px', borderRadius: '8px', background: 'transparent', border: isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid #cbd5e1', color: isDark ? '#cbd5e1' : '#475569', fontWeight: 600, cursor: 'pointer' }}>
+                <button type="button" onClick={() => setWizardStep((wizardStep - 1) as 1 | 2 | 3)} style={{ padding: '9px 18px', borderRadius: '8px', background: 'transparent', border: isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid #cbd5e1', color: isDark ? '#cbd5e1' : '#475569', fontWeight: 600, cursor: 'pointer' }}>
                   Voltar
                 </button>
               ) : <div />}
@@ -479,10 +480,10 @@ export const CompaniesTenantsScreen: React.FC = () => {
 function getBoxesForCompanies(
   activeTab: string,
   isDark: boolean,
-  filteredCompanies: any[],
+  filteredCompanies: CompanyItem[],
   filterText: string,
-  setFilterText: any,
-  nav: any
+  setFilterText: (text: string) => void,
+  nav: ReturnType<typeof useNavigation>
 ) {
   if (activeTab === 'Configuração') {
     const configItems = [
@@ -642,7 +643,7 @@ export const CompanyDetail360Screen: React.FC = () => {
   );
 };
 
-function getBoxesForCompanyDetail(activeTab: string, isDark: boolean, nav: any) {
+function getBoxesForCompanyDetail(activeTab: string, isDark: boolean, nav: ReturnType<typeof useNavigation>) {
   if (activeTab === 'AI Employees') {
     const employees = [
       { key: 'FIN-01', name: 'Contabilista Sénior PGC', dept: 'Finanças', status: 'Activo', tasksToday: 14, efficiency: '99.8%' },

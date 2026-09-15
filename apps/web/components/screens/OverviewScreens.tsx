@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScreenLayout, COLORS, useIsDark } from '../ui/DesignSystem';
 import { useNavigation } from '../NavigationContext';
 import { CANONICAL_500_ROLES } from '@ai-employee/rolepack';
-import { Layers, Users, CheckSquare, ShieldCheck, Zap, ArrowRight, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 const CANONICAL_44_AREAS = [
   { code: 'APP-01', name: 'Dashboard', cat: 'Início' },

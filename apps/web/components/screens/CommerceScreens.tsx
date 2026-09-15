@@ -66,7 +66,7 @@ export const PlansSubscriptionsScreen: React.FC = () => {
   );
 };
 
-function getBoxesForPlans(activeTab: string, isDark: boolean, nav: any) {
+function getBoxesForPlans(activeTab: string, isDark: boolean, nav: ReturnType<typeof useNavigation>) {
   if (activeTab === 'Subscrições') {
     const subscriptions = [
       { client: 'MARVINE, LDA', plan: 'Enterprise 50', employees: '18 / 50', value: '$1,850 / mês', status: 'Activa', renewal: '01/10/2026' },
@@ -233,7 +233,7 @@ export const BillingPaymentsScreen: React.FC = () => {
   );
 };
 
-function getBoxesForBilling(activeTab: string, isDark: boolean, nav: any) {
+function getBoxesForBilling(activeTab: string, isDark: boolean, _nav?: ReturnType<typeof useNavigation>) {
   if (activeTab === 'Payments') {
     const payments = [
       { id: 'PAY-801', client: 'MARVINE, LDA', method: 'Multicaixa Express (EMIS)', amount: 'Kz 1.850.000', date: 'Hoje 09:14', status: 'Liquidado' },

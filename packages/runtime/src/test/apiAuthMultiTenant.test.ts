@@ -2,6 +2,7 @@ import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert';
 import * as http from 'node:http';
 import * as path from 'node:path';
+import * as fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { TokenService } from '@ai-employee/shared/server';
 
@@ -391,17 +392,38 @@ describe('AETF-500 Multi-Tenant Authentication & Authorization Hardening', () =>
     assert.strictEqual(data.code, 'UNAUTHORIZED_ROLE_ESCALATION');
   });
 
-  it('21. P5: Unreachable identity database halts startup in production (fail-closed)', () => {
+  it('21. P5/P1: Unreachable identity database halts startup in production (fail-closed) cross-platform', () => {
     const prevEnv = process.env.NODE_ENV;
     const prevSecret = process.env.AUTH_SECRET;
+    const runtimeDir = path.resolve(getRoot(), 'packages/runtime');
+    const getDbResidues = () => {
+      try {
+        return fs.readdirSync(runtimeDir).filter(f => f.endsWith('.db') || f.includes('auth.db') || f.includes('impossible'));
+      } catch {
+        return [];
+      }
+    };
+
+    const initialResidues = getDbResidues();
+    assert.strictEqual(initialResidues.length, 0, 'No residual DB files should exist in packages/runtime before test');
+
     try {
       process.env.NODE_ENV = 'production';
       const validProdSecret = 'PROD_TOKEN_SIGNING_AUTHORITY_KEY_999999999999999999999999';
       process.env.AUTH_SECRET = validProdSecret;
-      // Attempting to initialize TokenService with an impossible database directory
+
+      // Injected factory that fails universally on Linux, Windows and macOS without path assumptions
+      const failingDbFactory = () => {
+        throw new Error('EACCES: permission denied / simulated unreachable disk storage');
+      };
+
       assert.throws(() => {
-        new TokenService(validProdSecret, 'Z:\\impossible_nonexistent_drive_folder\\auth.db');
+        new TokenService(validProdSecret, { dbFactory: failingDbFactory });
       }, /FATAL_DATABASE_INIT_FAILURE/);
+
+      // Verify no residual files were created on disk
+      const postResidues = getDbResidues();
+      assert.strictEqual(postResidues.length, 0, 'No DB file must be created on failure across platforms');
     } finally {
       process.env.NODE_ENV = prevEnv;
       if (prevSecret) process.env.AUTH_SECRET = prevSecret;
@@ -457,6 +479,110 @@ describe('AETF-500 Multi-Tenant Authentication & Authorization Hardening', () =>
       assert.strictEqual(res.status, 401);
       const data = await res.json() as any;
       assert.strictEqual(data.code, 'USER_NOT_REGISTERED');
+    } finally {
+      process.env.NODE_ENV = prevEnv;
+    }
+  });
+
+  it('24. P2: Post-startup database failure blocks isRevoked() and verifyToken() in production', () => {
+    const prevEnv = process.env.NODE_ENV;
+    try {
+      process.env.NODE_ENV = 'production';
+      const validProdSecret = 'PROD_TOKEN_SIGNING_AUTHORITY_KEY_999999999999999999999999';
+      const mockDb = {
+        exec: () => {},
+        prepare: (query: string) => {
+          if (query.includes('token_revocations')) {
+            return {
+              all: () => [],
+              get: () => { throw new Error('DISK_IO_ERROR: Query timeout reading revocation table'); }
+            };
+          }
+          return { all: () => [], get: () => null, run: () => {} };
+        },
+        close: () => {}
+      };
+
+      const failingService = new TokenService(validProdSecret, {
+        dbInstance: mockDb as any
+      });
+
+      // isRevoked throws REVOCATION_CHECK_UNAVAILABLE in production
+      assert.throws(() => {
+        failingService.isRevoked('jti_failing_test_123');
+      }, /REVOCATION_CHECK_UNAVAILABLE/);
+
+      // verifyToken catches and safely returns REVOCATION_CHECK_UNAVAILABLE code
+      const token = failingService.signToken({
+        tenant_id: 'tenant_alpha',
+        user_id: 'usr_valid_db_account',
+        roles: ['USER'],
+        jti: 'jti_failing_test_123'
+      });
+
+      const verifyRes = failingService.verifyToken(token);
+      assert.strictEqual(verifyRes.valid, false);
+      assert.strictEqual(verifyRes.code, 'REVOCATION_CHECK_UNAVAILABLE');
+    } finally {
+      process.env.NODE_ENV = prevEnv;
+    }
+  });
+
+  it('25. P2: Account persistence query failure in production throws IDENTITY_STORE_UNAVAILABLE', () => {
+    const prevEnv = process.env.NODE_ENV;
+    try {
+      process.env.NODE_ENV = 'production';
+      const validProdSecret = 'PROD_TOKEN_SIGNING_AUTHORITY_KEY_999999999999999999999999';
+      const mockDb = {
+        exec: () => {},
+        prepare: (query: string) => {
+          if (query.includes('account_authorizations')) {
+            return {
+              get: () => { throw new Error('DISK_CORRUPT: /var/lib/data.db block checksum error'); }
+            };
+          }
+          return { all: () => [], get: () => null, run: () => {} };
+        },
+        close: () => {}
+      };
+
+      const brokenAccountService = new TokenService(validProdSecret, {
+        dbInstance: mockDb as any
+      });
+
+      assert.throws(() => {
+        brokenAccountService.getAccount('any_user');
+      }, /IDENTITY_STORE_UNAVAILABLE/);
+    } finally {
+      process.env.NODE_ENV = prevEnv;
+    }
+  });
+
+  it('26. P2: Failure to persist token revocation throws REVOCATION_PERSISTENCE_FAILURE and prevents false confirmation', () => {
+    const prevEnv = process.env.NODE_ENV;
+    try {
+      process.env.NODE_ENV = 'production';
+      const validProdSecret = 'PROD_TOKEN_SIGNING_AUTHORITY_KEY_999999999999999999999999';
+      const readOnlyMockDb = {
+        exec: () => {},
+        prepare: (query: string) => {
+          if (query.includes('INSERT')) {
+            return {
+              run: () => { throw new Error('SQLITE_READONLY: database is locked in read-only mode'); }
+            };
+          }
+          return { all: () => [], get: () => null, run: () => {} };
+        },
+        close: () => {}
+      };
+
+      const readOnlyService = new TokenService(validProdSecret, {
+        dbInstance: readOnlyMockDb as any
+      });
+
+      assert.throws(() => {
+        readOnlyService.revokeToken('jti_cannot_persist', 'Security incident');
+      }, /REVOCATION_PERSISTENCE_FAILURE/);
     } finally {
       process.env.NODE_ENV = prevEnv;
     }
