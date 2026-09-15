@@ -43,3 +43,6 @@ billing_store.json
 *.db-wal
 data/
 packages/*/data/
+generated/verification/
+.artifacts/
+reports/

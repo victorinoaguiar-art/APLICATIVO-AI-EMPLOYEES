@@ -314,4 +314,80 @@ describe('AETF-500 Multi-Tenant Authentication & Authorization Hardening', () =>
     const data = await res.json() as any;
     assert.strictEqual(data.code, 'KEY_ROTATED_OR_UNKNOWN');
   });
+
+  it('17. Rejects request when persistent user account is SUSPENDED or REVOKED (403)', async () => {
+    const disabledUserId = 'usr_suspended_999';
+    tokenService.upsertAccount({
+      user_id: disabledUserId,
+      tenant_id: 'tenant_alpha',
+      roles: ['USER'],
+      permissions: ['READ'],
+      status: 'SUSPENDED'
+    });
+
+    const token = tokenService.signToken({
+      tenant_id: 'tenant_alpha',
+      user_id: disabledUserId,
+      roles: ['USER']
+    });
+
+    const res = await fetch(`${baseUrl}/api/v1/rolepacks`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    assert.strictEqual(res.status, 403);
+    const data = await res.json() as any;
+    assert.strictEqual(data.code, 'ACCOUNT_DISABLED');
+  });
+
+  it('18. Rejects cross-tenant access when persistent account belongs to different tenant (403)', async () => {
+    const crossTenantUserId = 'usr_cross_tenant_100';
+    tokenService.upsertAccount({
+      user_id: crossTenantUserId,
+      tenant_id: 'tenant_correct_home',
+      roles: ['USER'],
+      permissions: ['READ'],
+      status: 'ACTIVE'
+    });
+
+    // Token forged with wrong tenant
+    const forgedToken = tokenService.signToken({
+      tenant_id: 'tenant_forged_alien',
+      user_id: crossTenantUserId,
+      roles: ['USER']
+    });
+
+    const res = await fetch(`${baseUrl}/api/v1/rolepacks`, {
+      headers: { Authorization: `Bearer ${forgedToken}` }
+    });
+    assert.strictEqual(res.status, 403);
+    const data = await res.json() as any;
+    assert.strictEqual(data.code, 'TENANT_MISMATCH');
+  });
+
+  it('19. Durable revocation survives new TokenService instance restart from SQLite', () => {
+    const durableJti = 'durable-jti-restart-test-' + Date.now();
+    tokenService.revokeToken(durableJti, 'TEST_RESTART_SURVIVAL');
+    assert.strictEqual(tokenService.isRevoked(durableJti), true);
+
+    // Create fresh instance pointing to the same active database
+    const dbPath = tokenService.getDatabasePath() || undefined;
+    const restartedService = new TokenService(undefined, dbPath);
+    assert.strictEqual(restartedService.isRevoked(durableJti), true, 'Revocation must survive service restart');
+  });
+
+  it('20. Test token issuer rejects SUPER_ADMIN escalation when TEST_ADMIN_AUTHORIZATION_KEY is missing/wrong', async () => {
+    const res = await fetch(`${baseUrl}/api/v1/auth/test-token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tenantId: 'tenant_alpha',
+        userId: 'usr_escalation_test',
+        roles: ['SUPER_ADMIN'],
+        adminAuthKey: 'invalid-attempted-key'
+      })
+    });
+    assert.strictEqual(res.status, 403);
+    const data = await res.json() as any;
+    assert.strictEqual(data.code, 'UNAUTHORIZED_ROLE_ESCALATION');
+  });
 });

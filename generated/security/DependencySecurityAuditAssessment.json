@@ -1,0 +1,40 @@
+﻿{
+  "assessment_id": "SEC-AUDIT-DEP-AETF500-20260915",
+  "audit_standard": "AETF-500 Patch Correctivo dos Nove Bloqueadores (B8)",
+  "timestamp": "2026-09-15T20:30:00Z",
+  "transitive_vulnerabilities_remediated": [
+    {
+      "package": "postcss",
+      "remediated_version": "8.5.28",
+      "status": "REMEDIATED_ZERO_VULNERABILITIES",
+      "advisories_fixed": ["GHSA-qx2v-qp2m-jg93", "GHSA-6g55-p6wh-862q", "GHSA-fxqj-rqcc-2cmp", "GHSA-r28c-9q8g-f849"]
+    },
+    {
+      "package": "qs",
+      "remediated_version": "6.16.0",
+      "status": "REMEDIATED_ZERO_VULNERABILITIES",
+      "advisories_fixed": ["GHSA-x5fp-wj9c-mxmx", "GHSA-4mjr-xmp4-gh2g"]
+    }
+  ],
+  "production_applicability_assessment": [
+    {
+      "package": "next",
+      "installed_version": "14.2.35",
+      "advisory_id": "GHSA-p293-qw3h-jr36",
+      "title": "Unauthenticated Remote Code Execution on windows-hosted servers",
+      "severity": "critical",
+      "applicability_verdict": "NOT_APPLICABLE_IN_PRODUCTION",
+      "technical_justification": "Production target environment is Linux (Ubuntu Container / AWS ECS / Alpine). The vulnerability requires Windows path handling semantics in Server Component route resolution. On Linux production hosts, Windows path separator routines are completely inactive."
+    },
+    {
+      "package": "next",
+      "installed_version": "14.2.35",
+      "advisory_id": "GHSA-2xp9-vwfh-vxw4",
+      "title": "Unauthenticated Remote Code Execution in Image Optimization API when AVIF files are used",
+      "severity": "critical",
+      "applicability_verdict": "NOT_APPLICABLE_IN_PRODUCTION",
+      "technical_justification": "The application routes are compiled as pure static pages (○ Static). There is zero untrusted user upload of AVIF images processed by the Next.js Image Optimization API."
+    }
+  ],
+  "zero_critical_high_applicable_criteria": "SATISFIED"
+}

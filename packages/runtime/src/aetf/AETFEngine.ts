@@ -355,11 +355,15 @@ export class AETFEngine {
   private persistAuditDataToDisk(): void {
     try {
       const genDir = path.resolve(process.cwd(), 'generated');
+      const runsFile = path.join(genDir, 'aetf_phase2a_1250_test_runs_audit.json');
+      if (fs.existsSync(runsFile)) {
+        return; // Read-only: preserve tracked baseline audit files
+      }
+
       if (!fs.existsSync(genDir)) {
         fs.mkdirSync(genDir, { recursive: true });
       }
 
-      const runsFile = path.join(genDir, 'aetf_phase2a_1250_test_runs_audit.json');
       fs.writeFileSync(runsFile, JSON.stringify(this.testRuns, null, 2), 'utf-8');
 
       const assocsFile = path.join(genDir, 'aetf_phase2a_10000_associations_audit.json');
@@ -579,7 +583,9 @@ export class AETFEngine {
         fs.mkdirSync(genDir, { recursive: true });
       }
       const manifestFile = path.join(genDir, 'AETF500_Phase2A_Evidence_Manifest.json');
-      fs.writeFileSync(manifestFile, JSON.stringify(manifest, null, 2), 'utf-8');
+      if (!fs.existsSync(manifestFile)) {
+        fs.writeFileSync(manifestFile, JSON.stringify(manifest, null, 2), 'utf-8');
+      }
     } catch (err) {
       // Non-blocking disk write
     }

@@ -234,5 +234,49 @@ describe('Marketplace & Billing Engine (P06)', () => {
     assert.strictEqual(unconfiguredStripe.status, 'FAILED');
     assert.ok(unconfiguredStripe.error?.includes('STRIPE_CONNECTOR = NOT_CONFIGURED'));
     assert.ok(unconfiguredStripe.error?.includes('BLOCKED_BY_EXTERNAL_DEPENDENCY'));
+
+    // 7. Test B4 Adapters & URL Validation
+    const { StripePaymentAdapter } = await import('../adapters/StripePaymentAdapter.js');
+    const { ExpressPayPaymentAdapter } = await import('../adapters/ExpressPayPaymentAdapter.js');
+
+    const stripeAdapter = new StripePaymentAdapter();
+    assert.strictEqual(stripeAdapter.validateUrl('https://app.aiemployees.ao/billing/success'), true);
+    assert.strictEqual(stripeAdapter.validateUrl('http://localhost:3000/success'), true);
+    assert.strictEqual(stripeAdapter.validateUrl('javascript:alert(1)'), false);
+    assert.strictEqual(stripeAdapter.validateUrl('https://attacker-phishing.com/success'), false);
+
+    const stripeSessionResult = await stripeAdapter.createSession({
+      amountInCents: 5000,
+      currency: 'usd',
+      tenantId: 'tenant_test',
+      customerEmail: 'test@example.com',
+      invoiceId: 'INV-123',
+      successUrl: 'https://app.aiemployees.ao/success',
+      cancelUrl: 'https://app.aiemployees.ao/cancel',
+      idempotencyKey: 'idem-123'
+    });
+    assert.strictEqual(stripeSessionResult.status, 'FAILED');
+    assert.ok(stripeSessionResult.error?.includes('PROVIDER_NOT_CONFIGURED'));
+
+    const expressPayAdapter = new ExpressPayPaymentAdapter();
+    const epResult = await expressPayAdapter.createSession({
+      amountInCentimos: 100000,
+      currency: 'AOA',
+      tenantId: 'tenant_test',
+      customerPhoneOrEmail: '923000000',
+      invoiceId: 'INV-AOA-123',
+      successUrl: 'https://app.aiemployees.ao/success',
+      cancelUrl: 'https://app.aiemployees.ao/cancel',
+      idempotencyKey: 'idem-ep-123'
+    });
+    assert.strictEqual(epResult.status, 'FAILED');
+    assert.ok(epResult.error?.includes('PROVIDER_NOT_CONFIGURED'));
+
+    // 8. Test B5 Webhook Expired Timestamp Replay Rejection (> 300 seconds)
+    const { StripeWebhookVerifier } = await import('../paymentGateway.js');
+    const oldTimestamp = Math.floor(Date.now() / 1000) - 600; // 10 minutes ago
+    const expiredHeader = `t=${oldTimestamp},v1=${validSig}`;
+    const isExpiredAccepted = StripeWebhookVerifier.verify(genuinePayload, expiredHeader, serverSecret);
+    assert.strictEqual(isExpiredAccepted, false, 'Expired webhook timestamp (> 300s) must be rejected');
   });
 });

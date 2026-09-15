@@ -1,0 +1,13 @@
+﻿{
+  "event_id": "MIG-EVENT-AETF500-CANONICAL-SINGLE-HASH-20260915",
+  "event_type": "CANONICAL_HASH_BASELINE_MIGRATION",
+  "audit_standard": "AETF-500 Patch Correctivo dos Nove Bloqueadores (B3)",
+  "timestamp": "2026-09-15T19:50:00Z",
+  "target_artifact": "generated/repository_truth/02_Original_Build_Log.txt",
+  "historical_hash_linux_lf": "afdee24f1a7b60424a832f569db6ddf3ab15c139c74ba3cce9af2e7dc8827954",
+  "canonical_single_sha256": "712de5212d40c7b4aabe702815e889bc3f956042b486631db875a5d99bf73298",
+  "migration_rationale": "Imposição física de bytes binários puros através de .gitattributes (generated/repository_truth/* -text). Eliminação de tolerância a múltiplos hashes simultâneos (alternative_sha256). Apenas o hash físico canónico é aceito no baseline de verificação.",
+  "gitattributes_enforcement": "generated/repository_truth/* -text",
+  "approver": "Principal Security & Forensic Evidence Auditor",
+  "status": "MIGRATED_CANONICAL_SINGLE_HASH"
+}

@@ -115,6 +115,14 @@ export class StripeWebhookVerifier {
         }
       }
 
+      if (timestamp) {
+        const nowSec = Math.floor(Date.now() / 1000);
+        const tSec = Number(timestamp);
+        if (isNaN(tSec) || Math.abs(nowSec - tSec) > 300) {
+          return false; // Replay window exceeded (5 minutes max tolerance)
+        }
+      }
+
       const signedPayload = timestamp ? `${timestamp}.${payloadRaw}` : payloadRaw;
       const expected = createHmac('sha256', secret).update(signedPayload).digest('hex');
 
@@ -328,15 +336,36 @@ export class PaymentGatewayManager {
       throw new Error(`IDEMPOTENCY_CONFLICT: Payment idempotency key ${proof.idempotencyKey} already settled.`);
     }
 
-    // 2. Tenant & Currency & Amount validation
+    // 2. Tenant & Currency & Amount validation using smallest integer units (cents/cêntimos)
     if (proof.tenantId !== invoice.tenantId) {
       throw new Error(`TENANT_MISMATCH: Proof tenant ${proof.tenantId} does not match invoice tenant ${invoice.tenantId}.`);
     }
     if (proof.currency !== invoice.currency) {
       throw new Error(`CURRENCY_MISMATCH: Proof currency ${proof.currency} does not match invoice currency ${invoice.currency}.`);
     }
-    if (Math.abs(proof.amountPaid - invoice.totalAmount) > 0.01) {
-      throw new Error(`AMOUNT_MISMATCH: Proof amount ${proof.amountPaid} does not match invoice total ${invoice.totalAmount}.`);
+    const expectedCents = Math.round(invoice.totalAmount * 100);
+    const paidCents = Math.round(proof.amountPaid * 100);
+    if (expectedCents !== paidCents) {
+      throw new Error(`AMOUNT_MISMATCH: Proof amount in smallest unit (${paidCents}) does not match invoice total (${expectedCents}).`);
+    }
+
+    // Authenticated payload internal consistency extraction (B5)
+    try {
+      const parsedPayload = JSON.parse(proof.webhookPayloadRaw);
+      if (parsedPayload.tenantId && parsedPayload.tenantId !== invoice.tenantId) {
+        throw new Error(`AUTHENTICATED_PAYLOAD_TENANT_MISMATCH: Payload tenant '${parsedPayload.tenantId}' does not match invoice '${invoice.tenantId}'.`);
+      }
+      if (parsedPayload.currency && parsedPayload.currency !== invoice.currency) {
+        throw new Error(`AUTHENTICATED_PAYLOAD_CURRENCY_MISMATCH: Payload currency '${parsedPayload.currency}' does not match invoice '${invoice.currency}'.`);
+      }
+      if (parsedPayload.amountPaid !== undefined) {
+        const payloadCents = Math.round(Number(parsedPayload.amountPaid) * 100);
+        if (payloadCents !== expectedCents) {
+          throw new Error(`AUTHENTICATED_PAYLOAD_AMOUNT_MISMATCH: Payload amount '${payloadCents}' diverges from invoice total '${expectedCents}'.`);
+        }
+      }
+    } catch (e: any) {
+      if (e.message.startsWith('AUTHENTICATED_PAYLOAD_')) throw e;
     }
 
     // 3. Webhook Secret Resolution (Exclusively from Server Environment, never client body, NO fallback hardcoded secrets)

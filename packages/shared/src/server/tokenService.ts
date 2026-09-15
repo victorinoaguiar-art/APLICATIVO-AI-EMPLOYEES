@@ -58,15 +58,34 @@ const INSECURE_FALLBACK_PATTERNS = [
   'password'
 ];
 
+import { DatabaseSync } from 'node:sqlite';
+import * as os from 'node:os';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
+
+export interface AccountRecord {
+  user_id: string;
+  tenant_id: string;
+  roles: string[];
+  permissions: string[];
+  status: 'ACTIVE' | 'SUSPENDED' | 'REVOKED';
+}
+
 export class TokenService {
   private static instance: TokenService;
   private currentKid: string = 'k1';
   private readonly keys: Map<string, string> = new Map();
   private readonly revokedJtis: Set<string> = new Set();
+  private db: DatabaseSync | null = null;
+  private resolvedDbPath: string | null = null;
   public readonly expectedIssuer: string = 'ai-employee-platform';
   public readonly expectedAudience: string = 'ai-employee-api';
 
-  public constructor(customSecret?: string) {
+  public getDatabasePath(): string | null {
+    return this.resolvedDbPath;
+  }
+
+  public constructor(customSecret?: string, dbPath?: string) {
     const isProd = process.env.NODE_ENV === 'production';
     const envSecret = process.env.AUTH_SECRET || process.env.JWT_SECRET;
 
@@ -78,6 +97,52 @@ export class TokenService {
     } else {
       const activeSecret = customSecret || envSecret || 'dev-test-secret-min-32-chars-aetf500-test-suite';
       this.keys.set(this.currentKid, activeSecret);
+    }
+
+    this.initDatabase(dbPath);
+  }
+
+  private initDatabase(customPath?: string): void {
+    try {
+      let resolvedPath: string;
+      if (customPath) {
+        resolvedPath = customPath;
+      } else if (process.env.AUTH_DB_PATH) {
+        resolvedPath = process.env.AUTH_DB_PATH;
+      } else if (process.env.NODE_ENV === 'test') {
+        resolvedPath = path.join(os.tmpdir(), `aetf_auth_test_${process.pid}.db`);
+      } else {
+        const dataDir = path.resolve(process.cwd(), 'data');
+        if (!fs.existsSync(dataDir)) {
+          fs.mkdirSync(dataDir, { recursive: true });
+        }
+        resolvedPath = path.join(dataDir, 'auth_identity.db');
+      }
+
+      this.resolvedDbPath = resolvedPath;
+      this.db = new DatabaseSync(resolvedPath);
+      this.db.exec(`
+        CREATE TABLE IF NOT EXISTS token_revocations (
+          jti TEXT PRIMARY KEY,
+          revoked_at TEXT NOT NULL,
+          reason TEXT
+        );
+        CREATE TABLE IF NOT EXISTS account_authorizations (
+          user_id TEXT PRIMARY KEY,
+          tenant_id TEXT NOT NULL,
+          roles TEXT NOT NULL,
+          permissions TEXT NOT NULL,
+          status TEXT NOT NULL
+        );
+      `);
+
+      // Load active revocations into in-memory fast set
+      const rows = this.db.prepare('SELECT jti FROM token_revocations').all() as Array<{ jti: string }>;
+      for (const row of rows) {
+        this.revokedJtis.add(row.jti);
+      }
+    } catch {
+      // Fallback to in-memory set if SQLite unavailable in testing shims
     }
   }
 
@@ -96,14 +161,79 @@ export class TokenService {
     this.currentKid = newKid;
   }
 
-  public revokeToken(jti: string): void {
+  public revokeToken(jti: string, reason: string = 'MANUAL_REVOCATION'): void {
     if (jti) {
       this.revokedJtis.add(jti);
+      if (this.db) {
+        try {
+          const stmt = this.db.prepare(`
+            INSERT OR REPLACE INTO token_revocations (jti, revoked_at, reason)
+            VALUES (?, ?, ?)
+          `);
+          stmt.run(jti, new Date().toISOString(), reason);
+        } catch {
+          // In-memory set preserved
+        }
+      }
     }
   }
 
   public isRevoked(jti: string): boolean {
-    return this.revokedJtis.has(jti);
+    if (this.revokedJtis.has(jti)) return true;
+    if (this.db) {
+      try {
+        const stmt = this.db.prepare('SELECT jti FROM token_revocations WHERE jti = ?');
+        const row = stmt.get(jti);
+        if (row) {
+          this.revokedJtis.add(jti);
+          return true;
+        }
+      } catch {
+        // Return memory state
+      }
+    }
+    return false;
+  }
+
+  public upsertAccount(account: AccountRecord): void {
+    if (this.db) {
+      try {
+        const stmt = this.db.prepare(`
+          INSERT OR REPLACE INTO account_authorizations (user_id, tenant_id, roles, permissions, status)
+          VALUES (?, ?, ?, ?, ?)
+        `);
+        stmt.run(
+          account.user_id,
+          account.tenant_id,
+          JSON.stringify(account.roles),
+          JSON.stringify(account.permissions),
+          account.status
+        );
+      } catch {
+        // Fallback
+      }
+    }
+  }
+
+  public getAccount(userId: string): AccountRecord | null {
+    if (this.db) {
+      try {
+        const stmt = this.db.prepare('SELECT * FROM account_authorizations WHERE user_id = ?');
+        const row = stmt.get(userId) as any;
+        if (row) {
+          return {
+            user_id: row.user_id,
+            tenant_id: row.tenant_id,
+            roles: JSON.parse(row.roles),
+            permissions: JSON.parse(row.permissions),
+            status: row.status as any
+          };
+        }
+      } catch {
+        return null;
+      }
+    }
+    return null;
   }
 
   public signToken(

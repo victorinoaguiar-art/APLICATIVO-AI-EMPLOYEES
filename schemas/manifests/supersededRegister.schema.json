@@ -1,0 +1,68 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SupersededManifestRegisterSchema",
+  "type": "object",
+  "required": [
+    "register_id",
+    "audit_standard",
+    "generated_at",
+    "reconciliation_summary",
+    "superseded_manifests"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "register_id": { "type": "string" },
+    "audit_standard": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "reconciliation_summary": {
+      "type": "object",
+      "required": [
+        "total_superseded_manifests",
+        "verified_live_tasks",
+        "cert_l3_approved_count",
+        "externally_verified_tenants",
+        "general_production_status",
+        "controlled_pilot_status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "total_superseded_manifests": { "type": "integer", "minimum": 0 },
+        "verified_live_tasks": { "type": "integer", "const": 0 },
+        "cert_l3_approved_count": { "type": "integer", "const": 0 },
+        "externally_verified_tenants": { "type": "integer", "const": 0 },
+        "general_production_status": { "type": "string", "enum": ["BLOCKED", "ACTIVE"] },
+        "controlled_pilot_status": { "type": "string" }
+      }
+    },
+    "superseded_manifests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "legacy_path",
+          "reason",
+          "canonical_successor",
+          "superseded_at",
+          "reconciled_state"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "legacy_path": { "type": "string" },
+          "reason": { "type": "string" },
+          "canonical_successor": { "type": "string" },
+          "superseded_at": { "type": "string", "format": "date-time" },
+          "reconciled_state": {
+            "type": "object",
+            "required": ["verified_live_tasks", "cert_l3_approved", "status"],
+            "additionalProperties": false,
+            "properties": {
+              "verified_live_tasks": { "type": "integer", "const": 0 },
+              "cert_l3_approved": { "type": "integer", "const": 0 },
+              "status": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

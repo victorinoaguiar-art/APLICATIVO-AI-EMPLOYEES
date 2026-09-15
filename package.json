@@ -8,7 +8,7 @@
     "packages/*"
   ],
   "engines": {
-    "node": ">=20.11.0",
+    "node": ">=22.0.0",
     "npm": ">=10.0.0"
   },
   "scripts": {
@@ -34,8 +34,12 @@
     "dev:web": "npm run dev --workspace=apps/web"
   },
   "devDependencies": {
-    "@types/node": "^20.11.0",
+    "@types/node": "^22.0.0",
     "caniuse-lite": "^1.0.30001810",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "postcss": "^8.5.28",
+    "qs": "^6.16.0"
   }
 }

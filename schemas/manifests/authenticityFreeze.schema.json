@@ -1,0 +1,34 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AuthenticityProductionFreezeManifestSchema",
+  "type": "object",
+  "required": ["manifest_status", "reconciliation_note", "summary", "timestamp"],
+  "additionalProperties": false,
+  "properties": {
+    "manifest_status": { "type": "string" },
+    "reconciliation_note": { "type": "string" },
+    "summary": {
+      "type": "object",
+      "required": [
+        "artifact_id",
+        "baseline_id",
+        "freeze_version",
+        "total_claimed_live_tasks",
+        "authentic_verified_live_tasks",
+        "internal_authenticity_audit"
+      ],
+      "properties": {
+        "artifact_id": { "type": "string" },
+        "baseline_id": { "type": "string" },
+        "freeze_version": { "type": "string" },
+        "norma_interna": { "type": "string" },
+        "hash_algorithm": { "type": "string" },
+        "total_claimed_live_tasks": { "type": "number" },
+        "authentic_verified_live_tasks": { "type": "number", "const": 0 },
+        "authenticity_rate_pct": { "type": "number" },
+        "internal_authenticity_audit": { "type": "string" }
+      }
+    },
+    "timestamp": { "type": "string" }
+  }
+}

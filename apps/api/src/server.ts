@@ -106,43 +106,53 @@ app.post('/api/v1/auth/token', (req, res) => {
   });
 });
 
-// Emissor de teste estritamente restrito a desenvolvimento e testes automatizados
-app.post('/api/v1/auth/test-token', (req, res) => {
-  const isDevOrTest = process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development';
-  const allowTestIssuer = process.env.ALLOW_TEST_TOKEN_ISSUER === 'true';
+// Emissor de teste estritamente desativado fisicamente em produção (B6)
+if (process.env.NODE_ENV !== 'production') {
+  app.post('/api/v1/auth/test-token', (req, res) => {
+    const allowTestIssuer = process.env.ALLOW_TEST_TOKEN_ISSUER === 'true' || process.env.NODE_ENV === 'test';
 
-  if (!isDevOrTest || !allowTestIssuer) {
-    return res.status(404).json({
-      error: 'NOT_FOUND: Test token issuer is disabled or forbidden in this environment.',
-      code: 'TEST_ISSUER_DISABLED'
-    });
-  }
-
-  const { tenantId, userId, roles, permissions, adminAuthKey } = req.body;
-  if (!tenantId || !userId) {
-    return res.status(400).json({ error: 'tenantId and userId are required' });
-  }
-
-  // Se o pedido requisitar SUPER_ADMIN, exige chave interna de autorização administrativa de teste
-  const requestedRoles = roles || ['USER'];
-  if (requestedRoles.includes('SUPER_ADMIN')) {
-    const expectedAdminKey = process.env.TEST_ADMIN_AUTHORIZATION_KEY || 'test-admin-auth-authorized-key-2026';
-    if (!adminAuthKey || adminAuthKey !== expectedAdminKey) {
-      return res.status(403).json({
-        error: 'FORBIDDEN: Self-declared SUPER_ADMIN role rejected without valid admin authorization key',
-        code: 'UNAUTHORIZED_ROLE_ESCALATION'
+    if (!allowTestIssuer) {
+      return res.status(404).json({
+        error: 'NOT_FOUND: Test token issuer is disabled in this environment.',
+        code: 'TEST_ISSUER_DISABLED'
       });
     }
-  }
 
-  const token = tokenService.signToken({
-    tenant_id: tenantId,
-    user_id: userId,
-    roles: requestedRoles,
-    permissions: permissions || ['READ']
+    const { tenantId, userId, roles, permissions, adminAuthKey } = req.body;
+    if (!tenantId || !userId) {
+      return res.status(400).json({ error: 'tenantId and userId are required' });
+    }
+
+    // Se o pedido requisitar SUPER_ADMIN, exige chave explícita sem nenhum fallback
+    const requestedRoles = roles || ['USER'];
+    if (requestedRoles.includes('SUPER_ADMIN')) {
+      const expectedAdminKey = process.env.TEST_ADMIN_AUTHORIZATION_KEY;
+      if (!expectedAdminKey || !adminAuthKey || adminAuthKey !== expectedAdminKey) {
+        return res.status(403).json({
+          error: 'FORBIDDEN: Self-declared SUPER_ADMIN role rejected without valid admin authorization key',
+          code: 'UNAUTHORIZED_ROLE_ESCALATION'
+        });
+      }
+    }
+
+    // Persiste a conta autorizada de teste para validação de identidade
+    tokenService.upsertAccount({
+      user_id: userId,
+      tenant_id: tenantId,
+      roles: requestedRoles,
+      permissions: permissions || ['READ'],
+      status: 'ACTIVE'
+    });
+
+    const token = tokenService.signToken({
+      tenant_id: tenantId,
+      user_id: userId,
+      roles: requestedRoles,
+      permissions: permissions || ['READ']
+    });
+    res.json({ token, token_type: 'Bearer', expires_in: 3600 });
   });
-  res.json({ token, token_type: 'Bearer', expires_in: 3600 });
-});
+}
 
 // Middleware de Autenticação e Autorização Multi-Tenant Rigoroso
 app.use((req, res, next) => {
@@ -172,6 +182,25 @@ app.use((req, res, next) => {
   }
 
   const payload = verifyResult.payload;
+
+  // Verificação de conta persistente (B6)
+  const account = tokenService.getAccount(payload.user_id);
+  if (account) {
+    if (account.status !== 'ACTIVE') {
+      return res.status(403).json({
+        error: `FORBIDDEN: Account for user '${payload.user_id}' is ${account.status}.`,
+        code: 'ACCOUNT_DISABLED',
+        correlationId: (req as any).correlationId
+      });
+    }
+    if (account.tenant_id !== payload.tenant_id) {
+      return res.status(403).json({
+        error: `CROSS_TENANT_ACCESS_FORBIDDEN: Authenticated account belongs to '${account.tenant_id}', but token requested '${payload.tenant_id}'.`,
+        code: 'TENANT_MISMATCH',
+        correlationId: (req as any).correlationId
+      });
+    }
+  }
 
   // Enforce Tenant Alignment: Se header x-tenant-id for fornecido, DEVE coincidir com o token
   const headerTenantId = req.headers['x-tenant-id'] as string;

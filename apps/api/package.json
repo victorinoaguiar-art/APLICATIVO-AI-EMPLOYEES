@@ -17,6 +17,7 @@
     "@ai-employee/policies": "1.0.0",
     "@ai-employee/marketplace-billing": "1.0.0",
     "express": "^4.19.2",
+    "qs": "^6.16.0",
     "cors": "^2.8.5"
   },
   "devDependencies": {

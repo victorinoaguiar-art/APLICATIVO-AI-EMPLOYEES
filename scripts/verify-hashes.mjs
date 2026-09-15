@@ -51,9 +51,7 @@ const checks = [
   {
     target_object: 'npm_run_build_log',
     file_name: repro.pipeline_results.npm_run_build.log_file,
-    expected_sha256: repro.pipeline_results.npm_run_build.log_sha256,
-    // Cross-platform binary reconciliation documented in EvidenceReconciliationEvent.json
-    alternative_sha256: 'afdee24f1a7b60424a832f569db6ddf3ab15c139c74ba3cce9af2e7dc8827954'
+    expected_sha256: repro.pipeline_results.npm_run_build.log_sha256
   }
 ];
 
@@ -83,8 +81,7 @@ for (const item of checks) {
   const computed = crypto.createHash('sha256').update(buf).digest('hex');
   evidenceSha256[item.file_name] = computed;
 
-  const match = computed.toLowerCase() === item.expected_sha256.toLowerCase() ||
-                (item.alternative_sha256 && computed.toLowerCase() === item.alternative_sha256.toLowerCase());
+  const match = computed.toLowerCase() === item.expected_sha256.toLowerCase();
 
   if (!match) allPassed = false;
 

@@ -1,0 +1,23 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FinalProductionBaselineManifestSchema",
+  "type": "object",
+  "required": [
+    "artifact_id",
+    "baseline_id",
+    "baseline_version",
+    "total_employees",
+    "verified_live_business_tasks",
+    "production_freeze_status"
+  ],
+  "properties": {
+    "manifest_status": { "type": "string" },
+    "reconciliation_note": { "type": "string" },
+    "artifact_id": { "type": "string" },
+    "baseline_id": { "type": "string" },
+    "baseline_version": { "type": "string" },
+    "total_employees": { "type": "integer" },
+    "verified_live_business_tasks": { "type": "integer", "const": 0 },
+    "production_freeze_status": { "type": "string" }
+  }
+}
