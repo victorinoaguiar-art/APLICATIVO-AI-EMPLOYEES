@@ -1,15 +1,12 @@
+import * as crypto from 'crypto';
+
 export function safeHash(input: string): string {
   try {
-    // Dynamic require so bundlers won't force Node's crypto into browser builds
-    const req = typeof eval !== 'undefined' ? eval('require') : null;
-    if (req) {
-      const cryptoModule = req('crypto');
-      if (cryptoModule && cryptoModule.createHash) {
-        return cryptoModule.createHash('sha256').update(input).digest('hex');
-      }
+    if (crypto && typeof crypto.createHash === 'function') {
+      return crypto.createHash('sha256').update(input).digest('hex');
     }
   } catch (e) {
-    // Browser fallback
+    // Fallback
   }
 
   let hash1 = 5381;
@@ -26,19 +23,15 @@ export function safeHash(input: string): string {
 
 export function safeUUID(): string {
   try {
-    const req = typeof eval !== 'undefined' ? eval('require') : null;
-    if (req) {
-      const cryptoModule = req('crypto');
-      if (cryptoModule && cryptoModule.randomUUID) {
-        return cryptoModule.randomUUID();
-      }
+    if (crypto && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
     }
   } catch (e) {
-    // Browser fallback
+    // Fallback
   }
 
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID();
+  if (typeof globalThis !== 'undefined' && (globalThis as any).crypto && typeof (globalThis as any).crypto.randomUUID === 'function') {
+    return (globalThis as any).crypto.randomUUID();
   }
 
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {

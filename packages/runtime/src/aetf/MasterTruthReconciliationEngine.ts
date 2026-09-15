@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { execSync } from 'node:child_process';
 import { RolePackRegistry } from '@ai-employee/rolepack';
 import { sha256String } from '@ai-employee/shared';
 
@@ -121,7 +122,6 @@ export class MasterTruthReconciliationEngine {
 
   private getDynamicGitCommitSha(): string {
     try {
-      const { execSync } = eval('require')('child_process');
       const sha = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
       return sha || 'UNVERIFIED/DIRTY';
     } catch {

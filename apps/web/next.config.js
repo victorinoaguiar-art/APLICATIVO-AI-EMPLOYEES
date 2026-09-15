@@ -8,7 +8,12 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, webpack }) => {
+    config.plugins.push(
+      new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
+        resource.request = resource.request.replace(/^node:/, '');
+      })
+    );
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -16,10 +21,9 @@ const nextConfig = {
         fs: false,
         path: false,
         stream: false,
-        'node:crypto': false,
-        'node:fs': false,
-        'node:path': false,
-        'node:stream': false,
+        sqlite: false,
+        'node:sqlite': false,
+        child_process: false,
       };
     }
     return config;

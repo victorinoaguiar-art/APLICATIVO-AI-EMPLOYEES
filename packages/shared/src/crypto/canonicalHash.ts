@@ -1,16 +1,13 @@
+import * as crypto from 'crypto';
+
 /**
  * Cryptographic SHA-256 for binary buffers.
  * Complies with AETF-500 Master Forensic Prompt Section 8.
- * Safe for both Node.js (uses crypto.createHash) and bundler environments.
  */
 export function sha256Bytes(content: Buffer | Uint8Array): string {
   try {
-    const req = typeof eval !== 'undefined' ? eval('require') : null;
-    if (req) {
-      const cryptoModule = req('crypto');
-      if (cryptoModule && cryptoModule.createHash) {
-        return cryptoModule.createHash('sha256').update(content).digest('hex');
-      }
+    if (crypto && typeof crypto.createHash === 'function') {
+      return crypto.createHash('sha256').update(content).digest('hex');
     }
   } catch {
     // Fallback
@@ -34,12 +31,8 @@ export function sha256Bytes(content: Buffer | Uint8Array): string {
  */
 export function sha256String(content: string): string {
   try {
-    const req = typeof eval !== 'undefined' ? eval('require') : null;
-    if (req) {
-      const cryptoModule = req('crypto');
-      if (cryptoModule && cryptoModule.createHash) {
-        return cryptoModule.createHash('sha256').update(content, 'utf8').digest('hex');
-      }
+    if (crypto && typeof crypto.createHash === 'function') {
+      return crypto.createHash('sha256').update(content, 'utf8').digest('hex');
     }
   } catch {
     // Fallback

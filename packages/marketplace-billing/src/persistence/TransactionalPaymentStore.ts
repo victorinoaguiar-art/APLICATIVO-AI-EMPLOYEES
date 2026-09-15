@@ -1,5 +1,4 @@
-// Load node:sqlite safely with dynamic require for Node 22 runtime
-const { DatabaseSync } = (typeof eval !== 'undefined' ? eval('require')('node:sqlite') : {}) as any;
+import { DatabaseSync } from 'node:sqlite';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import * as os from 'node:os';

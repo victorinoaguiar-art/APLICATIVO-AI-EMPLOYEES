@@ -15,19 +15,18 @@ function simpleSha256(input: string): string {
   return sha256String(input);
 }
 
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+
 function writeJsonFileSafely(filePath: string, data: any): void {
   try {
-    if (typeof process !== 'undefined' && process.versions && process.versions.node) {
-      const fs = eval('require')('fs');
-      const path = eval('require')('path');
-      const dir = path.dirname(filePath);
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-      }
-      fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+    const dir = path.dirname(filePath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
     }
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
   } catch (err) {
-    // Ignore file write in browser environment
+    // Ignore file write error
   }
 }
 
