@@ -1,0 +1,4 @@
+# Preserve repository truth files as exact binary byte streams
+* text=auto eol=lf
+generated/repository_truth/* -text
+*.txt -text

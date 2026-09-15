@@ -95,6 +95,26 @@ describe('Marketplace & Billing Engine (P06)', () => {
 
     const runId = Date.now() + '_' + Math.random().toString(36).slice(2);
 
+    // Negative Test: Missing server secret throws WEBHOOK_SECRET_MISSING
+    delete process.env.EXPRESSPAY_WEBHOOK_SECRET;
+    delete process.env.WEBHOOK_SECRET;
+    assert.throws(() => {
+      gateway.settleInvoice(invoice.invoiceId, {
+        providerTransactionId: 'txn_no_secret',
+        webhookSignature: 'sig',
+        webhookPayloadRaw: '{}',
+        amountPaid: 114000,
+        currency: 'AOA' as const,
+        tenantId: 'tenant_sandbox_test',
+        idempotencyKey: `idem_no_sec_${runId}`
+      });
+    }, /WEBHOOK_SECRET_MISSING/);
+
+    // Explicit test secrets configured in environment (NO fallback strings)
+    const testSecret = 'ep_test_server_secret_secure_isolated_32_chars';
+    process.env.EXPRESSPAY_WEBHOOK_SECRET = testSecret;
+    process.env.STRIPE_WEBHOOK_SECRET = 'stripe_test_server_secret_secure_isolated_32_chars';
+
     // 4. Settle Invoice rejects fraudulent webhook signatures
     const fakeProof = {
       providerTransactionId: 'txn_fake_99',
@@ -129,7 +149,7 @@ describe('Marketplace & Billing Engine (P06)', () => {
     }, /WEBHOOK_SIGNATURE_INVALID/);
 
     // Negative Test: Tampered payload (signature valid for original, but payload altered)
-    const serverSecret = process.env.EXPRESSPAY_WEBHOOK_SECRET || process.env.WEBHOOK_SECRET || 'test_webhook_secret_expresspay_2026';
+    const serverSecret = process.env.EXPRESSPAY_WEBHOOK_SECRET!;
     const genuinePayload = '{"provider":"multicaixa_express","event":"payment.confirmed","amount":114000}';
     const validSig = createHmac('sha256', serverSecret).update(genuinePayload).digest('hex');
     const tamperedPayload = '{"provider":"multicaixa_express","event":"payment.confirmed","amount":999999}';
@@ -161,7 +181,7 @@ describe('Marketplace & Billing Engine (P06)', () => {
 
     // 5. Settle Invoice accepts genuine signed webhook using server secret
     const validProof = {
-      providerTransactionId: 'txn_valid_7788',
+      providerTransactionId: `txn_valid_7788_${runId}`,
       webhookSignature: validSig,
       webhookPayloadRaw: genuinePayload,
       amountPaid: 114000,
@@ -181,13 +201,38 @@ describe('Marketplace & Billing Engine (P06)', () => {
       // Attempting to settle another invoice with already-used idempotencyKey
       gateway.settleInvoice(invoice2.invoiceId, {
         ...validProof,
-        providerTransactionId: 'txn_replay'
+        providerTransactionId: `txn_replay_${runId}`
       });
     }, /IDEMPOTENCY_CONFLICT/);
 
     // Verify transactional persistence by reading directly from storage
     const reloadedInvoice = gateway.getInvoice(invoice.invoiceId);
     assert.strictEqual(reloadedInvoice?.status, 'PAID');
-    assert.strictEqual(reloadedInvoice?.settlementEvidence?.providerTransactionId, 'txn_valid_7788');
+    assert.strictEqual(reloadedInvoice?.settlementEvidence?.providerTransactionId, `txn_valid_7788_${runId}`);
+
+    // 6. Test Unconfigured Provider Handling (Point 6 of forensic prompt)
+    const unconfiguredAoa = await gateway.createCheckoutSession({
+      tenantId: 'tenant_sandbox_test',
+      planId: 'PLAN_500_PILOT',
+      amount: 500000,
+      currency: 'AOA',
+      customerEmail: 'real_client@example.com',
+      isSandbox: false
+    });
+    assert.strictEqual(unconfiguredAoa.status, 'FAILED');
+    assert.ok(unconfiguredAoa.error?.includes('EXPRESSPAY_CONNECTOR = NOT_CONFIGURED'));
+    assert.ok(unconfiguredAoa.error?.includes('BLOCKED_BY_EXTERNAL_DEPENDENCY'));
+
+    const unconfiguredStripe = await gateway.createCheckoutSession({
+      tenantId: 'tenant_sandbox_test',
+      planId: 'PLAN_500_PILOT',
+      amount: 1000,
+      currency: 'USD',
+      customerEmail: 'real_client@example.com',
+      isSandbox: false
+    });
+    assert.strictEqual(unconfiguredStripe.status, 'FAILED');
+    assert.ok(unconfiguredStripe.error?.includes('STRIPE_CONNECTOR = NOT_CONFIGURED'));
+    assert.ok(unconfiguredStripe.error?.includes('BLOCKED_BY_EXTERNAL_DEPENDENCY'));
   });
 });

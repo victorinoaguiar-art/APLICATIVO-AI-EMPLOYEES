@@ -1,13 +1,19 @@
 {
-  "receipt_id": "RCPT-CONTRADICTION-1789489571282",
+  "receipt_id": "RCPT-CONTRADICTION-SCAN-1789496773707",
   "gate_name": "ANTI_CONTRADICTION_GATE",
   "verifier_name": "ContradictoryClaimsScanner",
-  "generated_at": "2026-09-15T16:26:11.282Z",
+  "generated_at": "2026-09-15T18:26:13.707Z",
   "status": "PASS",
-  "checked_items_count": 4,
-  "failure_count": 0,
-  "details": {
-    "findings": [],
-    "conclusion": "ZERO_CONTRADICTORY_CLAIMS"
-  }
+  "checked_manifests": [
+    "generated/AETF500_CERTL3_Authenticity_ProductionFreeze_Manifest.json",
+    "generated/AETF500_CERTL3_LiveSampleExpansion_Manifest.json",
+    "generated/AETF500_CERTL3_FinalProductionBaseline_Manifest.json",
+    "generated/reconciliation/SupersededManifestRegister.json"
+  ],
+  "findings": {
+    "verified_live_tasks_claims": 0,
+    "unverified_cert_l3_claims": 0,
+    "contradictory_claims_detected": 0
+  },
+  "conclusion": "ZERO_CONTRADICTORY_CLAIMS_DETECTED"
 }

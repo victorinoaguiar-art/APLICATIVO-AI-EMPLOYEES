@@ -38,4 +38,8 @@ scratch/zip_test_extract/
 *.bundle
 packages/*/generated/
 billing_store.json
-
+*.db
+*.db-journal
+*.db-wal
+data/
+packages/*/data/

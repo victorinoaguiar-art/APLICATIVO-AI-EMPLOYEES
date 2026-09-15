@@ -81,6 +81,12 @@ app.use(express.json({
   }
 }));
 
+// Configuração de ambiente e Fail-Fast Security Gate
+import { enforceStartupConfigGate } from './config/envValidator.js';
+if (process.env.NODE_ENV !== 'test' && !process.env.SKIP_STARTUP_CONFIG_CHECK) {
+  enforceStartupConfigGate();
+}
+
 // Serviço de tokens JWT / HMAC
 import { tokenService } from './auth/tokenService.js';
 
@@ -89,20 +95,50 @@ const PUBLIC_PATHS = [
   '/api/v1/health',
   '/api/v1/catalog/integrity',
   '/api/v1/security/threat-report',
-  '/api/v1/auth/token',
   '/api/v1/billing/webhook' // Protegido pela assinatura criptográfica de webhook do provedor
 ];
 
-// Endpoint de emissão de tokens de autenticação
+// Endpoint público de emissão arbitrária: ELIMINADO (Rejeita com 403)
 app.post('/api/v1/auth/token', (req, res) => {
-  const { tenantId, userId, roles, permissions } = req.body;
+  return res.status(403).json({
+    error: 'PUBLIC_TOKEN_ISSUER_DISABLED: Arbitrary public token issuance has been eliminated. Integrate with verified IdP or authenticated enterprise SSO.',
+    code: 'PUBLIC_TOKEN_ISSUANCE_FORBIDDEN'
+  });
+});
+
+// Emissor de teste estritamente restrito a desenvolvimento e testes automatizados
+app.post('/api/v1/auth/test-token', (req, res) => {
+  const isDevOrTest = process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development';
+  const allowTestIssuer = process.env.ALLOW_TEST_TOKEN_ISSUER === 'true';
+
+  if (!isDevOrTest || !allowTestIssuer) {
+    return res.status(404).json({
+      error: 'NOT_FOUND: Test token issuer is disabled or forbidden in this environment.',
+      code: 'TEST_ISSUER_DISABLED'
+    });
+  }
+
+  const { tenantId, userId, roles, permissions, adminAuthKey } = req.body;
   if (!tenantId || !userId) {
     return res.status(400).json({ error: 'tenantId and userId are required' });
   }
+
+  // Se o pedido requisitar SUPER_ADMIN, exige chave interna de autorização administrativa de teste
+  const requestedRoles = roles || ['USER'];
+  if (requestedRoles.includes('SUPER_ADMIN')) {
+    const expectedAdminKey = process.env.TEST_ADMIN_AUTHORIZATION_KEY || 'test-admin-auth-authorized-key-2026';
+    if (!adminAuthKey || adminAuthKey !== expectedAdminKey) {
+      return res.status(403).json({
+        error: 'FORBIDDEN: Self-declared SUPER_ADMIN role rejected without valid admin authorization key',
+        code: 'UNAUTHORIZED_ROLE_ESCALATION'
+      });
+    }
+  }
+
   const token = tokenService.signToken({
     tenant_id: tenantId,
     user_id: userId,
-    roles: roles || ['USER'],
+    roles: requestedRoles,
     permissions: permissions || ['READ']
   });
   res.json({ token, token_type: 'Bearer', expires_in: 3600 });
@@ -142,6 +178,15 @@ app.use((req, res, next) => {
   if (headerTenantId && headerTenantId !== payload.tenant_id) {
     return res.status(403).json({
       error: `CROSS_TENANT_ACCESS_FORBIDDEN: Header x-tenant-id '${headerTenantId}' does not match authenticated token tenant '${payload.tenant_id}'.`,
+      code: 'TENANT_MISMATCH',
+      correlationId: (req as any).correlationId
+    });
+  }
+
+  // Enforce Tenant Alignment: Se body fornecer tenantId divergente, rejeita
+  if (req.body && typeof req.body === 'object' && req.body.tenantId && req.body.tenantId !== payload.tenant_id) {
+    return res.status(403).json({
+      error: `CROSS_TENANT_ACCESS_FORBIDDEN: Body tenantId '${req.body.tenantId}' does not match authenticated token tenant '${payload.tenant_id}'.`,
       code: 'TENANT_MISMATCH',
       correlationId: (req as any).correlationId
     });

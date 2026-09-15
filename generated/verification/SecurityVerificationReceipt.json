@@ -1,11 +1,28 @@
 {
-  "receipt_id": "RCPT-SECURITY-1789489573020",
+  "receipt_id": "RCPT-SECURITY-1789496788246",
   "gate_name": "SECURITY_GATE",
-  "verifier_name": "StaticSecurityVerifier",
-  "generated_at": "2026-09-15T16:26:13.020Z",
+  "source_commit_sha": "b5612c25a9749e39013d0bcf24675f2a085f1b5a",
+  "working_tree_state": "DIRTY",
+  "command": "node scripts/verify-security.mjs",
+  "environment": {
+    "os": "win32",
+    "node": "v22.23.0"
+  },
+  "started_at": "2026-09-15T18:26:27.907Z",
+  "completed_at": "2026-09-15T18:26:28.245Z",
+  "exit_code": 0,
+  "evidence_paths": [
+    ".gitignore",
+    "apps/api/src/server.ts"
+  ],
+  "evidence_sha256": {
+    ".gitignore": "756cf72dde8c16f53f40363d08288e5eb8a911d238cd02f962259f7c9c3ed7e7",
+    "apps/api/src/server.ts": "5f39bebb0f736df78ecb02724ec02d421148b0031cfb048e3c97b81b957ac796"
+  },
+  "verifier_name": "BehavioralSecurityAuditor",
+  "verifier_version": "2.0.0",
   "status": "PASS",
-  "checked_items_count": 4,
-  "failure_count": 0,
+  "findings": "All behavioral and static security controls verified: zero fallback secrets, strict alg whitelist, timingSafeEqual enforced, fail-closed CORS active.",
   "details": {
     "checks": [
       {
@@ -14,19 +31,24 @@
         "detail": "package-lock.json is tracked and not ignored"
       },
       {
-        "check": "NO_LIVE_SECRETS",
+        "check": "NO_FALLBACK_OR_LIVE_SECRETS",
         "status": "PASS",
-        "detail": "Zero live production API credentials found in source files"
+        "detail": "Zero known fallback or live credentials present in source files"
       },
       {
-        "check": "CONSTANT_TIME_CRYPTO_VERIFICATION",
+        "check": "BEHAVIORAL_TOKEN_SECURITY",
         "status": "PASS",
-        "detail": "crypto.timingSafeEqual enforced in token and webhook verifiers"
+        "detail": "TokenService correctly verified HMAC, rejected alg \"none\", and enforced JTI revocation"
       },
       {
-        "check": "FAIL_CLOSED_CORS_POLICY",
+        "check": "BEHAVIORAL_PAYMENT_SECURITY",
         "status": "PASS",
-        "detail": "Fail-closed CORS active for cross-origin authenticated requests"
+        "detail": "PaymentGateway correctly rejected invalid webhook signature in constant time"
+      },
+      {
+        "check": "FAIL_CLOSED_CORS_AND_AUTH_GATE",
+        "status": "PASS",
+        "detail": "Fail-closed CORS active and public arbitrary token issuer completely eliminated"
       }
     ]
   }

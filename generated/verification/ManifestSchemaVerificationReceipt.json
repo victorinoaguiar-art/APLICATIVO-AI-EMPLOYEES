@@ -1,31 +1,58 @@
 {
-  "receipt_id": "RCPT-SCHEMA-1789489571176",
+  "receipt_id": "RCPT-SCHEMA-1789496785466",
   "gate_name": "MANIFEST_SCHEMA_GATE",
-  "verifier_name": "ManifestSchemaVerifier",
-  "generated_at": "2026-09-15T16:26:11.176Z",
+  "source_commit_sha": "b5612c25a9749e39013d0bcf24675f2a085f1b5a",
+  "working_tree_state": "DIRTY",
+  "command": "node scripts/validate-manifests.mjs",
+  "environment": {
+    "os": "win32",
+    "node": "v22.23.0",
+    "ajv_version": "Ajv"
+  },
+  "started_at": "2026-09-15T18:26:25.400Z",
+  "completed_at": "2026-09-15T18:26:25.466Z",
+  "exit_code": 0,
+  "evidence_paths": [
+    "generated/reconciliation/SupersededManifestRegister.json",
+    "generated/AETF500_CERTL3_Authenticity_ProductionFreeze_Manifest.json",
+    "generated/AETF500_CERTL3_LiveSampleExpansion_Manifest.json",
+    "generated/AETF500_CERTL3_FinalProductionBaseline_Manifest.json"
+  ],
+  "evidence_sha256": {
+    "generated/reconciliation/SupersededManifestRegister.json": "1711f7ae0d09347f033b7ae1eb4a6fe00388c889a17835f4e28c781bf84a27a3",
+    "generated/AETF500_CERTL3_Authenticity_ProductionFreeze_Manifest.json": "ff0284b256ea64a791bb32ee4ac7b741739f21e7bc795482cdfebd2709b87bcf",
+    "generated/AETF500_CERTL3_LiveSampleExpansion_Manifest.json": "6249ed11360053f355caad8d2721998f230fec26b54603a001e9d00eed55bed3",
+    "generated/AETF500_CERTL3_FinalProductionBaseline_Manifest.json": "b03d982ba49b576935f1b78a8582410beb0838f32bf14b9ecf19794ceca80e6d"
+  },
+  "verifier_name": "AjvStrictSchemaVerifier",
+  "verifier_version": "8.17.1",
   "status": "PASS",
-  "checked_items_count": 4,
-  "failure_count": 0,
+  "findings": "All core manifests strictly validated against Ajv JSON Schemas with format checks and zero schema violations.",
   "details": {
+    "checked_manifests_count": 4,
     "results": [
       {
         "file": "generated/reconciliation/SupersededManifestRegister.json",
-        "status": "VALID_SCHEMA",
+        "status": "VALID_AJV_SCHEMA",
+        "schema": "SupersededManifestRegister",
         "keys_count": 5
       },
       {
         "file": "generated/AETF500_CERTL3_Authenticity_ProductionFreeze_Manifest.json",
-        "status": "VALID_SCHEMA",
+        "status": "VALID_AJV_SCHEMA",
+        "schema": "AuthenticityProductionFreezeManifest",
         "keys_count": 4
       },
       {
         "file": "generated/AETF500_CERTL3_LiveSampleExpansion_Manifest.json",
-        "status": "VALID_SCHEMA",
+        "status": "VALID_AJV_SCHEMA",
+        "schema": "LiveSampleExpansionManifest",
         "keys_count": 4
       },
       {
         "file": "generated/AETF500_CERTL3_FinalProductionBaseline_Manifest.json",
-        "status": "VALID_SCHEMA",
+        "status": "VALID_AJV_SCHEMA",
+        "schema": "FinalProductionBaselineManifest",
         "keys_count": 22
       }
     ]

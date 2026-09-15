@@ -1,11 +1,30 @@
 {
-  "receipt_id": "RCPT-HASH-1789489572007",
+  "receipt_id": "RCPT-HASH-1789496786646",
   "gate_name": "PHYSICAL_HASH_GATE",
+  "source_commit_sha": "b5612c25a9749e39013d0bcf24675f2a085f1b5a",
+  "working_tree_state": "DIRTY",
+  "command": "node scripts/verify-hashes.mjs",
+  "environment": {
+    "os": "win32",
+    "node": "v22.23.0"
+  },
+  "started_at": "2026-09-15T18:26:26.638Z",
+  "completed_at": "2026-09-15T18:26:26.646Z",
+  "exit_code": 0,
+  "evidence_paths": [
+    "generated/repository_truth/02_Original_Install_Log.txt",
+    "generated/repository_truth/03_Original_Test_Log.txt",
+    "generated/repository_truth/02_Original_Build_Log.txt"
+  ],
+  "evidence_sha256": {
+    "02_Original_Install_Log.txt": "8e4f1b5346776e542594956e806e332b85660af5a56657834332674dc6a4c334",
+    "03_Original_Test_Log.txt": "3211e10c027ff94e616e115db0c8dd393226d8f65394f0d4672b889ad315b29f",
+    "02_Original_Build_Log.txt": "712de5212d40c7b4aabe702815e889bc3f956042b486631db875a5d99bf73298"
+  },
   "verifier_name": "PhysicalHashVerifier",
-  "generated_at": "2026-09-15T16:26:12.007Z",
+  "verifier_version": "2.0.0",
   "status": "PASS",
-  "checked_items_count": 3,
-  "failure_count": 0,
+  "findings": "All repository truth physical logs matched cryptographic SHA-256 baseline with binary preservation.",
   "details": {
     "truth_directory": "generated/repository_truth",
     "results": [

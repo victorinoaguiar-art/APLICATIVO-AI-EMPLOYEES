@@ -35,11 +35,40 @@ jobs:
       - name: Deterministic Install (npm ci)
         run: npm ci
 
-      - name: Deterministic Pipeline Verification (Clean, Typecheck, Build Packages, Build Web, Test, Manifests, Hashes, Security)
-        run: npm run verify
+      - name: Monorepo Clean
+        run: npm run clean
+
+      - name: Strict Typecheck
+        run: npm run typecheck
+
+      - name: Build Monorepo Packages
+        run: npm run build:packages
+
+      - name: Build Web Application
+        run: npm run build:web
+
+      - name: Automated Test Suites
+        run: npm test
+
+      - name: Ajv Manifest & Domain Cardinality Validation
+        run: npm run validate:manifests
+
+      - name: Physical Hash Cryptographic Verification
+        run: npm run verify:hashes
+
+      - name: Security & Behavioral Controls Verification
+        run: npm run verify:security
+
+      - name: Transactional Payment & Webhook Verification
+        run: npm run verify:payments
+
+      - name: Multi-Tenant Authentication & Authorization Verification
+        run: npm run verify:auth
 
       - name: Ensure Clean Working Tree
-        run: git diff --exit-code
+        run: |
+          git status --porcelain
+          git diff --exit-code
 
       - name: Upload Build Artifacts
         if: always()

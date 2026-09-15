@@ -157,4 +157,161 @@ describe('AETF-500 Multi-Tenant Authentication & Authorization Hardening', () =>
     assert.ok(data.rolePacks);
     assert.strictEqual(data.count, 500);
   });
+
+  it('8. Public endpoint /api/v1/auth/token rejects arbitrary issuance (403)', async () => {
+    const res = await fetch(`${baseUrl}/api/v1/auth/token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tenantId: 'tenant_victim',
+        userId: 'attacker',
+        roles: ['SUPER_ADMIN']
+      })
+    });
+    assert.strictEqual(res.status, 403);
+    const data = await res.json() as any;
+    assert.strictEqual(data.code, 'PUBLIC_TOKEN_ISSUANCE_FORBIDDEN');
+  });
+
+  it('9. Test token issuer rejects self-declared SUPER_ADMIN without admin authorization key (403)', async () => {
+    process.env.ALLOW_TEST_TOKEN_ISSUER = 'true';
+    const res = await fetch(`${baseUrl}/api/v1/auth/test-token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tenantId: 'tenant_alpha',
+        userId: 'usr_unauthorized',
+        roles: ['SUPER_ADMIN'],
+        adminAuthKey: 'invalid_key'
+      })
+    });
+    assert.strictEqual(res.status, 403);
+    const data = await res.json() as any;
+    assert.strictEqual(data.code, 'UNAUTHORIZED_ROLE_ESCALATION');
+  });
+
+  it('10. Protected route rejects cross-tenant spoofing via body tenantId mismatch (403)', async () => {
+    const adminToken = tokenService.signToken({
+      tenant_id: 'tenant_alpha',
+      user_id: 'usr_admin',
+      roles: ['ADMIN']
+    });
+
+    const res = await fetch(`${baseUrl}/api/v1/apcatos/provision`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${adminToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        tenantId: 'tenant_beta', // Body mismatch against token
+        requestedEmployeeIds: [1]
+      })
+    });
+    assert.strictEqual(res.status, 403);
+    const data = await res.json() as any;
+    assert.strictEqual(data.code, 'TENANT_MISMATCH');
+  });
+
+  it('11. Rejects token with unauthorized algorithm "none" (401)', async () => {
+    const header = Buffer.from(JSON.stringify({ alg: 'none', typ: 'JWT' })).toString('base64url');
+    const payload = Buffer.from(JSON.stringify({
+      tenant_id: 'tenant_alpha',
+      user_id: 'usr_001',
+      roles: ['USER'],
+      exp: Math.floor(Date.now() / 1000) + 3600
+    })).toString('base64url');
+    const noneToken = `${header}.${payload}.`;
+
+    const res = await fetch(`${baseUrl}/api/v1/rolepacks`, {
+      headers: { Authorization: `Bearer ${noneToken}` }
+    });
+    assert.strictEqual(res.status, 401);
+    const data = await res.json() as any;
+    assert.strictEqual(data.code, 'INVALID_ALGORITHM');
+  });
+
+  it('12. Rejects token with invalid/unexpected issuer (401)', async () => {
+    const rogueToken = tokenService.signToken({
+      tenant_id: 'tenant_alpha',
+      user_id: 'usr_001',
+      iss: 'rogue-untrusted-issuer'
+    });
+
+    const res = await fetch(`${baseUrl}/api/v1/rolepacks`, {
+      headers: { Authorization: `Bearer ${rogueToken}` }
+    });
+    assert.strictEqual(res.status, 401);
+    const data = await res.json() as any;
+    assert.strictEqual(data.code, 'INVALID_ISSUER');
+  });
+
+  it('13. Rejects token with invalid/unexpected audience (401)', async () => {
+    const wrongAudToken = tokenService.signToken({
+      tenant_id: 'tenant_alpha',
+      user_id: 'usr_001',
+      aud: 'unintended-audience'
+    });
+
+    const res = await fetch(`${baseUrl}/api/v1/rolepacks`, {
+      headers: { Authorization: `Bearer ${wrongAudToken}` }
+    });
+    assert.strictEqual(res.status, 401);
+    const data = await res.json() as any;
+    assert.strictEqual(data.code, 'INVALID_AUDIENCE');
+  });
+
+  it('14. Rejects token evaluated before not-before timestamp (nbf) (401)', async () => {
+    const futureToken = tokenService.signToken({
+      tenant_id: 'tenant_alpha',
+      user_id: 'usr_001',
+      nbf: Math.floor(Date.now() / 1000) + 300 // Valid in 5 minutes
+    });
+
+    const res = await fetch(`${baseUrl}/api/v1/rolepacks`, {
+      headers: { Authorization: `Bearer ${futureToken}` }
+    });
+    assert.strictEqual(res.status, 401);
+    const data = await res.json() as any;
+    assert.strictEqual(data.code, 'TOKEN_NOT_YET_VALID');
+  });
+
+  it('15. Rejects revoked token by JTI (401)', async () => {
+    const jti = 'revoked-uuid-test-12345';
+    const tokenToRevoke = tokenService.signToken({
+      tenant_id: 'tenant_alpha',
+      user_id: 'usr_001',
+      jti
+    });
+
+    // Revoke token in token service
+    tokenService.revokeToken(jti);
+
+    const res = await fetch(`${baseUrl}/api/v1/rolepacks`, {
+      headers: { Authorization: `Bearer ${tokenToRevoke}` }
+    });
+    assert.strictEqual(res.status, 401);
+    const data = await res.json() as any;
+    assert.strictEqual(data.code, 'TOKEN_REVOKED');
+  });
+
+  it('16. Rejects token signed with unknown/retired key after rotation (401)', async () => {
+    // Generate token with kid: 'retired-key'
+    const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT', kid: 'retired-key' })).toString('base64url');
+    const payload = Buffer.from(JSON.stringify({
+      tenant_id: 'tenant_alpha',
+      user_id: 'usr_001',
+      roles: ['USER'],
+      exp: Math.floor(Date.now() / 1000) + 3600
+    })).toString('base64url');
+    const dummySig = Buffer.from('dummy_signature_bytes_for_testing').toString('base64url');
+    const rotatedOutToken = `${header}.${payload}.${dummySig}`;
+
+    const res = await fetch(`${baseUrl}/api/v1/rolepacks`, {
+      headers: { Authorization: `Bearer ${rotatedOutToken}` }
+    });
+    assert.strictEqual(res.status, 401);
+    const data = await res.json() as any;
+    assert.strictEqual(data.code, 'KEY_ROTATED_OR_UNKNOWN');
+  });
 });

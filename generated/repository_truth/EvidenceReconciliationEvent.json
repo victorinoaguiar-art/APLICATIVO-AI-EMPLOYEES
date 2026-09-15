@@ -1,0 +1,17 @@
+{
+  "event_id": "EV-REC-HASH-02-BUILD-LOG-001",
+  "artifact_id": "generated/repository_truth/02_Original_Build_Log.txt",
+  "audit_standard": "AETF-500 v2.0 Section 6 / PGC-001",
+  "timestamp_utc": "2026-09-15T18:25:00.000Z",
+  "investigation_summary": {
+    "finding": "Dual SHA-256 hash representation detected across execution environments for 02_Original_Build_Log.txt due to line terminator normalization.",
+    "registered_windows_sha256": "712de5212d40c7b4aabe702815e889bc3f956042b486631db875a5d99bf73298",
+    "registered_windows_byte_length": 74846,
+    "normalized_lf_unix_sha256": "afdee24f1a7b60424a832f569db6ddf3ab15c139c74ba3cce9af2e7dc8827954",
+    "normalized_lf_byte_length": 74613,
+    "root_cause_analysis": "File was created during Windows checkout with mixed CRLF (233 linebreaks) and LF (111 linebreaks). When checked out on Linux/Unix CI without explicit .gitattributes, git converted CRLF to LF, mutating 233 bytes and yielding computed_sha256 afdee24f1a7b60424a832f569db6ddf3ab15c139c74ba3cce9af2e7dc8827954.",
+    "reconciliation_action": "Added repository .gitattributes marking 'generated/repository_truth/* -text' to freeze exact binary bytes across all platforms. Both original Windows recorded hash (712de521...) and normalized Unix hash (afdee24f...) are recognized and cross-referenced in the immutable forensic event log.",
+    "impact": "Zero code or logic tampering. Integrity preserved deterministically across both Windows NT and Linux CI checkout runners.",
+    "status": "RECONCILED_WITH_BINARY_PRESERVATION"
+  }
+}

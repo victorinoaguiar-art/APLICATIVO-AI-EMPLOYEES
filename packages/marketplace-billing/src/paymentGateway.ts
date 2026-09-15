@@ -1,6 +1,5 @@
 import { createHmac, timingSafeEqual } from 'crypto';
-import * as fs from 'fs';
-import * as path from 'path';
+import { TransactionalPaymentStore } from './persistence/TransactionalPaymentStore.js';
 
 /**
  * AI Employee Platform — Multi-Currency Payment Gateway (Audited Forensically)
@@ -12,6 +11,7 @@ export type Currency = 'AOA' | 'USD' | 'EUR';
 export type PaymentStatus =
   | 'CREATED'
   | 'PENDING'
+  | 'PENDING_PROVIDER'
   | 'AWAITING_PROVIDER'
   | 'AUTHORIZED'
   | 'PAID'
@@ -37,6 +37,7 @@ export interface CheckoutSessionRequest {
   cancelUrl?: string;
   taxRegime?: 'REGIME_GERAL' | 'REGIME_SIMPLIFICADO' | 'ISENTO' | 'STANDARD';
   jurisdiction?: string;
+  isSandbox?: boolean;
 }
 
 export interface CheckoutSessionResponse {
@@ -50,6 +51,7 @@ export interface CheckoutSessionResponse {
   taxDocumentStatus: 'ISSUED' | 'NOT_ISSUED';
   expiresAt: string;
   isSandbox: boolean;
+  error?: string;
 }
 
 export interface TaxDetermination {
@@ -95,47 +97,6 @@ export interface Invoice {
   pdfDownloadUrl: string;
 }
 
-export interface BillingStorageData {
-  invoices: Record<string, Invoice>;
-  settledIdempotencyKeys: string[];
-}
-
-export class FileTransactionalStore {
-  private filePath: string;
-
-  constructor(customPath?: string) {
-    this.filePath = customPath || path.resolve(process.cwd(), 'generated/billing_store.json');
-    const dir = path.dirname(this.filePath);
-    if (!fs.existsSync(dir)) {
-      try {
-        fs.mkdirSync(dir, { recursive: true });
-      } catch {}
-    }
-  }
-
-  public read(): BillingStorageData {
-    if (!fs.existsSync(this.filePath)) {
-      return { invoices: {}, settledIdempotencyKeys: [] };
-    }
-    try {
-      const raw = fs.readFileSync(this.filePath, 'utf8');
-      return JSON.parse(raw);
-    } catch {
-      return { invoices: {}, settledIdempotencyKeys: [] };
-    }
-  }
-
-  public writeAtomic(data: BillingStorageData): void {
-    const dir = path.dirname(this.filePath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    const tmpPath = `${this.filePath}.${Date.now()}.${Math.random().toString(36).slice(2)}.tmp`;
-    fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf8');
-    fs.renameSync(tmpPath, this.filePath);
-  }
-}
-
 /**
  * Provedor de verificação Stripe (HMAC-SHA256 com timestamp ou assinatura direta)
  */
@@ -143,7 +104,6 @@ export class StripeWebhookVerifier {
   public static verify(payloadRaw: string, signatureHeader: string, secret: string): boolean {
     if (!signatureHeader || !secret) return false;
     try {
-      // Handle standard Stripe header format t=timestamp,v1=signature
       let timestamp = '';
       let sig = signatureHeader;
       if (signatureHeader.includes('v1=')) {
@@ -192,6 +152,9 @@ export class ExpressPayWebhookVerifier {
 export class SandboxPaymentVerifier {
   public static verify(payloadRaw: string, signature: string, secret: string): boolean {
     if (!signature || !secret) return false;
+    if (process.env.NODE_ENV === 'production') {
+      return false; // Proibido em produção
+    }
     try {
       const expected = createHmac('sha256', secret).update(payloadRaw).digest('hex');
       const expectedBuf = Buffer.from(expected, 'utf8');
@@ -206,13 +169,10 @@ export class SandboxPaymentVerifier {
 
 export class PaymentGatewayManager {
   private static instance: PaymentGatewayManager;
-  private store: FileTransactionalStore;
-  private memoryInvoices: Map<string, Invoice> = new Map();
-  private memorySettledIdempotencyKeys: Set<string> = new Set();
+  private transactionalStore: TransactionalPaymentStore;
 
   private constructor(customStorePath?: string) {
-    this.store = new FileTransactionalStore(customStorePath);
-    this.loadStateFromStore();
+    this.transactionalStore = new TransactionalPaymentStore(customStorePath);
   }
 
   public static getInstance(customStorePath?: string): PaymentGatewayManager {
@@ -220,26 +180,6 @@ export class PaymentGatewayManager {
       PaymentGatewayManager.instance = new PaymentGatewayManager(customStorePath);
     }
     return PaymentGatewayManager.instance;
-  }
-
-  private loadStateFromStore(): void {
-    const data = this.store.read();
-    this.memoryInvoices.clear();
-    for (const [id, inv] of Object.entries(data.invoices)) {
-      this.memoryInvoices.set(id, inv);
-    }
-    this.memorySettledIdempotencyKeys = new Set(data.settledIdempotencyKeys);
-  }
-
-  private persistStateToStore(): void {
-    const invoicesObj: Record<string, Invoice> = {};
-    for (const [id, inv] of this.memoryInvoices.entries()) {
-      invoicesObj[id] = inv;
-    }
-    this.store.writeAtomic({
-      invoices: invoicesObj,
-      settledIdempotencyKeys: Array.from(this.memorySettledIdempotencyKeys)
-    });
   }
 
   public determineTax(
@@ -280,42 +220,54 @@ export class PaymentGatewayManager {
   }
 
   public async createCheckoutSession(request: CheckoutSessionRequest): Promise<CheckoutSessionResponse> {
-    const stripeKey = process.env.STRIPE_SECRET_KEY;
-    const expressPayKey = process.env.EXPRESSPAY_AOA_API_KEY;
+    const isProd = process.env.NODE_ENV === 'production';
+    const isExplicitReal = request.isSandbox === false;
+    const isSandboxRequested = request.isSandbox === true || (!isProd && !isExplicitReal);
 
-    if (expressPayKey && request.currency === 'AOA') {
-      const sessionId = `exp_aoa_${Date.now()}`;
-      return {
-        sessionId,
-        checkoutUrl: `https://api.expresspay.co.ao/v2/checkout/${sessionId}`,
-        provider: 'EXPRESSPAY_AOA',
-        amountFormatted: `${request.amount.toLocaleString('pt-AO')} AOA`,
-        status: 'PENDING',
-        revenueStatus: 'DEFERRED',
-        accountingPosting: 'BLOCKED',
-        taxDocumentStatus: 'NOT_ISSUED',
-        expiresAt: new Date(Date.now() + 3600000).toISOString(),
-        isSandbox: false
-      };
+    if (isProd && (request.isSandbox === true || isSandboxRequested)) {
+      throw new Error('SANDBOX_PAYMENTS_FORBIDDEN_IN_PRODUCTION: Sandbox checkout is strictly forbidden in production');
     }
 
-    if (stripeKey && (request.currency === 'USD' || request.currency === 'EUR')) {
-      const sessionId = `cs_stripe_${Date.now()}`;
-      return {
-        sessionId,
-        checkoutUrl: `https://checkout.stripe.com/c/pay/${sessionId}`,
-        provider: 'STRIPE',
-        amountFormatted: request.currency === 'EUR' ? `€${request.amount.toFixed(2)}` : `$${request.amount.toFixed(2)}`,
-        status: 'PENDING',
-        revenueStatus: 'DEFERRED',
-        accountingPosting: 'BLOCKED',
-        taxDocumentStatus: 'NOT_ISSUED',
-        expiresAt: new Date(Date.now() + 3600000).toISOString(),
-        isSandbox: false
-      };
+    // 1. Real ExpressPay handling
+    if (request.currency === 'AOA' && !isSandboxRequested) {
+      const expressPayKey = process.env.EXPRESSPAY_AOA_API_KEY;
+      if (!expressPayKey) {
+        return {
+          sessionId: 'UNCONFIGURED',
+          provider: 'EXPRESSPAY_AOA',
+          amountFormatted: `${request.amount.toLocaleString('pt-AO')} AOA`,
+          status: 'FAILED',
+          revenueStatus: 'BLOCKED',
+          accountingPosting: 'BLOCKED',
+          taxDocumentStatus: 'NOT_ISSUED',
+          expiresAt: new Date().toISOString(),
+          isSandbox: false,
+          error: 'EXPRESSPAY_CONNECTOR = NOT_CONFIGURED: AOA_REAL_PAYMENT = BLOCKED_BY_EXTERNAL_DEPENDENCY'
+        };
+      }
     }
 
-    const sessionId = `sb_chk_${Date.now()}`;
+    // 2. Real Stripe handling
+    if ((request.currency === 'USD' || request.currency === 'EUR') && !isSandboxRequested) {
+      const stripeKey = process.env.STRIPE_SECRET_KEY;
+      if (!stripeKey) {
+        return {
+          sessionId: 'UNCONFIGURED',
+          provider: 'STRIPE',
+          amountFormatted: request.currency === 'EUR' ? `€${request.amount.toFixed(2)}` : `$${request.amount.toFixed(2)}`,
+          status: 'FAILED',
+          revenueStatus: 'BLOCKED',
+          accountingPosting: 'BLOCKED',
+          taxDocumentStatus: 'NOT_ISSUED',
+          expiresAt: new Date().toISOString(),
+          isSandbox: false,
+          error: 'STRIPE_CONNECTOR = NOT_CONFIGURED: BLOCKED_BY_EXTERNAL_DEPENDENCY'
+        };
+      }
+    }
+
+    // 3. Simulated Sandbox Session (only permitted in dev/test)
+    const sessionId = `sb_chk_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
     return {
       sessionId,
       checkoutUrl: undefined,
@@ -340,7 +292,7 @@ export class PaymentGatewayManager {
   ): Promise<Invoice> {
     const taxDetermination = this.determineTax(amount, currency, jurisdiction, regime);
     const totalAmount = Number((amount + taxDetermination.taxAmount).toFixed(2));
-    const invoiceId = `INV-${currency}-${Date.now().toString().slice(-6)}`;
+    const invoiceId = `INV-${currency}-${Date.now().toString().slice(-6)}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`;
 
     const invoice: Invoice = {
       invoiceId,
@@ -357,15 +309,12 @@ export class PaymentGatewayManager {
       pdfDownloadUrl: `/api/v1/billing/invoices/${invoiceId}.pdf`
     };
 
-    this.memoryInvoices.set(invoiceId, invoice);
-    this.persistStateToStore();
+    this.transactionalStore.saveInvoice(invoice);
     return invoice;
   }
 
   public settleInvoice(invoiceId: string, proof: SettlementProof): Invoice {
-    this.loadStateFromStore(); // Refresh state from storage for transaction freshness
-
-    const invoice = this.memoryInvoices.get(invoiceId);
+    const invoice = this.transactionalStore.getInvoice(invoiceId);
     if (!invoice) {
       throw new Error(`INVOICE_NOT_FOUND: Invoice ${invoiceId} does not exist.`);
     }
@@ -375,7 +324,7 @@ export class PaymentGatewayManager {
     }
 
     // 1. Idempotency Check
-    if (this.memorySettledIdempotencyKeys.has(proof.idempotencyKey)) {
+    if (this.transactionalStore.isIdempotencyKeySettled(proof.idempotencyKey)) {
       throw new Error(`IDEMPOTENCY_CONFLICT: Payment idempotency key ${proof.idempotencyKey} already settled.`);
     }
 
@@ -390,48 +339,37 @@ export class PaymentGatewayManager {
       throw new Error(`AMOUNT_MISMATCH: Proof amount ${proof.amountPaid} does not match invoice total ${invoice.totalAmount}.`);
     }
 
-    // 3. Webhook Secret Resolution (Exclusively from Server Environment, never client body)
-    const serverSecret =
-      (proof.currency === 'USD' || proof.currency === 'EUR')
-        ? (process.env.STRIPE_WEBHOOK_SECRET || process.env.WEBHOOK_SECRET || 'test_webhook_secret_stripe_2026')
-        : (process.env.EXPRESSPAY_WEBHOOK_SECRET || process.env.WEBHOOK_SECRET || 'test_webhook_secret_expresspay_2026');
+    // 3. Webhook Secret Resolution (Exclusively from Server Environment, never client body, NO fallback hardcoded secrets)
+    const isStripe = proof.provider === 'STRIPE' || proof.currency === 'USD' || proof.currency === 'EUR';
+    const serverSecret = isStripe
+      ? (process.env.STRIPE_WEBHOOK_SECRET || process.env.WEBHOOK_SECRET)
+      : (process.env.EXPRESSPAY_WEBHOOK_SECRET || process.env.WEBHOOK_SECRET);
+
+    if (!serverSecret) {
+      throw new Error(`WEBHOOK_SECRET_MISSING: Server webhook secret is not configured in environment for ${isStripe ? 'Stripe' : 'ExpressPay'}.`);
+    }
 
     // 4. Cryptographic Webhook Signature Verification with constant-time comparison
     let signatureValid = false;
-    if (proof.currency === 'USD' || proof.currency === 'EUR') {
+    if (proof.provider === 'SANDBOX') {
+      signatureValid = SandboxPaymentVerifier.verify(proof.webhookPayloadRaw, proof.webhookSignature, serverSecret);
+    } else if (isStripe) {
       signatureValid = StripeWebhookVerifier.verify(proof.webhookPayloadRaw, proof.webhookSignature, serverSecret);
     } else {
       signatureValid = ExpressPayWebhookVerifier.verify(proof.webhookPayloadRaw, proof.webhookSignature, serverSecret);
-    }
-
-    // Fallback verification for sandbox / tests
-    if (!signatureValid) {
-      signatureValid = SandboxPaymentVerifier.verify(proof.webhookPayloadRaw, proof.webhookSignature, serverSecret);
     }
 
     if (!signatureValid) {
       throw new Error(`WEBHOOK_SIGNATURE_INVALID: Cryptographic verification of webhook payload failed.`);
     }
 
-    // 5. Atomic State Update and Persistence
-    this.memorySettledIdempotencyKeys.add(proof.idempotencyKey);
-    invoice.status = 'PAID';
-    invoice.paidAt = new Date().toISOString();
-    invoice.settlementEvidence = {
-      paymentStatus: 'PAID',
-      providerTransactionId: proof.providerTransactionId,
-      webhookSignatureVerified: true,
-      settledAt: invoice.paidAt
-    };
-
-    this.memoryInvoices.set(invoiceId, invoice);
-    this.persistStateToStore();
-
-    return invoice;
+    // 5. ACID Transactional Settlement Execution (Locks, checks replay, updates state, outbox pattern)
+    const settledAt = new Date().toISOString();
+    return this.transactionalStore.executeSettlementTransaction(invoiceId, proof, settledAt);
   }
 
   public getInvoice(invoiceId: string): Invoice | undefined {
-    this.loadStateFromStore();
-    return this.memoryInvoices.get(invoiceId);
+    const inv = this.transactionalStore.getInvoice(invoiceId);
+    return inv || undefined;
   }
 }
