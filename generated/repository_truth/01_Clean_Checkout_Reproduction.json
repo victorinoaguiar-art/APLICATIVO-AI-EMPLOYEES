@@ -1,0 +1,42 @@
+{
+  "reproduction_metadata": {
+    "timestamp_utc": "2026-09-15T12:45:09.656Z",
+    "git_commit_sha": "b5b3129feaba04efe9637c3ed9bc88e33e826fd2",
+    "git_commit_title": "feat: synchronize complete project codebase, engines, test suites, and manifests",
+    "environment": {
+      "os": "win32",
+      "os_release": "10.0.26200",
+      "os_type": "Windows_NT",
+      "arch": "x64",
+      "cpu_cores": 8,
+      "node_version": "v22.23.0",
+      "npm_version": "10.9.8"
+    },
+    "clean_worktree_path": "C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout"
+  },
+  "pipeline_results": {
+    "npm_install": {
+      "exit_code": 0,
+      "duration_ms": 73580,
+      "log_file": "02_Original_Install_Log.txt",
+      "log_sha256": "53a8c8822e7c274153bed08bd94116a0f6a8336df33a88f78e420455616bb843"
+    },
+    "npm_test": {
+      "exit_code": 1,
+      "duration_ms": 2336,
+      "log_file": "03_Original_Test_Log.txt",
+      "log_sha256": "3211e10c027ff94e616e115db0c8dd393226d8f65394f0d4672b889ad315b29f"
+    },
+    "npm_run_build": {
+      "exit_code": 2,
+      "duration_ms": 35654,
+      "log_file": "02_Original_Build_Log.txt",
+      "log_sha256": "712de5212d40c7b4aabe702815e889bc3f956042b486631db875a5d99bf73298"
+    }
+  },
+  "failure_summary": {
+    "execution_failures_count": 2,
+    "structural_audit_findings_count": 7,
+    "clean_baseline_status": "FAIL"
+  }
+}

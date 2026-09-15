@@ -1,18 +1,12 @@
 import {
   AuditReconciliationEvent,
   EvidenceClaimEntry,
-  AuditReconciliationSummary
+  AuditReconciliationSummary,
+  sha256String
 } from '@ai-employee/shared';
 
 function simpleSha256(input: string): string {
-  let hash = 0;
-  for (let i = 0; i < input.length; i++) {
-    const char = input.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash |= 0;
-  }
-  const hex = Math.abs(hash).toString(16).padStart(8, '0');
-  return `reconciled_${hex}${hex}${hex}${hex}`.substring(0, 64);
+  return sha256String(input);
 }
 
 function writeJsonFileSafely(filePath: string, data: any): void {

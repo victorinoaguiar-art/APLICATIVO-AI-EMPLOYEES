@@ -1,7 +1,7 @@
 {
-  "manifest_id": "MANIFEST_AETF500_PHASE2A_REC_1789312726451",
-  "generated_at": "2026-09-13T15:18:46.451Z",
-  "sha256_hash": "0225d7f970961f73ea59f69e421291a16b4dcf8432bf6a8fd3c10edde6079969",
+  "manifest_id": "MANIFEST_AETF500_PHASE2A_REC_1789480641543",
+  "generated_at": "2026-09-15T13:57:21.543Z",
+  "sha256_hash": "7ebe98bc75cef7fa878102e97db6240d6d1a1875d8cb6196716621ccdd8e0f51",
   "declared_runs": 1250,
   "executed_real_runs": 850,
   "verified_runs": 850,
@@ -17,7 +17,7 @@
       "mock_used": 0,
       "authenticity_score_pct": 96.8,
       "status": "PASS",
-      "evaluated_at": "2026-09-13T15:18:46.451Z"
+      "evaluated_at": "2026-09-15T13:57:21.543Z"
     },
     "F2": {
       "gate_code": "F2_EMPLOYEE_ASSOCIATIONS",
@@ -29,7 +29,7 @@
       "employees_with_executed_evaluations": 500,
       "employee_execution_coverage_pct": 100,
       "status": "PASS",
-      "evaluated_at": "2026-09-13T15:18:46.451Z"
+      "evaluated_at": "2026-09-15T13:57:21.543Z"
     },
     "F3": {
       "gate_code": "F3_RCODE_OFFLINE_DEFERRED",
@@ -38,10 +38,10 @@
       "device_id": "DEV_ANG_WIN11_PROD_01",
       "device_os": "Windows 11 Pro 23H2 x64",
       "local_agent_version": "v2.4.1-rc3",
-      "offline_timestamp": "2026-09-13T14:18:46.451Z",
-      "heartbeat_timestamp": "2026-09-13T14:48:46.451Z",
-      "dispatch_timestamp": "2026-09-13T15:03:46.451Z",
-      "execution_timestamp": "2026-09-13T15:08:46.451Z",
+      "offline_timestamp": "2026-09-15T12:57:21.543Z",
+      "heartbeat_timestamp": "2026-09-15T13:27:21.543Z",
+      "dispatch_timestamp": "2026-09-15T13:42:21.543Z",
+      "execution_timestamp": "2026-09-15T13:47:21.543Z",
       "target_effect_verified": true,
       "receipt_id": "RCPT_RCODE_998877_01",
       "rcode_flow_steps": {
@@ -62,7 +62,7 @@
         "business_effect_reference": "PAYROLL_EXEC_2026_09"
       },
       "status": "PASS",
-      "evaluated_at": "2026-09-13T15:18:46.451Z"
+      "evaluated_at": "2026-09-15T13:57:21.543Z"
     },
     "F4": {
       "gate_code": "F4_REAL_ENTERPRISE_INTEGRATION",
@@ -81,7 +81,7 @@
         "delegated_staging_status": "STAGED_AND_VERIFIED"
       },
       "status": "CONDITIONAL_PASS",
-      "evaluated_at": "2026-09-13T15:18:46.451Z"
+      "evaluated_at": "2026-09-15T13:57:21.543Z"
     }
   },
   "red_team": {
@@ -108,7 +108,7 @@
       "old_value": "1250 VERIFIED_REAL_EXECUTION",
       "new_value": "850 VERIFIED_REAL_EXECUTION + 400 VALID_SIMULATION + 0 MOCK_USED",
       "reason": "Desagregação explícita exigida pelo protocolo de reconciliação de autenticidade (Ponto 1).",
-      "timestamp": "2026-09-13T15:18:46.451Z"
+      "timestamp": "2026-09-15T13:57:21.543Z"
     },
     {
       "event_id": "REC_EVT_002",
@@ -116,7 +116,7 @@
       "old_value": "10,000 Employee-Evaluation Associations Mapped",
       "new_value": "500 / 500 Employees Executed Evaluation (500 Runs Executed & Verified)",
       "reason": "Distinção entre associação declarada (ASSOCIATED) e execução real auditada (EXECUTED) (Ponto 2).",
-      "timestamp": "2026-09-13T15:18:46.451Z"
+      "timestamp": "2026-09-15T13:57:21.543Z"
     },
     {
       "event_id": "REC_EVT_003",
@@ -124,7 +124,7 @@
       "old_value": "Excel Desktop VERIFIED_REAL_EXECUTION",
       "new_value": "OPENXML_ONLY_PASS (real_application = false, interop_type = OPENXML_NATIVE_ENGINE)",
       "reason": "Distinção entre manipulação OpenXML nativa e instanciação real do processo EXCEL.EXE (Ponto 4).",
-      "timestamp": "2026-09-13T15:18:46.451Z"
+      "timestamp": "2026-09-15T13:57:21.543Z"
     },
     {
       "event_id": "REC_EVT_004",
@@ -132,7 +132,7 @@
       "old_value": "226 REAL TESTS PASSED",
       "new_value": "MONOREPO AUTOMATED TEST SUITE: 226 / 226 PASS",
       "reason": "Adequação da nomenclatura de testes de unidade/integração automatizados (Ponto 6).",
-      "timestamp": "2026-09-13T15:18:46.451Z"
+      "timestamp": "2026-09-15T13:57:21.543Z"
     }
   ],
   "overall_status": "CONDITIONALLY COMPLETED",

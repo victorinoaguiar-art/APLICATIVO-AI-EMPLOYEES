@@ -1,0 +1,18 @@
+GUIA MESTRE DE REDACÇÃO EMPRESARIAL E CORRESPONDÊNCIA INSTITUCIONAL v1.0
+========================================================================
+
+1. ESTRUTURA DA CARTA EMPRESARIAL FORMAL
+- Identificação clara do Remetente (Logótipo, Nome da Empresa, NIF, Endereço).
+- Identificação do Destinatário (Nome da Instituição, Cargo, Endereço).
+- Data e Local de emissão (ex: Luanda, 13 de Setembro de 2026).
+- Assunto claro e conciso em negrito.
+- Vocativo formal (ex: "Exmo.(a) Senhor(a) Director(a)").
+- Corpo do documento organizado logicamente com clareza, concisão e tom profissional.
+- Fórmula de fecho formal (ex: "Com os melhores cumprimentos").
+- Assinatura e Carimbo do Responsável Autorizado.
+- Lista de Anexos quando aplicável.
+
+2. REGRAS DE INTEGRIDADE E NÃO HALLUCINAÇÃO
+- NUNCA inventar NIF, endereços, montantes ou números de conta bancária.
+- Caso falte informação essencial para redigir o documento, solicitar formalmente ao utilizador antes de emitir a versão final.
+- Preservar escrupulosamente os valores e dados fornecidos pelo cliente.

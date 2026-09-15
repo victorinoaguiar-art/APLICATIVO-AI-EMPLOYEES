@@ -1,0 +1,101 @@
+{
+  "generated_at": "2026-09-15T12:45:09.656Z",
+  "commit_sha": "b5b3129feaba04efe9637c3ed9bc88e33e826fd2",
+  "commands_executed": {
+    "install": {
+      "exit_code": 0,
+      "duration_ms": 73580,
+      "log_sha256": "53a8c8822e7c274153bed08bd94116a0f6a8336df33a88f78e420455616bb843"
+    },
+    "test": {
+      "exit_code": 1,
+      "duration_ms": 2336,
+      "log_sha256": "3211e10c027ff94e616e115db0c8dd393226d8f65394f0d4672b889ad315b29f"
+    },
+    "build": {
+      "exit_code": 2,
+      "duration_ms": 35654,
+      "log_sha256": "712de5212d40c7b4aabe702815e889bc3f956042b486631db875a5d99bf73298"
+    }
+  },
+  "execution_failures": [
+    {
+      "phase": "TEST",
+      "exit_code": 1,
+      "summary": "npm test exited with non-zero exit code",
+      "details": "Could not find 'dist/test/integrityGate.test.js'\nnpm error Lifecycle script `test` failed with error:\nnpm error code 1\nnpm error path C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\rolepack\nnpm error workspace @ai-employee/rolepack@1.0.0\nnpm error location C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\rolepack\nnpm error command failed\nnpm error command C:\\Windows\\system32\\cmd.exe /d /s /c node --test dist/test/integrityGate.test.js\n"
+    },
+    {
+      "phase": "BUILD",
+      "exit_code": 2,
+      "summary": "npm run build exited with non-zero exit code",
+      "details": "npm error Lifecycle script `build` failed with error:\nnpm error code 2\nnpm error path C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\apps\\api\nnpm error workspace @ai-employee/api@1.0.0\nnpm error location C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\apps\\api\nnpm error command failed\nnpm error command C:\\Windows\\system32\\cmd.exe /d /s /c tsc\n\nnode:internal/modules/cjs/loader:1433\r\n  throw err;\r\n  ^\r\n\r\nError: Cannot find module 'C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\apps\\web\\node_modules\\next\\dist\\bin\\next'\r\n    at Function._resolveFilename (node:internal/modules/cjs/loader:1430:15)\r\n    at defaultResolveImpl (node:internal/modules/cjs/loader:1040:19)\r\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1045:22)\r\n    at Function._load (node:internal/modules/cjs/loader:1216:25)\r\n    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)\r\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)\r\n    at node:internal/main/run_main_module:36:49 {\r\n  code: 'MODULE_NOT_FOUND',\r\n  requireStack: []\r\n}\r\n\r\nNode.js v22.23.0\r\nnpm error Lifecycle script `build` failed with error:\nnpm error code 1\nnpm error path C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\apps\\web\nnpm error workspace @ai-employee/web@1.0.0\nnpm error location C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\apps\\web\nnpm error command failed\nnpm error command C:\\Windows\\system32\\cmd.exe /d /s /c node node_modules/next/dist/bin/next build\n\nnpm error Lifecycle script `build` failed with error:\nnpm error code 2\nnpm error path C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\approvals\nnpm error workspace @ai-employee/approvals@1.0.0\nnpm error location C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\approvals\nnpm error command failed\nnpm error command C:\\Windows\\system32\\cmd.exe /d /s /c tsc\n\nnpm error Lifecycle script `build` failed with error:\nnpm error code 2\nnpm error path C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\evaluation-sdk\nnpm error workspace @ai-employee/evaluation-sdk@1.0.0\nnpm error location C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\evaluation-sdk\nnpm error command failed\nnpm error command C:\\Windows\\system32\\cmd.exe /d /s /c tsc\n\nnpm error Lifecycle script `build` failed with error:\nnpm error code 2\nnpm error path C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\marketplace-billing\nnpm error workspace @ai-employee/marketplace-billing@1.0.0\nnpm error location C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\marketplace-billing\nnpm error command failed\nnpm error command C:\\Windows\\system32\\cmd.exe /d /s /c tsc\n\nnpm error Lifecycle script `build` failed with error:\nnpm error code 2\nnpm error path C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\permissions\nnpm error workspace @ai-employee/permissions@1.0.0\nnpm error location C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\permissions\nnpm error command failed\nnpm error command C:\\Windows\\system32\\cmd.exe /d /s /c tsc\n\nnpm error Lifecycle script `build` failed with error:\nnpm error code 2\nnpm error path C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\policies\nnpm error workspace @ai-employee/policies@1.0.0\nnpm error location C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\policies\nnpm error command failed\nnpm error command C:\\Windows\\system32\\cmd.exe /d /s /c tsc\n\nnpm error Lifecycle script `build` failed with error:\nnpm error code 2\nnpm error path C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\rolepack\nnpm error workspace @ai-employee/rolepack@1.0.0\nnpm error location C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\rolepack\nnpm error command failed\nnpm error command C:\\Windows\\system32\\cmd.exe /d /s /c tsc\n\nnpm error Lifecycle script `build` failed with error:\nnpm error code 2\nnpm error path C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\runtime\nnpm error workspace @ai-employee/runtime@1.0.0\nnpm error location C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\runtime\nnpm error command failed\nnpm error command C:\\Windows\\system32\\cmd.exe /d /s /c tsc\n\nnpm error Lifecycle script `build` failed with error:\nnpm error code 2\nnpm error path C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\tool-sdk\nnpm error workspace @ai-employee/tool-sdk@1.0.0\nnpm error location C:\\Users\\Victorino Aguiar\\.gemini\\antigravity\\brain\\c2036de6-7ce8-425e-951a-a1223857a363\\scratch\\clean-checkout\\packages\\tool-sdk\nnpm error command failed\nnpm error command C:\\Windows\\system32\\cmd.exe /d /s /c tsc\n"
+    }
+  ],
+  "forensic_audit_findings": [
+    {
+      "category": "MONOREPO_DETERMINISM",
+      "severity": "CRITICAL",
+      "finding": "package-lock.json was in .gitignore, preventing deterministic npm ci",
+      "affected_files": [
+        ".gitignore"
+      ]
+    },
+    {
+      "category": "CRYPTOGRAPHY_INTEGRITY",
+      "severity": "CRITICAL",
+      "finding": "Pseudo-hashes (simpleHash, simpleSha256 32-bit bitshift) used instead of standard crypto.createHash(sha256)",
+      "affected_files": [
+        "packages/runtime/src/aetf/AETFPhase2BEngine.ts",
+        "packages/runtime/src/aetf/CertL3AuditReconciliationEngine.ts",
+        "packages/runtime/src/aetf/CertL3LiveSampleExpansionEngine.ts",
+        "packages/runtime/src/aetf/CertL3AuthenticityFreezeEngine.ts",
+        "packages/runtime/src/aetf/WorkforceReadinessAccelerationEngine.ts"
+      ]
+    },
+    {
+      "category": "PAYMENT_TRUTH",
+      "severity": "CRITICAL",
+      "finding": "PaymentGatewayManager returned status PAID in sandbox mode and marked issued invoices as PAID immediately with paidAt timestamp without bank settlement confirmation",
+      "affected_files": [
+        "packages/marketplace-billing/src/paymentGateway.ts"
+      ]
+    },
+    {
+      "category": "TENANT_TRUTH",
+      "severity": "CRITICAL",
+      "finding": "Enterprise tenants (Sonangol, Banco BAI, Angola Telecom) hardcoded as active verified production pilot tenants without independent physical legal authorization or signature evidence",
+      "affected_files": [
+        "generated/AETF500_CERTL3_LiveBusiness_Evidence_Manifest.json",
+        "generated/AETF500_CERTL3_Authenticity_ProductionFreeze_Manifest.json",
+        "generated/AETF500_CERTL3_FinalProductionBaseline_Manifest.json"
+      ]
+    },
+    {
+      "category": "TASK_EVIDENCE_TRUTH",
+      "severity": "CRITICAL",
+      "finding": "Claim of 68,500 verified real live tasks is synthetic without physical execution receipts and task-level I/O bundles",
+      "affected_files": [
+        "packages/runtime/src/aetf/CertL3LiveSampleExpansionEngine.ts",
+        "packages/runtime/src/aetf/CertL3AuthenticityFreezeEngine.ts"
+      ]
+    },
+    {
+      "category": "SECURITY_API",
+      "severity": "CRITICAL",
+      "finding": "API server endpoints lacked strict tenant-isolation validation, authentication enforcement, and helmet/rate-limit middleware",
+      "affected_files": [
+        "apps/api/src/server.ts"
+      ]
+    },
+    {
+      "category": "CONNECTOR_REALITY",
+      "severity": "CRITICAL",
+      "finding": "Mock connectors (MockEmailConnector) permitted as default without strict runtime blocking in production environment; missing ConnectorRegistry taxonomy",
+      "affected_files": [
+        "packages/tool-sdk/src/connectors/mockConnectors.ts"
+      ]
+    }
+  ],
+  "total_blocking_findings": 9
+}

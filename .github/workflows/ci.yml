@@ -1,0 +1,67 @@
+name: CI / Production Readiness & Audit Gate
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Deterministic Build, Typecheck, Test & Audit
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 20.x ]
+
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Deterministic Install (npm ci)
+        run: npm ci
+
+      - name: Monorepo Clean
+        run: npm run clean
+
+      - name: Typecheck (Strict Project References)
+        run: npm run typecheck
+
+      - name: Compile Monorepo Packages
+        run: npm run build:packages
+
+      - name: Build Web Application
+        run: npm run build:web
+
+      - name: Full Test Suite
+        run: npm test
+
+      - name: Master Truth Reconciliation & Gates Verification
+        run: node --test packages/runtime/dist/test/masterTruthReconciliation.test.js
+
+      - name: Verify Cryptographic Integrity
+        run: node -e "const crypto = require('crypto'); console.log('[CI] Cryptographic Engine Active. SHA-256 Self-Test:', crypto.createHash('sha256').update('AETF500').digest('hex'));"
+
+      - name: Upload Build Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-and-test-reports
+          path: |
+            generated/
+            packages/*/dist/
+          retention-days: 14

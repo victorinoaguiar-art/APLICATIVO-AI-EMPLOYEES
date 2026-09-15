@@ -1,0 +1,28 @@
+=== COMMAND: npm test ===
+Exit Code: 1
+Duration: 2336ms
+
+--- STDOUT ---
+
+> ai-employee-platform@1.0.0 test
+> npm run test:catalog && npm run test:runtime && npm run test:security && npm run eval:catalog
+
+
+> ai-employee-platform@1.0.0 test:catalog
+> npm run test --workspace=packages/rolepack
+
+
+> @ai-employee/rolepack@1.0.0 test
+> node --test dist/test/integrityGate.test.js
+
+
+
+--- STDERR ---
+Could not find 'dist/test/integrityGate.test.js'
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\Victorino Aguiar\.gemini\antigravity\brain\c2036de6-7ce8-425e-951a-a1223857a363\scratch\clean-checkout\packages\rolepack
+npm error workspace @ai-employee/rolepack@1.0.0
+npm error location C:\Users\Victorino Aguiar\.gemini\antigravity\brain\c2036de6-7ce8-425e-951a-a1223857a363\scratch\clean-checkout\packages\rolepack
+npm error command failed
+npm error command C:\Windows\system32\cmd.exe /d /s /c node --test dist/test/integrityGate.test.js

@@ -31,6 +31,7 @@ export * from './program/LayeredImprovementPropagator.js';
 export * from './program/PriorityProgramEngine.js';
 export * from './operationalization/PlatformCertificationEngine.js';
 export * from './operationalization/OrganizationProvisioningEngine.js';
+export * from './operationalization/CompanyManagementEngine.js';
 export * from './erems/EREMSEngine.js';
 export * from './caqrs/CAQRSEngine.js';
 export * from './clbgs/CLBGSEngine.js';
@@ -68,6 +69,7 @@ export * from './aetf/CertL3ProductionReadinessEngine.js';
 export * from './aetf/CertL3AuditReconciliationEngine.js';
 export * from './aetf/CertL3LiveSampleExpansionEngine.js';
 export * from './aetf/CertL3AuthenticityFreezeEngine.js';
+export * from './aetf/MasterTruthReconciliationEngine.js';
 export * from './commerce/AIEmployeeCommerceEngine.js';
 export * from './commerce/CommerceProductionReadinessEngine.js';
 export * from './commerce/FirstPaidCustomerValidationEngine.js';
@@ -83,6 +85,17 @@ export * from './commerce/MetricDistributionEngine.js';
 export * from './commerce/SaaSMetricsHardeningV11Engine.js';
 export * from './commerce/MetricLineageEngine.js';
 export * from './commerce/PGCAccountingEngineV114.js';
+export * from './task/AETaskManagementEngine.js';
+export * from './competency/CompetencyProvenanceEngine.js';
+export * from './competency/ModelNativeCapabilityEngine.js';
+export * from './competency/AIEmployeeRuntimeEngine.js';
+export * from './competency/OperationalRolePackSOPEngine.js';
+export * from './competency/ExecutionModeEvidenceEngine.js';
+export * from './competency/AIOmnichannelEngine.js';
+export * from './competency/KnowledgeCenterEngine.js';
+export * from './competency/KnowledgeNecessityEngine.js';
+
+
 
 
 

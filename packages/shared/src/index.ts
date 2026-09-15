@@ -1,6 +1,7 @@
 export * from './types/index.js';
 export * from './constants/index.js';
 export * from './utils/crypto.js';
+export * from './crypto/canonicalHash.js';
 export * from './releaseReadiness.js';
 export * from './db/dbDriver.js';
 export * from './workContracts/workContractRegistry.js';
@@ -47,6 +48,14 @@ export * from './commerce/commerceProductionTypes.js';
 export * from './commerce/firstPaidCustomerTypes.js';
 export * from './commerce/controlledScaleTypes.js';
 export * from './commerce/saasMetricsV11Types.js';
+export * from './company/companyTypes.js';
+export * from './competency/executionModeTypes.js';
+export * from './competency/employeeRuntimeTypes.js';
+export * from './competency/omnichannelTypes.js';
+export * from './competency/knowledgeCenterTypes.js';
+export * from './competency/knowledgeNecessityTypes.js';
+
+
 
 
 

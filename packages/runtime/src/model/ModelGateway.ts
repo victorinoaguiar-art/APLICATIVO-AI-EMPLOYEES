@@ -38,6 +38,7 @@ export interface LLMGenerationResponse {
 
 export class ModelGateway {
   private static instance: ModelGateway;
+  private customKeys: { gemini?: string; openai?: string; anthropic?: string } = {};
 
   private constructor() {}
 
@@ -48,11 +49,49 @@ export class ModelGateway {
     return ModelGateway.instance;
   }
 
+  public setApiKeys(keys: { gemini?: string; openai?: string; anthropic?: string }): void {
+    if (keys.gemini !== undefined) this.customKeys.gemini = keys.gemini;
+    if (keys.openai !== undefined) this.customKeys.openai = keys.openai;
+    if (keys.anthropic !== undefined) this.customKeys.anthropic = keys.anthropic;
+  }
+
+  public getApiKeysConfig() {
+    const geminiKey = this.customKeys.gemini || process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '';
+    const openaiKey = this.customKeys.openai || process.env.OPENAI_API_KEY || '';
+    const anthropicKey = this.customKeys.anthropic || process.env.ANTHROPIC_API_KEY || '';
+
+    const mask = (k: string) => (k ? `${k.slice(0, 6)}...${k.slice(-4)}` : '');
+
+    return {
+      gemini: {
+        configured: !!geminiKey,
+        maskedKey: mask(geminiKey),
+        rawKey: geminiKey,
+        isPrimary: true,
+        status: geminiKey ? 'HEALTHY_PRIMARY' : 'FALLBACK_SIMULATOR'
+      },
+      openai: {
+        configured: !!openaiKey,
+        maskedKey: mask(openaiKey),
+        rawKey: openaiKey,
+        isPrimary: false,
+        status: openaiKey ? 'HEALTHY_FALLBACK' : 'NOT_CONFIGURED'
+      },
+      anthropic: {
+        configured: !!anthropicKey,
+        maskedKey: mask(anthropicKey),
+        rawKey: anthropicKey,
+        isPrimary: false,
+        status: anthropicKey ? 'HEALTHY_FALLBACK' : 'NOT_CONFIGURED'
+      }
+    };
+  }
+
   public async generate(request: LLMGenerationRequest): Promise<LLMGenerationResponse> {
     const startTime = Date.now();
-    const geminiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-    const openaiKey = process.env.OPENAI_API_KEY;
-    const anthropicKey = process.env.ANTHROPIC_API_KEY;
+    const geminiKey = this.customKeys.gemini || process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+    const openaiKey = this.customKeys.openai || process.env.OPENAI_API_KEY;
+    const anthropicKey = this.customKeys.anthropic || process.env.ANTHROPIC_API_KEY;
 
     // 1. Primary Route: Google Gemini
     if (geminiKey) {

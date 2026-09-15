@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { RolePackRegistry, runCatalogIntegrityGate } from '@ai-employee/rolepack';
 import { ApprovalGateway } from '@ai-employee/approvals';
-import { Orchestrator, TaskStateMachine, QueueManager, AuditStream, ModelGateway, RedisQueueProvider, APCATOSEngine, EMVTCSEngine, EPTOWDSEngine, PEIPIntegrationEngine, GWNISIntegrationEngine, AWDSEEngine, AWEEPEngine, IRECEEngine, ABWSEMV2Engine, DWACOSEngine, DWOSEngine, OTCTECEngine, CPEAAEngine, EOEDTDEngine, SocialMediaConnectorHubEngine, PTKMLEngine, PEEEngine, PCEEngine, KBUEEngine, CKRAIEEngine, CKRAIE2026Engine, RCODEEngine, CLEEngine, AETFEngine, AETFPhase2BEngine, ControlledPilotLaunchEngine, WorkforceReadinessAccelerationEngine, AuditReconciliationEngine, CertL3ProductionReadinessEngine, CertL3AuditReconciliationEngine, CertL3LiveSampleExpansionEngine, CertL3AuthenticityFreezeEngine, AIEmployeeCommerceEngine, CommerceProductionReadinessEngine, FirstPaidCustomerValidationEngine, TaxDeterminationEngine, CommercialEvidenceVerificationEngine, ControlledPaidScaleEngine, CustomerSuccessEngine, UnitEconomicsEngine, CommercialMetricMaturityEngine, MetricDistributionEngine, SaaSMetricsHardeningV11Engine, MetricLineageEngine, PGCAccountingGateEngineV114, PGC_MASTER_ACCOUNT_REGISTRY_V114, ACCOUNT_USAGE_INVENTORY_V114, PGCAccountingGateEngineV115, PGC_MASTER_ACCOUNT_REGISTRY_V115, ACCOUNT_USAGE_INVENTORY_V115, EXTERNAL_VALIDATION_REGISTER_V115, PGCAccountingGateEngineV116, PGC_MASTER_ACCOUNT_REGISTRY_V116, ACCOUNT_USAGE_INVENTORY_V116, EXTERNAL_VALIDATION_REGISTER_V116, VAT_OFFICIAL_SUBACCOUNT_REGISTRY_V116, PGCAccountingGateEngineV117, PGC_MASTER_ACCOUNT_REGISTRY_V117, ACCOUNT_USAGE_INVENTORY_V117, EXTERNAL_VALIDATION_REGISTER_V117, VAT_OFFICIAL_SUBACCOUNT_REGISTRY_V117, PGCAccountingGateEngineV118, PGCFinalEvidenceClosureGateEngineV118, VAT_OFFICIAL_SUBACCOUNT_REGISTRY_V118, TAX_RULE_VERSION_REGISTRY_V118, ACCOUNTING_EVIDENCE_REGISTRY_V118, ACCOUNTING_MATERIAL_CORRECTIONS_REGISTER_V118 } from '@ai-employee/runtime';
+import { Orchestrator, TaskStateMachine, QueueManager, AuditStream, ModelGateway, RedisQueueProvider, APCATOSEngine, CompanyManagementEngine, EMVTCSEngine, EPTOWDSEngine, PEIPIntegrationEngine, GWNISIntegrationEngine, AWDSEEngine, AWEEPEngine, IRECEEngine, ABWSEMV2Engine, DWACOSEngine, DWOSEngine, OTCTECEngine, CPEAAEngine, EOEDTDEngine, SocialMediaConnectorHubEngine, PTKMLEngine, PEEEngine, PCEEngine, KBUEEngine, CKRAIEEngine, CKRAIE2026Engine, RCODEEngine, CLEEngine, AETFEngine, AETFPhase2BEngine, ControlledPilotLaunchEngine, WorkforceReadinessAccelerationEngine, AuditReconciliationEngine, CertL3ProductionReadinessEngine, CertL3AuditReconciliationEngine, CertL3LiveSampleExpansionEngine, CertL3AuthenticityFreezeEngine, AIEmployeeCommerceEngine, CommerceProductionReadinessEngine, FirstPaidCustomerValidationEngine, TaxDeterminationEngine, CommercialEvidenceVerificationEngine, ControlledPaidScaleEngine, CustomerSuccessEngine, UnitEconomicsEngine, CommercialMetricMaturityEngine, MetricDistributionEngine, SaaSMetricsHardeningV11Engine, MetricLineageEngine, PGCAccountingGateEngineV114, PGC_MASTER_ACCOUNT_REGISTRY_V114, ACCOUNT_USAGE_INVENTORY_V114, PGCAccountingGateEngineV115, PGC_MASTER_ACCOUNT_REGISTRY_V115, ACCOUNT_USAGE_INVENTORY_V115, EXTERNAL_VALIDATION_REGISTER_V115, PGCAccountingGateEngineV116, PGC_MASTER_ACCOUNT_REGISTRY_V116, ACCOUNT_USAGE_INVENTORY_V116, EXTERNAL_VALIDATION_REGISTER_V116, VAT_OFFICIAL_SUBACCOUNT_REGISTRY_V116, PGCAccountingGateEngineV117, PGC_MASTER_ACCOUNT_REGISTRY_V117, ACCOUNT_USAGE_INVENTORY_V117, EXTERNAL_VALIDATION_REGISTER_V117, VAT_OFFICIAL_SUBACCOUNT_REGISTRY_V117, PGCAccountingGateEngineV118, PGCFinalEvidenceClosureGateEngineV118, VAT_OFFICIAL_SUBACCOUNT_REGISTRY_V118, TAX_RULE_VERSION_REGISTRY_V118, ACCOUNTING_EVIDENCE_REGISTRY_V118, ACCOUNTING_MATERIAL_CORRECTIONS_REGISTER_V118 } from '@ai-employee/runtime';
 
 
 
@@ -20,9 +20,49 @@ import { PromptSanitizer } from '@ai-employee/policies';
 import { MarketplaceManager, MeteringEngine, EntitlementsManager, PaymentGatewayManager } from '@ai-employee/marketplace-billing';
 
 
+import { randomUUID } from 'node:crypto';
+
 const app = express();
-app.use(cors());
-app.use(express.json());
+
+// Security Headers (Prompt Mestre Secção 13)
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  res.setHeader('Content-Security-Policy', "default-src 'self'");
+  const correlationId = req.headers['x-correlation-id'] || randomUUID();
+  res.setHeader('x-correlation-id', correlationId);
+  (req as any).correlationId = correlationId;
+  next();
+});
+
+// Production Tenant Security Gate: Rejects demo identities in production environment
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'production') {
+    const forbiddenDefaults = ['org-demo', 'org_default', 'tenant_demo', 'user@example.com', 'supervisor_user'];
+    const tenantHeader = (req.headers['x-tenant-id'] as string) || '';
+    const bodyStr = JSON.stringify(req.body || {});
+
+    for (const def of forbiddenDefaults) {
+      if (tenantHeader.includes(def) || bodyStr.includes(`"${def}"`)) {
+        return res.status(403).json({
+          error: `SECURITY_VIOLATION: Demo default identity '${def}' is strictly forbidden in production.`,
+          correlationId: (req as any).correlationId
+        });
+      }
+    }
+  }
+  next();
+});
+
+app.use(cors({
+  origin: process.env.CORS_ALLOWED_ORIGIN || '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-tenant-id', 'x-correlation-id', 'x-idempotency-key']
+}));
+
+app.use(express.json({ limit: '10mb' }));
 
 const registry = RolePackRegistry.getInstance();
 const emailConnector = new MockEmailConnector();
@@ -288,19 +328,163 @@ app.post('/api/v1/llm/generate', async (req, res) => {
 
 // 21. Phase 5 Multi-Currency Checkout (AOA / USD / EUR)
 app.post('/api/v1/billing/checkout', async (req, res) => {
-  const { tenantId, planId, amount, currency, customerEmail } = req.body;
+  const { tenantId, planId, amount, currency, customerEmail, taxRegime, jurisdiction } = req.body;
+  if (!tenantId || !amount || !currency) {
+    return res.status(400).json({ error: 'Campos obrigatórios em falta: tenantId, amount, currency' });
+  }
   try {
     const session = await PaymentGatewayManager.getInstance().createCheckoutSession({
-      tenantId: tenantId || 'tenant_default',
+      tenantId,
       planId: planId || 'plan_business',
-      amount: amount || 50000,
-      currency: currency || 'AOA',
-      customerEmail: customerEmail || 'finance@client.co.ao'
+      amount: Number(amount),
+      currency,
+      customerEmail: customerEmail || 'finance@client.ao',
+      taxRegime,
+      jurisdiction
     });
     res.json(session);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
   }
+});
+
+// 21.A Invoices & Cryptographic Webhook Settlement (Prompt Mestre Secção 12)
+app.post('/api/v1/billing/invoices', async (req, res) => {
+  const { tenantId, planId, amount, currency, jurisdiction, regime } = req.body;
+  if (!tenantId || !amount || !currency) {
+    return res.status(400).json({ error: 'Campos obrigatórios em falta: tenantId, amount, currency' });
+  }
+  try {
+    const invoice = await PaymentGatewayManager.getInstance().generateInvoice(
+      tenantId,
+      planId || 'plan_business',
+      Number(amount),
+      currency,
+      jurisdiction || 'AO',
+      regime || 'REGIME_GERAL'
+    );
+    res.status(201).json(invoice);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.get('/api/v1/billing/invoices/:id', (req, res) => {
+  const invoice = PaymentGatewayManager.getInstance().getInvoice(req.params.id);
+  if (!invoice) {
+    return res.status(404).json({ error: `Factura '${req.params.id}' não encontrada.` });
+  }
+  res.json(invoice);
+});
+
+app.post('/api/v1/billing/webhook', (req, res) => {
+  const { invoiceId, providerTransactionId, webhookSignature, webhookSecret, webhookPayloadRaw, amountPaid, currency, tenantId, idempotencyKey } = req.body;
+  try {
+    const settled = PaymentGatewayManager.getInstance().settleInvoice(invoiceId, {
+      providerTransactionId,
+      webhookSignature,
+      webhookSecret,
+      webhookPayloadRaw,
+      amountPaid: Number(amountPaid),
+      currency,
+      tenantId,
+      idempotencyKey
+    });
+    res.json({ success: true, invoice: settled });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 21.B Company Management Engine — Formal Company & Tenant Provisioning
+const companyEngine = CompanyManagementEngine.getInstance();
+
+app.get('/api/v1/companies', (req, res) => {
+  const companies = companyEngine.getAllCompanies();
+  res.json({ count: companies.length, companies });
+});
+
+app.post('/api/v1/companies', (req, res) => {
+  try {
+    const company = companyEngine.createCompany(req.body);
+    res.status(201).json(company);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.get('/api/v1/companies/:id', (req, res) => {
+  const company = companyEngine.getCompany(req.params.id) || companyEngine.getCompanyByTenantId(req.params.id);
+  if (!company) {
+    return res.status(404).json({ error: `Empresa '${req.params.id}' não encontrada.` });
+  }
+  res.json(company);
+});
+
+app.put('/api/v1/companies/:id/state', (req, res) => {
+  const { lifecycleState } = req.body;
+  try {
+    const updated = companyEngine.updateCompanyLifecycleState(req.params.id, lifecycleState);
+    res.json(updated);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.get('/api/v1/companies/:id/departments', (req, res) => {
+  const depts = companyEngine.getCompanyDepartments(req.params.id);
+  res.json({ count: depts.length, departments: depts });
+});
+
+app.post('/api/v1/companies/:id/departments', (req, res) => {
+  const { name, managerUserId, costCenter } = req.body;
+  try {
+    const dept = companyEngine.createDepartment(req.params.id, name, managerUserId, costCenter);
+    res.status(201).json(dept);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.get('/api/v1/companies/:id/memberships', (req, res) => {
+  const members = companyEngine.getCompanyMemberships(req.params.id);
+  res.json({ count: members.length, memberships: members });
+});
+
+app.post('/api/v1/companies/:id/memberships', (req, res) => {
+  const { userId, role } = req.body;
+  try {
+    const member = companyEngine.addCompanyMember(req.params.id, userId, role);
+    res.status(201).json(member);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/v1/companies/:id/hire', (req, res) => {
+  const { catalogEmployeeId, departmentId, supervisorId, planId } = req.body;
+  try {
+    const instance = companyEngine.hireEmployeeInstance(
+      req.params.id,
+      Number(catalogEmployeeId),
+      departmentId,
+      supervisorId,
+      planId
+    );
+    res.status(201).json(instance);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.get('/api/v1/companies/:id/instances', (req, res) => {
+  const instances = companyEngine.getCompanyEmployeeInstances(req.params.id);
+  res.json({ count: instances.length, instances });
+});
+
+app.get('/api/v1/companies/:id/audit', (req, res) => {
+  const logs = companyEngine.getAuditLogs(req.params.id);
+  res.json({ count: logs.length, logs });
 });
 
 // 22. APCATOS — AI Employee Provisioning, Client Access & Tenant Onboarding System

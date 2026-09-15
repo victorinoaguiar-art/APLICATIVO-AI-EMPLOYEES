@@ -3,11 +3,12 @@
   "files": [],
   "references": [
     { "path": "./packages/shared" },
-    { "path": "./packages/rolepack" },
-    { "path": "./packages/permissions" },
     { "path": "./packages/policies" },
+    { "path": "./packages/permissions" },
     { "path": "./packages/approvals" },
     { "path": "./packages/tool-sdk" },
+    { "path": "./packages/rolepack" },
+    { "path": "./packages/marketplace-billing" },
     { "path": "./packages/runtime" },
     { "path": "./packages/evaluation-sdk" },
     { "path": "./apps/api" }

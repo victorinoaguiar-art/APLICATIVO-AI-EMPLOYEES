@@ -2,19 +2,13 @@ import {
   LiveSampleExpansionSummary,
   EmployeeLiveSampleRequirement,
   WorkflowLiveCoverage,
-  LiveEvidenceBundle
+  LiveEvidenceBundle,
+  sha256String
 } from '@ai-employee/shared';
 import { RolePackRegistry } from '@ai-employee/rolepack';
 
 function simpleHash(str: string): string {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash |= 0;
-  }
-  const pos = Math.abs(hash).toString(16).padStart(8, '0');
-  return `expansion_hash_${pos}_${str.length}`;
+  return sha256String(str);
 }
 
 export class CertL3LiveSampleExpansionEngine {

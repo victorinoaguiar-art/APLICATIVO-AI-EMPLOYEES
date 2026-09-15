@@ -380,3 +380,143 @@ export interface EmployeeWorkBinding {
   policySetId: string;
 }
 
+export type AETaskStatus =
+  | 'DRAFT'
+  | 'SUBMITTED'
+  | 'VALIDATING'
+  | 'QUEUED'
+  | 'RUNNING'
+  | 'COMPLETED'
+  | 'WAITING_USER_INPUT'
+  | 'WAITING_APPROVAL'
+  | 'PAUSED'
+  | 'BLOCKED'
+  | 'FAILED'
+  | 'CANCELLED'
+  | 'QUEUED_OFFLINE';
+
+export type AETaskPriority = 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT';
+
+export type AETaskAutonomyMode = 'ANALYZE_ONLY' | 'PREPARE_AND_WAIT' | 'FULL_AUTONOMY';
+
+export interface AETaskInputFile {
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  url?: string;
+}
+
+export interface AETaskOutputFile {
+  name: string;
+  format: string;
+  url: string;
+  size: string;
+  generatedAt: string;
+}
+
+export interface AETaskTimelineEvent {
+  timestamp: string;
+  label: string;
+  description: string;
+  actor?: string;
+}
+
+export interface AETaskChatMessage {
+  id: string;
+  sender: 'USER' | 'AI_EMPLOYEE';
+  senderName: string;
+  message: string;
+  timestamp: string;
+}
+
+export interface AETaskEvidence {
+  taskId: string;
+  executionId: string;
+  instanceId: string;
+  companyId: string;
+  tenantId: string;
+  startedAt: string;
+  completedAt?: string;
+  inputsUsed: string[];
+  sourcesAccessed: string[];
+  connectorsUsed: string[];
+  rulesApplied: string[];
+  outputsProduced: string[];
+  approvals: string[];
+  errors: string[];
+  auditEvents: string[];
+}
+
+export interface AETaskApprovalRequest {
+  approvalId: string;
+  operation: string;
+  details: string;
+  requestedAt: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  decidedBy?: string;
+  decidedAt?: string;
+  reason?: string;
+}
+
+export interface AETaskInputRequest {
+  prompt: string;
+  requestedAt: string;
+  respondedAt?: string;
+  userResponse?: string;
+}
+
+export interface AETask {
+  taskId: string;
+  companyId: string;
+  tenantId: string;
+  instanceId: string;
+  catalogEmployeeId: number;
+  catalogRoleKey: string;
+  employeeDisplayName: string;
+  requesterUserId: string;
+  requesterName: string;
+  title: string;
+  instruction: string;
+  priority: AETaskPriority;
+  dueAt?: string;
+  status: AETaskStatus;
+  inputFiles: AETaskInputFile[];
+  dataSources: string[];
+  requestedOutputFormats: string[];
+  autonomyMode: AETaskAutonomyMode;
+  executionIds: string[];
+  currentExecutionId?: string;
+  createdAt: string;
+  submittedAt?: string;
+  startedAt?: string;
+  completedAt?: string;
+  cancelledAt?: string;
+  cancelledBy?: string;
+  cancelReason?: string;
+  result?: {
+    summary: string;
+    outputFiles: AETaskOutputFile[];
+    generatedAt: string;
+  };
+  error?: {
+    code: string;
+    message: string;
+    timestamp: string;
+  };
+  approvalRequest?: AETaskApprovalRequest;
+  inputRequest?: AETaskInputRequest;
+  timeline: AETaskTimelineEvent[];
+  chat: AETaskChatMessage[];
+  evidence?: AETaskEvidence;
+}
+
+
+export * from '../competency/competencyTypes.js';
+export * from '../competency/modelNativeTypes.js';
+export * from '../competency/employeeRuntimeTypes.js';
+export * from '../competency/operationalRolePackTypes.js';
+export * from '../competency/executionModeTypes.js';
+
+
+

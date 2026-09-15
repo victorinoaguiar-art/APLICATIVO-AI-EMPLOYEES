@@ -18,7 +18,8 @@ import {
   IndustryJurisdictionPack,
   DataResidencyPolicy,
   JoinerMoverLeaverEvent,
-  AWEEPGlobalSummary
+  AWEEPGlobalSummary,
+  sha256String
 } from '@ai-employee/shared';
 
 export class AWEEPEngine {
@@ -151,7 +152,7 @@ export class AWEEPEngine {
       employee_id: '50',
       task_id: 'task-ap-901',
       evidence_type: 'APPROVAL_SIGNATURE',
-      file_hash_sha256: '9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e',
+      file_hash_sha256: sha256String('ev-9901823:APPROVAL_SIGNATURE:task-ap-901:Director_Financeiro_Autorizado'),
       signed_by: 'Director_Financeiro_Autorizado',
       timestamp: new Date().toISOString(),
       storage_location: 's3://evidence-vault-luanda/org-empresa/ev-9901823.pdf',

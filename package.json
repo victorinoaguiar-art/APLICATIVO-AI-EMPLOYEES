@@ -7,13 +7,24 @@
     "apps/*",
     "packages/*"
   ],
+  "engines": {
+    "node": ">=20.11.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
-    "build": "npm run build --workspaces",
-    "test": "npm run test:catalog && npm run test:runtime && npm run test:security && npm run eval:catalog",
+    "clean": "node -e \"const fs = require('fs'); const path = require('path'); ['packages', 'apps'].forEach(dir => { if (fs.existsSync(dir)) fs.readdirSync(dir).forEach(p => { ['dist', '.next', 'tsconfig.tsbuildinfo'].forEach(sub => { const target = path.join(dir, p, sub); if (fs.existsSync(target)) fs.rmSync(target, { recursive: true, force: true }); }); }); }); if (fs.existsSync('tsconfig.tsbuildinfo')) fs.rmSync('tsconfig.tsbuildinfo', { force: true });\"",
+    "typecheck": "tsc -b",
+    "build:packages": "tsc -b",
+    "build:web": "npm run build --workspace=apps/web",
+    "build": "npm run build:packages && npm run build:web",
     "test:catalog": "npm run test --workspace=packages/rolepack",
     "test:runtime": "npm run test --workspace=packages/runtime",
     "test:security": "npm run test --workspace=packages/policies",
+    "test:billing": "npm run test --workspace=packages/marketplace-billing",
+    "test:tools": "npm run test --workspace=packages/tool-sdk",
     "eval:catalog": "npm run eval:catalog --workspace=packages/evaluation-sdk",
+    "test": "npm run test:catalog && npm run test:runtime && npm run test:security && npm run test:billing && npm run test:tools && npm run eval:catalog",
+    "verify": "npm run clean && npm run build:packages && npm test",
     "dev:api": "npm run dev --workspace=apps/api",
     "dev:web": "npm run dev --workspace=apps/web"
   },

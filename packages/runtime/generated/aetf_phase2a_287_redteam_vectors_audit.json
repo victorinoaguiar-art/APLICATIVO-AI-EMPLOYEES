@@ -6,7 +6,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_002",
@@ -15,7 +15,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_003",
@@ -24,7 +24,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_004",
@@ -33,7 +33,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_005",
@@ -42,7 +42,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_006",
@@ -51,7 +51,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_007",
@@ -60,7 +60,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_008",
@@ -69,7 +69,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_009",
@@ -78,7 +78,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_010",
@@ -87,7 +87,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_011",
@@ -96,7 +96,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque INDIRECT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_012",
@@ -105,7 +105,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque INDIRECT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_013",
@@ -114,7 +114,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque INDIRECT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_014",
@@ -123,7 +123,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque INDIRECT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_015",
@@ -132,7 +132,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque INDIRECT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_016",
@@ -141,7 +141,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque INDIRECT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_017",
@@ -150,7 +150,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque INDIRECT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_018",
@@ -159,7 +159,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque INDIRECT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.415Z"
   },
   {
     "vector_id": "VEC_019",
@@ -168,7 +168,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque INDIRECT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_020",
@@ -177,7 +177,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque INDIRECT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_021",
@@ -186,7 +186,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque DOCUMENT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_022",
@@ -195,7 +195,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque DOCUMENT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_023",
@@ -204,7 +204,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque DOCUMENT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_024",
@@ -213,7 +213,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque DOCUMENT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_025",
@@ -222,7 +222,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque DOCUMENT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_026",
@@ -231,7 +231,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque DOCUMENT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_027",
@@ -240,7 +240,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque DOCUMENT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_028",
@@ -249,7 +249,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque DOCUMENT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_029",
@@ -258,7 +258,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque DOCUMENT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_030",
@@ -267,7 +267,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque DOCUMENT_PROMPT_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_031",
@@ -276,7 +276,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque JAILBREAK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_032",
@@ -285,7 +285,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque JAILBREAK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_033",
@@ -294,7 +294,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque JAILBREAK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_034",
@@ -303,7 +303,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque JAILBREAK executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_035",
@@ -312,7 +312,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque JAILBREAK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_036",
@@ -321,7 +321,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque JAILBREAK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_037",
@@ -330,7 +330,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque JAILBREAK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_038",
@@ -339,7 +339,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque JAILBREAK executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_039",
@@ -348,7 +348,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque JAILBREAK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_040",
@@ -357,7 +357,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque JAILBREAK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_041",
@@ -366,7 +366,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque DATA_EXFILTRATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_042",
@@ -375,7 +375,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque DATA_EXFILTRATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_043",
@@ -384,7 +384,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque DATA_EXFILTRATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_044",
@@ -393,7 +393,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque DATA_EXFILTRATION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_045",
@@ -402,7 +402,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque DATA_EXFILTRATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_046",
@@ -411,7 +411,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque DATA_EXFILTRATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_047",
@@ -420,7 +420,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque DATA_EXFILTRATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_048",
@@ -429,7 +429,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque DATA_EXFILTRATION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_049",
@@ -438,7 +438,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque DATA_EXFILTRATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_050",
@@ -447,7 +447,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque DATA_EXFILTRATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_051",
@@ -456,7 +456,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque CROSS_TENANT_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_052",
@@ -465,7 +465,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque CROSS_TENANT_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_053",
@@ -474,7 +474,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque CROSS_TENANT_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_054",
@@ -483,7 +483,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque CROSS_TENANT_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_055",
@@ -492,7 +492,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque CROSS_TENANT_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_056",
@@ -501,7 +501,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque CROSS_TENANT_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_057",
@@ -510,7 +510,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque CROSS_TENANT_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_058",
@@ -519,7 +519,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque CROSS_TENANT_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_059",
@@ -528,7 +528,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque CROSS_TENANT_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_060",
@@ -537,7 +537,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque CROSS_TENANT_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_061",
@@ -546,7 +546,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PRIVILEGE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_062",
@@ -555,7 +555,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PRIVILEGE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_063",
@@ -564,7 +564,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PRIVILEGE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_064",
@@ -573,7 +573,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PRIVILEGE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_065",
@@ -582,7 +582,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PRIVILEGE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_066",
@@ -591,7 +591,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PRIVILEGE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_067",
@@ -600,7 +600,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PRIVILEGE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_068",
@@ -609,7 +609,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PRIVILEGE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_069",
@@ -618,7 +618,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PRIVILEGE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_070",
@@ -627,7 +627,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PRIVILEGE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_071",
@@ -636,7 +636,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque ROLE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_072",
@@ -645,7 +645,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque ROLE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_073",
@@ -654,7 +654,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque ROLE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_074",
@@ -663,7 +663,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque ROLE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_075",
@@ -672,7 +672,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque ROLE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_076",
@@ -681,7 +681,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque ROLE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_077",
@@ -690,7 +690,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque ROLE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_078",
@@ -699,7 +699,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque ROLE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_079",
@@ -708,7 +708,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque ROLE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_080",
@@ -717,7 +717,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque ROLE_ESCALATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_081",
@@ -726,7 +726,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque EMPLOYEE_IMPERSONATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_082",
@@ -735,7 +735,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque EMPLOYEE_IMPERSONATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_083",
@@ -744,7 +744,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque EMPLOYEE_IMPERSONATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_084",
@@ -753,7 +753,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque EMPLOYEE_IMPERSONATION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_085",
@@ -762,7 +762,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque EMPLOYEE_IMPERSONATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_086",
@@ -771,7 +771,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque EMPLOYEE_IMPERSONATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_087",
@@ -780,7 +780,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque EMPLOYEE_IMPERSONATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_088",
@@ -789,7 +789,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque EMPLOYEE_IMPERSONATION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_089",
@@ -798,7 +798,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque EMPLOYEE_IMPERSONATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_090",
@@ -807,7 +807,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque EMPLOYEE_IMPERSONATION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_091",
@@ -816,7 +816,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque APPROVAL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_092",
@@ -825,7 +825,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque APPROVAL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_093",
@@ -834,7 +834,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque APPROVAL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_094",
@@ -843,7 +843,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque APPROVAL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_095",
@@ -852,7 +852,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque APPROVAL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_096",
@@ -861,7 +861,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque APPROVAL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_097",
@@ -870,7 +870,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque APPROVAL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_098",
@@ -879,7 +879,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque APPROVAL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_099",
@@ -888,7 +888,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque APPROVAL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_100",
@@ -897,7 +897,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque APPROVAL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_101",
@@ -906,7 +906,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque HITL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_102",
@@ -915,7 +915,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque HITL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_103",
@@ -924,7 +924,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque HITL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_104",
@@ -933,7 +933,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque HITL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_105",
@@ -942,7 +942,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque HITL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_106",
@@ -951,7 +951,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque HITL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_107",
@@ -960,7 +960,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque HITL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_108",
@@ -969,7 +969,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque HITL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_109",
@@ -978,7 +978,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque HITL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_110",
@@ -987,7 +987,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque HITL_BYPASS executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_111",
@@ -996,7 +996,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque QUEUE_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_112",
@@ -1005,7 +1005,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque QUEUE_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_113",
@@ -1014,7 +1014,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque QUEUE_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_114",
@@ -1023,7 +1023,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque QUEUE_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_115",
@@ -1032,7 +1032,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque QUEUE_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.335Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_116",
@@ -1041,7 +1041,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque QUEUE_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_117",
@@ -1050,7 +1050,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque QUEUE_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_118",
@@ -1059,7 +1059,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque QUEUE_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_119",
@@ -1068,7 +1068,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque QUEUE_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_120",
@@ -1077,7 +1077,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque QUEUE_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_121",
@@ -1086,7 +1086,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque COMMAND_REPLAY executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_122",
@@ -1095,7 +1095,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque COMMAND_REPLAY executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_123",
@@ -1104,7 +1104,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque COMMAND_REPLAY executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_124",
@@ -1113,7 +1113,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque COMMAND_REPLAY executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_125",
@@ -1122,7 +1122,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque COMMAND_REPLAY executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_126",
@@ -1131,7 +1131,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque COMMAND_REPLAY executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_127",
@@ -1140,7 +1140,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque COMMAND_REPLAY executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_128",
@@ -1149,7 +1149,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque COMMAND_REPLAY executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_129",
@@ -1158,7 +1158,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque COMMAND_REPLAY executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_130",
@@ -1167,7 +1167,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque COMMAND_REPLAY executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_131",
@@ -1176,7 +1176,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SESSION_HIJACKING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_132",
@@ -1185,7 +1185,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SESSION_HIJACKING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_133",
@@ -1194,7 +1194,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SESSION_HIJACKING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_134",
@@ -1203,7 +1203,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SESSION_HIJACKING executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_135",
@@ -1212,7 +1212,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SESSION_HIJACKING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_136",
@@ -1221,7 +1221,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SESSION_HIJACKING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_137",
@@ -1230,7 +1230,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SESSION_HIJACKING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_138",
@@ -1239,7 +1239,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SESSION_HIJACKING executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_139",
@@ -1248,7 +1248,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SESSION_HIJACKING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_140",
@@ -1257,7 +1257,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SESSION_HIJACKING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_141",
@@ -1266,7 +1266,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque API_KEY_EXPOSURE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_142",
@@ -1275,7 +1275,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque API_KEY_EXPOSURE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_143",
@@ -1284,7 +1284,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque API_KEY_EXPOSURE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_144",
@@ -1293,7 +1293,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque API_KEY_EXPOSURE executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_145",
@@ -1302,7 +1302,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque API_KEY_EXPOSURE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_146",
@@ -1311,7 +1311,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque API_KEY_EXPOSURE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_147",
@@ -1320,7 +1320,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque API_KEY_EXPOSURE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_148",
@@ -1329,7 +1329,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque API_KEY_EXPOSURE executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_149",
@@ -1338,7 +1338,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque API_KEY_EXPOSURE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_150",
@@ -1347,7 +1347,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque API_KEY_EXPOSURE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_151",
@@ -1356,7 +1356,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SECRET_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_152",
@@ -1365,7 +1365,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SECRET_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_153",
@@ -1374,7 +1374,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SECRET_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_154",
@@ -1383,7 +1383,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SECRET_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_155",
@@ -1392,7 +1392,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SECRET_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_156",
@@ -1401,7 +1401,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SECRET_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_157",
@@ -1410,7 +1410,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SECRET_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_158",
@@ -1419,7 +1419,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SECRET_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_159",
@@ -1428,7 +1428,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SECRET_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_160",
@@ -1437,7 +1437,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SECRET_LEAKAGE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_161",
@@ -1446,7 +1446,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque MALICIOUS_WEBHOOK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_162",
@@ -1455,7 +1455,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque MALICIOUS_WEBHOOK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_163",
@@ -1464,7 +1464,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque MALICIOUS_WEBHOOK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_164",
@@ -1473,7 +1473,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque MALICIOUS_WEBHOOK executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_165",
@@ -1482,7 +1482,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque MALICIOUS_WEBHOOK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_166",
@@ -1491,7 +1491,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque MALICIOUS_WEBHOOK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_167",
@@ -1500,7 +1500,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque MALICIOUS_WEBHOOK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_168",
@@ -1509,7 +1509,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque MALICIOUS_WEBHOOK executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_169",
@@ -1518,7 +1518,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque MALICIOUS_WEBHOOK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_170",
@@ -1527,7 +1527,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque MALICIOUS_WEBHOOK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_171",
@@ -1536,7 +1536,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque KNOWLEDGE_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_172",
@@ -1545,7 +1545,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque KNOWLEDGE_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_173",
@@ -1554,7 +1554,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque KNOWLEDGE_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_174",
@@ -1563,7 +1563,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque KNOWLEDGE_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_175",
@@ -1572,7 +1572,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque KNOWLEDGE_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_176",
@@ -1581,7 +1581,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque KNOWLEDGE_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_177",
@@ -1590,7 +1590,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque KNOWLEDGE_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_178",
@@ -1599,7 +1599,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque KNOWLEDGE_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_179",
@@ -1608,7 +1608,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque KNOWLEDGE_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_180",
@@ -1617,7 +1617,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque KNOWLEDGE_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_181",
@@ -1626,7 +1626,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque POLICY_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_182",
@@ -1635,7 +1635,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque POLICY_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_183",
@@ -1644,7 +1644,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque POLICY_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_184",
@@ -1653,7 +1653,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque POLICY_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_185",
@@ -1662,7 +1662,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque POLICY_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_186",
@@ -1671,7 +1671,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque POLICY_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_187",
@@ -1680,7 +1680,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque POLICY_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_188",
@@ -1689,7 +1689,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque POLICY_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_189",
@@ -1698,7 +1698,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque POLICY_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_190",
@@ -1707,7 +1707,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque POLICY_POISONING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_191",
@@ -1716,7 +1716,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque AUDIT_LOG_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_192",
@@ -1725,7 +1725,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque AUDIT_LOG_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_193",
@@ -1734,7 +1734,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque AUDIT_LOG_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_194",
@@ -1743,7 +1743,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque AUDIT_LOG_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_195",
@@ -1752,7 +1752,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque AUDIT_LOG_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_196",
@@ -1761,7 +1761,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque AUDIT_LOG_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_197",
@@ -1770,7 +1770,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque AUDIT_LOG_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_198",
@@ -1779,7 +1779,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque AUDIT_LOG_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_199",
@@ -1788,7 +1788,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque AUDIT_LOG_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_200",
@@ -1797,7 +1797,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque AUDIT_LOG_TAMPERING executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_201",
@@ -1806,7 +1806,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque TOOL_ABUSE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_202",
@@ -1815,7 +1815,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque TOOL_ABUSE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_203",
@@ -1824,7 +1824,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque TOOL_ABUSE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_204",
@@ -1833,7 +1833,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque TOOL_ABUSE executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_205",
@@ -1842,7 +1842,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque TOOL_ABUSE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_206",
@@ -1851,7 +1851,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque TOOL_ABUSE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_207",
@@ -1860,7 +1860,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque TOOL_ABUSE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_208",
@@ -1869,7 +1869,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque TOOL_ABUSE executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_209",
@@ -1878,7 +1878,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque TOOL_ABUSE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_210",
@@ -1887,7 +1887,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque TOOL_ABUSE executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_211",
@@ -1896,7 +1896,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque UNSAFE_TOOL_EXECUTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_212",
@@ -1905,7 +1905,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque UNSAFE_TOOL_EXECUTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_213",
@@ -1914,7 +1914,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque UNSAFE_TOOL_EXECUTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_214",
@@ -1923,7 +1923,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque UNSAFE_TOOL_EXECUTION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_215",
@@ -1932,7 +1932,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque UNSAFE_TOOL_EXECUTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_216",
@@ -1941,7 +1941,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque UNSAFE_TOOL_EXECUTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_217",
@@ -1950,7 +1950,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque UNSAFE_TOOL_EXECUTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_218",
@@ -1959,7 +1959,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque UNSAFE_TOOL_EXECUTION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_219",
@@ -1968,7 +1968,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque UNSAFE_TOOL_EXECUTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_220",
@@ -1977,7 +1977,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque UNSAFE_TOOL_EXECUTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_221",
@@ -1986,7 +1986,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque MALICIOUS_TOOL_OUTPUT executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_222",
@@ -1995,7 +1995,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque MALICIOUS_TOOL_OUTPUT executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_223",
@@ -2004,7 +2004,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque MALICIOUS_TOOL_OUTPUT executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_224",
@@ -2013,7 +2013,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque MALICIOUS_TOOL_OUTPUT executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_225",
@@ -2022,7 +2022,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque MALICIOUS_TOOL_OUTPUT executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_226",
@@ -2031,7 +2031,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque MALICIOUS_TOOL_OUTPUT executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_227",
@@ -2040,7 +2040,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque MALICIOUS_TOOL_OUTPUT executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_228",
@@ -2049,7 +2049,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque MALICIOUS_TOOL_OUTPUT executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_229",
@@ -2058,7 +2058,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque MALICIOUS_TOOL_OUTPUT executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_230",
@@ -2067,7 +2067,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque MALICIOUS_TOOL_OUTPUT executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_231",
@@ -2076,7 +2076,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SSRF executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_232",
@@ -2085,7 +2085,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SSRF executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_233",
@@ -2094,7 +2094,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SSRF executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_234",
@@ -2103,7 +2103,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SSRF executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_235",
@@ -2112,7 +2112,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SSRF executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_236",
@@ -2121,7 +2121,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SSRF executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.416Z"
   },
   {
     "vector_id": "VEC_237",
@@ -2130,7 +2130,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SSRF executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_238",
@@ -2139,7 +2139,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SSRF executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_239",
@@ -2148,7 +2148,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SSRF executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_240",
@@ -2157,7 +2157,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SSRF executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_241",
@@ -2166,7 +2166,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SQL_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_242",
@@ -2175,7 +2175,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SQL_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_243",
@@ -2184,7 +2184,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SQL_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_244",
@@ -2193,7 +2193,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SQL_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_245",
@@ -2202,7 +2202,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SQL_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_246",
@@ -2211,7 +2211,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SQL_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_247",
@@ -2220,7 +2220,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SQL_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_248",
@@ -2229,7 +2229,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SQL_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_249",
@@ -2238,7 +2238,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque SQL_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_250",
@@ -2247,7 +2247,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque SQL_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_251",
@@ -2256,7 +2256,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque COMMAND_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_252",
@@ -2265,7 +2265,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque COMMAND_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_253",
@@ -2274,7 +2274,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque COMMAND_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_254",
@@ -2283,7 +2283,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque COMMAND_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_255",
@@ -2292,7 +2292,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque COMMAND_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_256",
@@ -2301,7 +2301,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque COMMAND_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_257",
@@ -2310,7 +2310,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque COMMAND_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_258",
@@ -2319,7 +2319,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque COMMAND_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_259",
@@ -2328,7 +2328,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque COMMAND_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_260",
@@ -2337,7 +2337,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque COMMAND_INJECTION executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_261",
@@ -2346,7 +2346,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PATH_TRAVERSAL executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_262",
@@ -2355,7 +2355,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PATH_TRAVERSAL executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_263",
@@ -2364,7 +2364,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PATH_TRAVERSAL executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_264",
@@ -2373,7 +2373,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PATH_TRAVERSAL executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_265",
@@ -2382,7 +2382,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PATH_TRAVERSAL executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_266",
@@ -2391,7 +2391,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PATH_TRAVERSAL executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_267",
@@ -2400,7 +2400,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PATH_TRAVERSAL executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_268",
@@ -2409,7 +2409,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PATH_TRAVERSAL executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_269",
@@ -2418,7 +2418,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque PATH_TRAVERSAL executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_270",
@@ -2427,7 +2427,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque PATH_TRAVERSAL executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_271",
@@ -2436,7 +2436,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque LOCAL_AGENT_ATTACK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_272",
@@ -2445,7 +2445,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque LOCAL_AGENT_ATTACK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_273",
@@ -2454,7 +2454,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque LOCAL_AGENT_ATTACK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_274",
@@ -2463,7 +2463,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque LOCAL_AGENT_ATTACK executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_275",
@@ -2472,7 +2472,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque LOCAL_AGENT_ATTACK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_276",
@@ -2481,7 +2481,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque LOCAL_AGENT_ATTACK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_277",
@@ -2490,7 +2490,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque LOCAL_AGENT_ATTACK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_278",
@@ -2499,7 +2499,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque LOCAL_AGENT_ATTACK executada e mitigada na Phase 2A.",
     "mitigation_status": "NEUTRALIZED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_279",
@@ -2508,7 +2508,7 @@
     "severity": "HIGH",
     "description": "Simulação de ataque LOCAL_AGENT_ATTACK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_280",
@@ -2517,7 +2517,7 @@
     "severity": "CRITICAL",
     "description": "Simulação de ataque LOCAL_AGENT_ATTACK executada e mitigada na Phase 2A.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_281",
@@ -2526,7 +2526,7 @@
     "severity": "CRITICAL",
     "description": "Teste de isolamento de memória e cache entre empresas.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_282",
@@ -2535,7 +2535,7 @@
     "severity": "CRITICAL",
     "description": "Teste de isolamento de memória e cache entre empresas.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_283",
@@ -2544,7 +2544,7 @@
     "severity": "CRITICAL",
     "description": "Teste de isolamento de memória e cache entre empresas.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_284",
@@ -2553,7 +2553,7 @@
     "severity": "CRITICAL",
     "description": "Teste de isolamento de memória e cache entre empresas.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_285",
@@ -2562,7 +2562,7 @@
     "severity": "CRITICAL",
     "description": "Teste de isolamento de memória e cache entre empresas.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_286",
@@ -2571,7 +2571,7 @@
     "severity": "CRITICAL",
     "description": "Teste de isolamento de memória e cache entre empresas.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   },
   {
     "vector_id": "VEC_287",
@@ -2580,6 +2580,6 @@
     "severity": "CRITICAL",
     "description": "Teste de isolamento de memória e cache entre empresas.",
     "mitigation_status": "BLOCKED",
-    "last_tested_at": "2026-09-13T15:18:46.336Z"
+    "last_tested_at": "2026-09-15T13:57:21.417Z"
   }
 ]

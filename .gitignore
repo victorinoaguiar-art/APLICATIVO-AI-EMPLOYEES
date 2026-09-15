@@ -1,13 +1,17 @@
 # Dependencies
 node_modules/
 .pnpm-store/
-package-lock.json
 
 # Next.js
 .next/
 out/
 build/
 dist/
+packages/*/dist/
+apps/*/dist/
+*.tsbuildinfo
+packages/*/tsconfig.tsbuildinfo
+apps/*/tsconfig.tsbuildinfo
 
 # Logs & Debug
 *.log
@@ -30,4 +34,6 @@ Thumbs.db
 # Temporary staging & scratch folders
 scratch/p0_zip_staging/
 scratch/zip_test_extract/
+*.zip
+*.bundle
 

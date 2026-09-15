@@ -8,20 +8,13 @@ import {
   PilotLaunchChecklist,
   PilotPermissionMatrixEntry,
   RollbackExecutionRecord,
-  RollbackPlanRecord
+  RollbackPlanRecord,
+  sha256String
 } from '@ai-employee/shared';
 import { AETFPhase2BEngine } from './AETFPhase2BEngine.js';
 
 function simpleSha256(input: string): string {
-  let hash = 0;
-  const str = input + 'AETF_CONTROLLED_PILOT_2026';
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
-  }
-  const hex = Math.abs(hash).toString(16).padStart(8, '0');
-  return (hex + hex + hex + hex + hex + hex + hex + hex).substring(0, 64);
+  return sha256String(input + 'AETF_CONTROLLED_PILOT_2026');
 }
 
 export class ControlledPilotLaunchEngine {

@@ -8,19 +8,12 @@ import {
   Phase2BPilotSummary,
   PilotRestrictionPolicy,
   RiskClass,
-  ShadowModeMetrics
+  ShadowModeMetrics,
+  sha256String
 } from '@ai-employee/shared';
 
 function simpleSha256(input: string): string {
-  let hash = 0;
-  const str = input + 'AETF_PHASE2B_SALT_2026';
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
-  }
-  const hex = Math.abs(hash).toString(16).padStart(8, '0');
-  return (hex + hex + hex + hex + hex + hex + hex + hex).substring(0, 64);
+  return sha256String(input + 'AETF_PHASE2B_SALT_2026');
 }
 
 export class AETFPhase2BEngine {

@@ -10,26 +10,12 @@ import {
   CanonicalRestrictedEmployeeRecord,
   FinancialAuthorizationProfile,
   ContinuousOperationsGovernanceManifest,
-  RiskClass
+  RiskClass,
+  sha256String
 } from '@ai-employee/shared';
 
 function generateSHA256Hash(content: string): string {
-  let hash1 = 0x811c9dc5;
-  let hash2 = 0x01000193;
-  for (let i = 0; i < content.length; i++) {
-    const code = content.charCodeAt(i);
-    hash1 ^= code;
-    hash1 = Math.imul(hash1, 0x01000193);
-    hash2 ^= code;
-    hash2 = Math.imul(hash2, 0x811c9dc5);
-  }
-  const hex1 = (hash1 >>> 0).toString(16).padStart(8, '0');
-  const hex2 = (hash2 >>> 0).toString(16).padStart(8, '0');
-  const hex3 = Math.abs(hash1 ^ hash2).toString(16).padStart(8, '0');
-  const hex4 = Math.abs(hash1 & hash2).toString(16).padStart(8, '0');
-  
-  // Real 64 hex character string format for SHA-256 digest representation
-  return `${hex1}${hex2}${hex3}${hex4}${hex2}${hex1}${hex4}${hex3}`;
+  return sha256String(content);
 }
 
 export class CertL3AuthenticityFreezeEngine {
