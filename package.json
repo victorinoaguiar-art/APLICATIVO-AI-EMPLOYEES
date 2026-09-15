@@ -29,7 +29,8 @@
     "verify:security": "node scripts/verify-security.mjs",
     "verify:payments": "node --test packages/marketplace-billing/dist/__tests__/billing.test.js",
     "verify:auth": "node --test packages/runtime/dist/test/apiAuthMultiTenant.test.js",
-    "verify": "npm run clean && npm run typecheck && npm run build:packages && npm run build:web && npm test && npm run validate:manifests && npm run verify:hashes && npm run verify:security && npm run verify:payments && npm run verify:auth",
+    "lint": "npm run lint --workspace=apps/web",
+    "verify": "npm run clean && npm run typecheck && npm run build:packages && npm run build:web && npm run lint && npm test && npm run validate:manifests && npm run verify:hashes && npm run verify:security && npm run verify:payments && npm run verify:auth",
     "dev:api": "npm run dev --workspace=apps/api",
     "dev:web": "npm run dev --workspace=apps/web"
   },
@@ -40,6 +41,9 @@
   },
   "overrides": {
     "postcss": "^8.5.28",
-    "qs": "^6.16.0"
+    "qs": "^6.16.0",
+    "next": {
+      "postcss": "^8.5.28"
+    }
   }
 }

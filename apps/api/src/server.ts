@@ -183,8 +183,30 @@ app.use((req, res, next) => {
 
   const payload = verifyResult.payload;
 
-  // Verificação de conta persistente (B6)
-  const account = tokenService.getAccount(payload.user_id);
+  // Verificação de conta persistente (B6 / P5)
+  let account: any = null;
+  try {
+    account = tokenService.getAccount(payload.user_id);
+  } catch (err: any) {
+    return res.status(500).json({
+      error: `IDENTITY_QUERY_FAILED: Failed to query persistent account: ${err.message}`,
+      code: 'IDENTITY_QUERY_FAILED',
+      correlationId: (req as any).correlationId
+    });
+  }
+
+  // Em produção, utilizador ausente no registo persistente DEVE ser rejeitado
+  if (process.env.NODE_ENV === 'production' && !account) {
+    return res.status(401).json({
+      error: `UNAUTHORIZED: User '${payload.user_id}' does not exist in persistent identity store.`,
+      code: 'USER_NOT_REGISTERED',
+      correlationId: (req as any).correlationId
+    });
+  }
+
+  let effectiveRoles = payload.roles;
+  let effectivePermissions = payload.permissions;
+
   if (account) {
     if (account.status !== 'ACTIVE') {
       return res.status(403).json({
@@ -200,6 +222,9 @@ app.use((req, res, next) => {
         correlationId: (req as any).correlationId
       });
     }
+    // Não confiar apenas nas funções presentes no token: a conta persistente é autoritativa
+    effectiveRoles = account.roles;
+    effectivePermissions = account.permissions;
   }
 
   // Enforce Tenant Alignment: Se header x-tenant-id for fornecido, DEVE coincidir com o token
@@ -221,10 +246,10 @@ app.use((req, res, next) => {
     });
   }
 
-  // RBAC / Permissão de Administração
+  // RBAC / Permissão de Administração baseada nas funções autoritativas
   const adminRoutes = ['/api/v1/apcatos/provision', '/api/v1/companies'];
   if (req.method === 'POST' && adminRoutes.some(r => path.startsWith(r))) {
-    const hasAdmin = payload.roles.includes('ADMIN') || payload.roles.includes('SUPER_ADMIN');
+    const hasAdmin = effectiveRoles.includes('ADMIN') || effectiveRoles.includes('SUPER_ADMIN');
     if (!hasAdmin) {
       return res.status(403).json({
         error: 'FORBIDDEN: Administrative role required for this resource.',

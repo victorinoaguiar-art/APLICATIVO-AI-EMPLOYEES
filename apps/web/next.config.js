@@ -2,12 +2,7 @@
 const nextConfig = {
   transpilePackages: ['lucide-react', '@ai-employee/shared', '@ai-employee/rolepack', '@ai-employee/runtime', '@ai-employee/marketplace-billing'],
   reactStrictMode: true,
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+
   webpack: (config, { isServer, webpack }) => {
     config.plugins.push(
       new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {

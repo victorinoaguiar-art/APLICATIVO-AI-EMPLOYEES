@@ -278,5 +278,32 @@ describe('Marketplace & Billing Engine (P06)', () => {
     const expiredHeader = `t=${oldTimestamp},v1=${validSig}`;
     const isExpiredAccepted = StripeWebhookVerifier.verify(genuinePayload, expiredHeader, serverSecret);
     assert.strictEqual(isExpiredAccepted, false, 'Expired webhook timestamp (> 300s) must be rejected');
+
+    // 9. Test P4: Real payment requests NEVER fall back to sandbox checkout
+    assert.notStrictEqual(unconfiguredAoa.provider, 'SANDBOX_CHECKOUT', 'Real AOA payment must never return sandbox session');
+    assert.notStrictEqual(unconfiguredStripe.provider, 'SANDBOX_CHECKOUT', 'Real Stripe payment must never return sandbox session');
+    assert.strictEqual(unconfiguredAoa.checkoutUrl, undefined, 'No fake checkout URLs manufactured');
+    assert.strictEqual(unconfiguredStripe.checkoutUrl, undefined, 'No fake checkout URLs manufactured');
+
+    // 10. Test P4: Sandbox is strictly forbidden in production environment
+    const prevEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = 'production';
+    try {
+      await assert.rejects(
+        async () => {
+          await gateway.createCheckoutSession({
+            tenantId: 'tenant_test_prod',
+            planId: 'PLAN_500',
+            amount: 100,
+            currency: 'USD',
+            customerEmail: 'client@example.com',
+            isSandbox: true
+          });
+        },
+        /SANDBOX_PAYMENTS_FORBIDDEN_IN_PRODUCTION/
+      );
+    } finally {
+      process.env.NODE_ENV = prevEnv;
+    }
   });
 });

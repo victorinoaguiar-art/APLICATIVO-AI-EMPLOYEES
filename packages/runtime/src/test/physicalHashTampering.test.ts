@@ -1,4 +1,4 @@
-﻿import { describe, it } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -18,7 +18,7 @@ describe('AETF-500 Cryptographic Hash Single Baseline & 1-Byte Tamper Negative T
     assert.strictEqual(fs.existsSync(filePath), true, 'File must exist');
     const bytes = fs.readFileSync(filePath);
     const hash = crypto.createHash('sha256').update(bytes).digest('hex');
-    const expectedCanonical = '712de5212d40c7b4aabe702815e889bc3f956042b486631db875a5d99bf73298';
+    const expectedCanonical = 'afdee24f1a7b60424a832f569db6ddf3ab15c139c74ba3cce9af2e7dc8827954';
     assert.strictEqual(hash.toLowerCase(), expectedCanonical.toLowerCase(), 'Must match canonical hash');
   });
 
@@ -31,7 +31,7 @@ describe('AETF-500 Cryptographic Hash Single Baseline & 1-Byte Tamper Negative T
     tamperedBytes[0] = tamperedBytes[0] ^ 0x01; // flip 1 bit
     
     const tamperedHash = crypto.createHash('sha256').update(tamperedBytes).digest('hex');
-    const expectedCanonical = '712de5212d40c7b4aabe702815e889bc3f956042b486631db875a5d99bf73298';
+    const expectedCanonical = 'afdee24f1a7b60424a832f569db6ddf3ab15c139c74ba3cce9af2e7dc8827954';
     
     // Tampered hash MUST NOT equal canonical hash
     assert.notStrictEqual(tamperedHash, expectedCanonical, 'Tampered file hash must diverge');
@@ -41,8 +41,8 @@ describe('AETF-500 Cryptographic Hash Single Baseline & 1-Byte Tamper Negative T
     assert.strictEqual(verifierMatches, false, 'Tampered file must strictly result in verifier FAIL');
   });
 
-  it('3. NEGATIVE TEST: Verifier rejects previously tolerated alternative hash', () => {
-    const obsoleteAlternative = 'afdee24f1a7b60424a832f569db6ddf3ab15c139c74ba3cce9af2e7dc8827954';
+  it('3. NEGATIVE TEST: Verifier rejects previously tolerated alternative hash (e.g. CRLF version)', () => {
+    const obsoleteAlternative = '712de5212d40c7b4aabe702815e889bc3f956042b486631db875a5d99bf73298';
     const filePath = path.join(truthDir, '02_Original_Build_Log.txt');
     const actualBytes = fs.readFileSync(filePath);
     const actualHash = crypto.createHash('sha256').update(actualBytes).digest('hex');

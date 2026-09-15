@@ -3,6 +3,12 @@ import * as path from 'node:path';
 import * as crypto from 'node:crypto';
 import { execSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import {
+  calculatePhysicalLiveTasks,
+  calculateLegallyAuthorizedTenants,
+  calculateEligibleCertificationEvidence,
+  calculateReadinessRiskDistribution
+} from './lib/cardinalityCalculators.mjs';
 
 const req = createRequire(path.resolve('package.json'));
 const Ajv = req('ajv');
@@ -198,43 +204,67 @@ const freezeManifest = readJsonNoBom(
   path.resolve(process.cwd(), 'generated/AETF500_CERTL3_Authenticity_ProductionFreeze_Manifest.json')
 );
 const declaredLiveTasks = freezeManifest.summary.authentic_verified_live_tasks; // 0
-// Physical count: verify whether any customer external live receipts exist
-const physicalLiveTasksInStorage = 0; // Derived from physical storage audit (0 live external executions)
+const liveTasksStoragePath = path.resolve(process.cwd(), 'data/live_tasks.json');
+const liveTasksCalc = calculatePhysicalLiveTasks(liveTasksStoragePath);
+const physicalLiveTasksInStorage = liveTasksCalc.count;
 const liveTasksCheckPassed = declaredLiveTasks === physicalLiveTasksInStorage;
+if (!liveTasksCheckPassed) cardinalityPassed = false;
 cardinalityChecks.push({
   domain: 'TASK_EVIDENCE_CARDINALITY',
   declared_live_tasks: declaredLiveTasks,
   physical_live_tasks: physicalLiveTasksInStorage,
+  verified_tasks: liveTasksCalc.verifiedTasks,
+  source_path: path.relative(process.cwd(), liveTasksStoragePath).replace(/\\/g, '/'),
+  source_hash: liveTasksCalc.sourceHash,
   verified_live_gap: 68500,
   status: liveTasksCheckPassed ? 'PASS' : 'FAIL'
 });
 
 // Domain Check 3: tenants_declared = tenants_authorized (dynamically calculated)
 const declaredTenantsCount = freezeManifest.summary?.tenant_reconciliation?.verified_companies?.length || 0;
-// Legally signed production contracts count in repository truth:
-const legallyAuthorizedTenantsCount = 0; // Zero external contractual execution files present
+const contractsStoragePath = path.resolve(process.cwd(), 'data/legal_contracts.json');
+const tenantsCalc = calculateLegallyAuthorizedTenants(contractsStoragePath);
+const legallyAuthorizedTenantsCount = tenantsCalc.count;
 const demonstrationTenantsCount = declaredTenantsCount;
+const tenantCheckPassed = legallyAuthorizedTenantsCount === 0;
+if (!tenantCheckPassed) cardinalityPassed = false;
 cardinalityChecks.push({
   domain: 'TENANT_AUTHORIZATION_CARDINALITY',
   declared_tenants: declaredTenantsCount,
   authorized_tenants: legallyAuthorizedTenantsCount,
   demonstration_tenants: demonstrationTenantsCount,
-  status: legallyAuthorizedTenantsCount === 0 ? 'PASS' : 'FAIL'
+  source_path: path.relative(process.cwd(), contractsStoragePath).replace(/\\/g, '/'),
+  source_hash: tenantsCalc.sourceHash,
+  status: tenantCheckPassed ? 'PASS' : 'FAIL'
 });
 
 // Domain Check 4: certifications_declared = evidence_eligible_records (dynamically calculated)
-const baselineManifest = readJsonNoBom(
-  path.resolve(process.cwd(), 'generated/AETF500_CERTL3_FinalProductionBaseline_Manifest.json')
-);
+const baselineManifestPath = path.resolve(process.cwd(), 'generated/AETF500_CERTL3_FinalProductionBaseline_Manifest.json');
+const baselineManifest = readJsonNoBom(baselineManifestPath);
 const certL3ApprovedDeclared = baselineManifest.cert_l3_count; // 0
-const eligiblePhysicalEvidenceCount = 0; // Derived: 0 independent third-party audit reports
+const auditEvidencePath = path.resolve(process.cwd(), 'data/external_audits.json');
+const evidenceCalc = calculateEligibleCertificationEvidence(auditEvidencePath);
+const eligiblePhysicalEvidenceCount = evidenceCalc.count;
+
+// Autonomy & Risk distribution dynamically calculated from physical employee_authorization_records
+const riskDistCalc = calculateReadinessRiskDistribution(baselineManifestPath);
+const controlled_pilot_ready_count = riskDistCalc.controlled_pilot_ready_count; // 470
+const hitl_mandatory_count = riskDistCalc.hitl_mandatory_count; // 30
+
+const certCheckPassed = certL3ApprovedDeclared === 0 && eligiblePhysicalEvidenceCount === 0 && riskDistCalc.status === 'PASS';
+if (!certCheckPassed) cardinalityPassed = false;
+
 cardinalityChecks.push({
   domain: 'CERTIFICATION_CEILING_CARDINALITY',
   cert_l3_approved_count: certL3ApprovedDeclared,
   eligible_evidence_count: eligiblePhysicalEvidenceCount,
-  controlled_pilot_ready_count: 470,
-  hitl_mandatory_count: 30,
-  status: certL3ApprovedDeclared === 0 ? 'PASS' : 'FAIL'
+  controlled_pilot_ready_count,
+  hitl_mandatory_count,
+  total_evaluated_employees: riskDistCalc.totalEmployees,
+  unique_evaluated_employees: riskDistCalc.uniqueEmployees,
+  source_path: path.relative(process.cwd(), baselineManifestPath).replace(/\\/g, '/'),
+  source_hash: riskDistCalc.sourceHash,
+  status: certCheckPassed ? 'PASS' : 'FAIL'
 });
 
 const cardinalityReceipt = {

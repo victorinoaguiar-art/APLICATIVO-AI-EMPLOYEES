@@ -87,7 +87,7 @@ export class TokenService {
 
   public constructor(customSecret?: string, dbPath?: string) {
     const isProd = process.env.NODE_ENV === 'production';
-    const envSecret = process.env.AUTH_SECRET || process.env.JWT_SECRET;
+    const envSecret = customSecret || process.env.AUTH_SECRET || process.env.JWT_SECRET;
 
     if (isProd) {
       if (!envSecret || envSecret.length < 32 || INSECURE_FALLBACK_PATTERNS.some(p => envSecret.toLowerCase().includes(p))) {
@@ -141,8 +141,13 @@ export class TokenService {
       for (const row of rows) {
         this.revokedJtis.add(row.jti);
       }
-    } catch {
-      // Fallback to in-memory set if SQLite unavailable in testing shims
+    } catch (err: any) {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error(`FATAL_DATABASE_INIT_FAILURE: Identity persistence SQLite startup failed in production: ${err.message}`);
+      }
+      if (customPath) {
+        throw err;
+      }
     }
   }
 
@@ -161,20 +166,18 @@ export class TokenService {
     this.currentKid = newKid;
   }
 
-  public revokeToken(jti: string, reason: string = 'MANUAL_REVOCATION'): void {
+  public revokeToken(jti: string, reason?: string): void {
     if (jti) {
-      this.revokedJtis.add(jti);
       if (this.db) {
-        try {
-          const stmt = this.db.prepare(`
-            INSERT OR REPLACE INTO token_revocations (jti, revoked_at, reason)
-            VALUES (?, ?, ?)
-          `);
-          stmt.run(jti, new Date().toISOString(), reason);
-        } catch {
-          // In-memory set preserved
-        }
+        const stmt = this.db.prepare(`
+          INSERT OR REPLACE INTO token_revocations (jti, revoked_at, reason)
+          VALUES (?, ?, ?)
+        `);
+        stmt.run(jti, new Date().toISOString(), reason || null);
+      } else if (process.env.NODE_ENV === 'production') {
+        throw new Error('REVOCATION_PERSISTENCE_FAILURE: Cannot persist revocation without database in production');
       }
+      this.revokedJtis.add(jti);
     }
   }
 
@@ -197,41 +200,39 @@ export class TokenService {
 
   public upsertAccount(account: AccountRecord): void {
     if (this.db) {
-      try {
-        const stmt = this.db.prepare(`
-          INSERT OR REPLACE INTO account_authorizations (user_id, tenant_id, roles, permissions, status)
-          VALUES (?, ?, ?, ?, ?)
-        `);
-        stmt.run(
-          account.user_id,
-          account.tenant_id,
-          JSON.stringify(account.roles),
-          JSON.stringify(account.permissions),
-          account.status
-        );
-      } catch {
-        // Fallback
-      }
+      const stmt = this.db.prepare(`
+        INSERT OR REPLACE INTO account_authorizations (user_id, tenant_id, roles, permissions, status)
+        VALUES (?, ?, ?, ?, ?)
+      `);
+      stmt.run(
+        account.user_id,
+        account.tenant_id,
+        JSON.stringify(account.roles),
+        JSON.stringify(account.permissions),
+        account.status
+      );
+    } else if (process.env.NODE_ENV === 'production') {
+      throw new Error('IDENTITY_STORE_UNAVAILABLE: Cannot upsert account without database in production');
     }
   }
 
   public getAccount(userId: string): AccountRecord | null {
     if (this.db) {
-      try {
-        const stmt = this.db.prepare('SELECT * FROM account_authorizations WHERE user_id = ?');
-        const row = stmt.get(userId) as any;
-        if (row) {
-          return {
-            user_id: row.user_id,
-            tenant_id: row.tenant_id,
-            roles: JSON.parse(row.roles),
-            permissions: JSON.parse(row.permissions),
-            status: row.status as any
-          };
-        }
-      } catch {
-        return null;
+      const stmt = this.db.prepare('SELECT * FROM account_authorizations WHERE user_id = ?');
+      const row = stmt.get(userId) as any;
+      if (row) {
+        return {
+          user_id: row.user_id,
+          tenant_id: row.tenant_id,
+          roles: JSON.parse(row.roles),
+          permissions: JSON.parse(row.permissions),
+          status: row.status as any
+        };
       }
+      return null;
+    }
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('IDENTITY_STORE_UNAVAILABLE: Database connection is not available in production');
     }
     return null;
   }

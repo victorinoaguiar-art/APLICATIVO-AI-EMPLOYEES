@@ -1,4 +1,4 @@
-﻿export interface StripeCheckoutParams {
+export interface StripeCheckoutParams {
   amountInCents: number;
   currency: 'usd' | 'eur';
   tenantId: string;
@@ -11,7 +11,7 @@
 
 export interface StripeCheckoutResult {
   sessionId: string;
-  checkoutUrl: string;
+  checkoutUrl?: string;
   status: 'OPEN' | 'FAILED';
   error?: string;
 }
@@ -42,9 +42,9 @@ export class StripePaymentAdapter {
     if (!this.apiKey) {
       return {
         sessionId: 'UNCONFIGURED',
-        checkoutUrl: '',
+        checkoutUrl: undefined,
         status: 'FAILED',
-        error: 'PROVIDER_NOT_CONFIGURED: Stripe API key missing or unconfigured'
+        error: 'PROVIDER_NOT_CONFIGURED: Stripe API key missing or unconfigured (STRIPE_CONNECTOR = NOT_CONFIGURED: BLOCKED_BY_EXTERNAL_DEPENDENCY)'
       };
     }
 

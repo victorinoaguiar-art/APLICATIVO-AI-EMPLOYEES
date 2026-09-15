@@ -5,14 +5,15 @@
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "node -e \"const fs = require('fs'); try { if (fs.existsSync('.next')) fs.rmSync('.next', { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }); } catch (e) {}\" && next build",
+    "lint": "next lint",
     "start": "next start -p 3001"
   },
   "dependencies": {
+    "@ai-employee/marketplace-billing": "1.0.0",
     "@ai-employee/rolepack": "1.0.0",
     "@ai-employee/shared": "1.0.0",
-    "@ai-employee/marketplace-billing": "1.0.0",
     "lucide-react": "^1.43.0",
-    "next": "^14.2.35",
+    "next": "^15.5.25",
     "postcss": "^8.5.28",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -22,6 +23,9 @@
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "typescript": "^5.4.0"
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.5",
+    "typescript": "^5.4.0",
+    "typescript-eslint": "^8.70.0"
   }
 }

@@ -1,4 +1,4 @@
-﻿export interface ExpressPayCheckoutParams {
+export interface ExpressPayCheckoutParams {
   amountInCentimos: number; // Smallest unit in AOA (cêntimos)
   currency: 'AOA';
   tenantId: string;
@@ -28,7 +28,7 @@ export class ExpressPayPaymentAdapter {
       return {
         sessionId: 'UNCONFIGURED',
         status: 'FAILED',
-        error: 'PROVIDER_NOT_CONFIGURED: ExpressPay Multicaixa API key unconfigured (NOT_CONFIGURED/NOT_VERIFIED)'
+        error: 'PROVIDER_NOT_CONFIGURED: ExpressPay Multicaixa API key unconfigured (EXPRESSPAY_CONNECTOR = NOT_CONFIGURED: AOA_REAL_PAYMENT = BLOCKED_BY_EXTERNAL_DEPENDENCY)'
       };
     }
 

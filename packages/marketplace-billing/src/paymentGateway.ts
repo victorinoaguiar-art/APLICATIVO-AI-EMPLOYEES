@@ -1,5 +1,7 @@
 import { createHmac, timingSafeEqual } from 'crypto';
 import { TransactionalPaymentStore } from './persistence/TransactionalPaymentStore.js';
+import { StripePaymentAdapter } from './adapters/StripePaymentAdapter.js';
+import { ExpressPayPaymentAdapter } from './adapters/ExpressPayPaymentAdapter.js';
 
 /**
  * AI Employee Platform — Multi-Currency Payment Gateway (Audited Forensically)
@@ -178,9 +180,13 @@ export class SandboxPaymentVerifier {
 export class PaymentGatewayManager {
   private static instance: PaymentGatewayManager;
   private transactionalStore: TransactionalPaymentStore;
+  private stripeAdapter: StripePaymentAdapter;
+  private expressPayAdapter: ExpressPayPaymentAdapter;
 
   private constructor(customStorePath?: string) {
     this.transactionalStore = new TransactionalPaymentStore(customStorePath);
+    this.stripeAdapter = new StripePaymentAdapter();
+    this.expressPayAdapter = new ExpressPayPaymentAdapter();
   }
 
   public static getInstance(customStorePath?: string): PaymentGatewayManager {
@@ -236,42 +242,70 @@ export class PaymentGatewayManager {
       throw new Error('SANDBOX_PAYMENTS_FORBIDDEN_IN_PRODUCTION: Sandbox checkout is strictly forbidden in production');
     }
 
-    // 1. Real ExpressPay handling
+    const idempotencyKey = `chk_idem_${request.tenantId}_${Date.now()}`;
+    const invoiceId = `INV-${request.currency}-${Date.now()}`;
+
+    // 1. Real ExpressPay handling via ExpressPayPaymentAdapter
     if (request.currency === 'AOA' && !isSandboxRequested) {
-      const expressPayKey = process.env.EXPRESSPAY_AOA_API_KEY;
-      if (!expressPayKey) {
-        return {
-          sessionId: 'UNCONFIGURED',
-          provider: 'EXPRESSPAY_AOA',
-          amountFormatted: `${request.amount.toLocaleString('pt-AO')} AOA`,
-          status: 'FAILED',
-          revenueStatus: 'BLOCKED',
-          accountingPosting: 'BLOCKED',
-          taxDocumentStatus: 'NOT_ISSUED',
-          expiresAt: new Date().toISOString(),
-          isSandbox: false,
-          error: 'EXPRESSPAY_CONNECTOR = NOT_CONFIGURED: AOA_REAL_PAYMENT = BLOCKED_BY_EXTERNAL_DEPENDENCY'
-        };
-      }
+      const amountInCentimos = Math.round(request.amount * 100);
+      const adapterResult = await this.expressPayAdapter.createSession({
+        amountInCentimos,
+        currency: 'AOA',
+        tenantId: request.tenantId,
+        customerPhoneOrEmail: request.customerEmail,
+        invoiceId,
+        successUrl: request.successUrl || 'https://billing.aiemployees.ao/success',
+        cancelUrl: request.cancelUrl || 'https://billing.aiemployees.ao/cancel',
+        idempotencyKey
+      });
+
+      return {
+        sessionId: adapterResult.sessionId,
+        checkoutUrl: adapterResult.checkoutUrl,
+        provider: 'EXPRESSPAY_AOA',
+        amountFormatted: `${request.amount.toLocaleString('pt-AO')} AOA`,
+        status: adapterResult.status === 'PENDING' ? 'PENDING_PROVIDER' : 'FAILED',
+        revenueStatus: 'BLOCKED',
+        accountingPosting: 'BLOCKED',
+        taxDocumentStatus: 'NOT_ISSUED',
+        expiresAt: new Date().toISOString(),
+        isSandbox: false,
+        error: adapterResult.error || 'EXPRESSPAY_CONNECTOR = NOT_CONFIGURED: AOA_REAL_PAYMENT = BLOCKED_BY_EXTERNAL_DEPENDENCY'
+      };
     }
 
-    // 2. Real Stripe handling
+    // 2. Real Stripe handling via StripePaymentAdapter
     if ((request.currency === 'USD' || request.currency === 'EUR') && !isSandboxRequested) {
-      const stripeKey = process.env.STRIPE_SECRET_KEY;
-      if (!stripeKey) {
-        return {
-          sessionId: 'UNCONFIGURED',
-          provider: 'STRIPE',
-          amountFormatted: request.currency === 'EUR' ? `€${request.amount.toFixed(2)}` : `$${request.amount.toFixed(2)}`,
-          status: 'FAILED',
-          revenueStatus: 'BLOCKED',
-          accountingPosting: 'BLOCKED',
-          taxDocumentStatus: 'NOT_ISSUED',
-          expiresAt: new Date().toISOString(),
-          isSandbox: false,
-          error: 'STRIPE_CONNECTOR = NOT_CONFIGURED: BLOCKED_BY_EXTERNAL_DEPENDENCY'
-        };
-      }
+      const amountInCents = Math.round(request.amount * 100);
+      const adapterResult = await this.stripeAdapter.createSession({
+        amountInCents,
+        currency: request.currency.toLowerCase() as 'usd' | 'eur',
+        tenantId: request.tenantId,
+        customerEmail: request.customerEmail,
+        invoiceId,
+        successUrl: request.successUrl || 'https://billing.aiemployees.ao/success',
+        cancelUrl: request.cancelUrl || 'https://billing.aiemployees.ao/cancel',
+        idempotencyKey
+      });
+
+      return {
+        sessionId: adapterResult.sessionId,
+        checkoutUrl: adapterResult.checkoutUrl,
+        provider: 'STRIPE',
+        amountFormatted: request.currency === 'EUR' ? `€${request.amount.toFixed(2)}` : `$${request.amount.toFixed(2)}`,
+        status: adapterResult.status === 'OPEN' ? 'PENDING_PROVIDER' : 'FAILED',
+        revenueStatus: 'BLOCKED',
+        accountingPosting: 'BLOCKED',
+        taxDocumentStatus: 'NOT_ISSUED',
+        expiresAt: new Date().toISOString(),
+        isSandbox: false,
+        error: adapterResult.error || 'STRIPE_CONNECTOR = NOT_CONFIGURED: BLOCKED_BY_EXTERNAL_DEPENDENCY'
+      };
+    }
+
+    // Guard against falling through to sandbox if a real request had an unsupported currency
+    if (!isSandboxRequested) {
+      throw new Error(`UNSUPPORTED_REAL_CURRENCY: Real payment not supported for currency ${request.currency}`);
     }
 
     // 3. Simulated Sandbox Session (only permitted in dev/test)

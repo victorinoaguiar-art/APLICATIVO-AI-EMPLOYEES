@@ -390,4 +390,75 @@ describe('AETF-500 Multi-Tenant Authentication & Authorization Hardening', () =>
     const data = await res.json() as any;
     assert.strictEqual(data.code, 'UNAUTHORIZED_ROLE_ESCALATION');
   });
+
+  it('21. P5: Unreachable identity database halts startup in production (fail-closed)', () => {
+    const prevEnv = process.env.NODE_ENV;
+    const prevSecret = process.env.AUTH_SECRET;
+    try {
+      process.env.NODE_ENV = 'production';
+      const validProdSecret = 'PROD_TOKEN_SIGNING_AUTHORITY_KEY_999999999999999999999999';
+      process.env.AUTH_SECRET = validProdSecret;
+      // Attempting to initialize TokenService with an impossible database directory
+      assert.throws(() => {
+        new TokenService(validProdSecret, 'Z:\\impossible_nonexistent_drive_folder\\auth.db');
+      }, /FATAL_DATABASE_INIT_FAILURE/);
+    } finally {
+      process.env.NODE_ENV = prevEnv;
+      if (prevSecret) process.env.AUTH_SECRET = prevSecret;
+      else delete process.env.AUTH_SECRET;
+    }
+  });
+
+  it('22. P5: Role declared ONLY in token does NOT grant administrative access when persistent account is USER', async () => {
+    const regularUserId = 'usr_regular_db_account_' + Date.now();
+    tokenService.upsertAccount({
+      user_id: regularUserId,
+      tenant_id: 'tenant_alpha',
+      roles: ['USER'], // Authoritative account has only USER
+      permissions: ['READ'],
+      status: 'ACTIVE'
+    });
+
+    // Token forged with ADMIN role
+    const forgedAdminToken = tokenService.signToken({
+      tenant_id: 'tenant_alpha',
+      user_id: regularUserId,
+      roles: ['ADMIN'] // Forged in token
+    });
+
+    const res = await fetch(`${baseUrl}/api/v1/companies`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${forgedAdminToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name: 'Unauthorized Corp' })
+    });
+
+    assert.strictEqual(res.status, 403);
+    const data = await res.json() as any;
+    assert.strictEqual(data.code, 'INSUFFICIENT_PERMISSIONS');
+  });
+
+  it('23. P5: Unregistered user in persistent store is rejected in production environment (401)', async () => {
+    const prevEnv = process.env.NODE_ENV;
+    try {
+      process.env.NODE_ENV = 'production';
+      const unregisteredToken = tokenService.signToken({
+        tenant_id: 'tenant_alpha',
+        user_id: 'usr_ghost_not_in_db_' + Date.now(),
+        roles: ['USER']
+      });
+
+      const res = await fetch(`${baseUrl}/api/v1/rolepacks`, {
+        headers: { Authorization: `Bearer ${unregisteredToken}` }
+      });
+
+      assert.strictEqual(res.status, 401);
+      const data = await res.json() as any;
+      assert.strictEqual(data.code, 'USER_NOT_REGISTERED');
+    } finally {
+      process.env.NODE_ENV = prevEnv;
+    }
+  });
 });
