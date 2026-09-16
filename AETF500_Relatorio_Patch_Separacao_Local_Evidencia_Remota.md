@@ -6,7 +6,9 @@
 - **Data da Auditoria:** 2026-09-16
 - **Auditor:** Antigravity Senior Engineering, CI/CD & Forensic Security Auditor
 - **Commit Auditado Inicial:** `a5a0816006b613c9563e2503a249aa2c499693d9`
-- **CI de Referência:** Run ID `35099235528` (Completed, Success)
+- **Commit Técnico Final:** `de25b883adbb8b62674f1b1821ae19dc877f3dba`
+- **CI Principal (Run ID):** [35107524291](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35107524291) (Status: completed, Conclusion: success)
+- **CI Remota de Validação (Run ID):** [35107919894](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35107919894) (Status: completed, Conclusion: success)
 
 ---
 
