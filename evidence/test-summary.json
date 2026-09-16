@@ -1,11 +1,15 @@
 {
-  "commit_sha": "40c46c42b90fe4c3c37a66cc57e140653e906e34",
+  "repository": "victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES",
+  "branch": "master",
+  "commit_sha": "649cad6144ee3e6ae9d8ce943dc44770ce2df393",
+  "generated_at": "2026-09-16T12:43:23.292Z",
+  "generator": "scripts/generate-evidence.mjs",
   "command": "npm test",
-  "started_at": "2026-09-16T00:00:16.996Z",
-  "completed_at": "2026-09-16T00:00:31.287Z",
+  "started_at": "2026-09-16T12:43:08.467Z",
+  "completed_at": "2026-09-16T12:43:23.291Z",
   "exit_code": 0,
-  "total_tests": 392,
-  "passed_tests": 392,
+  "total_tests": 411,
+  "passed_tests": 411,
   "failed_tests": 0,
   "skipped_tests": 0,
   "cancelled_tests": 0,
@@ -21,21 +25,21 @@
       "cancelled": 0,
       "skipped": 0,
       "todo": 0,
-      "started_at": "2026-09-16T00:00:16.996Z",
-      "completed_at": "2026-09-16T00:00:18.892Z"
+      "started_at": "2026-09-16T12:43:08.467Z",
+      "completed_at": "2026-09-16T12:43:10.365Z"
     },
     "runtime": {
       "command": "npm run test:runtime",
       "exit_code": 0,
-      "suites": 29,
-      "tests": 359,
-      "passed": 359,
+      "suites": 30,
+      "tests": 378,
+      "passed": 378,
       "failed": 0,
       "cancelled": 0,
       "skipped": 0,
       "todo": 0,
-      "started_at": "2026-09-16T00:00:18.893Z",
-      "completed_at": "2026-09-16T00:00:24.376Z"
+      "started_at": "2026-09-16T12:43:10.366Z",
+      "completed_at": "2026-09-16T12:43:17.118Z"
     },
     "policies": {
       "command": "npm run test:security",
@@ -47,8 +51,8 @@
       "cancelled": 0,
       "skipped": 0,
       "todo": 0,
-      "started_at": "2026-09-16T00:00:24.380Z",
-      "completed_at": "2026-09-16T00:00:26.110Z"
+      "started_at": "2026-09-16T12:43:17.120Z",
+      "completed_at": "2026-09-16T12:43:18.498Z"
     },
     "marketplace_billing": {
       "command": "npm run test:billing",
@@ -60,8 +64,8 @@
       "cancelled": 0,
       "skipped": 0,
       "todo": 0,
-      "started_at": "2026-09-16T00:00:26.110Z",
-      "completed_at": "2026-09-16T00:00:28.125Z"
+      "started_at": "2026-09-16T12:43:18.499Z",
+      "completed_at": "2026-09-16T12:43:20.087Z"
     },
     "tool_sdk": {
       "command": "npm run test:tools",
@@ -73,8 +77,8 @@
       "cancelled": 0,
       "skipped": 0,
       "todo": 0,
-      "started_at": "2026-09-16T00:00:28.125Z",
-      "completed_at": "2026-09-16T00:00:29.795Z"
+      "started_at": "2026-09-16T12:43:20.087Z",
+      "completed_at": "2026-09-16T12:43:21.527Z"
     },
     "evaluation_sdk": {
       "command": "npm run eval:catalog",
@@ -86,8 +90,8 @@
       "cancelled": 0,
       "skipped": 0,
       "todo": 0,
-      "started_at": "2026-09-16T00:00:29.796Z",
-      "completed_at": "2026-09-16T00:00:31.287Z"
+      "started_at": "2026-09-16T12:43:21.527Z",
+      "completed_at": "2026-09-16T12:43:23.291Z"
     }
   }
 }

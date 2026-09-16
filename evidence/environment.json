@@ -1,8 +1,10 @@
 {
   "repository": "victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES",
   "branch": "master",
-  "commit_sha": "40c46c42b90fe4c3c37a66cc57e140653e906e34",
-  "timestamp_utc": "2026-09-15T23:57:57.659Z",
+  "commit_sha": "649cad6144ee3e6ae9d8ce943dc44770ce2df393",
+  "generated_at": "2026-09-16T12:40:07.667Z",
+  "generator": "scripts/generate-evidence.mjs",
+  "timestamp_utc": "2026-09-16T12:40:07.668Z",
   "os": {
     "platform": "win32",
     "arch": "x64",

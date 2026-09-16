@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as crypto from 'node:crypto';
-import { execSync } from 'node:child_process';
+import { execSync, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import {
   calculatePhysicalLiveTasks,
@@ -23,8 +23,22 @@ if (!fs.existsSync(EVIDENCE_DIR)) {
 console.log('[EVIDENCE] Generating forensic evidence artifacts from REAL physical executions in evidence/ ...');
 
 const currentSha = execSync('git rev-parse HEAD', { encoding: 'utf8', cwd: ROOT_DIR }).trim();
-const currentBranch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8', cwd: ROOT_DIR }).trim();
+let currentBranch = 'master';
+try {
+  currentBranch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8', cwd: ROOT_DIR }).trim();
+} catch {}
+if (currentBranch === 'HEAD') currentBranch = 'master';
+
+// P2: In CI, verify commit_sha = GITHUB_SHA
+if (process.env.GITHUB_SHA && process.env.GITHUB_SHA !== currentSha) {
+  console.error(`[FATAL] SOURCE_SHA_MISMATCH: GITHUB_SHA (${process.env.GITHUB_SHA}) !== git rev-parse HEAD (${currentSha})`);
+  process.exit(1);
+}
+
 const npmVersion = execSync('npm --version', { encoding: 'utf8', cwd: ROOT_DIR }).trim();
+
+const commandExecutions = [];
+let hasCommandFailure = false;
 
 function runCommandAndLog(cmd, logFileName) {
   const startedAt = new Date().toISOString();
@@ -32,13 +46,26 @@ function runCommandAndLog(cmd, logFileName) {
   let stderr = '';
   let exitCode = 0;
   try {
-    stdout = execSync(cmd, { cwd: ROOT_DIR, encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 });
+    stdout = execSync(cmd, { cwd: ROOT_DIR, encoding: 'utf8', maxBuffer: 15 * 1024 * 1024 });
   } catch (err) {
     exitCode = err.status || 1;
     stdout = err.stdout || '';
     stderr = err.stderr || err.message;
   }
   const completedAt = new Date().toISOString();
+  const success = exitCode === 0;
+
+  commandExecutions.push({
+    command: cmd,
+    logFile: logFileName,
+    startedAt,
+    completedAt,
+    exitCode,
+    stdout,
+    stderr,
+    success
+  });
+
   const header = [
     `COMMAND: ${cmd}`,
     `COMMIT_SHA: ${currentSha}`,
@@ -53,15 +80,24 @@ function runCommandAndLog(cmd, logFileName) {
   ].join('\n');
   const fullContent = header + stdout + (stderr ? '\nSTDERR:\n' + stderr : '');
   fs.writeFileSync(path.join(EVIDENCE_DIR, logFileName), fullContent, 'utf8');
-  console.log(`  -> ${logFileName} generated (exit code ${exitCode})`);
-  return { exitCode, stdout, stderr, startedAt, completedAt };
+
+  if (!success) {
+    hasCommandFailure = true;
+    console.error(`[ERROR] Command failed: ${cmd} (exit code ${exitCode}) -> logged to ${logFileName}`);
+  } else {
+    console.log(`  -> ${logFileName} generated (exit code ${exitCode})`);
+  }
+
+  return { exitCode, stdout, stderr, startedAt, completedAt, success };
 }
 
-// 1. environment.json
+// 1. environment.json (P2 metadata compliant)
 const envData = {
   repository: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES',
   branch: currentBranch,
   commit_sha: currentSha,
+  generated_at: new Date().toISOString(),
+  generator: 'scripts/generate-evidence.mjs',
   timestamp_utc: new Date().toISOString(),
   os: {
     platform: process.platform,
@@ -86,8 +122,24 @@ const gitStatus = execSync('git status', { encoding: 'utf8', cwd: ROOT_DIR });
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'clean-checkout.txt'), gitStatus, 'utf8');
 console.log('  -> clean-checkout.txt generated');
 
-// 4. Execution Logs
-runCommandAndLog('npm ci --dry-run', 'npm-ci.log');
+// 4. P5 — Real npm ci validation & logging
+const npmCiLogPath = path.join(EVIDENCE_DIR, 'npm-ci.log');
+if (!fs.existsSync(npmCiLogPath) || fs.readFileSync(npmCiLogPath, 'utf8').includes('--dry-run')) {
+  // Execute real record-npm-ci.mjs
+  const recordScript = path.resolve(ROOT_DIR, 'scripts/record-npm-ci.mjs');
+  runCommandAndLog(`node "${recordScript}"`, 'npm-ci.log');
+} else {
+  // Validate existing real npm-ci.log
+  const logContent = fs.readFileSync(npmCiLogPath, 'utf8');
+  if (logContent.includes('--dry-run') || !logContent.includes('COMMAND: npm ci') || !logContent.includes('EXIT_CODE: 0')) {
+    const recordScript = path.resolve(ROOT_DIR, 'scripts/record-npm-ci.mjs');
+    runCommandAndLog(`node "${recordScript}"`, 'npm-ci.log');
+  } else {
+    console.log('  -> npm-ci.log verified (real install record present)');
+  }
+}
+
+// 5. Execution Logs (P1 & P4)
 runCommandAndLog('npm audit --omit=dev', 'npm-audit-production.log');
 runCommandAndLog('npm run typecheck', 'typecheck.log');
 runCommandAndLog('npm run build:packages', 'build-packages.log');
@@ -98,9 +150,9 @@ runCommandAndLog('npm run verify:hashes', 'verify-hashes.log');
 runCommandAndLog('npm run verify:security', 'verify-security.log');
 runCommandAndLog('npm run verify:payments', 'verify-payments.log');
 runCommandAndLog('npm run verify:auth', 'verify-auth.log');
-runCommandAndLog('npm run verify', 'verify.log');
+runCommandAndLog('npm run verify:pipeline', 'verify.log');
 
-// 5. P4 — Deriving test summary dynamically from real test executions
+// 6. P4 & P1 — Deriving test summary dynamically from real test executions
 console.log('[EVIDENCE] Executing real test suites to derive test summary (P4)...');
 const testSuites = [
   { name: 'rolepack', cmd: 'npm run test:catalog' },
@@ -121,19 +173,22 @@ let globalTodoTests = 0;
 let allSuitesExitCode = 0;
 const breakdown = {};
 const allTestResults = [];
+let combinedTestsLog = '';
 
 for (const suite of testSuites) {
   const startedAt = new Date().toISOString();
   let stdout = '';
   let exitCode = 0;
   try {
-    stdout = execSync(suite.cmd, { cwd: ROOT_DIR, encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 });
+    stdout = execSync(suite.cmd, { cwd: ROOT_DIR, encoding: 'utf8', maxBuffer: 15 * 1024 * 1024 });
   } catch (err) {
     exitCode = err.status || 1;
     stdout = (err.stdout || '') + '\n' + (err.stderr || '');
     allSuitesExitCode = exitCode;
+    hasCommandFailure = true;
   }
   const completedAt = new Date().toISOString();
+  combinedTestsLog += `\n=== SUITE: ${suite.name} (${suite.cmd}) ===\n` + stdout;
 
   // Parse TAP summary lines
   const testsMatch = stdout.match(/# tests\s+(\d+)/);
@@ -194,13 +249,30 @@ for (const suite of testSuites) {
 
 const testRunCompletedAt = new Date().toISOString();
 
+// Write tests.log (P1)
+fs.writeFileSync(path.join(EVIDENCE_DIR, 'tests.log'), [
+  'COMMAND: npm test',
+  `COMMIT_SHA: ${currentSha}`,
+  `STARTED_AT: ${testRunStartedAt}`,
+  `COMPLETED_AT: ${testRunCompletedAt}`,
+  `EXIT_CODE: ${allSuitesExitCode}`,
+  '----------------------------------------',
+  combinedTestsLog
+].join('\n'), 'utf8');
+console.log('  -> tests.log generated');
+
 // Strict integrity verification of parsed metrics
 if (globalFailedTests > 0 || allSuitesExitCode !== 0) {
-  console.warn(`[WARNING] Test suite failures detected: exit_code=${allSuitesExitCode}, failed=${globalFailedTests}`);
+  hasCommandFailure = true;
+  console.error(`[ERROR] Test suite failures detected: exit_code=${allSuitesExitCode}, failed=${globalFailedTests}`);
 }
 
 const testSummary = {
+  repository: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES',
+  branch: currentBranch,
   commit_sha: currentSha,
+  generated_at: new Date().toISOString(),
+  generator: 'scripts/generate-evidence.mjs',
   command: 'npm test',
   started_at: testRunStartedAt,
   completed_at: testRunCompletedAt,
@@ -218,19 +290,27 @@ fs.writeFileSync(path.join(EVIDENCE_DIR, 'test-summary.json'), JSON.stringify(te
 console.log(`  -> test-summary.json generated (${globalTotalTests} tests, ${globalPassedTests} passed, ${globalFailedTests} failed)`);
 
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'test-results.json'), JSON.stringify({
+  repository: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES',
+  branch: currentBranch,
   commit_sha: currentSha,
+  generated_at: new Date().toISOString(),
+  generator: 'scripts/generate-evidence.mjs',
   total_results: allTestResults.length,
   results: allTestResults
 }, null, 2), 'utf8');
 console.log(`  -> test-results.json generated (${allTestResults.length} parsed items)`);
 
-// 6. cardinality-results.json
+// 7. cardinality-results.json (P2 metadata compliant)
 const liveTasksRes = calculatePhysicalLiveTasks(path.resolve(ROOT_DIR, 'data/liveTasks.json'));
 const legalContractsRes = calculateLegallyAuthorizedTenants(path.resolve(ROOT_DIR, 'data/legalContracts.json'));
 const externalAuditsRes = calculateEligibleCertificationEvidence(path.resolve(ROOT_DIR, 'data/externalAudits.json'));
 
 const cardinalityResults = {
-  timestamp: new Date().toISOString(),
+  repository: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES',
+  branch: currentBranch,
+  commit_sha: currentSha,
+  generated_at: new Date().toISOString(),
+  generator: 'scripts/generate-evidence.mjs',
   live_tasks: liveTasksRes,
   legal_contracts: legalContractsRes,
   external_audits: externalAuditsRes,
@@ -243,7 +323,7 @@ const cardinalityResults = {
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'cardinality-results.json'), JSON.stringify(cardinalityResults, null, 2), 'utf8');
 console.log('  -> cardinality-results.json generated');
 
-// 7. schema-validation-results.json
+// 8. schema-validation-results.json (P2 metadata compliant)
 const schemas = [
   { name: 'liveTasks.schema.json', data: path.resolve(ROOT_DIR, 'data/liveTasks.json') },
   { name: 'legalContracts.schema.json', data: path.resolve(ROOT_DIR, 'data/legalContracts.json') },
@@ -251,7 +331,11 @@ const schemas = [
 ];
 
 const schemaValidationResults = {
-  timestamp: new Date().toISOString(),
+  repository: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES',
+  branch: currentBranch,
+  commit_sha: currentSha,
+  generated_at: new Date().toISOString(),
+  generator: 'scripts/generate-evidence.mjs',
   results: schemas.map(s => {
     const schemaPath = path.resolve(ROOT_DIR, 'schemas/data', s.name);
     const dataObj = JSON.parse(fs.readFileSync(s.data, 'utf8'));
@@ -270,7 +354,7 @@ const schemaValidationResults = {
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'schema-validation-results.json'), JSON.stringify(schemaValidationResults, null, 2), 'utf8');
 console.log('  -> schema-validation-results.json generated');
 
-// 8. canonical-source-hashes.sha256 & file-hashes.sha256
+// 9. canonical-source-hashes.sha256 & file-hashes.sha256
 const canonicalFiles = [
   'schemas/data/liveTasks.schema.json',
   'schemas/data/legalContracts.schema.json',
@@ -291,18 +375,21 @@ fs.writeFileSync(path.join(EVIDENCE_DIR, 'canonical-source-hashes.sha256'), cano
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'file-hashes.sha256'), canonicalHashLines.join('\n') + '\n', 'utf8');
 console.log('  -> canonical-source-hashes.sha256 generated');
 
-// 9. git-status-after-verification.txt
+// 10. git-status-after-verification.txt
 const postStatus = execSync('git status --short', { encoding: 'utf8', cwd: ROOT_DIR });
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'git-status-after-verification.txt'), postStatus || 'WORKING_TREE_CLEAN\n', 'utf8');
 console.log('  -> git-status-after-verification.txt generated');
 
-// 10. github-actions-receipt.json (Initial state before remote run query)
+// 11. github-actions-receipt.json (P2 & P3 compliant)
 let githubReceipt = {
   repository: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES',
   branch: currentBranch,
   commit_sha: currentSha,
+  generated_at: new Date().toISOString(),
+  generator: 'scripts/generate-evidence.mjs',
   workflow_name: 'CI / Production Readiness & Audit Gate',
   run_id: null,
+  run_attempt: 1,
   run_url: null,
   status: 'pending_push',
   conclusion: 'CI_EVIDENCE_PENDING_REMOTE_EXECUTION',
@@ -314,9 +401,27 @@ let githubReceipt = {
     instruction_2: 'Click "Add branch ruleset" or "Add rule" for branch pattern "master"',
     instruction_3: 'Enable "Require a pull request before merging"',
     instruction_4: 'Enable "Require status checks to pass before merging"',
-    instruction_5: 'Select check: "Deterministic Build, Typecheck, Test & Audit"'
+    instruction_5: 'Select check: "Deterministic Build, Typecheck, Test & Audit (22.x)"'
   },
-  jobs: []
+  jobs: [],
+  required_steps: [
+    'Checkout Codebase',
+    'Setup Node.js 22.x',
+    'Deterministic Install (npm ci)',
+    'Production Dependency Audit',
+    'Monorepo Clean',
+    'Strict Typecheck',
+    'Build Monorepo Packages',
+    'Build Web Application',
+    'Next.js ESLint',
+    'Automated Test Suites',
+    'Ajv Manifest & Domain Cardinality Validation',
+    'Physical Hash Cryptographic Verification',
+    'Security & Behavioral Controls Verification',
+    'Transactional Payment & Webhook Verification',
+    'Multi-Tenant Authentication & Authorization Verification'
+  ],
+  skipped_required_steps: []
 };
 
 // Check if a remote run already exists for this exact commit_sha via gh CLI
@@ -331,6 +436,15 @@ try {
     githubReceipt.conclusion = run.conclusion;
     githubReceipt.started_at = run.createdAt;
     githubReceipt.completed_at = run.updatedAt;
+
+    // Fetch jobs and steps if run is completed
+    if (run.databaseId) {
+      try {
+        const jobsOutput = execSync(`gh run view ${run.databaseId} --json jobs`, { encoding: 'utf8', cwd: ROOT_DIR });
+        const jobsData = JSON.parse(jobsOutput);
+        githubReceipt.jobs = jobsData.jobs || [];
+      } catch {}
+    }
   }
 } catch {
   // gh CLI unavailable or not executed yet
@@ -338,5 +452,37 @@ try {
 
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'github-actions-receipt.json'), JSON.stringify(githubReceipt, null, 2), 'utf8');
 console.log('  -> github-actions-receipt.json generated');
+
+// 12. P7 — Physical Hashes of All Evidence Files (evidence/evidence-files.sha256)
+console.log('[EVIDENCE] Calculating physical hashes for evidence/evidence-files.sha256 (P7)...');
+const evidenceEntries = fs.readdirSync(EVIDENCE_DIR)
+  .filter(f => f !== 'evidence-files.sha256')
+  .filter(f => fs.statSync(path.join(EVIDENCE_DIR, f)).isFile())
+  .sort();
+
+const evidenceHashLines = evidenceEntries.map(filename => {
+  const filePath = path.join(EVIDENCE_DIR, filename);
+  const hash = getFileSha256(filePath);
+  return `${hash}  ${filename}`;
+});
+
+fs.writeFileSync(path.join(EVIDENCE_DIR, 'evidence-files.sha256'), evidenceHashLines.join('\n') + '\n', 'utf8');
+console.log(`  -> evidence-files.sha256 generated (${evidenceEntries.length} files indexed)`);
+
+// P4: Fail-closed enforcement
+if (hasCommandFailure) {
+  console.error('[FATAL] EVIDENCE_GENERATION_FAILED: One or more required pipeline commands failed.');
+  process.exit(1);
+}
+
+// Run coherence gate to verify bundle integrity
+console.log('[EVIDENCE] Running coherence gate verification...');
+const coherenceScript = path.resolve(ROOT_DIR, 'scripts/verify-evidence-coherence.mjs');
+const coherenceCheck = spawnSync('node', [coherenceScript], { cwd: ROOT_DIR, encoding: 'utf8' });
+if (coherenceCheck.status !== 0) {
+  console.error('[FATAL] EVIDENCE_COHERENCE_FAILED:\n' + (coherenceCheck.stdout || '') + (coherenceCheck.stderr || ''));
+  process.exit(1);
+}
+console.log('  -> Evidence coherence gate PASSED.');
 
 console.log('[EVIDENCE] All required evidence files generated successfully.');

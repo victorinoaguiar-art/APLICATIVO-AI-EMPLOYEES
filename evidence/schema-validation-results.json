@@ -1,5 +1,9 @@
 {
-  "timestamp": "2026-09-16T00:00:31.413Z",
+  "repository": "victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES",
+  "branch": "master",
+  "commit_sha": "649cad6144ee3e6ae9d8ce943dc44770ce2df393",
+  "generated_at": "2026-09-16T12:43:23.535Z",
+  "generator": "scripts/generate-evidence.mjs",
   "results": [
     {
       "schema": "liveTasks.schema.json",

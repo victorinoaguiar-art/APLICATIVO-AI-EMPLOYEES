@@ -2,38 +2,29 @@ On branch master
 Your branch is up to date with 'origin/master'.
 
 Changes not staged for commit:
-  (use "git add/rm <file>..." to update what will be committed)
+  (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
-	modified:   AETF500_Relatorio_Patch_Correctivo_Schemas_Cardinalidades_CI.md
-	modified:   apps/api/src/server.ts
-	modified:   data/externalAudits.json
-	deleted:    data/external_audits.json
-	modified:   data/legalContracts.json
-	deleted:    data/legal_contracts.json
-	modified:   data/liveTasks.json
-	deleted:    data/live_tasks.json
+	modified:   .github/workflows/ci.yml
 	modified:   evidence/cardinality-results.json
 	modified:   evidence/changed-files.txt
 	modified:   evidence/clean-checkout.txt
 	modified:   evidence/environment.json
-	modified:   evidence/file-hashes.sha256
 	modified:   evidence/git-status-after-verification.txt
 	modified:   evidence/github-actions-receipt.json
 	modified:   evidence/schema-validation-results.json
+	modified:   evidence/test-results.json
 	modified:   evidence/test-summary.json
-	modified:   packages/runtime/src/test/cardinalityCalculators.test.ts
-	modified:   schemas/data/externalAudits.schema.json
-	modified:   schemas/data/legalContracts.schema.json
-	modified:   schemas/data/liveTasks.schema.json
+	modified:   package.json
+	modified:   packages/runtime/package.json
 	modified:   scripts/generate-evidence.mjs
-	modified:   scripts/lib/cardinalityCalculators.mjs
-	modified:   scripts/validate-manifests.mjs
 
 Untracked files:
   (use "git add <file>..." to include in what will be committed)
-	AETF500_Relatorio_Patch_Portabilidade_Fontes_Evidencias.md
-	PROMPT_PATCH_PORTABILIDADE_FONTES_SCHEMAS_EVIDENCIAS_REAIS.md
-	evidence/canonical-source-hashes.sha256
-	evidence/test-results.json
+	PROMPT_PATCH_COERENCIA_EVIDENCIAS_SHA_CI.md
+	evidence/branch-protection.json
+	evidence/evidence-files.sha256
+	packages/runtime/src/test/evidenceCoherence.test.ts
+	scripts/record-npm-ci.mjs
+	scripts/verify-evidence-coherence.mjs
 
 no changes added to commit (use "git add" and/or "git commit -a")

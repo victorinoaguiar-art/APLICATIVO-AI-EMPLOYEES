@@ -1,28 +1,19 @@
- M AETF500_Relatorio_Patch_Correctivo_Schemas_Cardinalidades_CI.md
- M apps/api/src/server.ts
- M data/externalAudits.json
- D data/external_audits.json
- M data/legalContracts.json
- D data/legal_contracts.json
- M data/liveTasks.json
- D data/live_tasks.json
+ M .github/workflows/ci.yml
  M evidence/cardinality-results.json
  M evidence/changed-files.txt
  M evidence/clean-checkout.txt
  M evidence/environment.json
- M evidence/file-hashes.sha256
  M evidence/git-status-after-verification.txt
  M evidence/github-actions-receipt.json
  M evidence/schema-validation-results.json
+ M evidence/test-results.json
  M evidence/test-summary.json
- M packages/runtime/src/test/cardinalityCalculators.test.ts
- M schemas/data/externalAudits.schema.json
- M schemas/data/legalContracts.schema.json
- M schemas/data/liveTasks.schema.json
+ M package.json
+ M packages/runtime/package.json
  M scripts/generate-evidence.mjs
- M scripts/lib/cardinalityCalculators.mjs
- M scripts/validate-manifests.mjs
-?? AETF500_Relatorio_Patch_Portabilidade_Fontes_Evidencias.md
-?? PROMPT_PATCH_PORTABILIDADE_FONTES_SCHEMAS_EVIDENCIAS_REAIS.md
-?? evidence/canonical-source-hashes.sha256
-?? evidence/test-results.json
+?? PROMPT_PATCH_COERENCIA_EVIDENCIAS_SHA_CI.md
+?? evidence/branch-protection.json
+?? evidence/evidence-files.sha256
+?? packages/runtime/src/test/evidenceCoherence.test.ts
+?? scripts/record-npm-ci.mjs
+?? scripts/verify-evidence-coherence.mjs

@@ -36,7 +36,7 @@ jobs:
           cache: 'npm'
 
       - name: Deterministic Install (npm ci)
-        run: npm ci
+        run: node scripts/record-npm-ci.mjs
 
       - name: Production Dependency Audit
         run: npm audit --omit=dev
@@ -73,6 +73,25 @@ jobs:
 
       - name: Multi-Tenant Authentication & Authorization Verification
         run: npm run verify:auth
+
+      - name: Generate CI Forensic Evidence Bundle
+        run: node scripts/generate-evidence.mjs
+
+      - name: Evidence Coherence & Same-SHA Gate
+        run: npm run verify:evidence-coherence
+
+      - name: Upload Evidence Artifacts Bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aetf-evidence-bundle-${{ github.sha }}
+          path: evidence/
+          retention-days: 30
+
+      - name: Reset Generated Evidence Working State
+        run: |
+          git checkout -- evidence/ || true
+          git clean -fd evidence/ || true
 
       - name: Ensure Clean Working Tree
         run: |

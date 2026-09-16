@@ -1,6 +1,10 @@
 {
-  "commit_sha": "40c46c42b90fe4c3c37a66cc57e140653e906e34",
-  "total_results": 111,
+  "repository": "victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES",
+  "branch": "master",
+  "commit_sha": "649cad6144ee3e6ae9d8ce943dc44770ce2df393",
+  "generated_at": "2026-09-16T12:43:23.294Z",
+  "generator": "scripts/generate-evidence.mjs",
+  "total_results": 112,
   "results": [
     {
       "suite": "rolepack",
@@ -258,269 +262,275 @@
       "suite": "runtime",
       "index": 41,
       "status": "PASS",
-      "name": "AETF500 Knowledge Gap Filling Forensic Matrix Engine v1.0"
+      "name": "AETF-500 Evidence Coherence & Negative Security Gate (18 Cenários Obrigatórios)"
     },
     {
       "suite": "runtime",
       "index": 42,
       "status": "PASS",
-      "name": "AETF-500 Global Multi-Jurisdiction Professional Knowledge Architecture v1.0"
+      "name": "AETF500 Knowledge Gap Filling Forensic Matrix Engine v1.0"
     },
     {
       "suite": "runtime",
       "index": 43,
       "status": "PASS",
-      "name": "AETF-500 P0 Knowledge Provenance Remediation Engine v1.0"
+      "name": "AETF-500 Global Multi-Jurisdiction Professional Knowledge Architecture v1.0"
     },
     {
       "suite": "runtime",
       "index": 44,
       "status": "PASS",
-      "name": "AETF-500 P0 Remediation Evidence Closure Gate Engine v1.0"
+      "name": "AETF-500 P0 Knowledge Provenance Remediation Engine v1.0"
     },
     {
       "suite": "runtime",
       "index": 45,
       "status": "PASS",
-      "name": "AETF-500 Hash Subject Semantics & Evidence Recomputability Final Micro-Patch v1.0"
+      "name": "AETF-500 P0 Remediation Evidence Closure Gate Engine v1.0"
     },
     {
       "suite": "runtime",
       "index": 46,
       "status": "PASS",
-      "name": "AETF-500 Post-Crypto Remediation Implementation Version Lineage Closure v1.0"
+      "name": "AETF-500 Hash Subject Semantics & Evidence Recomputability Final Micro-Patch v1.0"
     },
     {
       "suite": "runtime",
       "index": 47,
       "status": "PASS",
-      "name": "KBUE-500 v1.0 — Knowledge Baseline Update Engine 2026.09.11 Test Suite"
+      "name": "AETF-500 Post-Crypto Remediation Implementation Version Lineage Closure v1.0"
     },
     {
       "suite": "runtime",
       "index": 48,
       "status": "PASS",
-      "name": "AETF-500 Mass Exception Legitimacy & External Evidence Authenticity Micro-Gate v1.0"
+      "name": "KBUE-500 v1.0 — Knowledge Baseline Update Engine 2026.09.11 Test Suite"
     },
     {
       "suite": "runtime",
       "index": 49,
       "status": "PASS",
-      "name": "Phase 2 — Model Gateway (Google Gemini Primary)"
+      "name": "AETF-500 Mass Exception Legitimacy & External Evidence Authenticity Micro-Gate v1.0"
     },
     {
       "suite": "runtime",
       "index": 50,
       "status": "PASS",
-      "name": "Phase 4 — Redis Queue Provider"
+      "name": "Phase 2 — Model Gateway (Google Gemini Primary)"
     },
     {
       "suite": "runtime",
       "index": 51,
       "status": "PASS",
-      "name": "AETF-500 Multi-Jurisdiction Material Inconsistency Reconciliation & Jurisdiction Safety Patch v1.0"
+      "name": "Phase 4 — Redis Queue Provider"
     },
     {
       "suite": "runtime",
       "index": 52,
       "status": "PASS",
-      "name": "AETF-500 Final Multi-Jurisdiction Semantic Freeze Micro-Patch v1.0"
+      "name": "AETF-500 Multi-Jurisdiction Material Inconsistency Reconciliation & Jurisdiction Safety Patch v1.0"
     },
     {
       "suite": "runtime",
       "index": 53,
       "status": "PASS",
-      "name": "Operationalization - PlatformCertificationEngine Audit & Digital Certificate"
+      "name": "AETF-500 Final Multi-Jurisdiction Semantic Freeze Micro-Patch v1.0"
     },
     {
       "suite": "runtime",
       "index": 54,
       "status": "PASS",
-      "name": "Operationalization - OrganizationProvisioningEngine & Connector Config"
+      "name": "Operationalization - PlatformCertificationEngine Audit & Digital Certificate"
     },
     {
       "suite": "runtime",
       "index": 55,
       "status": "PASS",
-      "name": "Operationalization - Deny Rule: IF certification missing THEN ACTIVE = DENIED"
+      "name": "Operationalization - OrganizationProvisioningEngine & Connector Config"
     },
     {
       "suite": "runtime",
       "index": 56,
       "status": "PASS",
-      "name": "Operationalization - End-to-End Certification & Activation"
+      "name": "Operationalization - Deny Rule: IF certification missing THEN ACTIVE = DENIED"
     },
     {
       "suite": "runtime",
       "index": 57,
       "status": "PASS",
-      "name": "Orchestrator Executes Normal Task Successfully"
+      "name": "Operationalization - End-to-End Certification & Activation"
     },
     {
       "suite": "runtime",
       "index": 58,
       "status": "PASS",
-      "name": "Orchestrator Triggers Approval Gateway on Monetary Threshold"
+      "name": "Orchestrator Executes Normal Task Successfully"
     },
     {
       "suite": "runtime",
       "index": 59,
       "status": "PASS",
-      "name": "ORDKS - RoleKnowledgeProfileRegistry - 500/500 Coverage Validation Gate"
+      "name": "Orchestrator Triggers Approval Gateway on Monetary Threshold"
     },
     {
       "suite": "runtime",
       "index": 60,
       "status": "PASS",
-      "name": "ORDKS - Angola Jurisdiction Pack Integrity"
+      "name": "ORDKS - RoleKnowledgeProfileRegistry - 500/500 Coverage Validation Gate"
     },
     {
       "suite": "runtime",
       "index": 61,
       "status": "PASS",
-      "name": "ORDKS - ExceptionLibraryEngine - Department Exceptions"
+      "name": "ORDKS - Angola Jurisdiction Pack Integrity"
     },
     {
       "suite": "runtime",
       "index": 62,
       "status": "PASS",
-      "name": "ORDKS - ORDKSEngine - 11-Level Precedence & Status Filter Query"
+      "name": "ORDKS - ExceptionLibraryEngine - Department Exceptions"
     },
     {
       "suite": "runtime",
       "index": 63,
       "status": "PASS",
-      "name": "OTCTEC v1.0 — Operational Testing & Employee Certification"
+      "name": "ORDKS - ORDKSEngine - 11-Level Precedence & Status Filter Query"
     },
     {
       "suite": "runtime",
       "index": 64,
       "status": "PASS",
-      "name": "PCE-500 v1.0 — Professional Certification Engine Test Suite"
+      "name": "OTCTEC v1.0 — Operational Testing & Employee Certification"
     },
     {
       "suite": "runtime",
       "index": 65,
       "status": "PASS",
-      "name": "PEE-500 v1.0 — Professional Evaluation Engine Test Suite"
+      "name": "PCE-500 v1.0 — Professional Certification Engine Test Suite"
     },
     {
       "suite": "runtime",
       "index": 66,
       "status": "PASS",
-      "name": "PEIPIntegrationEngine — Progressive Enterprise Integration Pack (6 Phases)"
+      "name": "PEE-500 v1.0 — Professional Evaluation Engine Test Suite"
     },
     {
       "suite": "runtime",
       "index": 67,
       "status": "PASS",
-      "name": "AETF-500 Cryptographic Hash Single Baseline & 1-Byte Tamper Negative Test (B3)"
+      "name": "PEIPIntegrationEngine — Progressive Enterprise Integration Pack (6 Phases)"
     },
     {
       "suite": "runtime",
       "index": 68,
       "status": "PASS",
-      "name": "500/500 Priority Program v2.0 - Gate 500 TOTAL = 500 PRIORITY = 0 NON_PRIORITY"
+      "name": "AETF-500 Cryptographic Hash Single Baseline & 1-Byte Tamper Negative Test (B3)"
     },
     {
       "suite": "runtime",
       "index": 69,
       "status": "PASS",
-      "name": "500/500 Priority Program v2.0 - 10 Validation Waves (50 per wave)"
+      "name": "500/500 Priority Program v2.0 - Gate 500 TOTAL = 500 PRIORITY = 0 NON_PRIORITY"
     },
     {
       "suite": "runtime",
       "index": 70,
       "status": "PASS",
-      "name": "500/500 Priority Program v2.0 - Individual Employee Priority Flags"
+      "name": "500/500 Priority Program v2.0 - 10 Validation Waves (50 per wave)"
     },
     {
       "suite": "runtime",
       "index": 71,
       "status": "PASS",
-      "name": "500/500 Priority Program v2.0 - Dynamic Reordering by Business Value"
+      "name": "500/500 Priority Program v2.0 - Individual Employee Priority Flags"
     },
     {
       "suite": "runtime",
       "index": 72,
       "status": "PASS",
-      "name": "AETF-500 Professional Knowledge Cardinality, Lineage & Readiness Semantics Reconciliation Micro-Patch v1.0"
+      "name": "500/500 Priority Program v2.0 - Dynamic Reordering by Business Value"
     },
     {
       "suite": "runtime",
       "index": 73,
       "status": "PASS",
-      "name": "PTKML-500 v1.0 — Professional Technical Knowledge Master Library Test Suite"
+      "name": "AETF-500 Professional Knowledge Cardinality, Lineage & Readiness Semantics Reconciliation Micro-Patch v1.0"
     },
     {
       "suite": "runtime",
       "index": 74,
       "status": "PASS",
-      "name": "RCODE-500 — Remote Command, Offline Queue & Deferred Execution Engine Test Suite"
+      "name": "PTKML-500 v1.0 — Professional Technical Knowledge Master Library Test Suite"
     },
     {
       "suite": "runtime",
       "index": 75,
       "status": "PASS",
-      "name": "Programa 500/300/200 - Mathematical Gate & Partitioning Verification"
+      "name": "RCODE-500 — Remote Command, Offline Queue & Deferred Execution Engine Test Suite"
     },
     {
       "suite": "runtime",
       "index": 76,
       "status": "PASS",
-      "name": "Programa 500/300/200 - 100% Structural Readiness Passports"
+      "name": "Programa 500/300/200 - Mathematical Gate & Partitioning Verification"
     },
     {
       "suite": "runtime",
       "index": 77,
       "status": "PASS",
-      "name": "Programa 500/300/200 - Cohort Distribution Verification"
+      "name": "Programa 500/300/200 - 100% Structural Readiness Passports"
     },
     {
       "suite": "runtime",
       "index": 78,
       "status": "PASS",
-      "name": "Programa 500/300/200 - Lifecycle State Machine Transitions"
+      "name": "Programa 500/300/200 - Cohort Distribution Verification"
     },
     {
       "suite": "runtime",
       "index": 79,
       "status": "PASS",
-      "name": "Programa 500/300/200 - Layered Improvement Propagation"
+      "name": "Programa 500/300/200 - Lifecycle State Machine Transitions"
     },
     {
       "suite": "runtime",
       "index": 80,
       "status": "PASS",
-      "name": "SMCH-CP v1.0 — Social Media Connector Hub & Controlled Publishing Test Suite"
+      "name": "Programa 500/300/200 - Layered Improvement Propagation"
     },
     {
       "suite": "runtime",
       "index": 81,
       "status": "PASS",
-      "name": "UTCEG - WorkActivationContractRegistry - 500/500 Coverage Validation"
+      "name": "SMCH-CP v1.0 — Social Media Connector Hub & Controlled Publishing Test Suite"
     },
     {
       "suite": "runtime",
       "index": 82,
       "status": "PASS",
-      "name": "UTCEG - CommandNormalizationEngine - Multimodal Normalization"
+      "name": "UTCEG - WorkActivationContractRegistry - 500/500 Coverage Validation"
     },
     {
       "suite": "runtime",
       "index": 83,
       "status": "PASS",
-      "name": "UTCEG - EventEngine - Replay Protection & Rule Matching"
+      "name": "UTCEG - CommandNormalizationEngine - Multimodal Normalization"
     },
     {
       "suite": "runtime",
       "index": 84,
       "status": "PASS",
-      "name": "UTCEG - EmployeeHandoffRouter - Inter-Employee Handoff Routing"
+      "name": "UTCEG - EventEngine - Replay Protection & Rule Matching"
     },
     {
       "suite": "runtime",
       "index": 85,
+      "status": "PASS",
+      "name": "UTCEG - EmployeeHandoffRouter - Inter-Employee Handoff Routing"
+    },
+    {
+      "suite": "runtime",
+      "index": 86,
       "status": "PASS",
       "name": "UTCEG - Adapters Test"
     },
