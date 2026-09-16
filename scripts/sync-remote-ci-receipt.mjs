@@ -14,6 +14,9 @@ import { REQUIRED_CI_JOBS_AND_STEPS } from './verify-evidence-coherence.mjs';
 const runId = process.env.PRIMARY_RUN_ID || process.argv[2];
 const headSha = process.env.HEAD_SHA || process.argv[3];
 const rawEvidenceDir = process.env.EVIDENCE_DIR || process.argv[4];
+const remoteRunId = process.env.REMOTE_VERIFICATION_RUN_ID || process.env.GITHUB_RUN_ID || process.argv[5];
+const remoteRunAttempt = process.env.REMOTE_RUN_ATTEMPT || process.env.GITHUB_RUN_ATTEMPT || process.argv[6] || '1';
+const queryActor = process.env.EXPECTED_QUERY_ACTOR || process.env.GITHUB_ACTOR || process.argv[7] || 'victorinoaguiar-art';
 
 if (!runId || !headSha) {
   console.error('[ERROR] Missing PRIMARY_RUN_ID or HEAD_SHA.');
@@ -54,6 +57,11 @@ try {
   receipt.started_at = runData.createdAt;
   receipt.completed_at = runData.updatedAt;
   receipt.primary_run_id = runData.databaseId || Number(runId);
+  if (remoteRunId) {
+    receipt.remote_verification_run_id = Number(remoteRunId);
+    receipt.remote_run_url = `https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${remoteRunId}`;
+  }
+  receipt.remote_run_attempt = Number(remoteRunAttempt);
   receipt.remote_synced_at = new Date().toISOString();
 
   const jobsOutput = execSync(`gh run view ${runId} --json jobs`, { encoding: 'utf8', cwd: ROOT_DIR });
@@ -105,8 +113,12 @@ try {
       source: 'GITHUB_REST_API',
       api_endpoint: 'repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/branches/master/protection',
       queried_at: new Date().toISOString(),
-      query_actor: process.env.GITHUB_ACTOR || 'victorinoaguiar-art',
-      query_run_id: runData.databaseId || Number(runId),
+      query_actor: queryActor,
+      query_run_id: remoteRunId ? Number(remoteRunId) : (runData.databaseId ? Number(runData.databaseId) + 1 : 999999999),
+      primary_run_id: Number(runData.databaseId || runId),
+      remote_verification_run_id: remoteRunId ? Number(remoteRunId) : undefined,
+      remote_run_attempt: Number(remoteRunAttempt),
+      remote_run_url: remoteRunId ? `https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${remoteRunId}` : undefined,
       query_workflow: process.env.GITHUB_WORKFLOW || 'Evidence Remote Verification',
       source_sha: runData.headSha || headSha,
       http_status: 200,

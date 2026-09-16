@@ -1,4 +1,4 @@
-﻿import * as fs from 'node:fs';
+import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
@@ -9,12 +9,48 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.resolve(__dirname, '..');
 
+function parseBundleCliArgs(args) {
+  const parsed = {};
+  const positional = [];
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === '--dir') {
+      parsed.evidenceDir = args[++i];
+    } else if (arg === '--sha') {
+      parsed.headSha = args[++i];
+    } else if (arg === '--run-id') {
+      parsed.expectedRunId = args[++i];
+    } else if (arg === '--report') {
+      parsed.reportPath = args[++i];
+    } else if (arg === '--classification') {
+      parsed.classification = args[++i];
+    } else if (arg === '--expected-query-actor') {
+      parsed.expectedQueryActor = args[++i];
+    } else if (arg === '--remote-run-id') {
+      parsed.remoteRunId = args[++i];
+    } else if (!arg.startsWith('--')) {
+      positional.push(arg);
+    }
+  }
+  if (!parsed.evidenceDir && positional[0]) parsed.evidenceDir = positional[0];
+  if (!parsed.headSha && positional[1]) parsed.headSha = positional[1];
+  if (!parsed.expectedRunId && positional[2]) parsed.expectedRunId = positional[2];
+  if (!parsed.reportPath && positional[3]) parsed.reportPath = positional[3];
+  if (!parsed.classification && positional[4]) parsed.classification = positional[4];
+  if (!parsed.expectedQueryActor && positional[5]) parsed.expectedQueryActor = positional[5];
+  if (!parsed.remoteRunId && positional[6]) parsed.remoteRunId = positional[6];
+  return parsed;
+}
+
 export function verifyEvidenceBundle(options = {}) {
-  const rawEvidenceDir = options.evidenceDir || process.argv[2] || '.artifacts/evidence';
-  const headSha = options.headSha || process.argv[3];
-  const expectedRunId = options.expectedRunId || process.argv[4];
-  const reportPath = options.reportPath || process.argv[5] || 'AETF500_Relatorio_Correccao_Final_Evidencias_CI.md';
-  const classification = options.classification || process.argv[6] || 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS';
+  const cliParsed = process.argv[1] === fileURLToPath(import.meta.url) ? parseBundleCliArgs(process.argv.slice(2)) : {};
+  const rawEvidenceDir = options.evidenceDir || cliParsed.evidenceDir || '.artifacts/evidence';
+  const headSha = options.headSha || cliParsed.headSha;
+  const expectedRunId = options.expectedRunId || cliParsed.expectedRunId;
+  const reportPath = options.reportPath || cliParsed.reportPath || 'AETF500_Relatorio_Correccao_Final_Evidencias_CI.md';
+  const classification = options.classification || cliParsed.classification || 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS';
+  const expectedQueryActor = options.expectedQueryActor || cliParsed.expectedQueryActor || process.env.EXPECTED_QUERY_ACTOR;
+  const remoteRunId = options.remoteRunId || cliParsed.remoteRunId || process.env.REMOTE_VERIFICATION_RUN_ID;
 
   const evidenceDir = validateEvidenceDir(rawEvidenceDir, ROOT_DIR);
 
@@ -24,7 +60,9 @@ export function verifyEvidenceBundle(options = {}) {
     targetSha: headSha,
     enforceRemoteCi: true,
     targetClassification: classification,
-    reportPath
+    reportPath,
+    expectedQueryActor,
+    remoteRunId
   });
 
   if (!coherenceResult.valid) {
@@ -96,15 +134,36 @@ export function verifyEvidenceBundle(options = {}) {
   // 5. Receipt validation: run_id and primary run association
   const receiptPath = path.join(evidenceDir, 'github-actions-receipt.json');
   const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
-  if (expectedRunId && Number(receipt.run_id) !== Number(expectedRunId)) {
+  const actualPrimaryId = receipt.primary_run_id || receipt.run_id;
+  if (expectedRunId && Number(actualPrimaryId) !== Number(expectedRunId)) {
     return {
       valid: false,
       code: 'BUNDLE_RECEIPT_RUN_ID_MISMATCH',
-      error: `Receipt run_id (${receipt.run_id}) does not match expected run_id (${expectedRunId})`
+      error: `Receipt primary run_id (${actualPrimaryId}) does not match expected run_id (${expectedRunId})`
     };
   }
 
-  // 6. Verify bundle was verified AFTER remote enrichment (receipt has remote_synced_at)
+  // 6. Verify remote run ID and query run ID separation if available
+  const bpPath = path.join(evidenceDir, 'branch-protection.json');
+  if (fs.existsSync(bpPath)) {
+    const bpData = JSON.parse(fs.readFileSync(bpPath, 'utf8'));
+    if (actualPrimaryId && bpData.query_run_id && Number(bpData.query_run_id) === Number(actualPrimaryId)) {
+      return {
+        valid: false,
+        code: 'BUNDLE_QUERY_RUN_ID_COLLISION',
+        error: `query_run_id (${bpData.query_run_id}) cannot be identical to primary_run_id (${actualPrimaryId}) in verified bundle`
+      };
+    }
+    if (remoteRunId && bpData.query_run_id && Number(bpData.query_run_id) !== Number(remoteRunId)) {
+      return {
+        valid: false,
+        code: 'BUNDLE_REMOTE_RUN_ID_MISMATCH',
+        error: `query_run_id mismatch: expected remote run ID "${remoteRunId}", found "${bpData.query_run_id}"`
+      };
+    }
+  }
+
+  // 7. Verify bundle was verified AFTER remote enrichment (receipt has remote_synced_at)
   if (!receipt.remote_synced_at) {
     return {
       valid: false,

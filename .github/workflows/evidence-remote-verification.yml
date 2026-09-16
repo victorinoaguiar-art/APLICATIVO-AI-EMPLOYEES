@@ -40,10 +40,20 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Sync and Enrich Remote CI Receipt
-        run: node scripts/sync-remote-ci-receipt.mjs ${{ github.event.workflow_run.id }} ${{ github.event.workflow_run.head_sha }} .artifacts/evidence
+        run: |
+          node scripts/sync-remote-ci-receipt.mjs \
+            "${{ github.event.workflow_run.id }}" \
+            "${{ github.event.workflow_run.head_sha }}" \
+            .artifacts/evidence \
+            "${{ github.run_id }}" \
+            "${{ github.run_attempt }}" \
+            "${{ github.actor }}"
         env:
           GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN || secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_ADMIN_TOKEN || secrets.GITHUB_TOKEN }}
+          EXPECTED_QUERY_ACTOR: ${{ github.actor }}
+          REMOTE_VERIFICATION_RUN_ID: ${{ github.run_id }}
+          PRIMARY_RUN_ID: ${{ github.event.workflow_run.id }}
 
       - name: Run Evidence Remote Verification Gate
         run: |
@@ -51,20 +61,29 @@ jobs:
             --dir .artifacts/evidence \
             --sha "${{ github.event.workflow_run.head_sha }}" \
             --classification PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS \
-            --report AETF500_Relatorio_Correccao_Final_Evidencias_CI.md
+            --report AETF500_Relatorio_Correccao_Final_Evidencias_CI.md \
+            --expected-query-actor "${{ github.actor }}" \
+            --remote-run-id "${{ github.run_id }}"
         env:
           GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN || secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_ADMIN_TOKEN || secrets.GITHUB_TOKEN }}
+          EXPECTED_QUERY_ACTOR: ${{ github.actor }}
+          REMOTE_VERIFICATION_RUN_ID: ${{ github.run_id }}
           ENFORCE_REMOTE_CI: 'true'
 
       - name: Validate Final Verified Evidence Bundle Consistency
         run: |
           node scripts/verify-evidence-bundle.mjs \
-            .artifacts/evidence \
-            "${{ github.event.workflow_run.head_sha }}" \
-            "${{ github.event.workflow_run.id }}" \
-            AETF500_Relatorio_Correccao_Final_Evidencias_CI.md \
-            PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS
+            --dir .artifacts/evidence \
+            --sha "${{ github.event.workflow_run.head_sha }}" \
+            --run-id "${{ github.event.workflow_run.id }}" \
+            --report AETF500_Relatorio_Correccao_Final_Evidencias_CI.md \
+            --classification PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS \
+            --expected-query-actor "${{ github.actor }}" \
+            --remote-run-id "${{ github.run_id }}"
+        env:
+          EXPECTED_QUERY_ACTOR: ${{ github.actor }}
+          REMOTE_VERIFICATION_RUN_ID: ${{ github.run_id }}
 
       - name: Upload Verified Remote Evidence Bundle
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1

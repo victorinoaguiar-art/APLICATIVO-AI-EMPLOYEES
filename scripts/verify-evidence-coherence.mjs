@@ -40,7 +40,10 @@ export const ERROR_CODES = {
   CLASSIFICATION_MISSING: 'CLASSIFICATION_MISSING',
   CLASSIFICATION_INVALID: 'CLASSIFICATION_INVALID',
   REPORT_FILE_MISSING: 'REPORT_FILE_MISSING',
-  REPORT_PATH_INVALID: 'REPORT_PATH_INVALID'
+  REPORT_PATH_INVALID: 'REPORT_PATH_INVALID',
+  EXPECTED_QUERY_ACTOR_MISSING: 'EXPECTED_QUERY_ACTOR_MISSING',
+  REMOTE_RUN_ID_MISMATCH: 'REMOTE_RUN_ID_MISMATCH',
+  QUERY_RUN_ID_COLLISION: 'QUERY_RUN_ID_COLLISION'
 };
 
 export const ALLOWED_CLASSIFICATIONS = [
@@ -552,7 +555,29 @@ export function verifyEvidenceCoherence(options = {}) {
           };
         }
       }
+      const remoteStartedAt = options.remoteRunStartedAt || process.env.REMOTE_RUN_STARTED_AT || receipt.remote_started_at;
+      if (remoteStartedAt) {
+        const rStart = Date.parse(remoteStartedAt);
+        if (!isNaN(rStart) && queriedAtTime < rStart - 60 * 1000) {
+          return {
+            valid: false,
+            code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+            error: `queried_at ("${bpData.queried_at}") cannot be prior to remote execution started_at ("${remoteStartedAt}")`
+          };
+        }
+      }
+      if (receipt.remote_synced_at) {
+        const syncedAtTime = Date.parse(receipt.remote_synced_at);
+        if (!isNaN(syncedAtTime) && queriedAtTime > syncedAtTime + 60 * 1000) {
+          return {
+            valid: false,
+            code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+            error: `queried_at ("${bpData.queried_at}") cannot be posterior to remote sync timestamp ("${receipt.remote_synced_at}") beyond allowed tolerance (60s)`
+          };
+        }
+      }
 
+      const expectedActor = options.expectedQueryActor || process.env.EXPECTED_QUERY_ACTOR;
       if (!bpData.query_actor || typeof bpData.query_actor !== 'string' || !bpData.query_actor.trim()) {
         return {
           valid: false,
@@ -560,7 +585,6 @@ export function verifyEvidenceCoherence(options = {}) {
           error: `query_actor in branch-protection.json is missing or empty`
         };
       }
-      const expectedActor = options.expectedQueryActor || process.env.EXPECTED_QUERY_ACTOR;
       if (expectedActor && bpData.query_actor !== expectedActor) {
         return {
           valid: false,
@@ -568,6 +592,49 @@ export function verifyEvidenceCoherence(options = {}) {
           error: `query_actor mismatch in branch-protection.json: expected "${expectedActor}", found "${bpData.query_actor}"`
         };
       }
+
+      // Check required provenance metadata fields
+      const requiredProvenanceFields = ['source', 'api_endpoint', 'queried_at', 'query_actor', 'query_run_id', 'query_workflow'];
+      for (const field of requiredProvenanceFields) {
+        if (!bpData[field]) {
+          return {
+            valid: false,
+            code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+            error: `Provenance metadata missing in branch-protection.json: ${field}`
+          };
+        }
+      }
+
+      // Check run IDs separation and matching in remote mode
+      const primaryRunId = receipt.primary_run_id || receipt.run_id || options.primaryRunId || process.env.PRIMARY_RUN_ID;
+      const expectedRemoteRunId = options.remoteRunId || process.env.REMOTE_VERIFICATION_RUN_ID;
+      if (enforceRemoteCi) {
+        if (primaryRunId && bpData.query_run_id && Number(bpData.query_run_id) === Number(primaryRunId)) {
+          return {
+            valid: false,
+            code: ERROR_CODES.QUERY_RUN_ID_COLLISION,
+            error: `query_run_id (${bpData.query_run_id}) cannot be identical to primary_run_id (${primaryRunId}) in remote verification`
+          };
+        }
+        if (expectedRemoteRunId) {
+          if (bpData.query_run_id && Number(bpData.query_run_id) !== Number(expectedRemoteRunId)) {
+            return {
+              valid: false,
+              code: ERROR_CODES.REMOTE_RUN_ID_MISMATCH,
+              error: `query_run_id mismatch in branch-protection.json: expected remote run ID "${expectedRemoteRunId}", found "${bpData.query_run_id}"`
+            };
+          }
+          const recRemoteRunId = receipt.remote_verification_run_id || bpData.remote_verification_run_id;
+          if (recRemoteRunId && Number(recRemoteRunId) !== Number(expectedRemoteRunId)) {
+            return {
+              valid: false,
+              code: ERROR_CODES.REMOTE_RUN_ID_MISMATCH,
+              error: `remote_verification_run_id mismatch: expected "${expectedRemoteRunId}", found "${recRemoteRunId}"`
+            };
+          }
+        }
+      }
+
       if (!bpData.source_sha || bpData.source_sha.toLowerCase() !== expectedSha.toLowerCase()) {
         return {
           valid: false,
@@ -846,6 +913,16 @@ export function verifyEvidenceCoherence(options = {}) {
     };
   }
 
+  // Remote verification expected query actor mandatory check
+  const expectedActor = options.expectedQueryActor || process.env.EXPECTED_QUERY_ACTOR;
+  if (enforceRemoteCi && (!expectedActor || typeof expectedActor !== 'string' || !expectedActor.trim())) {
+    return {
+      valid: false,
+      code: ERROR_CODES.EXPECTED_QUERY_ACTOR_MISSING,
+      error: 'Expected query actor not specified for remote verification (EXPECTED_QUERY_ACTOR required).'
+    };
+  }
+
   return {
     valid: true,
     commit_sha: expectedSha,
@@ -864,6 +941,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let evidenceDir;
   let targetClassification;
   let reportPath;
+  let expectedQueryActor;
+  let remoteRunId;
+  let primaryRunId;
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
@@ -893,6 +973,24 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
         process.exit(1);
       }
       reportPath = args[++i];
+    } else if (arg === '--expected-query-actor') {
+      if (i + 1 >= args.length || args[i + 1].startsWith('--')) {
+        console.error('[FAIL] CLI_ARGUMENT_ERROR: Argument --expected-query-actor provided without value');
+        process.exit(1);
+      }
+      expectedQueryActor = args[++i];
+    } else if (arg === '--remote-run-id') {
+      if (i + 1 >= args.length || args[i + 1].startsWith('--')) {
+        console.error('[FAIL] CLI_ARGUMENT_ERROR: Argument --remote-run-id provided without value');
+        process.exit(1);
+      }
+      remoteRunId = args[++i];
+    } else if (arg === '--primary-run-id') {
+      if (i + 1 >= args.length || args[i + 1].startsWith('--')) {
+        console.error('[FAIL] CLI_ARGUMENT_ERROR: Argument --primary-run-id provided without value');
+        process.exit(1);
+      }
+      primaryRunId = args[++i];
     }
   }
 
@@ -902,7 +1000,10 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     enforceRemoteCi,
     evidenceDir,
     targetClassification,
-    reportPath
+    reportPath,
+    expectedQueryActor: expectedQueryActor || process.env.EXPECTED_QUERY_ACTOR,
+    remoteRunId: remoteRunId || process.env.REMOTE_VERIFICATION_RUN_ID,
+    primaryRunId: primaryRunId || process.env.PRIMARY_RUN_ID
   });
 
   if (!result.valid) {
