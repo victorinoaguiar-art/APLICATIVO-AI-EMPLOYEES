@@ -6,11 +6,10 @@
 - **Data da Auditoria:** 2026-09-16
 - **Auditor:** Antigravity Senior Engineering, CI/CD & Forensic Security Auditor
 - **Commit Inicial Auditado:** `d4b811ce3d343068ae081881ed1469ee2793bc16`
-- **Commit do Patch Técnico Base:** [`726d9af728291381421837e8e54d7ebe2c334aa2`](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/commit/726d9af728291381421837e8e54d7ebe2c334aa2)
-- **Commit Documental e de Sincronização:** [`8cb7eac6e1cb10f05562725fef6070624bf91219`](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/commit/8cb7eac6e1cb10f05562725fef6070624bf91219)
-- **Execução da CI Principal Prévia (Run ID):** [35139315097](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35139315097) (Status: `completed`, Conclusion: `success`)
-- **Execução da Verificação Remota Prévia (Run ID):** [35139638915](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35139638915) (Status: `completed`, Conclusion: `success`)
-- **Artefacto Preservado no GitHub Actions:** [`aetf-verified-remote-evidence-bundle-8cb7eac6e1cb10f05562725fef6070624bf91219`](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35139638915/artifacts/10464203884) (ID `10464203884`, 27 ficheiros)
+- **Commit do Patch Técnico Validado:** [`f5f508e7d64e41f6e685c30279c43402533f279b`](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/commit/f5f508e7d64e41f6e685c30279c43402533f279b)
+- **CI Principal (Run ID):** [35153339838](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35153339838) (Status: `completed`, Conclusion: `success`)
+- **CI Remota de Validação (Run ID):** [35153644417](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35153644417) (Status: `completed`, Conclusion: `success`)
+- **Artefacto Preservado no GitHub Actions:** [`aetf-verified-remote-evidence-bundle-f5f508e7d64e41f6e685c30279c43402533f279b`](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35153644417/artifacts/10470246964) (ID `10470246964`, 27 ficheiros)
 
 ---
 
@@ -20,13 +19,15 @@ O presente micro-patch de proveniência verificável e reconciliação documenta
 
 Foram integrados 10 novos testes automatizados determinísticos na Suite 32 de `packages/runtime/src/test/evidenceCoherence.test.ts`, elevando a suíte de evidência forense para 74 testes e o total do monorepo para 464 testes físicos reais, todos aprovados com zero falhas.
 
+Ambas as pipelines no GitHub Actions terminaram com `success` sobre o SHA técnico [`f5f508e`](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/commit/f5f508e7d64e41f6e685c30279c43402533f279b): a CI principal (Run `35153339838`) e a verificação remota de evidências (Run `35153644417`), que preservou o pacote completo de 27 ficheiros sob o artefacto `10470246964` com digest sha256 `0ddd98d7b9977dc60a96284abe29492599b9fd810c10cd6f3c8ec30e1eec7a7f`.
+
 | Gate / Componente | Resultado | Detalhe Forense |
 |---|:---:|---|
 | **`LOCAL_VERIFY_RESULT`** | **PASS (Exit code 0)** | `npm run verify` executa e aprova todos os 464 testes e gates de integridade localmente |
-| **`PRIMARY_CI_RESULT`** | **PASS (Success)** | Run [35139315097](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35139315097): jobs `Clean Checkout Local Verification (22.x)` e `Deterministic Build, Typecheck, Test & Audit (22.x)` 100% verdes |
-| **`REMOTE_EVIDENCE_RESULT`** | **PASS (Success)** | Run [35139638915](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35139638915): validação remota com `--classification`, `--report`, `--expected-query-actor` e `--remote-run-id` aprovada com êxito |
+| **`PRIMARY_CI_RESULT`** | **PASS (Success)** | Run [35153339838](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35153339838): jobs `Clean Checkout Local Verification (22.x)` e `Deterministic Build, Typecheck, Test & Audit (22.x)` 100% verdes |
+| **`REMOTE_EVIDENCE_RESULT`** | **PASS (Success)** | Run [35153644417](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35153644417): validação remota com `--classification`, `--report`, `--expected-query-actor` e `--remote-run-id` aprovada com êxito |
 | **`REMOTE_BUNDLE_VERIFICATION`** | **PASS (26 ficheiros)** | `scripts/verify-evidence-bundle.mjs` valida integridade física byte-a-byte de todos os ficheiros indexados no bundle |
-| **`REMOTE_BUNDLE_PRESERVATION`** | **UPLOADED (ID 10464203884)** | Upload de `.artifacts/evidence/` completo (27 ficheiros, 30 dias de retenção) |
+| **`REMOTE_BUNDLE_PRESERVATION`** | **UPLOADED (ID 10470246964)** | Upload de `.artifacts/evidence/` completo (27 ficheiros, 30 dias de retenção, hash zip `0ddd98d7b...`) |
 | **`BRANCH_PROTECTION_RESULT`** | **CONFIGURED (HTTP 200)** | API GitHub confirmada; 2 checks pré-merge obrigatórios e regras de PR ativas |
 | **`ADMIN_BYPASS_STATUS`** | **BYPASS_PERMITTED (`enforce_admins: false`)** | **Admin bypass permitido, comprovado pela API e explicitamente reflectido na classificação limitada** |
 | **`OPERATIONAL_READINESS_RESULT`** | **PRE-PRODUCTION / L2 HARDENED** | Tarefas reais = 0; contratos assinados = 0; auditorias externas = 0 |
@@ -41,12 +42,14 @@ Foram integrados 10 novos testes automatizados determinísticos na Suite 32 de `
    - Contém: implementação da CLI de `--classification` e `--report`, fortalecimento de `queried_at` e `query_actor`, script `scripts/verify-evidence-bundle.mjs`, workflow remoto enriquecido e 18 testes automatizados (Suite 31).
    - **CI Principal:** [Run ID 35137111237](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35137111237) — `completed / success`.
    - **CI Remota de Validação:** [Run ID 35137482782](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35137482782) — `completed / success` (Artefacto: `10463746296`).
-3. **Commit Documental e de Sincronização:** [`8cb7eac6e1cb10f05562725fef6070624bf91219`](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/commit/8cb7eac6e1cb10f05562725fef6070624bf91219)
-   - Atualização documental e alinhamento dos artefactos gerados pela execução do patch técnico.
+3. **Commit Documental Prévio:** [`8cb7eac6e1cb10f05562725fef6070624bf91219`](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/commit/8cb7eac6e1cb10f05562725fef6070624bf91219)
    - **CI Principal:** [Run ID 35139315097](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35139315097) — `completed / success`.
    - **CI Remota de Validação:** [Run ID 35139638915](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35139638915) — `completed / success` (Artefacto: `10464203884`).
-4. **Micro-Patch de Proveniência Verificável (Este Commit):**
+4. **Commit do Patch Técnico de Proveniência Validado:** [`f5f508e7d64e41f6e685c30279c43402533f279b`](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/commit/f5f508e7d64e41f6e685c30279c43402533f279b)
    - Fecho das 7 condições de proveniência remota: segregação `primary_run_id` vs `remote_verification_run_id`, checagem de colisão `QUERY_RUN_ID_COLLISION`, validação mandatória de `EXPECTED_QUERY_ACTOR`, limites da janela temporal de execução, e 10 novos testes determinísticos na Suite 32.
+   - **CI Principal:** [Run ID 35153339838](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35153339838) — `completed / success`.
+   - **CI Remota de Validação:** [Run ID 35153644417](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35153644417) — `completed / success`.
+   - **Artefacto Preservado:** [`aetf-verified-remote-evidence-bundle-f5f508e7d64e41f6e685c30279c43402533f279b`](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35153644417/artifacts/10470246964) (ID `10470246964`).
 
 ---
 
@@ -182,7 +185,7 @@ Foram integrados 10 novos testes automatizados determinísticos na Suite 32 de `
 
 ## 6. Verificação Física de Hashes do Pacote Remoto
 
-Hashes calculados e verificados pelo script `scripts/verify-evidence-bundle.mjs` no artefacto [`aetf-verified-remote-evidence-bundle-8cb7eac6e1cb10f05562725fef6070624bf91219`](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35139638915/artifacts/10464203884):
+Hashes calculados e verificados pelo script `scripts/verify-evidence-bundle.mjs` no artefacto [`aetf-verified-remote-evidence-bundle-f5f508e7d64e41f6e685c30279c43402533f279b`](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35153644417/artifacts/10470246964):
 
 ```text
 branch-protection-api-response.json: OK
