@@ -10,8 +10,12 @@ export const ROOT_DIR = path.resolve(__dirname, '../../');
 
 const req = createRequire(import.meta.url);
 let DefaultAjv = null;
+let addFormats = null;
 try {
   DefaultAjv = req('ajv');
+  try {
+    addFormats = req('ajv-formats');
+  } catch {}
 } catch {}
 
 export const ERROR_CODES = {
@@ -32,18 +36,7 @@ export function getFileSha256(filePath) {
 
 export function resolveDeterministicPath(targetPath) {
   if (!targetPath) return null;
-  const direct = path.isAbsolute(targetPath) ? targetPath : path.resolve(ROOT_DIR, targetPath);
-  if (fs.existsSync(direct)) return direct;
-
-  // Fallback between camelCase and snake_case in same dir if applicable
-  const base = path.basename(direct);
-  const dir = path.dirname(direct);
-  const snake = base.replace(/([A-Z])/g, '_$1').toLowerCase().replace(/^_/, '');
-  const camel = base.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
-  if (fs.existsSync(path.join(dir, snake))) return path.join(dir, snake);
-  if (fs.existsSync(path.join(dir, camel))) return path.join(dir, camel);
-
-  return direct;
+  return path.isAbsolute(targetPath) ? targetPath : path.resolve(ROOT_DIR, targetPath);
 }
 
 /**
@@ -88,6 +81,11 @@ export function validateWithAjv(data, schemaPath, options = {}) {
     const ajvInstance = typeof ajvToUse === 'function'
       ? new ajvToUse({ allErrors: true, strict: false })
       : ajvToUse;
+    if (addFormats && typeof addFormats === 'function') {
+      try {
+        addFormats(ajvInstance);
+      } catch {}
+    }
     const validate = ajvInstance.compile(schema);
     const valid = validate(data);
     if (!valid) {

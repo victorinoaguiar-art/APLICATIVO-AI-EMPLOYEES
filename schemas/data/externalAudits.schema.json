@@ -2,31 +2,118 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ExternalAuditsSchema",
   "type": "object",
+  "additionalProperties": false,
   "required": ["$schema", "metadata", "audits"],
   "properties": {
-    "$schema": { "type": "string" },
+    "$schema": {
+      "type": "string",
+      "const": "https://ai-employee.net/schemas/external-audits-v1.json"
+    },
     "metadata": {
       "type": "object",
-      "required": ["version", "scope", "updated_at", "description"],
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "scope",
+        "updated_at",
+        "description",
+        "source_id",
+        "collection_date",
+        "origin",
+        "verification_status"
+      ],
       "properties": {
-        "version": { "type": "string" },
-        "scope": { "type": "string" },
-        "updated_at": { "type": "string" },
-        "description": { "type": "string" }
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "scope": { "type": "string", "enum": ["INDEPENDENT_THIRD_PARTY_CERT_L3_AUDITS"] },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "description": { "type": "string", "minLength": 5 },
+        "source_id": { "type": "string", "minLength": 3 },
+        "collection_date": { "type": "string", "format": "date-time" },
+        "origin": { "type": "string", "minLength": 3 },
+        "verification_status": {
+          "type": "string",
+          "enum": ["VERIFIED_EMPTY_BASELINE", "ACTIVE_VERIFIED", "PENDING_AUDIT"]
+        }
       }
     },
     "audits": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
         "type": "object",
-        "required": ["audit_id", "auditor_type", "verdict"],
+        "additionalProperties": false,
+        "required": [
+          "audit_id",
+          "auditor_type",
+          "auditor_organization",
+          "audit_date",
+          "scope",
+          "verdict",
+          "is_internal_receipt",
+          "provenance_ref"
+        ],
         "properties": {
-          "audit_id": { "type": "string" },
-          "auditor_type": { "type": "string" },
-          "verdict": { "type": "string" },
-          "auditor_signature": { "type": "string" },
-          "is_internal_receipt": { "type": "boolean" }
-        }
+          "audit_id": {
+            "type": "string",
+            "minLength": 3,
+            "pattern": "^AUD-[A-Za-z0-9_-]+$"
+          },
+          "auditor_type": {
+            "type": "string",
+            "enum": ["INDEPENDENT_THIRD_PARTY", "INTERNAL_SELF_ASSESSMENT"]
+          },
+          "auditor_organization": {
+            "type": "string",
+            "minLength": 3
+          },
+          "audit_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 3
+          },
+          "verdict": {
+            "type": "string",
+            "enum": ["CERT_L3_APPROVED", "CERT_L3_REJECTED", "PENDING_REMEDIATION"]
+          },
+          "is_internal_receipt": {
+            "type": "boolean"
+          },
+          "auditor_signature": {
+            "type": "string",
+            "minLength": 8
+          },
+          "document_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "provenance_ref": {
+            "type": "string",
+            "minLength": 3
+          }
+        },
+        "oneOf": [
+          {
+            "properties": {
+              "auditor_type": { "const": "INDEPENDENT_THIRD_PARTY" },
+              "is_internal_receipt": { "const": false },
+              "verdict": { "const": "CERT_L3_APPROVED" }
+            },
+            "required": ["auditor_signature"]
+          },
+          {
+            "properties": {
+              "is_internal_receipt": { "const": true }
+            }
+          },
+          {
+            "properties": {
+              "verdict": { "enum": ["CERT_L3_REJECTED", "PENDING_REMEDIATION"] }
+            }
+          }
+        ]
       }
     }
   }

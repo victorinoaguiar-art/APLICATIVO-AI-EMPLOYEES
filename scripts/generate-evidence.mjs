@@ -20,13 +20,48 @@ if (!fs.existsSync(EVIDENCE_DIR)) {
   fs.mkdirSync(EVIDENCE_DIR, { recursive: true });
 }
 
-console.log('[EVIDENCE] Generating forensic evidence artifacts in evidence/ ...');
+console.log('[EVIDENCE] Generating forensic evidence artifacts from REAL physical executions in evidence/ ...');
+
+const currentSha = execSync('git rev-parse HEAD', { encoding: 'utf8', cwd: ROOT_DIR }).trim();
+const currentBranch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8', cwd: ROOT_DIR }).trim();
+const npmVersion = execSync('npm --version', { encoding: 'utf8', cwd: ROOT_DIR }).trim();
+
+function runCommandAndLog(cmd, logFileName) {
+  const startedAt = new Date().toISOString();
+  let stdout = '';
+  let stderr = '';
+  let exitCode = 0;
+  try {
+    stdout = execSync(cmd, { cwd: ROOT_DIR, encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 });
+  } catch (err) {
+    exitCode = err.status || 1;
+    stdout = err.stdout || '';
+    stderr = err.stderr || err.message;
+  }
+  const completedAt = new Date().toISOString();
+  const header = [
+    `COMMAND: ${cmd}`,
+    `COMMIT_SHA: ${currentSha}`,
+    `STARTED_AT: ${startedAt}`,
+    `COMPLETED_AT: ${completedAt}`,
+    `EXIT_CODE: ${exitCode}`,
+    `OS: ${process.platform} ${process.arch}`,
+    `NODE_VERSION: ${process.version}`,
+    `NPM_VERSION: ${npmVersion}`,
+    '----------------------------------------',
+    ''
+  ].join('\n');
+  const fullContent = header + stdout + (stderr ? '\nSTDERR:\n' + stderr : '');
+  fs.writeFileSync(path.join(EVIDENCE_DIR, logFileName), fullContent, 'utf8');
+  console.log(`  -> ${logFileName} generated (exit code ${exitCode})`);
+  return { exitCode, stdout, stderr, startedAt, completedAt };
+}
 
 // 1. environment.json
 const envData = {
   repository: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES',
-  branch: execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8', cwd: ROOT_DIR }).trim(),
-  commit_sha: execSync('git rev-parse HEAD', { encoding: 'utf8', cwd: ROOT_DIR }).trim(),
+  branch: currentBranch,
+  commit_sha: currentSha,
   timestamp_utc: new Date().toISOString(),
   os: {
     platform: process.platform,
@@ -35,9 +70,7 @@ const envData = {
   },
   runtime: {
     node: process.version,
-    npm: execSync('npm --version', { encoding: 'utf8', cwd: ROOT_DIR }).trim(),
-    next: '15.5.25',
-    eslint: '9.39.5'
+    npm: npmVersion
   }
 };
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'environment.json'), JSON.stringify(envData, null, 2), 'utf8');
@@ -45,7 +78,7 @@ console.log('  -> environment.json generated');
 
 // 2. changed-files.txt
 const changedFiles = execSync('git status --short', { encoding: 'utf8', cwd: ROOT_DIR });
-fs.writeFileSync(path.join(EVIDENCE_DIR, 'changed-files.txt'), changedFiles, 'utf8');
+fs.writeFileSync(path.join(EVIDENCE_DIR, 'changed-files.txt'), changedFiles || 'NO_UNCOMMITTED_CHANGES\n', 'utf8');
 console.log('  -> changed-files.txt generated');
 
 // 3. clean-checkout.txt
@@ -53,68 +86,145 @@ const gitStatus = execSync('git status', { encoding: 'utf8', cwd: ROOT_DIR });
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'clean-checkout.txt'), gitStatus, 'utf8');
 console.log('  -> clean-checkout.txt generated');
 
-// 4. npm-audit-production.log
-let auditLog = '';
-try {
-  auditLog = execSync('npm audit --omit=dev', { encoding: 'utf8', cwd: ROOT_DIR });
-} catch (err) {
-  auditLog = err.stdout || err.message;
-}
-fs.writeFileSync(path.join(EVIDENCE_DIR, 'npm-audit-production.log'), auditLog, 'utf8');
-console.log('  -> npm-audit-production.log generated');
+// 4. Execution Logs
+runCommandAndLog('npm ci --dry-run', 'npm-ci.log');
+runCommandAndLog('npm audit --omit=dev', 'npm-audit-production.log');
+runCommandAndLog('npm run typecheck', 'typecheck.log');
+runCommandAndLog('npm run build:packages', 'build-packages.log');
+runCommandAndLog('npm run build:web', 'build-web.log');
+runCommandAndLog('npm run lint', 'lint.log');
+runCommandAndLog('npm run validate:manifests', 'validate-manifests.log');
+runCommandAndLog('npm run verify:hashes', 'verify-hashes.log');
+runCommandAndLog('npm run verify:security', 'verify-security.log');
+runCommandAndLog('npm run verify:payments', 'verify-payments.log');
+runCommandAndLog('npm run verify:auth', 'verify-auth.log');
+runCommandAndLog('npm run verify', 'verify.log');
 
-// 5. lint.log
-let lintLog = '';
-try {
-  lintLog = execSync('npm run lint', { encoding: 'utf8', cwd: ROOT_DIR });
-} catch (err) {
-  lintLog = err.stdout || err.message;
-}
-fs.writeFileSync(path.join(EVIDENCE_DIR, 'lint.log'), lintLog, 'utf8');
-console.log('  -> lint.log generated');
+// 5. P4 — Deriving test summary dynamically from real test executions
+console.log('[EVIDENCE] Executing real test suites to derive test summary (P4)...');
+const testSuites = [
+  { name: 'rolepack', cmd: 'npm run test:catalog' },
+  { name: 'runtime', cmd: 'npm run test:runtime' },
+  { name: 'policies', cmd: 'npm run test:security' },
+  { name: 'marketplace_billing', cmd: 'npm run test:billing' },
+  { name: 'tool_sdk', cmd: 'npm run test:tools' },
+  { name: 'evaluation_sdk', cmd: 'npm run eval:catalog' }
+];
 
-// 6. build-web.log
-let buildWebLog = '';
-try {
-  buildWebLog = execSync('npm run build:web', { encoding: 'utf8', cwd: ROOT_DIR });
-} catch (err) {
-  buildWebLog = err.stdout || err.message;
-}
-fs.writeFileSync(path.join(EVIDENCE_DIR, 'build-web.log'), buildWebLog, 'utf8');
-console.log('  -> build-web.log generated');
+const testRunStartedAt = new Date().toISOString();
+let globalTotalTests = 0;
+let globalPassedTests = 0;
+let globalFailedTests = 0;
+let globalSkippedTests = 0;
+let globalCancelledTests = 0;
+let globalTodoTests = 0;
+let allSuitesExitCode = 0;
+const breakdown = {};
+const allTestResults = [];
 
-// 7. verify.log
-let verifyLog = '';
-try {
-  verifyLog = execSync('npm run verify', { encoding: 'utf8', cwd: ROOT_DIR });
-} catch (err) {
-  verifyLog = err.stdout || err.message;
-}
-fs.writeFileSync(path.join(EVIDENCE_DIR, 'verify.log'), verifyLog, 'utf8');
-console.log('  -> verify.log generated');
+for (const suite of testSuites) {
+  const startedAt = new Date().toISOString();
+  let stdout = '';
+  let exitCode = 0;
+  try {
+    stdout = execSync(suite.cmd, { cwd: ROOT_DIR, encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 });
+  } catch (err) {
+    exitCode = err.status || 1;
+    stdout = (err.stdout || '') + '\n' + (err.stderr || '');
+    allSuitesExitCode = exitCode;
+  }
+  const completedAt = new Date().toISOString();
 
-// 8. test-summary.json
+  // Parse TAP summary lines
+  const testsMatch = stdout.match(/# tests\s+(\d+)/);
+  const passMatch = stdout.match(/# pass\s+(\d+)/);
+  const failMatch = stdout.match(/# fail\s+(\d+)/);
+  const cancelledMatch = stdout.match(/# cancelled\s+(\d+)/);
+  const skippedMatch = stdout.match(/# skipped\s+(\d+)/);
+  const todoMatch = stdout.match(/# todo\s+(\d+)/);
+  const suitesMatch = stdout.match(/# suites\s+(\d+)/);
+
+  if (!testsMatch || !passMatch) {
+    throw new Error(`TEST_PARSER_FAILURE: Unable to parse TAP output for suite ${suite.name}`);
+  }
+
+  const tests = parseInt(testsMatch[1], 10);
+  const pass = parseInt(passMatch[1], 10);
+  const fail = failMatch ? parseInt(failMatch[1], 10) : 0;
+  const cancelled = cancelledMatch ? parseInt(cancelledMatch[1], 10) : 0;
+  const skipped = skippedMatch ? parseInt(skippedMatch[1], 10) : 0;
+  const todo = todoMatch ? parseInt(todoMatch[1], 10) : 0;
+  const suites = suitesMatch ? parseInt(suitesMatch[1], 10) : 1;
+
+  globalTotalTests += tests;
+  globalPassedTests += pass;
+  globalFailedTests += fail;
+  globalCancelledTests += cancelled;
+  globalSkippedTests += skipped;
+  globalTodoTests += todo;
+
+  breakdown[suite.name] = {
+    command: suite.cmd,
+    exit_code: exitCode,
+    suites,
+    tests,
+    passed: pass,
+    failed: fail,
+    cancelled,
+    skipped,
+    todo,
+    started_at: startedAt,
+    completed_at: completedAt
+  };
+
+  // Parse individual test items from TAP
+  const lines = stdout.split('\n');
+  for (const line of lines) {
+    const okMatch = line.match(/^(ok|not ok)\s+(\d+)\s+-\s+(.+)$/);
+    if (okMatch) {
+      allTestResults.push({
+        suite: suite.name,
+        index: parseInt(okMatch[2], 10),
+        status: okMatch[1] === 'ok' ? 'PASS' : 'FAIL',
+        name: okMatch[3].trim()
+      });
+    }
+  }
+}
+
+const testRunCompletedAt = new Date().toISOString();
+
+// Strict integrity verification of parsed metrics
+if (globalFailedTests > 0 || allSuitesExitCode !== 0) {
+  console.warn(`[WARNING] Test suite failures detected: exit_code=${allSuitesExitCode}, failed=${globalFailedTests}`);
+}
+
 const testSummary = {
-  total_suites: 32,
-  total_tests: 388,
-  passed_tests: 388,
-  failed_tests: 0,
-  skipped_tests: 0,
-  exit_code: 0,
-  breakdown: {
-    rolepack: { suites: 1, tests: 2, passed: 2, failed: 0 },
-    runtime: { suites: 29, tests: 355, passed: 355, failed: 0 },
-    policies: { suites: 1, tests: 12, passed: 12, failed: 0 },
-    marketplace_billing: { suites: 1, tests: 5, passed: 5, failed: 0 },
-    tool_sdk: { suites: 1, tests: 4, passed: 4, failed: 0 },
-    evaluation_sdk: { suites: 1, tests: 10, passed: 10, failed: 0 }
-  },
-  timestamp: new Date().toISOString()
+  commit_sha: currentSha,
+  command: 'npm test',
+  started_at: testRunStartedAt,
+  completed_at: testRunCompletedAt,
+  exit_code: allSuitesExitCode,
+  total_tests: globalTotalTests,
+  passed_tests: globalPassedTests,
+  failed_tests: globalFailedTests,
+  skipped_tests: globalSkippedTests,
+  cancelled_tests: globalCancelledTests,
+  todo_tests: globalTodoTests,
+  breakdown
 };
-fs.writeFileSync(path.join(EVIDENCE_DIR, 'test-summary.json'), JSON.stringify(testSummary, null, 2), 'utf8');
-console.log('  -> test-summary.json generated');
 
-// 9. cardinality-results.json
+fs.writeFileSync(path.join(EVIDENCE_DIR, 'test-summary.json'), JSON.stringify(testSummary, null, 2), 'utf8');
+console.log(`  -> test-summary.json generated (${globalTotalTests} tests, ${globalPassedTests} passed, ${globalFailedTests} failed)`);
+
+fs.writeFileSync(path.join(EVIDENCE_DIR, 'test-results.json'), JSON.stringify({
+  commit_sha: currentSha,
+  total_results: allTestResults.length,
+  results: allTestResults
+}, null, 2), 'utf8');
+console.log(`  -> test-results.json generated (${allTestResults.length} parsed items)`);
+
+// 6. cardinality-results.json
 const liveTasksRes = calculatePhysicalLiveTasks(path.resolve(ROOT_DIR, 'data/liveTasks.json'));
 const legalContractsRes = calculateLegallyAuthorizedTenants(path.resolve(ROOT_DIR, 'data/legalContracts.json'));
 const externalAuditsRes = calculateEligibleCertificationEvidence(path.resolve(ROOT_DIR, 'data/externalAudits.json'));
@@ -133,7 +243,7 @@ const cardinalityResults = {
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'cardinality-results.json'), JSON.stringify(cardinalityResults, null, 2), 'utf8');
 console.log('  -> cardinality-results.json generated');
 
-// 10. schema-validation-results.json
+// 7. schema-validation-results.json
 const schemas = [
   { name: 'liveTasks.schema.json', data: path.resolve(ROOT_DIR, 'data/liveTasks.json') },
   { name: 'legalContracts.schema.json', data: path.resolve(ROOT_DIR, 'data/legalContracts.json') },
@@ -160,58 +270,44 @@ const schemaValidationResults = {
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'schema-validation-results.json'), JSON.stringify(schemaValidationResults, null, 2), 'utf8');
 console.log('  -> schema-validation-results.json generated');
 
-// 11. file-hashes.sha256
-const filesToHash = [
+// 8. canonical-source-hashes.sha256 & file-hashes.sha256
+const canonicalFiles = [
   'schemas/data/liveTasks.schema.json',
   'schemas/data/legalContracts.schema.json',
   'schemas/data/externalAudits.schema.json',
   'data/liveTasks.json',
   'data/legalContracts.json',
   'data/externalAudits.json',
-  'data/live_tasks.json',
-  'data/legal_contracts.json',
-  'data/external_audits.json',
   'scripts/lib/cardinalityCalculators.mjs',
   'scripts/validate-manifests.mjs'
 ];
 
-const hashLines = filesToHash.map(rel => {
+const canonicalHashLines = canonicalFiles.map(rel => {
   const abs = path.resolve(ROOT_DIR, rel);
   const hash = getFileSha256(abs);
   return `${hash}  ${rel}`;
 });
-fs.writeFileSync(path.join(EVIDENCE_DIR, 'file-hashes.sha256'), hashLines.join('\n') + '\n', 'utf8');
-console.log('  -> file-hashes.sha256 generated');
+fs.writeFileSync(path.join(EVIDENCE_DIR, 'canonical-source-hashes.sha256'), canonicalHashLines.join('\n') + '\n', 'utf8');
+fs.writeFileSync(path.join(EVIDENCE_DIR, 'file-hashes.sha256'), canonicalHashLines.join('\n') + '\n', 'utf8');
+console.log('  -> canonical-source-hashes.sha256 generated');
 
-// 12. git-status-after-verification.txt
+// 9. git-status-after-verification.txt
 const postStatus = execSync('git status --short', { encoding: 'utf8', cwd: ROOT_DIR });
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'git-status-after-verification.txt'), postStatus || 'WORKING_TREE_CLEAN\n', 'utf8');
 console.log('  -> git-status-after-verification.txt generated');
 
-// 13. github-actions-receipt.json
-const githubReceipt = {
-  workflow_file: '.github/workflows/ci.yml',
-  workflow_name: 'CI / Production Readiness & Audit Gate',
+// 10. github-actions-receipt.json (Initial state before remote run query)
+let githubReceipt = {
   repository: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES',
-  target_branch: 'master',
-  required_steps: [
-    'Checkout Codebase',
-    'Setup Node.js 22.x',
-    'Deterministic Install (npm ci)',
-    'Production Dependency Audit (npm audit --omit=dev)',
-    'Monorepo Clean',
-    'Strict Typecheck',
-    'Build Monorepo Packages',
-    'Build Web Application',
-    'Next.js ESLint',
-    'Automated Test Suites',
-    'Ajv Manifest & Domain Cardinality Validation',
-    'Physical Hash Cryptographic Verification',
-    'Security & Behavioral Controls Verification',
-    'Transactional Payment & Webhook Verification',
-    'Multi-Tenant Authentication & Authorization Verification',
-    'Ensure Clean Working Tree'
-  ],
+  branch: currentBranch,
+  commit_sha: currentSha,
+  workflow_name: 'CI / Production Readiness & Audit Gate',
+  run_id: null,
+  run_url: null,
+  status: 'pending_push',
+  conclusion: 'CI_EVIDENCE_PENDING_REMOTE_EXECUTION',
+  started_at: null,
+  completed_at: null,
   branch_protection_status: 'BRANCH_PROTECTION_NOT_CONFIGURED',
   branch_protection_instructions: {
     instruction_1: 'Navigate to https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/settings/branches',
@@ -220,21 +316,27 @@ const githubReceipt = {
     instruction_4: 'Enable "Require status checks to pass before merging"',
     instruction_5: 'Select check: "Deterministic Build, Typecheck, Test & Audit"'
   },
-  classification: 'PATCH_VERIFIED_CI_NOT_ENFORCED',
-  timestamp: new Date().toISOString()
+  jobs: []
 };
+
+// Check if a remote run already exists for this exact commit_sha via gh CLI
+try {
+  const ghRunOutput = execSync(`gh run list --commit ${currentSha} --json databaseId,url,status,conclusion,createdAt,updatedAt --limit 1`, { encoding: 'utf8', cwd: ROOT_DIR });
+  const runs = JSON.parse(ghRunOutput);
+  if (Array.isArray(runs) && runs.length > 0) {
+    const run = runs[0];
+    githubReceipt.run_id = run.databaseId;
+    githubReceipt.run_url = run.url;
+    githubReceipt.status = run.status;
+    githubReceipt.conclusion = run.conclusion;
+    githubReceipt.started_at = run.createdAt;
+    githubReceipt.completed_at = run.updatedAt;
+  }
+} catch {
+  // gh CLI unavailable or not executed yet
+}
+
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'github-actions-receipt.json'), JSON.stringify(githubReceipt, null, 2), 'utf8');
 console.log('  -> github-actions-receipt.json generated');
 
-// 14. npm-ci.log
-// Since we are running in workspace, record the npm ci command execution validation
-let ciLog = '';
-try {
-  ciLog = execSync('npm ci --dry-run', { encoding: 'utf8', cwd: ROOT_DIR });
-} catch (e) {
-  ciLog = e.stdout || e.message;
-}
-fs.writeFileSync(path.join(EVIDENCE_DIR, 'npm-ci.log'), ciLog || 'npm ci validation completed successfully with 0 exit code.\n', 'utf8');
-console.log('  -> npm-ci.log generated');
-
-console.log('[EVIDENCE] All 14 evidence files successfully generated in evidence/ directory.');
+console.log('[EVIDENCE] All required evidence files generated successfully.');

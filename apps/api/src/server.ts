@@ -762,7 +762,7 @@ app.post('/api/v1/apcatos/instances/:id/offboard', (req, res) => {
   const { tenantId, reason, requestedBy } = req.body;
   try {
     const job = apcatosEngine.offboardInstance(
-      tenantId || 'tenant_angola_telecom_01',
+      tenantId || 'tenant_demo_alfa_01',
       req.params.id,
       reason || 'CONTRACT_EXPIRED',
       requestedBy || 'usr_admin_01'
@@ -802,13 +802,13 @@ app.post('/api/v1/apcatos/users/invite', (req, res) => {
 });
 
 app.get('/api/v1/apcatos/readiness', (req, res) => {
-  const tenantId = (req.query.tenantId as string) || 'tenant_angola_telecom_01';
+  const tenantId = (req.query.tenantId as string) || 'tenant_demo_alfa_01';
   const passport = apcatosEngine.runOrganizationReadinessCheck(tenantId);
   res.json(passport);
 });
 
 app.get('/api/v1/apcatos/passport', (req, res) => {
-  const tenantId = (req.query.tenantId as string) || 'tenant_angola_telecom_01';
+  const tenantId = (req.query.tenantId as string) || 'tenant_demo_alfa_01';
   const userId = (req.query.userId as string) || 'usr_admin_01';
   const passport = apcatosEngine.getClientAccessPassport(tenantId, userId);
   if (!passport) {

@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-09-15T23:09:50.799Z",
+  "timestamp": "2026-09-16T00:00:31.412Z",
   "live_tasks": {
     "count": 0,
     "verifiedTasks": [],
     "sourcePath": "C:\\Users\\Victorino Aguiar\\OneDrive\\Desktop\\APLICATIVO AI EMPLOYEES\\data\\liveTasks.json",
-    "sourceHash": "13958edbb291b9a5238a3f4830685cfb41a44730401b994b4c734187db610879",
+    "sourceHash": "ac61bb3c331d2191446b429d7bf2abad0344eab576fd814c3b6c953b77022566",
     "status": "OK",
     "code": "OK",
     "isProvenZero": true,
@@ -21,21 +21,21 @@
     "uniqueCount": 3,
     "totalRecords": 3,
     "sourcePath": "C:\\Users\\Victorino Aguiar\\OneDrive\\Desktop\\APLICATIVO AI EMPLOYEES\\data\\legalContracts.json",
-    "sourceHash": "7db4bd457a8c64032753254fa2bcdf845e0ffc916d8de2698ebedaaa59780498",
+    "sourceHash": "eedd454c5dad3960d9b5ad74650fd256d1bee1653a9d9f0f9b18698b919ec925",
     "status": "OK",
     "code": "OK",
     "exclusions": [
       {
         "reason": "DEMONSTRATION_PILOT_NOT_AUTHORIZED_PRODUCTION",
-        "tenant_id": "tenant_angola_telecom"
+        "tenant_id": "tenant_demo_alfa"
       },
       {
         "reason": "DEMONSTRATION_PILOT_NOT_AUTHORIZED_PRODUCTION",
-        "tenant_id": "tenant_ban_angola"
+        "tenant_id": "tenant_demo_beta"
       },
       {
         "reason": "DEMONSTRATION_PILOT_NOT_AUTHORIZED_PRODUCTION",
-        "tenant_id": "tenant_sonangol_logistics"
+        "tenant_id": "tenant_demo_gama"
       }
     ]
   },
@@ -49,7 +49,7 @@
     "uniqueCount": 0,
     "totalRecords": 0,
     "sourcePath": "C:\\Users\\Victorino Aguiar\\OneDrive\\Desktop\\APLICATIVO AI EMPLOYEES\\data\\externalAudits.json",
-    "sourceHash": "63b50baade511e1213fd7bea7817c0f0fe17f51242b3bba711b8d5365811b40d",
+    "sourceHash": "53a34a3a33e8bcf9401f29b80b7cdb42509983449d2b9c294c8d4e1a2c9e567a",
     "status": "OK",
     "code": "OK",
     "exclusions": []

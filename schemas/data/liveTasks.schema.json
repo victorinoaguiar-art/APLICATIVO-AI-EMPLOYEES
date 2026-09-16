@@ -2,31 +2,96 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "LiveTasksSchema",
   "type": "object",
+  "additionalProperties": false,
   "required": ["$schema", "metadata", "tasks"],
   "properties": {
-    "$schema": { "type": "string" },
+    "$schema": {
+      "type": "string",
+      "const": "https://ai-employee.net/schemas/live-tasks-v1.json"
+    },
     "metadata": {
       "type": "object",
-      "required": ["version", "scope", "updated_at", "description"],
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "scope",
+        "updated_at",
+        "description",
+        "source_id",
+        "collection_date",
+        "origin",
+        "verification_status"
+      ],
       "properties": {
-        "version": { "type": "string" },
-        "scope": { "type": "string" },
-        "updated_at": { "type": "string" },
-        "description": { "type": "string" }
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "scope": { "type": "string", "enum": ["EXTERNAL_CLIENT_PRODUCTION_TASKS"] },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "description": { "type": "string", "minLength": 5 },
+        "source_id": { "type": "string", "minLength": 3 },
+        "collection_date": { "type": "string", "format": "date-time" },
+        "origin": { "type": "string", "minLength": 3 },
+        "verification_status": {
+          "type": "string",
+          "enum": ["VERIFIED_EMPTY_BASELINE", "ACTIVE_VERIFIED", "PENDING_AUDIT"]
+        }
       }
     },
     "tasks": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
         "type": "object",
-        "required": ["task_id"],
+        "additionalProperties": false,
+        "required": [
+          "task_id",
+          "tenant_id",
+          "execution_date",
+          "origin",
+          "external_system_confirmation",
+          "client_signature",
+          "status",
+          "is_demonstration",
+          "is_test"
+        ],
         "properties": {
-          "task_id": { "type": "string" },
-          "client_signature": { "type": "string" },
-          "external_system_confirmation": { "type": "string" },
-          "is_demonstration": { "type": "boolean" },
-          "is_test": { "type": "boolean" },
-          "simulated": { "type": "boolean" }
+          "task_id": {
+            "type": "string",
+            "minLength": 3,
+            "pattern": "^TSK-[A-Za-z0-9_-]+$"
+          },
+          "tenant_id": {
+            "type": "string",
+            "minLength": 3
+          },
+          "execution_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "origin": {
+            "type": "string",
+            "minLength": 3
+          },
+          "external_system_confirmation": {
+            "type": "string",
+            "minLength": 3
+          },
+          "client_signature": {
+            "type": "string",
+            "minLength": 8
+          },
+          "status": {
+            "type": "string",
+            "enum": ["COMPLETED", "VERIFIED", "PENDING", "FAILED"]
+          },
+          "is_demonstration": {
+            "type": "boolean"
+          },
+          "is_test": {
+            "type": "boolean"
+          },
+          "simulated": {
+            "type": "boolean"
+          }
         }
       }
     }

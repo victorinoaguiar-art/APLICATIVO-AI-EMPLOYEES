@@ -2,34 +2,128 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "LegalContractsSchema",
   "type": "object",
+  "additionalProperties": false,
   "required": ["$schema", "metadata", "contracts"],
   "properties": {
-    "$schema": { "type": "string" },
+    "$schema": {
+      "type": "string",
+      "const": "https://ai-employee.net/schemas/legal-contracts-v1.json"
+    },
     "metadata": {
       "type": "object",
-      "required": ["version", "scope", "updated_at", "description"],
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "scope",
+        "updated_at",
+        "description",
+        "source_id",
+        "collection_date",
+        "origin",
+        "verification_status"
+      ],
       "properties": {
-        "version": { "type": "string" },
-        "scope": { "type": "string" },
-        "updated_at": { "type": "string" },
-        "description": { "type": "string" }
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "scope": { "type": "string", "enum": ["TENANT_LEGAL_CONTRACTS"] },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "description": { "type": "string", "minLength": 5 },
+        "source_id": { "type": "string", "minLength": 3 },
+        "collection_date": { "type": "string", "format": "date-time" },
+        "origin": { "type": "string", "minLength": 3 },
+        "verification_status": {
+          "type": "string",
+          "enum": ["VERIFIED_DEMONSTRATION_BASELINE", "ACTIVE_VERIFIED", "PENDING_AUDIT"]
+        }
       }
     },
     "contracts": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
         "type": "object",
-        "required": ["tenant_id", "status"],
+        "additionalProperties": false,
+        "required": [
+          "tenant_id",
+          "status",
+          "authorization_type",
+          "is_pilot_demonstration"
+        ],
         "properties": {
-          "tenant_id": { "type": "string" },
-          "tenant_name": { "type": "string" },
-          "tenant_type": { "type": "string" },
-          "authorization_type": { "type": "string" },
-          "is_pilot_demonstration": { "type": "boolean" },
-          "status": { "type": "string" },
-          "legal_signatory": { "type": "string" },
-          "contract_document_sha256": { "type": "string" }
-        }
+          "tenant_id": {
+            "type": "string",
+            "minLength": 3,
+            "pattern": "^tenant_[a-z0-9_]+$"
+          },
+          "tenant_name": {
+            "type": "string",
+            "minLength": 3
+          },
+          "tenant_type": {
+            "type": "string",
+            "enum": ["ENTERPRISE_PRODUCTION", "PILOT_DEMONSTRATION", "TECHNICAL"]
+          },
+          "authorization_type": {
+            "type": "string",
+            "enum": ["LEGAL_CONTRACT", "DEMONSTRATION", "TECHNICAL_ONLY"]
+          },
+          "is_pilot_demonstration": {
+            "type": "boolean"
+          },
+          "fictional_entity": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["SIGNED_LEGAL_CONTRACT", "PILOT_ACTIVE_DEMO", "REVOKED", "EXPIRED", "PENDING_SIGNATURE"]
+          },
+          "effective_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "legal_signatory": {
+            "type": "string",
+            "minLength": 2
+          },
+          "contract_document_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "provenance_ref": {
+            "type": "string",
+            "minLength": 3
+          },
+          "is_technical_only": {
+            "type": "boolean"
+          }
+        },
+        "oneOf": [
+          {
+            "properties": {
+              "authorization_type": { "const": "DEMONSTRATION" },
+              "is_pilot_demonstration": { "const": true }
+            },
+            "required": ["fictional_entity"]
+          },
+          {
+            "properties": {
+              "authorization_type": { "const": "LEGAL_CONTRACT" },
+              "is_pilot_demonstration": { "const": false },
+              "status": { "const": "SIGNED_LEGAL_CONTRACT" }
+            },
+            "required": [
+              "legal_signatory",
+              "contract_document_sha256",
+              "effective_date",
+              "provenance_ref"
+            ]
+          },
+          {
+            "properties": {
+              "authorization_type": { "const": "TECHNICAL_ONLY" },
+              "is_pilot_demonstration": { "const": false }
+            }
+          }
+        ]
       }
     }
   }

@@ -1,0 +1,672 @@
+{
+  "commit_sha": "40c46c42b90fe4c3c37a66cc57e140653e906e34",
+  "total_results": 111,
+  "results": [
+    {
+      "suite": "rolepack",
+      "index": 1,
+      "status": "PASS",
+      "name": "Catalog Integrity Gate 500/500"
+    },
+    {
+      "suite": "rolepack",
+      "index": 2,
+      "status": "PASS",
+      "name": "RolePack Registry Loads 500/500 Canonically"
+    },
+    {
+      "suite": "runtime",
+      "index": 1,
+      "status": "PASS",
+      "name": "AESSREEngine - Canonical Products & Digital Salary Display"
+    },
+    {
+      "suite": "runtime",
+      "index": 2,
+      "status": "PASS",
+      "name": "AESSREEngine - Hiring Flow & Legal Subscription Descriptor"
+    },
+    {
+      "suite": "runtime",
+      "index": 3,
+      "status": "PASS",
+      "name": "AESSREEngine - Multiple Instances of Same Role for Same Tenant"
+    },
+    {
+      "suite": "runtime",
+      "index": 4,
+      "status": "PASS",
+      "name": "AESSREEngine - Instance Lifecycle State Transitions"
+    },
+    {
+      "suite": "runtime",
+      "index": 5,
+      "status": "PASS",
+      "name": "AESSREEngine - Revenue Operations Metrics & Gross Margin"
+    },
+    {
+      "suite": "runtime",
+      "index": 6,
+      "status": "PASS",
+      "name": "AETF-500 Phase 2A Completion — Real Test Execution, 1,000+ Runs & Evidence Closure Test Suite"
+    },
+    {
+      "suite": "runtime",
+      "index": 7,
+      "status": "PASS",
+      "name": "AETF-500 All Employees Professional Knowledge Audit & Readiness Baseline v1.0"
+    },
+    {
+      "suite": "runtime",
+      "index": 8,
+      "status": "PASS",
+      "name": "APCATOSEngine — Provisioning, Client Access & Tenant Onboarding System"
+    },
+    {
+      "suite": "runtime",
+      "index": 9,
+      "status": "PASS",
+      "name": "AETF-500 Multi-Tenant Authentication & Authorization Hardening"
+    },
+    {
+      "suite": "runtime",
+      "index": 10,
+      "status": "PASS",
+      "name": "ATCCRSEngine — Training, Competency & Commercial Readiness System"
+    },
+    {
+      "suite": "runtime",
+      "index": 11,
+      "status": "PASS",
+      "name": "CAQRS Engine - Baseline Summary & Preferences"
+    },
+    {
+      "suite": "runtime",
+      "index": 12,
+      "status": "PASS",
+      "name": "CAQRS Engine - Client Preference Feedback Learns Rule & Does NOT Penalize UMER"
+    },
+    {
+      "suite": "runtime",
+      "index": 13,
+      "status": "PASS",
+      "name": "CAQRS Engine - Objective Error Feedback Feeds EREMS & Generates Revision Plan"
+    },
+    {
+      "suite": "runtime",
+      "index": 14,
+      "status": "PASS",
+      "name": "CAQRS Engine - Scope Change generates Revision Plan without penalizing Employee"
+    },
+    {
+      "suite": "runtime",
+      "index": 15,
+      "status": "PASS",
+      "name": "AETF-500 Pure Cardinality Calculators & Dynamic Physical Truth (Cross-Platform & Strict Schemas)"
+    },
+    {
+      "suite": "runtime",
+      "index": 16,
+      "status": "PASS",
+      "name": "CKRAIE-500 v1.0 — Continuous Knowledge, Regulation & API Intelligence Engine Test Suite"
+    },
+    {
+      "suite": "runtime",
+      "index": 17,
+      "status": "PASS",
+      "name": "CLBGSEngine - Global Summary & Default Brand Pack"
+    },
+    {
+      "suite": "runtime",
+      "index": 18,
+      "status": "PASS",
+      "name": "CLBGSEngine - Multi-Tenant Isolation Blocks Cross-Tenant Asset Usage"
+    },
+    {
+      "suite": "runtime",
+      "index": 19,
+      "status": "PASS",
+      "name": "CLBGSEngine - Stationery Modes & Physical Margin Reservation"
+    },
+    {
+      "suite": "runtime",
+      "index": 20,
+      "status": "PASS",
+      "name": "CLBGSEngine - Authorized Signature & Immutable Cryptographic Hash"
+    },
+    {
+      "suite": "runtime",
+      "index": 21,
+      "status": "PASS",
+      "name": "CLE-500 — Remote Command, Offline Queue, Deferred Execution & Cloud/Local Connectivity Engine Test Suite"
+    },
+    {
+      "suite": "runtime",
+      "index": 22,
+      "status": "PASS",
+      "name": "AETF-500 Contradictory Claims & Manifest Truth Reconciliation Scan"
+    },
+    {
+      "suite": "runtime",
+      "index": 23,
+      "status": "PASS",
+      "name": "AETF-500 Country Pack Maturity → Employee Certification Ceiling Micro-Gate v1.0"
+    },
+    {
+      "suite": "runtime",
+      "index": 24,
+      "status": "PASS",
+      "name": "CPEAA & CKRAIE-2026 — Client Policy Alignment & Approval Intelligence Test Suite"
+    },
+    {
+      "suite": "runtime",
+      "index": 25,
+      "status": "PASS",
+      "name": "AETF-500 Cryptographic SHA-256 Remediation & Dependent Hash Recalculation v1.0"
+    },
+    {
+      "suite": "runtime",
+      "index": 26,
+      "status": "PASS",
+      "name": "AETF-500 Professional Knowledge Dependency Preservation & Object Lineage Final Gate v1.0"
+    },
+    {
+      "suite": "runtime",
+      "index": 27,
+      "status": "PASS",
+      "name": "P05 Durable Execution — Idempotency Lock Manager Prevents Duplicate Execution"
+    },
+    {
+      "suite": "runtime",
+      "index": 28,
+      "status": "PASS",
+      "name": "P05 Durable Execution — QueueManager Priorities & DLQ Routing"
+    },
+    {
+      "suite": "runtime",
+      "index": 29,
+      "status": "PASS",
+      "name": "P05 Durable Execution — AuditStream & Decision Trace Tracking"
+    },
+    {
+      "suite": "runtime",
+      "index": 30,
+      "status": "PASS",
+      "name": "P05 Durable Worker Engine — Processes Tasks End-to-End"
+    },
+    {
+      "suite": "runtime",
+      "index": 31,
+      "status": "PASS",
+      "name": "DWACOS v1.0 Engine — Digital Workforce Area Commerce & Operations System"
+    },
+    {
+      "suite": "runtime",
+      "index": 32,
+      "status": "PASS",
+      "name": "DWOS-HYBRID v1.0 — Digital Workforce Operating System"
+    },
+    {
+      "suite": "runtime",
+      "index": 33,
+      "status": "PASS",
+      "name": "EMVTCSEngine — 500 AI Employee Master Validation, Testing & Certification System"
+    },
+    {
+      "suite": "runtime",
+      "index": 34,
+      "status": "PASS",
+      "name": "EOEDTD v1.0 — Enterprise Offboarding, Employee Deactivation & Tenant Decommissioning"
+    },
+    {
+      "suite": "runtime",
+      "index": 35,
+      "status": "PASS",
+      "name": "EPTOWDSEngine — Enterprise Pilot Testing & Omnichannel Work Delivery System (Prompt 500)"
+    },
+    {
+      "suite": "runtime",
+      "index": 36,
+      "status": "PASS",
+      "name": "EREMS Engine - Baseline Reliability Passports for 500 AI Employees"
+    },
+    {
+      "suite": "runtime",
+      "index": 37,
+      "status": "PASS",
+      "name": "EREMS Engine - Wilson Score 95% Confidence Interval Calculation"
+    },
+    {
+      "suite": "runtime",
+      "index": 38,
+      "status": "PASS",
+      "name": "EREMS Engine - Logging Material Incident Updates UMER and Triggers Escalation"
+    },
+    {
+      "suite": "runtime",
+      "index": 39,
+      "status": "PASS",
+      "name": "EREMS Engine - Logging Critical E4/E5 Incident Blocks Autonomy"
+    },
+    {
+      "suite": "runtime",
+      "index": 40,
+      "status": "PASS",
+      "name": "EREMS Engine - Global Summary & Severity Breakdown"
+    },
+    {
+      "suite": "runtime",
+      "index": 41,
+      "status": "PASS",
+      "name": "AETF500 Knowledge Gap Filling Forensic Matrix Engine v1.0"
+    },
+    {
+      "suite": "runtime",
+      "index": 42,
+      "status": "PASS",
+      "name": "AETF-500 Global Multi-Jurisdiction Professional Knowledge Architecture v1.0"
+    },
+    {
+      "suite": "runtime",
+      "index": 43,
+      "status": "PASS",
+      "name": "AETF-500 P0 Knowledge Provenance Remediation Engine v1.0"
+    },
+    {
+      "suite": "runtime",
+      "index": 44,
+      "status": "PASS",
+      "name": "AETF-500 P0 Remediation Evidence Closure Gate Engine v1.0"
+    },
+    {
+      "suite": "runtime",
+      "index": 45,
+      "status": "PASS",
+      "name": "AETF-500 Hash Subject Semantics & Evidence Recomputability Final Micro-Patch v1.0"
+    },
+    {
+      "suite": "runtime",
+      "index": 46,
+      "status": "PASS",
+      "name": "AETF-500 Post-Crypto Remediation Implementation Version Lineage Closure v1.0"
+    },
+    {
+      "suite": "runtime",
+      "index": 47,
+      "status": "PASS",
+      "name": "KBUE-500 v1.0 — Knowledge Baseline Update Engine 2026.09.11 Test Suite"
+    },
+    {
+      "suite": "runtime",
+      "index": 48,
+      "status": "PASS",
+      "name": "AETF-500 Mass Exception Legitimacy & External Evidence Authenticity Micro-Gate v1.0"
+    },
+    {
+      "suite": "runtime",
+      "index": 49,
+      "status": "PASS",
+      "name": "Phase 2 — Model Gateway (Google Gemini Primary)"
+    },
+    {
+      "suite": "runtime",
+      "index": 50,
+      "status": "PASS",
+      "name": "Phase 4 — Redis Queue Provider"
+    },
+    {
+      "suite": "runtime",
+      "index": 51,
+      "status": "PASS",
+      "name": "AETF-500 Multi-Jurisdiction Material Inconsistency Reconciliation & Jurisdiction Safety Patch v1.0"
+    },
+    {
+      "suite": "runtime",
+      "index": 52,
+      "status": "PASS",
+      "name": "AETF-500 Final Multi-Jurisdiction Semantic Freeze Micro-Patch v1.0"
+    },
+    {
+      "suite": "runtime",
+      "index": 53,
+      "status": "PASS",
+      "name": "Operationalization - PlatformCertificationEngine Audit & Digital Certificate"
+    },
+    {
+      "suite": "runtime",
+      "index": 54,
+      "status": "PASS",
+      "name": "Operationalization - OrganizationProvisioningEngine & Connector Config"
+    },
+    {
+      "suite": "runtime",
+      "index": 55,
+      "status": "PASS",
+      "name": "Operationalization - Deny Rule: IF certification missing THEN ACTIVE = DENIED"
+    },
+    {
+      "suite": "runtime",
+      "index": 56,
+      "status": "PASS",
+      "name": "Operationalization - End-to-End Certification & Activation"
+    },
+    {
+      "suite": "runtime",
+      "index": 57,
+      "status": "PASS",
+      "name": "Orchestrator Executes Normal Task Successfully"
+    },
+    {
+      "suite": "runtime",
+      "index": 58,
+      "status": "PASS",
+      "name": "Orchestrator Triggers Approval Gateway on Monetary Threshold"
+    },
+    {
+      "suite": "runtime",
+      "index": 59,
+      "status": "PASS",
+      "name": "ORDKS - RoleKnowledgeProfileRegistry - 500/500 Coverage Validation Gate"
+    },
+    {
+      "suite": "runtime",
+      "index": 60,
+      "status": "PASS",
+      "name": "ORDKS - Angola Jurisdiction Pack Integrity"
+    },
+    {
+      "suite": "runtime",
+      "index": 61,
+      "status": "PASS",
+      "name": "ORDKS - ExceptionLibraryEngine - Department Exceptions"
+    },
+    {
+      "suite": "runtime",
+      "index": 62,
+      "status": "PASS",
+      "name": "ORDKS - ORDKSEngine - 11-Level Precedence & Status Filter Query"
+    },
+    {
+      "suite": "runtime",
+      "index": 63,
+      "status": "PASS",
+      "name": "OTCTEC v1.0 — Operational Testing & Employee Certification"
+    },
+    {
+      "suite": "runtime",
+      "index": 64,
+      "status": "PASS",
+      "name": "PCE-500 v1.0 — Professional Certification Engine Test Suite"
+    },
+    {
+      "suite": "runtime",
+      "index": 65,
+      "status": "PASS",
+      "name": "PEE-500 v1.0 — Professional Evaluation Engine Test Suite"
+    },
+    {
+      "suite": "runtime",
+      "index": 66,
+      "status": "PASS",
+      "name": "PEIPIntegrationEngine — Progressive Enterprise Integration Pack (6 Phases)"
+    },
+    {
+      "suite": "runtime",
+      "index": 67,
+      "status": "PASS",
+      "name": "AETF-500 Cryptographic Hash Single Baseline & 1-Byte Tamper Negative Test (B3)"
+    },
+    {
+      "suite": "runtime",
+      "index": 68,
+      "status": "PASS",
+      "name": "500/500 Priority Program v2.0 - Gate 500 TOTAL = 500 PRIORITY = 0 NON_PRIORITY"
+    },
+    {
+      "suite": "runtime",
+      "index": 69,
+      "status": "PASS",
+      "name": "500/500 Priority Program v2.0 - 10 Validation Waves (50 per wave)"
+    },
+    {
+      "suite": "runtime",
+      "index": 70,
+      "status": "PASS",
+      "name": "500/500 Priority Program v2.0 - Individual Employee Priority Flags"
+    },
+    {
+      "suite": "runtime",
+      "index": 71,
+      "status": "PASS",
+      "name": "500/500 Priority Program v2.0 - Dynamic Reordering by Business Value"
+    },
+    {
+      "suite": "runtime",
+      "index": 72,
+      "status": "PASS",
+      "name": "AETF-500 Professional Knowledge Cardinality, Lineage & Readiness Semantics Reconciliation Micro-Patch v1.0"
+    },
+    {
+      "suite": "runtime",
+      "index": 73,
+      "status": "PASS",
+      "name": "PTKML-500 v1.0 — Professional Technical Knowledge Master Library Test Suite"
+    },
+    {
+      "suite": "runtime",
+      "index": 74,
+      "status": "PASS",
+      "name": "RCODE-500 — Remote Command, Offline Queue & Deferred Execution Engine Test Suite"
+    },
+    {
+      "suite": "runtime",
+      "index": 75,
+      "status": "PASS",
+      "name": "Programa 500/300/200 - Mathematical Gate & Partitioning Verification"
+    },
+    {
+      "suite": "runtime",
+      "index": 76,
+      "status": "PASS",
+      "name": "Programa 500/300/200 - 100% Structural Readiness Passports"
+    },
+    {
+      "suite": "runtime",
+      "index": 77,
+      "status": "PASS",
+      "name": "Programa 500/300/200 - Cohort Distribution Verification"
+    },
+    {
+      "suite": "runtime",
+      "index": 78,
+      "status": "PASS",
+      "name": "Programa 500/300/200 - Lifecycle State Machine Transitions"
+    },
+    {
+      "suite": "runtime",
+      "index": 79,
+      "status": "PASS",
+      "name": "Programa 500/300/200 - Layered Improvement Propagation"
+    },
+    {
+      "suite": "runtime",
+      "index": 80,
+      "status": "PASS",
+      "name": "SMCH-CP v1.0 — Social Media Connector Hub & Controlled Publishing Test Suite"
+    },
+    {
+      "suite": "runtime",
+      "index": 81,
+      "status": "PASS",
+      "name": "UTCEG - WorkActivationContractRegistry - 500/500 Coverage Validation"
+    },
+    {
+      "suite": "runtime",
+      "index": 82,
+      "status": "PASS",
+      "name": "UTCEG - CommandNormalizationEngine - Multimodal Normalization"
+    },
+    {
+      "suite": "runtime",
+      "index": 83,
+      "status": "PASS",
+      "name": "UTCEG - EventEngine - Replay Protection & Rule Matching"
+    },
+    {
+      "suite": "runtime",
+      "index": 84,
+      "status": "PASS",
+      "name": "UTCEG - EmployeeHandoffRouter - Inter-Employee Handoff Routing"
+    },
+    {
+      "suite": "runtime",
+      "index": 85,
+      "status": "PASS",
+      "name": "UTCEG - Adapters Test"
+    },
+    {
+      "suite": "policies",
+      "index": 1,
+      "status": "PASS",
+      "name": "P02 Red Team Attack 1 — Malicious Prompt Injection Neutralized"
+    },
+    {
+      "suite": "policies",
+      "index": 2,
+      "status": "PASS",
+      "name": "P02 Red Team Attack 2 — Cross-Tenant Access Exfiltration Blocked"
+    },
+    {
+      "suite": "policies",
+      "index": 3,
+      "status": "PASS",
+      "name": "P02 Red Team Attack 3 — Unauthorized Privilege Escalation Blocked"
+    },
+    {
+      "suite": "policies",
+      "index": 4,
+      "status": "PASS",
+      "name": "P02 Red Team Attack 4 — Document-Borne Prompt Injection Neutralized"
+    },
+    {
+      "suite": "policies",
+      "index": 5,
+      "status": "PASS",
+      "name": "P02 Red Team Attack 5 — Multi-Tenant Memory & Cache Isolation Enforced"
+    },
+    {
+      "suite": "policies",
+      "index": 6,
+      "status": "PASS",
+      "name": "P02 Red Team Attack 6 — Approval Bypass & HITL Tampering Blocked"
+    },
+    {
+      "suite": "policies",
+      "index": 7,
+      "status": "PASS",
+      "name": "P02 Red Team Attack 7 — Secret Leakage & API Key Exfiltration Blocked"
+    },
+    {
+      "suite": "policies",
+      "index": 8,
+      "status": "PASS",
+      "name": "P02 Red Team Attack 8 — Knowledge & Policy Poisoning Blocked"
+    },
+    {
+      "suite": "policies",
+      "index": 9,
+      "status": "PASS",
+      "name": "P02 Red Team Attack 9 — Audit Log Tampering Attempt Blocked"
+    },
+    {
+      "suite": "policies",
+      "index": 10,
+      "status": "PASS",
+      "name": "P02 Red Team Attack 10 — Unsafe Tool Execution & SSRF Blocked"
+    },
+    {
+      "suite": "policies",
+      "index": 11,
+      "status": "PASS",
+      "name": "P02 Red Team Attack 11 — SQL & Command Injection Blocked"
+    },
+    {
+      "suite": "policies",
+      "index": 12,
+      "status": "PASS",
+      "name": "P02 Red Team Attack 12 — Path Traversal & Local Agent Attack Blocked"
+    },
+    {
+      "suite": "marketplace_billing",
+      "index": 1,
+      "status": "PASS",
+      "name": "Marketplace & Billing Engine (P06)"
+    },
+    {
+      "suite": "tool_sdk",
+      "index": 1,
+      "status": "PASS",
+      "name": "AETF-500 Connector Reality Gate (Prompt Mestre Secção 14)"
+    },
+    {
+      "suite": "evaluation_sdk",
+      "index": 1,
+      "status": "PASS",
+      "name": "P04 Evaluation Engine Certifies CEO Assistant"
+    },
+    {
+      "suite": "evaluation_sdk",
+      "index": 2,
+      "status": "PASS",
+      "name": "P04 Evaluation Engine Blocks Invalid High Risk Role"
+    },
+    {
+      "suite": "evaluation_sdk",
+      "index": 3,
+      "status": "PASS",
+      "name": "Evaluation Catalog 03 — Certifies RolePack \\#002"
+    },
+    {
+      "suite": "evaluation_sdk",
+      "index": 4,
+      "status": "PASS",
+      "name": "Evaluation Catalog 04 — Validates 18 Evaluation Axes Completeness"
+    },
+    {
+      "suite": "evaluation_sdk",
+      "index": 5,
+      "status": "PASS",
+      "name": "Evaluation Catalog 05 — Rejects Ambiguous Instructions without Inventing Facts"
+    },
+    {
+      "suite": "evaluation_sdk",
+      "index": 6,
+      "status": "PASS",
+      "name": "Evaluation Catalog 06 — Penalizes Hallucinated Legal Articles & Financial Rates"
+    },
+    {
+      "suite": "evaluation_sdk",
+      "index": 7,
+      "status": "PASS",
+      "name": "Evaluation Catalog 07 — Enforces Temporal Boundary Rules (2025 vs 2026 IRT Tax)"
+    },
+    {
+      "suite": "evaluation_sdk",
+      "index": 8,
+      "status": "PASS",
+      "name": "Evaluation Catalog 08 — Validates AGT / BNA Compliance Thresholds"
+    },
+    {
+      "suite": "evaluation_sdk",
+      "index": 9,
+      "status": "PASS",
+      "name": "Evaluation Catalog 09 — Verifies Deterministic Evidence SHA256 Audit Trail"
+    },
+    {
+      "suite": "evaluation_sdk",
+      "index": 10,
+      "status": "PASS",
+      "name": "Evaluation Catalog 10 — Enforces CERT-L1 to CERT-L4 Certification Levels"
+    }
+  ]
+}

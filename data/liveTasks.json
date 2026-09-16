@@ -4,7 +4,11 @@
     "version": "1.0.0",
     "scope": "EXTERNAL_CLIENT_PRODUCTION_TASKS",
     "updated_at": "2026-09-15T22:00:00.000Z",
-    "description": "Canonical physical evidence repository for verified external client task executions."
+    "description": "Canonical physical evidence repository for verified external client task executions.",
+    "source_id": "SRC-DATA-LIVE-TASKS-001",
+    "collection_date": "2026-09-15T22:00:00.000Z",
+    "origin": "CANONICAL_PHYSICAL_STORAGE",
+    "verification_status": "VERIFIED_EMPTY_BASELINE"
   },
   "tasks": []
 }

@@ -1,26 +1,14 @@
 {
-  "workflow_file": ".github/workflows/ci.yml",
-  "workflow_name": "CI / Production Readiness & Audit Gate",
   "repository": "victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES",
-  "target_branch": "master",
-  "required_steps": [
-    "Checkout Codebase",
-    "Setup Node.js 22.x",
-    "Deterministic Install (npm ci)",
-    "Production Dependency Audit (npm audit --omit=dev)",
-    "Monorepo Clean",
-    "Strict Typecheck",
-    "Build Monorepo Packages",
-    "Build Web Application",
-    "Next.js ESLint",
-    "Automated Test Suites",
-    "Ajv Manifest & Domain Cardinality Validation",
-    "Physical Hash Cryptographic Verification",
-    "Security & Behavioral Controls Verification",
-    "Transactional Payment & Webhook Verification",
-    "Multi-Tenant Authentication & Authorization Verification",
-    "Ensure Clean Working Tree"
-  ],
+  "branch": "master",
+  "commit_sha": "40c46c42b90fe4c3c37a66cc57e140653e906e34",
+  "workflow_name": "CI / Production Readiness & Audit Gate",
+  "run_id": 35034764403,
+  "run_url": "https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35034764403",
+  "status": "completed",
+  "conclusion": "failure",
+  "started_at": "2026-09-15T23:14:32Z",
+  "completed_at": "2026-09-15T23:15:31Z",
   "branch_protection_status": "BRANCH_PROTECTION_NOT_CONFIGURED",
   "branch_protection_instructions": {
     "instruction_1": "Navigate to https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/settings/branches",
@@ -29,6 +17,5 @@
     "instruction_4": "Enable \"Require status checks to pass before merging\"",
     "instruction_5": "Select check: \"Deterministic Build, Typecheck, Test & Audit\""
   },
-  "classification": "PATCH_VERIFIED_CI_NOT_ENFORCED",
-  "timestamp": "2026-09-15T23:09:51.023Z"
+  "jobs": []
 }

@@ -4,31 +4,38 @@
     "version": "1.0.0",
     "scope": "TENANT_LEGAL_CONTRACTS",
     "updated_at": "2026-09-15T22:00:00.000Z",
-    "description": "Registry of enterprise tenant contracts, technical registrations, and pilot demonstrations."
+    "description": "Registry of enterprise tenant contracts, technical registrations, and pilot demonstrations.",
+    "source_id": "SRC-DATA-LEGAL-CONTRACTS-001",
+    "collection_date": "2026-09-15T22:00:00.000Z",
+    "origin": "CANONICAL_PHYSICAL_STORAGE",
+    "verification_status": "VERIFIED_DEMONSTRATION_BASELINE"
   },
   "contracts": [
     {
-      "tenant_id": "tenant_angola_telecom",
-      "tenant_name": "Angola Telecom, E.P.",
+      "tenant_id": "tenant_demo_alfa",
+      "tenant_name": "Empresa Demonstração Alfa, Lda",
       "tenant_type": "PILOT_DEMONSTRATION",
       "authorization_type": "DEMONSTRATION",
       "is_pilot_demonstration": true,
+      "fictional_entity": true,
       "status": "PILOT_ACTIVE_DEMO"
     },
     {
-      "tenant_id": "tenant_ban_angola",
-      "tenant_name": "Banco Angolano de Investimentos, S.A.",
+      "tenant_id": "tenant_demo_beta",
+      "tenant_name": "Empresa Demonstração Beta, S.A.",
       "tenant_type": "PILOT_DEMONSTRATION",
       "authorization_type": "DEMONSTRATION",
       "is_pilot_demonstration": true,
+      "fictional_entity": true,
       "status": "PILOT_ACTIVE_DEMO"
     },
     {
-      "tenant_id": "tenant_sonangol_logistics",
-      "tenant_name": "Sonangol Logística, S.A.",
+      "tenant_id": "tenant_demo_gama",
+      "tenant_name": "Empresa Demonstração Gama, Lda",
       "tenant_type": "PILOT_DEMONSTRATION",
       "authorization_type": "DEMONSTRATION",
       "is_pilot_demonstration": true,
+      "fictional_entity": true,
       "status": "PILOT_ACTIVE_DEMO"
     }
   ]

@@ -1,47 +1,93 @@
 {
-  "total_suites": 32,
-  "total_tests": 388,
-  "passed_tests": 388,
+  "commit_sha": "40c46c42b90fe4c3c37a66cc57e140653e906e34",
+  "command": "npm test",
+  "started_at": "2026-09-16T00:00:16.996Z",
+  "completed_at": "2026-09-16T00:00:31.287Z",
+  "exit_code": 0,
+  "total_tests": 392,
+  "passed_tests": 392,
   "failed_tests": 0,
   "skipped_tests": 0,
-  "exit_code": 0,
+  "cancelled_tests": 0,
+  "todo_tests": 0,
   "breakdown": {
     "rolepack": {
-      "suites": 1,
+      "command": "npm run test:catalog",
+      "exit_code": 0,
+      "suites": 0,
       "tests": 2,
       "passed": 2,
-      "failed": 0
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "started_at": "2026-09-16T00:00:16.996Z",
+      "completed_at": "2026-09-16T00:00:18.892Z"
     },
     "runtime": {
+      "command": "npm run test:runtime",
+      "exit_code": 0,
       "suites": 29,
-      "tests": 355,
-      "passed": 355,
-      "failed": 0
+      "tests": 359,
+      "passed": 359,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "started_at": "2026-09-16T00:00:18.893Z",
+      "completed_at": "2026-09-16T00:00:24.376Z"
     },
     "policies": {
-      "suites": 1,
+      "command": "npm run test:security",
+      "exit_code": 0,
+      "suites": 0,
       "tests": 12,
       "passed": 12,
-      "failed": 0
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "started_at": "2026-09-16T00:00:24.380Z",
+      "completed_at": "2026-09-16T00:00:26.110Z"
     },
     "marketplace_billing": {
+      "command": "npm run test:billing",
+      "exit_code": 0,
       "suites": 1,
       "tests": 5,
       "passed": 5,
-      "failed": 0
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "started_at": "2026-09-16T00:00:26.110Z",
+      "completed_at": "2026-09-16T00:00:28.125Z"
     },
     "tool_sdk": {
+      "command": "npm run test:tools",
+      "exit_code": 0,
       "suites": 1,
       "tests": 4,
       "passed": 4,
-      "failed": 0
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "started_at": "2026-09-16T00:00:28.125Z",
+      "completed_at": "2026-09-16T00:00:29.795Z"
     },
     "evaluation_sdk": {
-      "suites": 1,
+      "command": "npm run eval:catalog",
+      "exit_code": 0,
+      "suites": 0,
       "tests": 10,
       "passed": 10,
-      "failed": 0
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "started_at": "2026-09-16T00:00:29.796Z",
+      "completed_at": "2026-09-16T00:00:31.287Z"
     }
-  },
-  "timestamp": "2026-09-15T23:09:50.648Z"
+  }
 }

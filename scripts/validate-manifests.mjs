@@ -205,6 +205,24 @@ try {
   });
 }
 
+// Domain Check 1B: CANONICAL_SOURCE_INTEGRITY (P5 — Prohibit alternative/duplicate sources)
+const forbiddenSources = [
+  'data/live_tasks.json',
+  'data/legal_contracts.json',
+  'data/external_audits.json'
+];
+const foundForbidden = forbiddenSources.filter(rel => fs.existsSync(path.resolve(ROOT_DIR, rel)));
+const canonicalSourceIntegrityPassed = foundForbidden.length === 0;
+if (!canonicalSourceIntegrityPassed) cardinalityPassed = false;
+
+cardinalityChecks.push({
+  domain: 'CANONICAL_SOURCE_INTEGRITY',
+  authoritative_sources: ['data/liveTasks.json', 'data/legalContracts.json', 'data/externalAudits.json'],
+  forbidden_alternatives_detected: foundForbidden,
+  status: canonicalSourceIntegrityPassed ? 'PASS' : 'FAIL',
+  error: canonicalSourceIntegrityPassed ? null : `FORBIDDEN_ALTERNATIVE_SOURCES_EXIST: ${foundForbidden.join(', ')}`
+});
+
 // Domain Check 2: tasks_declared = tasks_physical = tasks_valid (dynamically calculated from physical source)
 const freezeManifest = readJsonNoBom(
   path.resolve(ROOT_DIR, 'generated/AETF500_CERTL3_Authenticity_ProductionFreeze_Manifest.json')

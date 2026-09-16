@@ -40,21 +40,22 @@ No entanto, uma auditoria estrita num checkout limpo comprovou as seguintes **di
 
 ---
 
-## 3. Hashes Criptográficos das Fontes Canónicas e Schemas
+## 3. Hashes Criptográficos das Fontes Canónicas e Schemas (Actualizado)
 
-Todos os schemas e fontes canónicas foram calculados e validados via SHA-256 (registados em `evidence/file-hashes.sha256`):
+Todos os schemas e fontes canónicas oficiais (com eliminação definitiva das cópias redundantes) foram validados via SHA-256 (registados em `evidence/canonical-source-hashes.sha256`):
 
 ```text
-7c2ce40ba1b51e064971c2baea2da60c5a2ec35f6063cb478c946e386ab97bb4  schemas/data/liveTasks.schema.json
-d46487e671d18471b40280eb46d0a7a3b3793dfceca11df83e5f29910d6e6a17  schemas/data/legalContracts.schema.json
-8ec6eeecff026bb4580fb2b75a137ef2540600a944883fbb3644f12f00224be5  schemas/data/externalAudits.schema.json
-13958edb5f08baaa0e737976e2794eb84e555776d6ec5c735d4f3e69fceec221  data/liveTasks.json
-7db4bd457b01dd79b6910dd0a6712ea4c9472eecbcab3357597ba00bbab7d725  data/legalContracts.json
-63b50baa2c544d67e103986a7d97e289be9ba99c011e74f177656917637841c2  data/externalAudits.json
-13958edb5f08baaa0e737976e2794eb84e555776d6ec5c735d4f3e69fceec221  data/live_tasks.json
-7db4bd457b01dd79b6910dd0a6712ea4c9472eecbcab3357597ba00bbab7d725  data/legal_contracts.json
-63b50baa2c544d67e103986a7d97e289be9ba99c011e74f177656917637841c2  data/external_audits.json
+accd0f5b4e2afcf2faf3143224d3978c393ca75705116400bac07d607eb42223  schemas/data/liveTasks.schema.json
+bec57ff71798c3f3ff06a17b1e7b4a58b79fb06fd730ab1b29ffc84b15e33ba7  schemas/data/legalContracts.schema.json
+49ab6521608f3292ef3b516aada420825f3bcd5f47813b49d3269ae969487dd1  schemas/data/externalAudits.schema.json
+ac61bb3c331d2191446b429d7bf2abad0344eab576fd814c3b6c953b77022566  data/liveTasks.json
+eedd454c5dad3960d9b5ad74650fd256d1bee1653a9d9f0f9b18698b919ec925  data/legalContracts.json
+53a34a3a33e8bcf9401f29b80b7cdb42509983449d2b9c294c8d4e1a2c9e567a  data/externalAudits.json
+e81987d56459df511354a6121e9b28d95fc443bf34676e4218320a4e5c984d3a  scripts/lib/cardinalityCalculators.mjs
+501e67a6431397b68a38419e859beaecb5c6ae940e1276e01484f046f97a6f02  scripts/validate-manifests.mjs
 ```
+
+As 3 cópias duplicadas em `snake_case` (`live_tasks.json`, `legal_contracts.json`, `external_audits.json`) foram permanentemente removidas per P5.
 
 ---
 
@@ -91,7 +92,7 @@ A suíte `packages/runtime/src/test/cardinalityCalculators.test.ts` foi expandid
 | `npm run lint` | **0** | Next.js ESLint Flat Config sem warnings (`lint.log`). |
 | `npm run build:web` | **0** | Build estático do Next.js 15 gerou 4 páginas com sucesso (`build-web.log`). |
 | `node scripts/validate-manifests.mjs` | **0** | `Ajv Schema: PASS \| Domain Cardinality: PASS`. |
-| `npm test` | **0** | **388 testes automatizados aprovados, 0 falhas, 0 ignorados**. |
+| `npm test` | **0** | **392 testes automatizados aprovados, 0 falhas, 0 ignorados**. |
 | `npm run verify` | **0** | Pipeline completa executou todos os 11 gates com sucesso (`verify.log`). |
 
 ---

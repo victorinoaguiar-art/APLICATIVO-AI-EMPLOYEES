@@ -4,7 +4,11 @@
     "version": "1.0.0",
     "scope": "INDEPENDENT_THIRD_PARTY_CERT_L3_AUDITS",
     "updated_at": "2026-09-15T22:00:00.000Z",
-    "description": "Canonical registry of independent third-party certification evidence for CERT-L3."
+    "description": "Canonical registry of independent third-party certification evidence for CERT-L3.",
+    "source_id": "SRC-DATA-EXTERNAL-AUDITS-001",
+    "collection_date": "2026-09-15T22:00:00.000Z",
+    "origin": "CANONICAL_PHYSICAL_STORAGE",
+    "verification_status": "VERIFIED_EMPTY_BASELINE"
   },
   "audits": []
 }
