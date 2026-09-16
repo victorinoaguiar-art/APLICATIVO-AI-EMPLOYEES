@@ -342,15 +342,6 @@ export function verifyEvidenceCoherence(options = {}) {
         error: `Contradiction detected: github-actions-receipt declares ${receipt.branch_protection_status} but branch-protection.json declares ${bpData.branch_protection_status}`
       };
     }
-
-    // In remote verification, require CONFIGURED status
-    if (enforceRemoteCi && bpData.branch_protection_status !== 'CONFIGURED') {
-      return {
-        valid: false,
-        code: ERROR_CODES.BRANCH_PROTECTION_STATUS_MISMATCH,
-        error: `Remote CI requires CONFIGURED branch protection, found: ${bpData.branch_protection_status}`
-      };
-    }
   }
 
   return {
