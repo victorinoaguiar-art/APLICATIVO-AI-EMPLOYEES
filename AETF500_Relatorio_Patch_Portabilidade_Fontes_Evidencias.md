@@ -7,7 +7,12 @@
 | **Repositório** | `victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES` |
 | **Branch** | `master` |
 | **Commit Inicial Auditado** | `40c46c42b90fe4c3c37a66cc57e140653e906e34` |
-| **Data UTC de Início** | `2026-09-15T23:32:00Z` |
+| **Commit Final Validado** | `8ee734881335456b0cd6c7c2a1efaa8dbb504cac` |
+| **Link do Commit Final** | [Commit 8ee7348](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/commit/8ee734881335456b0cd6c7c2a1efaa8dbb504cac) |
+| **GitHub Actions Run ID** | `35038264400` |
+| **Link da Execução de CI** | [GitHub Actions Run 35038264400](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35038264400) |
+| **Estado e Conclusão da CI** | `status: completed` \| `conclusion: success` |
+| **Data UTC de Conclusão** | `2026-09-16T00:03:31Z` |
 | **Ambiente Local** | Windows 10/11 x64, Node.js `v22.23.0`, npm `10.9.8` |
 | **Ambiente de CI** | GitHub Actions (`ubuntu-latest`, Node.js `22.x`) |
 | **Workflow** | `CI / Production Readiness & Audit Gate` (`.github/workflows/ci.yml`) |

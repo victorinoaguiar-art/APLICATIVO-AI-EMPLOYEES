@@ -1,21 +1,51 @@
 {
   "repository": "victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES",
   "branch": "master",
-  "commit_sha": "40c46c42b90fe4c3c37a66cc57e140653e906e34",
+  "commit_sha": "8ee734881335456b0cd6c7c2a1efaa8dbb504cac",
   "workflow_name": "CI / Production Readiness & Audit Gate",
-  "run_id": 35034764403,
-  "run_url": "https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35034764403",
+  "run_id": 35038264400,
+  "run_url": "https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35038264400",
   "status": "completed",
-  "conclusion": "failure",
-  "started_at": "2026-09-15T23:14:32Z",
-  "completed_at": "2026-09-15T23:15:31Z",
+  "conclusion": "success",
+  "started_at": "2026-09-16T00:02:16Z",
+  "completed_at": "2026-09-16T00:03:31Z",
   "branch_protection_status": "BRANCH_PROTECTION_NOT_CONFIGURED",
   "branch_protection_instructions": {
     "instruction_1": "Navigate to https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/settings/branches",
     "instruction_2": "Click \"Add branch ruleset\" or \"Add rule\" for branch pattern \"master\"",
     "instruction_3": "Enable \"Require a pull request before merging\"",
     "instruction_4": "Enable \"Require status checks to pass before merging\"",
-    "instruction_5": "Select check: \"Deterministic Build, Typecheck, Test & Audit\""
+    "instruction_5": "Select check: \"Deterministic Build, Typecheck, Test & Audit (22.x)\""
   },
-  "jobs": []
+  "jobs": [
+    {
+      "databaseId": 104612151126,
+      "name": "Deterministic Build, Typecheck, Test & Audit (22.x)",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-09-16T00:02:20Z",
+      "completedAt": "2026-09-16T00:03:30Z",
+      "url": "https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35038264400/job/104612151126",
+      "steps": [
+        { "number": 1, "name": "Set up job", "status": "completed", "conclusion": "success" },
+        { "number": 2, "name": "Checkout Codebase", "status": "completed", "conclusion": "success" },
+        { "number": 3, "name": "Setup Node.js 22.x", "status": "completed", "conclusion": "success" },
+        { "number": 4, "name": "Deterministic Install (npm ci)", "status": "completed", "conclusion": "success" },
+        { "number": 5, "name": "Production Dependency Audit", "status": "completed", "conclusion": "success" },
+        { "number": 6, "name": "Monorepo Clean", "status": "completed", "conclusion": "success" },
+        { "number": 7, "name": "Strict Typecheck", "status": "completed", "conclusion": "success" },
+        { "number": 8, "name": "Build Monorepo Packages", "status": "completed", "conclusion": "success" },
+        { "number": 9, "name": "Build Web Application", "status": "completed", "conclusion": "success" },
+        { "number": 10, "name": "Next.js ESLint", "status": "completed", "conclusion": "success" },
+        { "number": 11, "name": "Automated Test Suites", "status": "completed", "conclusion": "success" },
+        { "number": 12, "name": "Ajv Manifest & Domain Cardinality Validation", "status": "completed", "conclusion": "success" },
+        { "number": 13, "name": "Physical Hash Cryptographic Verification", "status": "completed", "conclusion": "success" },
+        { "number": 14, "name": "Security & Behavioral Controls Verification", "status": "completed", "conclusion": "success" },
+        { "number": 15, "name": "Transactional Payment & Webhook Verification", "status": "completed", "conclusion": "success" },
+        { "number": 16, "name": "Multi-Tenant Authentication & Authorization Verification", "status": "completed", "conclusion": "success" },
+        { "number": 17, "name": "Ensure Clean Working Tree", "status": "completed", "conclusion": "success" },
+        { "number": 18, "name": "Upload Build Artifacts", "status": "completed", "conclusion": "success" }
+      ]
+    }
+  ]
 }
