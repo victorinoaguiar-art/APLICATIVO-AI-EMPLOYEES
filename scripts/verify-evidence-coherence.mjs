@@ -22,8 +22,18 @@ export const ERROR_CODES = {
   CI_RUN_NOT_SUCCESSFUL: 'CI_RUN_NOT_SUCCESSFUL',
   REQUIRED_STEP_SKIPPED: 'REQUIRED_STEP_SKIPPED',
   EVIDENCE_INDEX_INVALID: 'EVIDENCE_INDEX_INVALID',
-  BRANCH_PROTECTION_STATUS_MISMATCH: 'BRANCH_PROTECTION_STATUS_MISMATCH'
+  BRANCH_PROTECTION_STATUS_MISMATCH: 'BRANCH_PROTECTION_STATUS_MISMATCH',
+  BRANCH_PROTECTION_UNVERIFIED: 'BRANCH_PROTECTION_UNVERIFIED',
+  BRANCH_PROTECTION_CHECK_MISSING: 'BRANCH_PROTECTION_CHECK_MISSING',
+  BRANCH_PROTECTION_RULES_INSUFFICIENT: 'BRANCH_PROTECTION_RULES_INSUFFICIENT',
+  BRANCH_PROTECTION_REPOSITORY_MISMATCH: 'BRANCH_PROTECTION_REPOSITORY_MISMATCH',
+  EVIDENCE_PATH_INVALID: 'EVIDENCE_PATH_INVALID'
 };
+
+export const EXPECTED_PRE_MERGE_CHECKS = [
+  'Clean Checkout Local Verification (22.x)',
+  'Deterministic Build, Typecheck, Test & Audit (22.x)'
+];
 
 export const REQUIRED_EVIDENCE_FILES = [
   'environment.json',
@@ -312,29 +322,116 @@ export function verifyEvidenceCoherence(options = {}) {
       };
     }
 
-    if (bpData.http_status !== 200 && bpData.branch_protection_status === 'CONFIGURED') {
-      return {
-        valid: false,
-        code: ERROR_CODES.BRANCH_PROTECTION_STATUS_MISMATCH,
-        error: `branch-protection.json declares CONFIGURED with non-200 HTTP status: ${bpData.http_status}`
-      };
+    // In remote mode, branch protection must be CONFIGURED with HTTP 200
+    if (enforceRemoteCi) {
+      if (bpData.branch_protection_status !== 'CONFIGURED') {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_UNVERIFIED,
+          error: `Branch protection is not verified in remote mode: status is "${bpData.branch_protection_status}". Must be "CONFIGURED".`
+        };
+      }
+      if (bpData.http_status !== 200) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_STATUS_MISMATCH,
+          error: `branch-protection.json declares ${bpData.branch_protection_status} with non-200 HTTP status: ${bpData.http_status}`
+        };
+      }
+    } else {
+      if (bpData.http_status !== 200 && bpData.branch_protection_status === 'CONFIGURED') {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_STATUS_MISMATCH,
+          error: `branch-protection.json declares CONFIGURED with non-200 HTTP status: ${bpData.http_status}`
+        };
+      }
     }
 
     // Verify response_sha256 if branch-protection-api-response.json exists
     const bpApiResPath = path.join(targetDir, 'branch-protection-api-response.json');
-    if (fs.existsSync(bpApiResPath) && bpData.response_sha256) {
+    if (fs.existsSync(bpApiResPath)) {
       const apiResRaw = fs.readFileSync(bpApiResPath, 'utf8');
       const computedSha = crypto.createHash('sha256').update(apiResRaw).digest('hex');
-      if (computedSha !== bpData.response_sha256) {
+      if (bpData.response_sha256 && computedSha !== bpData.response_sha256) {
         return {
           valid: false,
           code: ERROR_CODES.EVIDENCE_HASH_MISMATCH,
           error: `response_sha256 in branch-protection.json does not match hash of branch-protection-api-response.json`
         };
       }
+
+      // If branch protection is CONFIGURED, perform deep structural validation of the API response
+      if (bpData.branch_protection_status === 'CONFIGURED') {
+        let bpApiData;
+        try {
+          bpApiData = JSON.parse(apiResRaw);
+        } catch (e) {
+          return {
+            valid: false,
+            code: ERROR_CODES.EVIDENCE_INVALID_JSON,
+            error: `Failed to parse branch-protection-api-response.json: ${e.message}`
+          };
+        }
+
+        // Validate repository and branch in API URL
+        const expectedUrlPattern = `repos/${expectedRepo}/branches/master/protection`;
+        if (bpApiData.url && !bpApiData.url.includes(expectedUrlPattern)) {
+          return {
+            valid: false,
+            code: ERROR_CODES.BRANCH_PROTECTION_REPOSITORY_MISMATCH,
+            error: `Branch protection API URL mismatch: expected ${expectedUrlPattern}, found ${bpApiData.url}`
+          };
+        }
+
+        // Validate required status checks
+        if (!bpApiData.required_status_checks || !Array.isArray(bpApiData.required_status_checks.contexts)) {
+          return {
+            valid: false,
+            code: ERROR_CODES.BRANCH_PROTECTION_CHECK_MISSING,
+            error: 'Required status checks not configured in branch protection.'
+          };
+        }
+
+        const configuredContexts = bpApiData.required_status_checks.contexts;
+        for (const expectedCheck of EXPECTED_PRE_MERGE_CHECKS) {
+          if (!configuredContexts.includes(expectedCheck)) {
+            return {
+              valid: false,
+              code: ERROR_CODES.BRANCH_PROTECTION_CHECK_MISSING,
+              error: `Required pre-merge check missing in branch protection: "${expectedCheck}". Configured checks: [${configuredContexts.join(', ')}]`
+            };
+          }
+        }
+
+        // Validate material protection rules
+        if (!bpApiData.required_pull_request_reviews) {
+          return {
+            valid: false,
+            code: ERROR_CODES.BRANCH_PROTECTION_RULES_INSUFFICIENT,
+            error: 'Pull request reviews are required before merge in branch protection.'
+          };
+        }
+
+        if (bpApiData.allow_force_pushes?.enabled) {
+          return {
+            valid: false,
+            code: ERROR_CODES.BRANCH_PROTECTION_RULES_INSUFFICIENT,
+            error: 'Force pushes are permitted on master branch.'
+          };
+        }
+
+        if (bpApiData.allow_deletions?.enabled) {
+          return {
+            valid: false,
+            code: ERROR_CODES.BRANCH_PROTECTION_RULES_INSUFFICIENT,
+            error: 'Branch deletions are permitted on master branch.'
+          };
+        }
+      }
     }
 
-    // P6: Check for contradiction between github-actions-receipt.json and branch-protection.json
+    // Check for contradiction between github-actions-receipt.json and branch-protection.json
     if (receipt.branch_protection_status && receipt.branch_protection_status !== bpData.branch_protection_status) {
       return {
         valid: false,

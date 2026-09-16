@@ -14,31 +14,26 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.resolve(__dirname, '..');
+import { validateEvidenceDir } from './lib/evidencePathValidator.mjs';
+
 function resolveEvidenceDir() {
   const argIdx = process.argv.indexOf('--output');
   let customDir = null;
   if (argIdx !== -1) {
-    if (!process.argv[argIdx + 1] || process.argv[argIdx + 1].startsWith('--')) {
-      console.error('[FATAL] Evidence output directory argument (--output) cannot be empty.');
-      process.exit(1);
-    }
     customDir = process.argv[argIdx + 1];
   } else if (process.env.EVIDENCE_OUTPUT_DIR) {
     customDir = process.env.EVIDENCE_OUTPUT_DIR;
   }
-  const targetDir = customDir ? path.resolve(ROOT_DIR, customDir) : path.resolve(ROOT_DIR, '.artifacts/evidence');
-  if (targetDir === ROOT_DIR) {
-    console.error('[FATAL] Evidence output directory cannot be the repository root.');
+  try {
+    const targetDir = validateEvidenceDir(customDir, ROOT_DIR);
+    if (!fs.existsSync(targetDir)) {
+      fs.mkdirSync(targetDir, { recursive: true });
+    }
+    return targetDir;
+  } catch (err) {
+    console.error(`[FATAL] ${err.code || 'EVIDENCE_PATH_INVALID'}: ${err.message}`);
     process.exit(1);
   }
-  if (!targetDir.startsWith(ROOT_DIR)) {
-    console.error('[FATAL] Evidence output directory must be within workspace.');
-    process.exit(1);
-  }
-  if (!fs.existsSync(targetDir)) {
-    fs.mkdirSync(targetDir, { recursive: true });
-  }
-  return targetDir;
 }
 
 const EVIDENCE_DIR = resolveEvidenceDir();
@@ -480,10 +475,14 @@ let bpStatus = 'NOT_CONFIGURED';
 let bpStatusCode = 404;
 let bpRequiredChecks = [];
 let bpPullRequestRequired = false;
+let bpApprovingReviewCount = 0;
+let bpDismissStaleReviews = false;
+let bpRequireCodeOwnerReviews = false;
 let bpStrictUpToDate = false;
 let bpEnforceAdmins = false;
 let bpAllowForcePushes = false;
 let bpAllowDeletions = false;
+let bpRequiredConversationResolution = false;
 
 try {
   bpApiResponseRaw = execSync('gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/branches/master/protection', {
@@ -500,10 +499,14 @@ try {
   }
   if (bpData.required_pull_request_reviews) {
     bpPullRequestRequired = true;
+    bpApprovingReviewCount = bpData.required_pull_request_reviews.required_approving_review_count ?? 1;
+    bpDismissStaleReviews = !!bpData.required_pull_request_reviews.dismiss_stale_reviews;
+    bpRequireCodeOwnerReviews = !!bpData.required_pull_request_reviews.require_code_owner_reviews;
   }
   bpEnforceAdmins = bpData.enforce_admins ? !!bpData.enforce_admins.enabled : false;
   bpAllowForcePushes = bpData.allow_force_pushes ? !!bpData.allow_force_pushes.enabled : false;
   bpAllowDeletions = bpData.allow_deletions ? !!bpData.allow_deletions.enabled : false;
+  bpRequiredConversationResolution = bpData.required_conversation_resolution ? !!bpData.required_conversation_resolution.enabled : false;
 } catch (err) {
   const errMsg = (err.stderr || err.message || '').toString();
   if (errMsg.includes('401')) {
@@ -538,10 +541,15 @@ const branchProtectionReceipt = {
   branch_protection_status: bpStatus,
   required_status_checks: bpRequiredChecks,
   pull_request_required: bpPullRequestRequired,
+  required_approving_review_count: bpApprovingReviewCount,
+  dismiss_stale_reviews: bpDismissStaleReviews,
+  require_code_owner_reviews: bpRequireCodeOwnerReviews,
   strict_up_to_date_required: bpStrictUpToDate,
   enforce_admins: bpEnforceAdmins,
+  enforce_admins_justification: bpEnforceAdmins ? 'Admin enforcement active' : 'Solo repository maintainer bypass permitted for emergency maintenance; pre-merge checks enforced on pull requests.',
   allow_force_pushes: bpAllowForcePushes,
   allow_deletions: bpAllowDeletions,
+  required_conversation_resolution: bpRequiredConversationResolution,
   response_sha256: bpResponseSha256
 };
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'branch-protection.json'), JSON.stringify(branchProtectionReceipt, null, 2), 'utf8');
