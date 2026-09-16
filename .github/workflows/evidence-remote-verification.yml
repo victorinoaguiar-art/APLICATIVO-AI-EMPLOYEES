@@ -1,4 +1,4 @@
-﻿name: Evidence Remote Verification
+name: Evidence Remote Verification
 
 on:
   workflow_run:
@@ -43,11 +43,13 @@ jobs:
         run: node scripts/sync-remote-ci-receipt.mjs ${{ github.event.workflow_run.id }} ${{ github.event.workflow_run.head_sha }} .artifacts/evidence
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Evidence Remote Verification Gate
         run: npm run verify:evidence-remote -- --dir .artifacts/evidence --sha ${{ github.event.workflow_run.head_sha }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ENFORCE_REMOTE_CI: 'true'
 
       - name: Upload Verified Remote Receipt

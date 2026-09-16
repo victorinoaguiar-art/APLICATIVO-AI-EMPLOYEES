@@ -1,5 +1,6 @@
-﻿import * as fs from 'node:fs';
+import * as fs from 'node:fs';
 import * as path from 'node:path';
+import * as crypto from 'node:crypto';
 import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
@@ -48,6 +49,20 @@ try {
 
   fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2), 'utf8');
   console.log(`[SYNC-REMOTE-RECEIPT] Updated ${receiptPath} with completed run data (Status: ${receipt.status}, Conclusion: ${receipt.conclusion}).`);
+
+  const newReceiptHash = crypto.createHash('sha256').update(fs.readFileSync(receiptPath)).digest('hex');
+  const indexPath = path.join(evidenceDir, 'evidence-files.sha256');
+  if (fs.existsSync(indexPath)) {
+    const lines = fs.readFileSync(indexPath, 'utf8').split('\n');
+    const updatedLines = lines.map(line => {
+      if (line.includes('github-actions-receipt.json')) {
+        return `${newReceiptHash}  github-actions-receipt.json`;
+      }
+      return line;
+    });
+    fs.writeFileSync(indexPath, updatedLines.join('\n'), 'utf8');
+    console.log(`[SYNC-REMOTE-RECEIPT] Updated ${indexPath} with new hash for github-actions-receipt.json: ${newReceiptHash}`);
+  }
 } catch (err) {
   console.error('[ERROR] Failed to query GitHub API:', err.message);
   process.exit(1);
