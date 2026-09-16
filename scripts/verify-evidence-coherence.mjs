@@ -20,13 +20,22 @@ export const ERROR_CODES = {
   CI_RUN_SHA_MISMATCH: 'CI_RUN_SHA_MISMATCH',
   CI_RUN_NOT_COMPLETED: 'CI_RUN_NOT_COMPLETED',
   CI_RUN_NOT_SUCCESSFUL: 'CI_RUN_NOT_SUCCESSFUL',
+  REQUIRED_JOB_MISSING: 'REQUIRED_JOB_MISSING',
+  REQUIRED_STEP_MISSING: 'REQUIRED_STEP_MISSING',
   REQUIRED_STEP_SKIPPED: 'REQUIRED_STEP_SKIPPED',
+  REQUIRED_STEP_FAILED: 'REQUIRED_STEP_FAILED',
   EVIDENCE_INDEX_INVALID: 'EVIDENCE_INDEX_INVALID',
   BRANCH_PROTECTION_STATUS_MISMATCH: 'BRANCH_PROTECTION_STATUS_MISMATCH',
   BRANCH_PROTECTION_UNVERIFIED: 'BRANCH_PROTECTION_UNVERIFIED',
   BRANCH_PROTECTION_CHECK_MISSING: 'BRANCH_PROTECTION_CHECK_MISSING',
   BRANCH_PROTECTION_RULES_INSUFFICIENT: 'BRANCH_PROTECTION_RULES_INSUFFICIENT',
   BRANCH_PROTECTION_REPOSITORY_MISMATCH: 'BRANCH_PROTECTION_REPOSITORY_MISMATCH',
+  BRANCH_PROTECTION_RESPONSE_SHA_MISSING: 'BRANCH_PROTECTION_RESPONSE_SHA_MISSING',
+  BRANCH_PROTECTION_RESPONSE_SHA_INVALID: 'BRANCH_PROTECTION_RESPONSE_SHA_INVALID',
+  BRANCH_PROTECTION_ORIGIN_INVALID: 'BRANCH_PROTECTION_ORIGIN_INVALID',
+  BRANCH_PROTECTION_RECEIPT_MISMATCH: 'BRANCH_PROTECTION_RECEIPT_MISMATCH',
+  ADMIN_ENFORCEMENT_MISMATCH: 'ADMIN_ENFORCEMENT_MISMATCH',
+  LOCAL_FILE_LINK_DETECTED: 'LOCAL_FILE_LINK_DETECTED',
   EVIDENCE_PATH_INVALID: 'EVIDENCE_PATH_INVALID'
 };
 
@@ -34,6 +43,38 @@ export const EXPECTED_PRE_MERGE_CHECKS = [
   'Clean Checkout Local Verification (22.x)',
   'Deterministic Build, Typecheck, Test & Audit (22.x)'
 ];
+
+export const REQUIRED_CI_JOBS_AND_STEPS = {
+  'Clean Checkout Local Verification (22.x)': [
+    'Checkout Codebase',
+    'Setup Node.js 22.x',
+    'Deterministic Install (npm ci)',
+    'Production Dependency Audit',
+    'Local Full Verification',
+    'Ensure Clean Working Tree'
+  ],
+  'Deterministic Build, Typecheck, Test & Audit (22.x)': [
+    'Checkout Codebase',
+    'Setup Node.js 22.x',
+    'Deterministic Install (npm ci)',
+    'Production Dependency Audit',
+    'Monorepo Clean',
+    'Strict Typecheck',
+    'Build Monorepo Packages',
+    'Build Web Application',
+    'Next.js ESLint',
+    'Automated Test Suites',
+    'Ajv Manifest & Domain Cardinality Validation',
+    'Physical Hash Cryptographic Verification',
+    'Security & Behavioral Controls Verification',
+    'Transactional Payment & Webhook Verification',
+    'Multi-Tenant Authentication & Authorization Verification',
+    'Generate CI Forensic Evidence Bundle',
+    'Evidence Coherence & Same-SHA Gate',
+    'Upload Evidence Artifacts Bundle',
+    'Ensure Clean Working Tree'
+  ]
+};
 
 export const REQUIRED_EVIDENCE_FILES = [
   'environment.json',
@@ -245,6 +286,13 @@ export function verifyEvidenceCoherence(options = {}) {
 
     const repo = data.repository;
     if (repo && repo !== expectedRepo) {
+      if (fileName === 'branch-protection.json') {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_REPOSITORY_MISMATCH,
+          error: `repository mismatch in ${fileName}: expected ${expectedRepo}, found ${repo}`
+        };
+      }
       return {
         valid: false,
         code: ERROR_CODES.EVIDENCE_REPOSITORY_MISMATCH,
@@ -297,6 +345,77 @@ export function verifyEvidenceCoherence(options = {}) {
         error: `Required CI steps were skipped: ${receipt.skipped_required_steps.join(', ')}`
       };
     }
+
+    // Physical jobs and steps inspection (Prompt section 5)
+    if (!Array.isArray(receipt.jobs) || receipt.jobs.length === 0) {
+      return {
+        valid: false,
+        code: ERROR_CODES.REQUIRED_JOB_MISSING,
+        error: 'CI receipt does not contain physical jobs array.'
+      };
+    }
+
+    for (const [expectedJobName, expectedSteps] of Object.entries(REQUIRED_CI_JOBS_AND_STEPS)) {
+      const job = receipt.jobs.find(j => j.name === expectedJobName);
+      if (!job) {
+        return {
+          valid: false,
+          code: ERROR_CODES.REQUIRED_JOB_MISSING,
+          error: `Required CI job missing from receipt: "${expectedJobName}"`
+        };
+      }
+
+      if (job.status !== 'completed' || job.conclusion !== 'success') {
+        return {
+          valid: false,
+          code: ERROR_CODES.CI_RUN_NOT_SUCCESSFUL,
+          error: `Required CI job "${expectedJobName}" did not conclude successfully (status: ${job.status}, conclusion: ${job.conclusion})`
+        };
+      }
+
+      if (!Array.isArray(job.steps) || job.steps.length === 0) {
+        return {
+          valid: false,
+          code: ERROR_CODES.REQUIRED_STEP_MISSING,
+          error: `Physical steps array missing in job "${expectedJobName}"`
+        };
+      }
+
+      for (const stepName of expectedSteps) {
+        const step = job.steps.find(s => s.name === stepName);
+        if (!step) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REQUIRED_STEP_MISSING,
+            error: `Required step "${stepName}" missing in job "${expectedJobName}"`
+          };
+        }
+
+        if (step.conclusion === 'skipped' || step.status === 'skipped') {
+          return {
+            valid: false,
+            code: ERROR_CODES.REQUIRED_STEP_SKIPPED,
+            error: `Required step "${stepName}" was skipped in job "${expectedJobName}"`
+          };
+        }
+
+        if (['cancelled', 'failure'].includes(step.conclusion) || ['cancelled', 'failure'].includes(step.status)) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REQUIRED_STEP_FAILED,
+            error: `Required step "${stepName}" ended with ${step.conclusion || step.status} in job "${expectedJobName}"`
+          };
+        }
+
+        if (step.status !== 'completed' || step.conclusion !== 'success') {
+          return {
+            valid: false,
+            code: ERROR_CODES.REQUIRED_STEP_FAILED,
+            error: `Required step "${stepName}" not successfully completed in job "${expectedJobName}" (status: ${step.status}, conclusion: ${step.conclusion})`
+          };
+        }
+      }
+    }
   }
 
   // 5. Validate branch protection receipt
@@ -348,84 +467,269 @@ export function verifyEvidenceCoherence(options = {}) {
       }
     }
 
-    // Verify response_sha256 if branch-protection-api-response.json exists
-    const bpApiResPath = path.join(targetDir, 'branch-protection-api-response.json');
-    if (fs.existsSync(bpApiResPath)) {
-      const apiResRaw = fs.readFileSync(bpApiResPath, 'utf8');
-      const computedSha = crypto.createHash('sha256').update(apiResRaw).digest('hex');
-      if (bpData.response_sha256 && computedSha !== bpData.response_sha256) {
+    // If CONFIGURED or in remote mode, perform forensic validation of origin and API response
+    if (bpData.branch_protection_status === 'CONFIGURED' || enforceRemoteCi) {
+      // 1. Mandatory response_sha256 validation (Prompt section 1)
+      if (bpData.response_sha256 === undefined || bpData.response_sha256 === null) {
         return {
           valid: false,
-          code: ERROR_CODES.EVIDENCE_HASH_MISMATCH,
-          error: `response_sha256 in branch-protection.json does not match hash of branch-protection-api-response.json`
+          code: ERROR_CODES.BRANCH_PROTECTION_RESPONSE_SHA_MISSING,
+          error: 'response_sha256 is strictly required in branch-protection.json'
+        };
+      }
+      if (typeof bpData.response_sha256 !== 'string' || bpData.response_sha256.trim() === '' || !/^[a-f0-9]{64}$/i.test(bpData.response_sha256)) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RESPONSE_SHA_INVALID,
+          error: `response_sha256 must be a 64-character hex string, got: "${bpData.response_sha256}"`
         };
       }
 
-      // If branch protection is CONFIGURED, perform deep structural validation of the API response
-      if (bpData.branch_protection_status === 'CONFIGURED') {
-        let bpApiData;
-        try {
-          bpApiData = JSON.parse(apiResRaw);
-        } catch (e) {
-          return {
-            valid: false,
-            code: ERROR_CODES.EVIDENCE_INVALID_JSON,
-            error: `Failed to parse branch-protection-api-response.json: ${e.message}`
-          };
-        }
+      // 2. Verifiable origin checks (Prompt section 2)
+      if (!bpData.repository || bpData.repository !== expectedRepo) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_REPOSITORY_MISMATCH,
+          error: `repository in branch-protection.json mismatch: expected "${expectedRepo}", found "${bpData.repository}"`
+        };
+      }
+      if (!bpData.branch || bpData.branch !== 'master') {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+          error: `branch in branch-protection.json mismatch: expected "master", found "${bpData.branch}"`
+        };
+      }
+      if (!bpData.source || bpData.source !== 'GITHUB_REST_API') {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+          error: `source in branch-protection.json mismatch: expected "GITHUB_REST_API", found "${bpData.source}"`
+        };
+      }
+      const expectedEndpoint = `repos/${expectedRepo}/branches/master/protection`;
+      if (!bpData.api_endpoint || bpData.api_endpoint !== expectedEndpoint) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+          error: `api_endpoint in branch-protection.json mismatch: expected "${expectedEndpoint}", found "${bpData.api_endpoint}"`
+        };
+      }
+      if (!bpData.queried_at || isNaN(Date.parse(bpData.queried_at))) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+          error: `queried_at in branch-protection.json is missing or not a valid ISO timestamp: "${bpData.queried_at}"`
+        };
+      }
+      if (!bpData.query_actor || typeof bpData.query_actor !== 'string' || !bpData.query_actor.trim()) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+          error: `query_actor in branch-protection.json is missing or empty`
+        };
+      }
+      if (!bpData.source_sha || bpData.source_sha.toLowerCase() !== expectedSha.toLowerCase()) {
+        return {
+          valid: false,
+          code: ERROR_CODES.EVIDENCE_COMMIT_SHA_MISMATCH,
+          error: `source_sha in branch-protection.json mismatch: expected "${expectedSha}", found "${bpData.source_sha}"`
+        };
+      }
 
-        // Validate repository and branch in API URL
-        const expectedUrlPattern = `repos/${expectedRepo}/branches/master/protection`;
-        if (bpApiData.url && !bpApiData.url.includes(expectedUrlPattern)) {
-          return {
-            valid: false,
-            code: ERROR_CODES.BRANCH_PROTECTION_REPOSITORY_MISMATCH,
-            error: `Branch protection API URL mismatch: expected ${expectedUrlPattern}, found ${bpApiData.url}`
-          };
-        }
+      // Check physical raw response file and byte hash
+      const bpApiResPath = path.join(targetDir, 'branch-protection-api-response.json');
+      if (!fs.existsSync(bpApiResPath)) {
+        return {
+          valid: false,
+          code: ERROR_CODES.EVIDENCE_FILE_MISSING,
+          error: 'Required physical response file branch-protection-api-response.json missing on disk'
+        };
+      }
 
-        // Validate required status checks
-        if (!bpApiData.required_status_checks || !Array.isArray(bpApiData.required_status_checks.contexts)) {
+      const apiResRaw = fs.readFileSync(bpApiResPath, 'utf8');
+      const computedSha = crypto.createHash('sha256').update(apiResRaw).digest('hex');
+      if (computedSha.toLowerCase() !== bpData.response_sha256.toLowerCase()) {
+        return {
+          valid: false,
+          code: ERROR_CODES.EVIDENCE_HASH_MISMATCH,
+          error: `response_sha256 mismatch: branch-protection.json has "${bpData.response_sha256}", computed hash of branch-protection-api-response.json is "${computedSha}"`
+        };
+      }
+
+      // 3. Recalculate ALL derived fields directly from raw API response (Prompt section 3)
+      let bpApiData;
+      try {
+        bpApiData = JSON.parse(apiResRaw);
+      } catch (e) {
+        return {
+          valid: false,
+          code: ERROR_CODES.EVIDENCE_INVALID_JSON,
+          error: `Failed to parse branch-protection-api-response.json: ${e.message}`
+        };
+      }
+
+      // Validate repository and branch in API URL if present
+      const expectedUrlPattern = `repos/${expectedRepo}/branches/master/protection`;
+      if (bpApiData.url && !bpApiData.url.includes(expectedUrlPattern)) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_REPOSITORY_MISMATCH,
+          error: `Branch protection API URL mismatch: expected ${expectedUrlPattern}, found ${bpApiData.url}`
+        };
+      }
+
+      // Re-derive and compare 10 derived fields
+      // 1. required_status_checks
+      const rawContexts = Array.isArray(bpApiData.required_status_checks?.contexts)
+        ? bpApiData.required_status_checks.contexts
+        : [];
+      const receiptChecks = Array.isArray(bpData.required_status_checks) ? bpData.required_status_checks : [];
+      if (rawContexts.length !== receiptChecks.length || !rawContexts.every(c => receiptChecks.includes(c))) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RECEIPT_MISMATCH,
+          error: `required_status_checks mismatch between receipt and raw API response`
+        };
+      }
+
+      // 2. strict_up_to_date_required
+      const rawStrict = !!bpApiData.required_status_checks?.strict;
+      if (rawStrict !== !!bpData.strict_up_to_date_required) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RECEIPT_MISMATCH,
+          error: `strict_up_to_date_required mismatch between receipt (${bpData.strict_up_to_date_required}) and raw API response (${rawStrict})`
+        };
+      }
+
+      // 3. pull_request_required
+      const rawPr = !!bpApiData.required_pull_request_reviews;
+      if (rawPr !== !!bpData.pull_request_required) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RECEIPT_MISMATCH,
+          error: `pull_request_required mismatch between receipt (${bpData.pull_request_required}) and raw API response (${rawPr})`
+        };
+      }
+
+      // 4. required_approving_review_count
+      const rawApprovals = bpApiData.required_pull_request_reviews?.required_approving_review_count ?? 0;
+      if (rawApprovals !== bpData.required_approving_review_count) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RECEIPT_MISMATCH,
+          error: `required_approving_review_count mismatch between receipt (${bpData.required_approving_review_count}) and raw API response (${rawApprovals})`
+        };
+      }
+
+      // 5. dismiss_stale_reviews
+      const rawDismissStale = !!bpApiData.required_pull_request_reviews?.dismiss_stale_reviews;
+      if (rawDismissStale !== !!bpData.dismiss_stale_reviews) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RECEIPT_MISMATCH,
+          error: `dismiss_stale_reviews mismatch between receipt and raw API response`
+        };
+      }
+
+      // 6. require_code_owner_reviews
+      const rawCodeOwners = !!bpApiData.required_pull_request_reviews?.require_code_owner_reviews;
+      if (rawCodeOwners !== !!bpData.require_code_owner_reviews) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RECEIPT_MISMATCH,
+          error: `require_code_owner_reviews mismatch between receipt and raw API response`
+        };
+      }
+
+      // 7. enforce_admins
+      const rawEnforceAdmins = !!bpApiData.enforce_admins?.enabled;
+      if (rawEnforceAdmins !== !!bpData.enforce_admins) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RECEIPT_MISMATCH,
+          error: `enforce_admins mismatch between receipt (${bpData.enforce_admins}) and raw API response (${rawEnforceAdmins})`
+        };
+      }
+
+      // 8. allow_force_pushes
+      const rawForcePushes = !!bpApiData.allow_force_pushes?.enabled;
+      if (rawForcePushes !== !!bpData.allow_force_pushes) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RECEIPT_MISMATCH,
+          error: `allow_force_pushes mismatch between receipt and raw API response`
+        };
+      }
+
+      // 9. allow_deletions
+      const rawDeletions = !!bpApiData.allow_deletions?.enabled;
+      if (rawDeletions !== !!bpData.allow_deletions) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RECEIPT_MISMATCH,
+          error: `allow_deletions mismatch between receipt and raw API response`
+        };
+      }
+
+      // 10. required_conversation_resolution
+      const rawReqConv = !!bpApiData.required_conversation_resolution?.enabled;
+      if (rawReqConv !== !!bpData.required_conversation_resolution) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RECEIPT_MISMATCH,
+          error: `required_conversation_resolution mismatch between receipt and raw API response`
+        };
+      }
+
+      // 4. Transform rules into blocking conditions (Prompt section 4)
+      if (!bpData.pull_request_required) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RULES_INSUFFICIENT,
+          error: 'Pull request reviews are required before merge in branch protection.'
+        };
+      }
+
+      if (typeof bpData.required_approving_review_count !== 'number' || bpData.required_approving_review_count < 1) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RULES_INSUFFICIENT,
+          error: `At least 1 approving review is required in branch protection (configured: ${bpData.required_approving_review_count}).`
+        };
+      }
+
+      if (!bpData.strict_up_to_date_required) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RULES_INSUFFICIENT,
+          error: 'Branch protection requires strict up-to-date checks before merge.'
+        };
+      }
+
+      if (bpData.allow_force_pushes) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RULES_INSUFFICIENT,
+          error: 'Force pushes are permitted on master branch.'
+        };
+      }
+
+      if (bpData.allow_deletions) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_RULES_INSUFFICIENT,
+          error: 'Branch deletions are permitted on master branch.'
+        };
+      }
+
+      for (const expectedCheck of EXPECTED_PRE_MERGE_CHECKS) {
+        if (!bpData.required_status_checks.includes(expectedCheck)) {
           return {
             valid: false,
             code: ERROR_CODES.BRANCH_PROTECTION_CHECK_MISSING,
-            error: 'Required status checks not configured in branch protection.'
-          };
-        }
-
-        const configuredContexts = bpApiData.required_status_checks.contexts;
-        for (const expectedCheck of EXPECTED_PRE_MERGE_CHECKS) {
-          if (!configuredContexts.includes(expectedCheck)) {
-            return {
-              valid: false,
-              code: ERROR_CODES.BRANCH_PROTECTION_CHECK_MISSING,
-              error: `Required pre-merge check missing in branch protection: "${expectedCheck}". Configured checks: [${configuredContexts.join(', ')}]`
-            };
-          }
-        }
-
-        // Validate material protection rules
-        if (!bpApiData.required_pull_request_reviews) {
-          return {
-            valid: false,
-            code: ERROR_CODES.BRANCH_PROTECTION_RULES_INSUFFICIENT,
-            error: 'Pull request reviews are required before merge in branch protection.'
-          };
-        }
-
-        if (bpApiData.allow_force_pushes?.enabled) {
-          return {
-            valid: false,
-            code: ERROR_CODES.BRANCH_PROTECTION_RULES_INSUFFICIENT,
-            error: 'Force pushes are permitted on master branch.'
-          };
-        }
-
-        if (bpApiData.allow_deletions?.enabled) {
-          return {
-            valid: false,
-            code: ERROR_CODES.BRANCH_PROTECTION_RULES_INSUFFICIENT,
-            error: 'Branch deletions are permitted on master branch.'
+            error: `Required pre-merge check missing in branch protection: "${expectedCheck}". Configured: [${bpData.required_status_checks.join(', ')}]`
           };
         }
       }
@@ -437,6 +741,37 @@ export function verifyEvidenceCoherence(options = {}) {
         valid: false,
         code: ERROR_CODES.BRANCH_PROTECTION_STATUS_MISMATCH,
         error: `Contradiction detected: github-actions-receipt declares ${receipt.branch_protection_status} but branch-protection.json declares ${bpData.branch_protection_status}`
+      };
+    }
+  }
+
+  // 6. Classification check (Prompt section 6)
+  const bpDataFinal = fs.existsSync(bpPath) ? JSON.parse(fs.readFileSync(bpPath, 'utf8')) : {};
+  if (options.targetClassification) {
+    if (options.targetClassification === 'PATCH_VERIFIED_AND_CI_ENFORCED' && !bpDataFinal.enforce_admins) {
+      return {
+        valid: false,
+        code: ERROR_CODES.ADMIN_ENFORCEMENT_MISMATCH,
+        error: 'enforce_admins is false; unqualified PATCH_VERIFIED_AND_CI_ENFORCED is prohibited. Use PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS.'
+      };
+    }
+  }
+
+  // 7. Report local file links validation (Prompt section 7)
+  if (options.reportPath) {
+    if (!fs.existsSync(options.reportPath)) {
+      return {
+        valid: false,
+        code: ERROR_CODES.EVIDENCE_FILE_MISSING,
+        error: `Report file missing: ${options.reportPath}`
+      };
+    }
+    const reportContent = fs.readFileSync(options.reportPath, 'utf8');
+    if (/file:\/\/\/[a-z]:/i.test(reportContent) || reportContent.includes('file:///')) {
+      return {
+        valid: false,
+        code: ERROR_CODES.LOCAL_FILE_LINK_DETECTED,
+        error: `Local file link (file:///) detected in report: ${options.reportPath}`
       };
     }
   }

@@ -9,6 +9,7 @@ const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.resolve(__dirname, '..');
 
 import { validateEvidenceDir } from './lib/evidencePathValidator.mjs';
+import { REQUIRED_CI_JOBS_AND_STEPS } from './verify-evidence-coherence.mjs';
 
 const runId = process.env.PRIMARY_RUN_ID || process.argv[2];
 const headSha = process.env.HEAD_SHA || process.argv[3];
@@ -56,6 +57,29 @@ try {
   const jobsOutput = execSync(`gh run view ${runId} --json jobs`, { encoding: 'utf8', cwd: ROOT_DIR });
   const jobsData = JSON.parse(jobsOutput);
   receipt.jobs = jobsData.jobs || [];
+
+  // Derive skipped and failed required steps from real job steps
+  const skippedSteps = [];
+  const failedSteps = [];
+  for (const [jobName, steps] of Object.entries(REQUIRED_CI_JOBS_AND_STEPS)) {
+    const job = receipt.jobs.find(j => j.name === jobName);
+    if (!job) {
+      failedSteps.push(`Job missing: ${jobName}`);
+      continue;
+    }
+    for (const stepName of steps) {
+      const step = job.steps?.find(s => s.name === stepName);
+      if (!step) {
+        failedSteps.push(`Step missing: ${stepName} in ${jobName}`);
+      } else if (step.conclusion === 'skipped' || step.status === 'skipped') {
+        skippedSteps.push(`${stepName} (${jobName})`);
+      } else if (['cancelled', 'failure'].includes(step.conclusion) || ['cancelled', 'failure'].includes(step.status)) {
+        failedSteps.push(`${stepName} [${step.conclusion || step.status}] (${jobName})`);
+      }
+    }
+  }
+  receipt.skipped_required_steps = skippedSteps;
+  receipt.failed_required_steps = failedSteps;
 
   // Query live branch protection if token is available
   try {
