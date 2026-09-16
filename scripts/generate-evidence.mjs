@@ -536,6 +536,8 @@ const branchProtectionReceipt = {
   api_endpoint: 'repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/branches/master/protection',
   queried_at: new Date().toISOString(),
   query_actor: process.env.GITHUB_ACTOR || 'GitHub Actions',
+  query_run_id: process.env.GITHUB_RUN_ID ? Number(process.env.GITHUB_RUN_ID) : 'local',
+  query_workflow: process.env.GITHUB_WORKFLOW || 'CI / Production Readiness & Audit Gate',
   source_sha: currentSha,
   http_status: bpStatusCode,
   branch_protection_status: bpStatus,

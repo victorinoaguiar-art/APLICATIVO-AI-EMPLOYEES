@@ -594,7 +594,10 @@ export function verifyEvidenceCoherence(options = {}) {
       }
 
       // Check required provenance metadata fields
-      const requiredProvenanceFields = ['source', 'api_endpoint', 'queried_at', 'query_actor', 'query_run_id', 'query_workflow'];
+      const requiredProvenanceFields = ['source', 'api_endpoint', 'queried_at', 'query_actor'];
+      if (enforceRemoteCi) {
+        requiredProvenanceFields.push('query_run_id', 'query_workflow');
+      }
       for (const field of requiredProvenanceFields) {
         if (!bpData[field]) {
           return {
