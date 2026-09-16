@@ -1,4 +1,4 @@
-name: CI / Production Readiness & Audit Gate
+﻿name: CI / Production Readiness & Audit Gate
 
 on:
   push:
@@ -15,10 +15,46 @@ permissions:
   contents: read
 
 jobs:
-  verify:
-    name: Deterministic Build, Typecheck, Test & Audit
+  clean-checkout-verification:
+    name: Clean Checkout Local Verification
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 22.x ]
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
 
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Deterministic Install (npm ci)
+        run: npm ci
+
+      - name: Production Dependency Audit
+        run: npm audit --omit=dev
+
+      - name: Local Full Verification
+        run: npm run verify
+
+      - name: Ensure Clean Working Tree
+        run: |
+          CHANGES=$(git status --porcelain)
+          if [ -n "$CHANGES" ]; then
+            echo "[FATAL] TRACKED_WORKTREE_MUTATION: Unexpected mutations in clean checkout"
+            echo "$CHANGES"
+            exit 1
+          fi
+          git diff --exit-code
+          git diff --cached --exit-code
+
+  verify:
+    name: Deterministic Build, Typecheck, Test & Audit (22.x)
+    runs-on: ubuntu-latest
+    needs: [ clean-checkout-verification ]
     strategy:
       matrix:
         node-version: [ 22.x ]
@@ -36,7 +72,7 @@ jobs:
           cache: 'npm'
 
       - name: Deterministic Install (npm ci)
-        run: node scripts/record-npm-ci.mjs
+        run: node scripts/record-npm-ci.mjs --output .artifacts/evidence
 
       - name: Production Dependency Audit
         run: npm audit --omit=dev
@@ -75,28 +111,31 @@ jobs:
         run: npm run verify:auth
 
       - name: Generate CI Forensic Evidence Bundle
-        run: node scripts/generate-evidence.mjs
+        run: node scripts/generate-evidence.mjs --output .artifacts/evidence
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Evidence Coherence & Same-SHA Gate
-        run: npm run verify:evidence-coherence
+        run: npm run verify:evidence-artifact -- --dir .artifacts/evidence
 
       - name: Upload Evidence Artifacts Bundle
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: aetf-evidence-bundle-${{ github.sha }}
-          path: evidence/
+          path: .artifacts/evidence/
           retention-days: 30
-
-      - name: Reset Generated Evidence Working State
-        run: |
-          git checkout -- evidence/ || true
-          git clean -fd evidence/ || true
 
       - name: Ensure Clean Working Tree
         run: |
-          git status --porcelain
+          CHANGES=$(git status --porcelain)
+          if [ -n "$CHANGES" ]; then
+            echo "[FATAL] TRACKED_WORKTREE_MUTATION: Tracked files mutated during CI execution"
+            echo "$CHANGES"
+            exit 1
+          fi
           git diff --exit-code
+          git diff --cached --exit-code
 
       - name: Upload Build Artifacts
         if: always()

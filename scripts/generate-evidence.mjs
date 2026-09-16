@@ -14,13 +14,36 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.resolve(__dirname, '..');
-const EVIDENCE_DIR = path.resolve(ROOT_DIR, 'evidence');
-
-if (!fs.existsSync(EVIDENCE_DIR)) {
-  fs.mkdirSync(EVIDENCE_DIR, { recursive: true });
+function resolveEvidenceDir() {
+  const argIdx = process.argv.indexOf('--output');
+  let customDir = null;
+  if (argIdx !== -1) {
+    if (!process.argv[argIdx + 1] || process.argv[argIdx + 1].startsWith('--')) {
+      console.error('[FATAL] Evidence output directory argument (--output) cannot be empty.');
+      process.exit(1);
+    }
+    customDir = process.argv[argIdx + 1];
+  } else if (process.env.EVIDENCE_OUTPUT_DIR) {
+    customDir = process.env.EVIDENCE_OUTPUT_DIR;
+  }
+  const targetDir = customDir ? path.resolve(ROOT_DIR, customDir) : path.resolve(ROOT_DIR, '.artifacts/evidence');
+  if (targetDir === ROOT_DIR) {
+    console.error('[FATAL] Evidence output directory cannot be the repository root.');
+    process.exit(1);
+  }
+  if (!targetDir.startsWith(ROOT_DIR)) {
+    console.error('[FATAL] Evidence output directory must be within workspace.');
+    process.exit(1);
+  }
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir, { recursive: true });
+  }
+  return targetDir;
 }
 
-console.log('[EVIDENCE] Generating forensic evidence artifacts from REAL physical executions in evidence/ ...');
+const EVIDENCE_DIR = resolveEvidenceDir();
+
+console.log(`[EVIDENCE] Generating forensic evidence artifacts from REAL physical executions in ${path.relative(ROOT_DIR, EVIDENCE_DIR)} ...`);
 
 const currentSha = execSync('git rev-parse HEAD', { encoding: 'utf8', cwd: ROOT_DIR }).trim();
 let currentBranch = 'master';
@@ -127,13 +150,13 @@ const npmCiLogPath = path.join(EVIDENCE_DIR, 'npm-ci.log');
 if (!fs.existsSync(npmCiLogPath) || fs.readFileSync(npmCiLogPath, 'utf8').includes('--dry-run')) {
   // Execute real record-npm-ci.mjs
   const recordScript = path.resolve(ROOT_DIR, 'scripts/record-npm-ci.mjs');
-  runCommandAndLog(`node "${recordScript}"`, 'npm-ci.log');
+  runCommandAndLog(`node "${recordScript}" --output "${EVIDENCE_DIR}"`, 'npm-ci.log');
 } else {
   // Validate existing real npm-ci.log
   const logContent = fs.readFileSync(npmCiLogPath, 'utf8');
   if (logContent.includes('--dry-run') || !logContent.includes('COMMAND: npm ci') || !logContent.includes('EXIT_CODE: 0')) {
     const recordScript = path.resolve(ROOT_DIR, 'scripts/record-npm-ci.mjs');
-    runCommandAndLog(`node "${recordScript}"`, 'npm-ci.log');
+    runCommandAndLog(`node "${recordScript}" --output "${EVIDENCE_DIR}"`, 'npm-ci.log');
   } else {
     console.log('  -> npm-ci.log verified (real install record present)');
   }
@@ -150,7 +173,7 @@ runCommandAndLog('npm run verify:hashes', 'verify-hashes.log');
 runCommandAndLog('npm run verify:security', 'verify-security.log');
 runCommandAndLog('npm run verify:payments', 'verify-payments.log');
 runCommandAndLog('npm run verify:auth', 'verify-auth.log');
-runCommandAndLog('npm run verify:pipeline', 'verify.log');
+runCommandAndLog('npm run verify:local', 'verify.log');
 
 // 6. P4 & P1 — Deriving test summary dynamically from real test executions
 console.log('[EVIDENCE] Executing real test suites to derive test summary (P4)...');
@@ -450,11 +473,88 @@ try {
   // gh CLI unavailable or not executed yet
 }
 
+// 11. P7 — Query GitHub REST API for Branch Protection and generate verifiable receipt
+console.log('[EVIDENCE] Querying GitHub API for master branch protection (P7)...');
+let bpApiResponseRaw = '';
+let bpStatus = 'NOT_CONFIGURED';
+let bpStatusCode = 404;
+let bpRequiredChecks = [];
+let bpPullRequestRequired = false;
+let bpStrictUpToDate = false;
+let bpEnforceAdmins = false;
+let bpAllowForcePushes = false;
+let bpAllowDeletions = false;
+
+try {
+  bpApiResponseRaw = execSync('gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/branches/master/protection', {
+    encoding: 'utf8',
+    cwd: ROOT_DIR,
+    stdio: ['pipe', 'pipe', 'pipe']
+  }).trim();
+  const bpData = JSON.parse(bpApiResponseRaw);
+  bpStatusCode = 200;
+  bpStatus = 'CONFIGURED';
+  if (bpData.required_status_checks) {
+    bpStrictUpToDate = !!bpData.required_status_checks.strict;
+    bpRequiredChecks = bpData.required_status_checks.contexts || [];
+  }
+  if (bpData.required_pull_request_reviews) {
+    bpPullRequestRequired = true;
+  }
+  bpEnforceAdmins = bpData.enforce_admins ? !!bpData.enforce_admins.enabled : false;
+  bpAllowForcePushes = bpData.allow_force_pushes ? !!bpData.allow_force_pushes.enabled : false;
+  bpAllowDeletions = bpData.allow_deletions ? !!bpData.allow_deletions.enabled : false;
+} catch (err) {
+  const errMsg = (err.stderr || err.message || '').toString();
+  if (errMsg.includes('401')) {
+    bpStatusCode = 401;
+    bpStatus = 'API_UNAUTHORIZED';
+  } else if (errMsg.includes('403')) {
+    bpStatusCode = 403;
+    bpStatus = 'API_FORBIDDEN';
+  } else if (errMsg.includes('404') || errMsg.includes('Branch not protected')) {
+    bpStatusCode = 404;
+    bpStatus = 'NOT_CONFIGURED';
+  } else {
+    bpStatusCode = 500;
+    bpStatus = 'API_UNAVAILABLE';
+  }
+  bpApiResponseRaw = JSON.stringify({ error: bpStatus, message: errMsg }, null, 2);
+}
+
+const bpResponseSha256 = crypto.createHash('sha256').update(bpApiResponseRaw).digest('hex');
+fs.writeFileSync(path.join(EVIDENCE_DIR, 'branch-protection-api-response.json'), bpApiResponseRaw, 'utf8');
+console.log('  -> branch-protection-api-response.json generated');
+
+const branchProtectionReceipt = {
+  repository: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES',
+  branch: 'master',
+  source: 'GITHUB_REST_API',
+  api_endpoint: 'repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/branches/master/protection',
+  queried_at: new Date().toISOString(),
+  query_actor: process.env.GITHUB_ACTOR || 'GitHub Actions',
+  source_sha: currentSha,
+  http_status: bpStatusCode,
+  branch_protection_status: bpStatus,
+  required_status_checks: bpRequiredChecks,
+  pull_request_required: bpPullRequestRequired,
+  strict_up_to_date_required: bpStrictUpToDate,
+  enforce_admins: bpEnforceAdmins,
+  allow_force_pushes: bpAllowForcePushes,
+  allow_deletions: bpAllowDeletions,
+  response_sha256: bpResponseSha256
+};
+fs.writeFileSync(path.join(EVIDENCE_DIR, 'branch-protection.json'), JSON.stringify(branchProtectionReceipt, null, 2), 'utf8');
+console.log(`  -> branch-protection.json generated (${bpStatus})`);
+
+// P6: Unify branch_protection_status in githubReceipt
+githubReceipt.branch_protection_status = bpStatus;
+
 fs.writeFileSync(path.join(EVIDENCE_DIR, 'github-actions-receipt.json'), JSON.stringify(githubReceipt, null, 2), 'utf8');
 console.log('  -> github-actions-receipt.json generated');
 
-// 12. P7 — Physical Hashes of All Evidence Files (evidence/evidence-files.sha256)
-console.log('[EVIDENCE] Calculating physical hashes for evidence/evidence-files.sha256 (P7)...');
+// 12. P7 — Physical Hashes of All Evidence Files (.artifacts/evidence/evidence-files.sha256)
+console.log(`[EVIDENCE] Calculating physical hashes for ${path.relative(ROOT_DIR, EVIDENCE_DIR)}/evidence-files.sha256 (P7)...`);
 const evidenceEntries = fs.readdirSync(EVIDENCE_DIR)
   .filter(f => f !== 'evidence-files.sha256')
   .filter(f => fs.statSync(path.join(EVIDENCE_DIR, f)).isFile())
@@ -476,9 +576,9 @@ if (hasCommandFailure) {
 }
 
 // Run coherence gate to verify bundle integrity
-console.log('[EVIDENCE] Running coherence gate verification...');
+console.log('[EVIDENCE] Running coherence gate verification on generated bundle...');
 const coherenceScript = path.resolve(ROOT_DIR, 'scripts/verify-evidence-coherence.mjs');
-const coherenceCheck = spawnSync('node', [coherenceScript], { cwd: ROOT_DIR, encoding: 'utf8' });
+const coherenceCheck = spawnSync('node', [coherenceScript, '--dir', EVIDENCE_DIR], { cwd: ROOT_DIR, encoding: 'utf8' });
 if (coherenceCheck.status !== 0) {
   console.error('[FATAL] EVIDENCE_COHERENCE_FAILED:\n' + (coherenceCheck.stdout || '') + (coherenceCheck.stderr || ''));
   process.exit(1);

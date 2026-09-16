@@ -7,11 +7,30 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.resolve(__dirname, '..');
-const EVIDENCE_DIR = path.resolve(ROOT_DIR, 'evidence');
-
-if (!fs.existsSync(EVIDENCE_DIR)) {
-  fs.mkdirSync(EVIDENCE_DIR, { recursive: true });
+function resolveEvidenceDir() {
+  const argIdx = process.argv.indexOf('--output');
+  let customDir = null;
+  if (argIdx !== -1 && process.argv[argIdx + 1]) {
+    customDir = process.argv[argIdx + 1];
+  } else if (process.env.EVIDENCE_OUTPUT_DIR) {
+    customDir = process.env.EVIDENCE_OUTPUT_DIR;
+  }
+  const targetDir = customDir ? path.resolve(ROOT_DIR, customDir) : path.resolve(ROOT_DIR, '.artifacts/evidence');
+  if (targetDir === ROOT_DIR) {
+    console.error('[FATAL] Evidence output directory cannot be the repository root.');
+    process.exit(1);
+  }
+  if (!targetDir.startsWith(ROOT_DIR)) {
+    console.error('[FATAL] Evidence output directory must be within workspace.');
+    process.exit(1);
+  }
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir, { recursive: true });
+  }
+  return targetDir;
 }
+
+const EVIDENCE_DIR = resolveEvidenceDir();
 
 const lockfilePath = path.resolve(ROOT_DIR, 'package-lock.json');
 if (!fs.existsSync(lockfilePath)) {

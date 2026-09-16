@@ -21,7 +21,8 @@ export const ERROR_CODES = {
   CI_RUN_NOT_COMPLETED: 'CI_RUN_NOT_COMPLETED',
   CI_RUN_NOT_SUCCESSFUL: 'CI_RUN_NOT_SUCCESSFUL',
   REQUIRED_STEP_SKIPPED: 'REQUIRED_STEP_SKIPPED',
-  EVIDENCE_INDEX_INVALID: 'EVIDENCE_INDEX_INVALID'
+  EVIDENCE_INDEX_INVALID: 'EVIDENCE_INDEX_INVALID',
+  BRANCH_PROTECTION_STATUS_MISMATCH: 'BRANCH_PROTECTION_STATUS_MISMATCH'
 };
 
 export const REQUIRED_EVIDENCE_FILES = [
@@ -33,6 +34,8 @@ export const REQUIRED_EVIDENCE_FILES = [
   'canonical-source-hashes.sha256',
   'file-hashes.sha256',
   'evidence-files.sha256',
+  'branch-protection.json',
+  'branch-protection-api-response.json',
   'npm-ci.log',
   'npm-audit-production.log',
   'typecheck.log',
@@ -55,6 +58,7 @@ export const JSON_FILES_TO_CHECK = [
   'schema-validation-results.json',
   'test-results.json',
   'test-summary.json',
+  'branch-protection.json',
   'github-actions-receipt.json'
 ];
 
@@ -205,7 +209,7 @@ export function verifyEvidenceCoherence(options = {}) {
       };
     }
 
-    const fileSha = data.commit_sha || data.commitSha;
+    const fileSha = data.commit_sha || data.commitSha || data.source_sha || data.sourceSha;
     if (!fileSha) {
       return {
         valid: false,
@@ -285,6 +289,70 @@ export function verifyEvidenceCoherence(options = {}) {
     }
   }
 
+  // 5. Validate branch protection receipt
+  const bpPath = path.join(targetDir, 'branch-protection.json');
+  if (fs.existsSync(bpPath)) {
+    let bpData;
+    try {
+      bpData = JSON.parse(fs.readFileSync(bpPath, 'utf8'));
+    } catch (e) {
+      return {
+        valid: false,
+        code: ERROR_CODES.EVIDENCE_INVALID_JSON,
+        error: `Failed to parse branch-protection.json: ${e.message}`
+      };
+    }
+
+    const validStatuses = ['CONFIGURED', 'NOT_CONFIGURED', 'API_UNAUTHORIZED', 'API_FORBIDDEN', 'API_UNAVAILABLE'];
+    if (!validStatuses.includes(bpData.branch_protection_status)) {
+      return {
+        valid: false,
+        code: ERROR_CODES.EVIDENCE_INVALID_JSON,
+        error: `Invalid branch_protection_status: ${bpData.branch_protection_status}`
+      };
+    }
+
+    if (bpData.http_status !== 200 && bpData.branch_protection_status === 'CONFIGURED') {
+      return {
+        valid: false,
+        code: ERROR_CODES.BRANCH_PROTECTION_STATUS_MISMATCH,
+        error: `branch-protection.json declares CONFIGURED with non-200 HTTP status: ${bpData.http_status}`
+      };
+    }
+
+    // Verify response_sha256 if branch-protection-api-response.json exists
+    const bpApiResPath = path.join(targetDir, 'branch-protection-api-response.json');
+    if (fs.existsSync(bpApiResPath) && bpData.response_sha256) {
+      const apiResRaw = fs.readFileSync(bpApiResPath, 'utf8');
+      const computedSha = crypto.createHash('sha256').update(apiResRaw).digest('hex');
+      if (computedSha !== bpData.response_sha256) {
+        return {
+          valid: false,
+          code: ERROR_CODES.EVIDENCE_HASH_MISMATCH,
+          error: `response_sha256 in branch-protection.json does not match hash of branch-protection-api-response.json`
+        };
+      }
+    }
+
+    // P6: Check for contradiction between github-actions-receipt.json and branch-protection.json
+    if (receipt.branch_protection_status && receipt.branch_protection_status !== bpData.branch_protection_status) {
+      return {
+        valid: false,
+        code: ERROR_CODES.BRANCH_PROTECTION_STATUS_MISMATCH,
+        error: `Contradiction detected: github-actions-receipt declares ${receipt.branch_protection_status} but branch-protection.json declares ${bpData.branch_protection_status}`
+      };
+    }
+
+    // In remote verification, require CONFIGURED status
+    if (enforceRemoteCi && bpData.branch_protection_status !== 'CONFIGURED') {
+      return {
+        valid: false,
+        code: ERROR_CODES.BRANCH_PROTECTION_STATUS_MISMATCH,
+        error: `Remote CI requires CONFIGURED branch protection, found: ${bpData.branch_protection_status}`
+      };
+    }
+  }
+
   return {
     valid: true,
     commit_sha: expectedSha,
@@ -301,9 +369,11 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const enforceRemoteCi = args.includes('--remote') || args.includes('--ci') || process.env.ENFORCE_REMOTE_CI === 'true';
   const shaArgIndex = args.indexOf('--sha');
   const targetSha = shaArgIndex !== -1 ? args[shaArgIndex + 1] : undefined;
+  const dirArgIndex = args.indexOf('--dir');
+  const evidenceDir = dirArgIndex !== -1 ? args[dirArgIndex + 1] : undefined;
 
   console.log(`[VERIFY:EVIDENCE-COHERENCE] Starting coherence audit (enforceRemoteCi: ${enforceRemoteCi})...`);
-  const result = verifyEvidenceCoherence({ targetSha, enforceRemoteCi });
+  const result = verifyEvidenceCoherence({ targetSha, enforceRemoteCi, evidenceDir });
 
   if (!result.valid) {
     console.error(`[FAIL] ${result.code}: ${result.error}`);

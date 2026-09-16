@@ -52,3 +52,4 @@ data/*.db-*
 generated/verification/
 .artifacts/
 reports/
+evidence/

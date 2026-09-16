@@ -80,8 +80,27 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (18 Cenários Obr
         run_url: 'https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/123456789',
         status: 'completed',
         conclusion: 'success',
+        branch_protection_status: 'CONFIGURED',
         required_steps: ['Automated Test Suites'],
         skipped_required_steps: []
+      },
+      'branch-protection.json': {
+        repository: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES',
+        branch: 'master',
+        source: 'GITHUB_REST_API',
+        api_endpoint: 'repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/branches/master/protection',
+        queried_at: new Date().toISOString(),
+        query_actor: 'GitHub Actions',
+        source_sha: sha,
+        http_status: 200,
+        branch_protection_status: 'CONFIGURED',
+        required_status_checks: ['Deterministic Build, Typecheck, Test & Audit (22.x)'],
+        pull_request_required: true,
+        strict_up_to_date_required: true,
+        enforce_admins: false,
+        allow_force_pushes: false,
+        allow_deletions: false,
+        response_sha256: crypto.createHash('sha256').update('{"mock":"api_response"}\n').digest('hex')
       }
     };
 
@@ -93,6 +112,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (18 Cenários Obr
     const textFiles: Record<string, string> = {
       'canonical-source-hashes.sha256': 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  data/liveTasks.json\n',
       'file-hashes.sha256': 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  data/liveTasks.json\n',
+      'branch-protection-api-response.json': '{"mock":"api_response"}\n',
       'npm-ci.log': 'COMMAND: npm ci\nEXIT_CODE: 0\nREAL_INSTALL_VERIFIED: true\n',
       'npm-audit-production.log': 'found 0 vulnerabilities\n',
       'typecheck.log': 'typecheck success\n',
@@ -456,6 +476,81 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (18 Cenários Obr
       assert.strictEqual(res.code, ERROR_CODES.EVIDENCE_REPOSITORY_MISMATCH);
     } finally {
       cleanup();
+    }
+  });
+
+  // 19. Contradição de status de branch protection (P6)
+  it('19. Rejeita divergência entre github-actions-receipt e branch-protection com BRANCH_PROTECTION_STATUS_MISMATCH', () => {
+    try {
+      setupMockEvidenceBundle(tempDir);
+      const bpPath = path.join(tempDir, 'branch-protection.json');
+      const bpData = JSON.parse(fs.readFileSync(bpPath, 'utf8'));
+      bpData.branch_protection_status = 'NOT_CONFIGURED';
+      bpData.http_status = 404;
+      fs.writeFileSync(bpPath, JSON.stringify(bpData), 'utf8');
+
+      const hash = crypto.createHash('sha256').update(fs.readFileSync(bpPath)).digest('hex');
+      const idxPath = path.join(tempDir, 'evidence-files.sha256');
+      fs.writeFileSync(idxPath, fs.readFileSync(idxPath, 'utf8').replace(/[a-f0-9]{64}(\s+branch-protection\.json)/, `${hash}$1`));
+
+      const res = verifyEvidenceCoherence({ evidenceDir: tempDir, targetSha: testSha });
+      assert.strictEqual(res.valid, false);
+      assert.strictEqual(res.code, ERROR_CODES.BRANCH_PROTECTION_STATUS_MISMATCH);
+    } finally {
+      cleanup();
+    }
+  });
+
+  // 20. Resposta não-200 rejeita CONFIGURED (P7)
+  it('20. Rejeita branch_protection CONFIGURED quando http_status é diferente de 200', () => {
+    try {
+      setupMockEvidenceBundle(tempDir);
+      const bpPath = path.join(tempDir, 'branch-protection.json');
+      const bpData = JSON.parse(fs.readFileSync(bpPath, 'utf8'));
+      bpData.http_status = 403; // forbidden
+      bpData.branch_protection_status = 'CONFIGURED'; // invalid combination
+      fs.writeFileSync(bpPath, JSON.stringify(bpData), 'utf8');
+
+      const hash = crypto.createHash('sha256').update(fs.readFileSync(bpPath)).digest('hex');
+      const idxPath = path.join(tempDir, 'evidence-files.sha256');
+      fs.writeFileSync(idxPath, fs.readFileSync(idxPath, 'utf8').replace(/[a-f0-9]{64}(\s+branch-protection\.json)/, `${hash}$1`));
+
+      const res = verifyEvidenceCoherence({ evidenceDir: tempDir, targetSha: testSha });
+      assert.strictEqual(res.valid, false);
+      assert.strictEqual(res.code, ERROR_CODES.BRANCH_PROTECTION_STATUS_MISMATCH);
+    } finally {
+      cleanup();
+    }
+  });
+
+  // 21. Diretório de evidências inexistente
+  it('21. Falha com EVIDENCE_FILE_MISSING quando diretório de evidências não existe', () => {
+    const nonExistent = path.resolve(root, 'generated/non_existent_evidence_dir_123');
+    const res = verifyEvidenceCoherence({ evidenceDir: nonExistent, targetSha: testSha });
+    assert.strictEqual(res.valid, false);
+    assert.strictEqual(res.code, ERROR_CODES.EVIDENCE_FILE_MISSING);
+  });
+
+  // 22. Ausência estrita de integração AGT neste patch (P10)
+  it('22. Comprova que nenhum código de integração ou facturação AGT foi introduzido (P10)', () => {
+    const forbiddenKeywords = ['AGT_JWS_SIGNATURE', 'agt_invoice_submission', 'agtTaxAuthorityConnector'];
+    const runtimeSrc = path.resolve(root, 'packages/runtime/src');
+    const scanDir = (dir: string): string[] => {
+      const files: string[] = [];
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        if (entry.name === 'test' || entry.name.endsWith('.test.ts')) continue;
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) files.push(...scanDir(full));
+        else if (entry.name.endsWith('.ts')) files.push(full);
+      }
+      return files;
+    };
+    const tsFiles = scanDir(runtimeSrc);
+    for (const file of tsFiles) {
+      const content = fs.readFileSync(file, 'utf8');
+      for (const kw of forbiddenKeywords) {
+        assert.ok(!content.includes(kw), `Forbidden AGT keyword "${kw}" found in ${file}`);
+      }
     }
   });
 });
