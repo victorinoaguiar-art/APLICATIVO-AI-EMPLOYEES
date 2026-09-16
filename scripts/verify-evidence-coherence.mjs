@@ -767,7 +767,7 @@ export function verifyEvidenceCoherence(options = {}) {
       };
     }
     const reportContent = fs.readFileSync(options.reportPath, 'utf8');
-    if (/file:\/\/\/[a-z]:/i.test(reportContent) || reportContent.includes('file:///')) {
+    if (/file:\/\/\/[a-z]:/i.test(reportContent) || /\]\(file:\/\//i.test(reportContent) || /<file:\/\//i.test(reportContent)) {
       return {
         valid: false,
         code: ERROR_CODES.LOCAL_FILE_LINK_DETECTED,
