@@ -36,7 +36,10 @@ Todas as 8 correcções obrigatórias e os 12 testes negativos exigidos pelo `Pr
    - **Artefactos da CI:** `aetf-evidence-bundle-973b61f9e1f368099c7127c9f78c031afff9ed40`, `build-and-test-reports`.
    - **CI Remota de Evidências:** [Run ID 35116781234](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35116781234) — `completed / success` (Job: `Remote Evidence Verification Gate`).
    - **Artefacto Remoto:** `aetf-remote-verification-receipt-973b61f9e1f368099c7127c9f78c031afff9ed40`.
-3. **Commit Final com Relatório:** Commit subsequente no branch `master` para versionamento do relatório técnico final.
+3. **Commit Final com Relatório:** [`4f97c0a96ef89b708605553e2fa1c94474320921`](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/commit/4f97c0a96ef89b708605553e2fa1c94474320921)
+   - Contém: versionamento do relatório técnico e documentação de auditoria.
+   - **CI Principal:** [Run ID 35117386933](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35117386933) — `completed / success` (Jobs: `Clean Checkout Local Verification (22.x)` e `Deterministic Build, Typecheck, Test & Audit (22.x)`).
+   - **CI Remota de Evidências:** [Run ID 35117722074](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35117722074) — `completed / success` (Job: `Remote Evidence Verification Gate`).
 
 ---
 
