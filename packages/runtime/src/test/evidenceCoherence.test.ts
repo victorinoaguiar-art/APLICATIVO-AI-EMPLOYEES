@@ -3,6 +3,7 @@ import assert from 'node:assert';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as crypto from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 
 describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Completa & 12 Cenários Obrigatórios)', async () => {
@@ -14,6 +15,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
   };
   const root = getRoot();
   const coherenceModulePath = path.resolve(root, 'scripts/verify-evidence-coherence.mjs');
+  const bundleModulePath = path.resolve(root, 'scripts/verify-evidence-bundle.mjs');
   const pathValidatorModulePath = path.resolve(root, 'scripts/lib/evidencePathValidator.mjs');
   const tempDir = path.resolve(root, 'generated/tmp_test_evidence_coherence');
 
@@ -24,6 +26,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
     REQUIRED_EVIDENCE_FILES
   } = await import(pathToFileURL(coherenceModulePath).href);
 
+  const { verifyEvidenceBundle } = await import(pathToFileURL(bundleModulePath).href);
   const { validateEvidenceDir } = await import(pathToFileURL(pathValidatorModulePath).href);
 
   const testSha = 'a'.repeat(40);
@@ -103,6 +106,9 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
         run_url: 'https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/123456789',
         status: 'completed',
         conclusion: 'success',
+        started_at: new Date(Date.now() - 300000).toISOString(),
+        completed_at: new Date(Date.now() - 60000).toISOString(),
+        remote_synced_at: new Date().toISOString(),
         branch_protection_status: 'CONFIGURED',
         required_steps: ['Automated Test Suites'],
         skipped_required_steps: [],
@@ -239,7 +245,13 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
   it('0. Base: Pacote de evidências 100% coerente passa com sucesso em modo remoto', () => {
     try {
       setupMockEvidenceBundle(tempDir);
-      const res = verifyEvidenceCoherence({ evidenceDir: tempDir, targetSha: testSha, enforceRemoteCi: true });
+      const res = verifyEvidenceCoherence({
+        evidenceDir: tempDir,
+        targetSha: testSha,
+        enforceRemoteCi: true,
+        targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+        reportPath: 'AETF500_Relatorio_Correccao_Final_Evidencias_CI.md'
+      });
       assert.strictEqual(res.valid, true);
       assert.strictEqual(res.commit_sha, testSha);
     } finally {
@@ -1172,6 +1184,379 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
           fs.unlinkSync(dummyReportPath);
         }
         cleanup();
+      }
+    });
+  });
+
+  describe('Patch Final de Ligação dos Gates e Preservação da Evidência Remota: 18 Testes Obrigatórios', () => {
+    const validReportRelPath = 'generated/test_valid_report_18.md';
+    const validReportAbsPath = path.resolve(root, validReportRelPath);
+
+    const ensureValidReport = () => {
+      fs.mkdirSync(path.dirname(validReportAbsPath), { recursive: true });
+      fs.writeFileSync(validReportAbsPath, '# Relatório Válido de Teste\nSem links locais.\n', 'utf8');
+    };
+
+    const cleanupReport = () => {
+      if (fs.existsSync(validReportAbsPath)) {
+        fs.unlinkSync(validReportAbsPath);
+      }
+    };
+
+    // 1. CLI aceita --classification válido
+    it('1. CLI aceita --classification válido', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const res = spawnSync(process.execPath, [
+          coherenceModulePath,
+          '--dir', tempDir,
+          '--sha', testSha,
+          '--classification', 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS'
+        ], { encoding: 'utf8', cwd: root });
+        assert.strictEqual(res.status, 0, `CLI failed with: ${res.stderr || res.stdout}`);
+        assert.match(res.stdout, /Classification verified: PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS/);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 2. CLI aceita --report válido
+    it('2. CLI aceita --report válido', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const res = spawnSync(process.execPath, [
+          coherenceModulePath,
+          '--dir', tempDir,
+          '--sha', testSha,
+          '--report', validReportRelPath
+        ], { encoding: 'utf8', cwd: root });
+        assert.strictEqual(res.status, 0, `CLI failed with: ${res.stderr || res.stdout}`);
+        assert.match(res.stdout, /Report verified/);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 3. CLI falha quando --classification não tem valor
+    it('3. CLI falha quando --classification não tem valor', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        const res = spawnSync(process.execPath, [
+          coherenceModulePath,
+          '--dir', tempDir,
+          '--sha', testSha,
+          '--classification'
+        ], { encoding: 'utf8', cwd: root });
+        assert.strictEqual(res.status, 1);
+        assert.match(res.stderr + res.stdout, /CLASSIFICATION_INVALID/);
+      } finally {
+        cleanup();
+      }
+    });
+
+    // 4. CLI falha quando --report não tem valor
+    it('4. CLI falha quando --report não tem valor', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        const res = spawnSync(process.execPath, [
+          coherenceModulePath,
+          '--dir', tempDir,
+          '--sha', testSha,
+          '--report'
+        ], { encoding: 'utf8', cwd: root });
+        assert.strictEqual(res.status, 1);
+        assert.match(res.stderr + res.stdout, /REPORT_PATH_INVALID/);
+      } finally {
+        cleanup();
+      }
+    });
+
+    // 5. CLI falha com classificação desconhecida
+    it('5. CLI falha com classificação desconhecida', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        const res = spawnSync(process.execPath, [
+          coherenceModulePath,
+          '--dir', tempDir,
+          '--sha', testSha,
+          '--classification', 'CLASSIFICACAO_TOTALMENTE_DESCONHECIDA'
+        ], { encoding: 'utf8', cwd: root });
+        assert.strictEqual(res.status, 1);
+        assert.match(res.stderr + res.stdout, /CLASSIFICATION_INVALID/);
+      } finally {
+        cleanup();
+      }
+    });
+
+    // 6. modo remoto falha sem --classification
+    it('6. Modo remoto falha sem --classification', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          reportPath: validReportRelPath
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.CLASSIFICATION_MISSING);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 7. modo remoto falha sem --report
+    it('7. Modo remoto falha sem --report', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.REPORT_FILE_MISSING);
+      } finally {
+        cleanup();
+      }
+    });
+
+    // 8. classificação sem ressalvas falha com enforce_admins: false
+    it('8. Classificação sem ressalvas falha com enforce_admins: false', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED',
+          reportPath: validReportRelPath
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.ADMIN_ENFORCEMENT_MISMATCH);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 9. classificação limitada passa com enforce_admins: false, se todos os outros gates passarem
+    it('9. Classificação limitada passa com enforce_admins: false, se todos os outros gates passarem', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          reportPath: validReportRelPath
+        });
+        assert.strictEqual(res.valid, true, `Verification failed with ${res.code}: ${res.error}`);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 10. relatório com file:/// falha através da CLI real
+    it('10. Relatório com file:/// falha através da CLI real', () => {
+      const dummyWithLinkRel = 'generated/test_report_with_local_link.md';
+      const dummyWithLinkAbs = path.resolve(root, dummyWithLinkRel);
+      try {
+        setupMockEvidenceBundle(tempDir);
+        fs.mkdirSync(path.dirname(dummyWithLinkAbs), { recursive: true });
+        fs.writeFileSync(dummyWithLinkAbs, '# Relatório\nLink: [log](file:///C:/Users/file.log)\n', 'utf8');
+
+        const res = spawnSync(process.execPath, [
+          coherenceModulePath,
+          '--dir', tempDir,
+          '--sha', testSha,
+          '--report', dummyWithLinkRel
+        ], { encoding: 'utf8', cwd: root });
+        assert.strictEqual(res.status, 1);
+        assert.match(res.stderr + res.stdout, /LOCAL_FILE_LINK_DETECTED/);
+      } finally {
+        if (fs.existsSync(dummyWithLinkAbs)) {
+          fs.unlinkSync(dummyWithLinkAbs);
+        }
+        cleanup();
+      }
+    });
+
+    // 11. relatório ausente falha através da CLI real
+    it('11. Relatório ausente falha através da CLI real', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        const res = spawnSync(process.execPath, [
+          coherenceModulePath,
+          '--dir', tempDir,
+          '--sha', testSha,
+          '--report', 'generated/non_existent_report_xyz_123.md'
+        ], { encoding: 'utf8', cwd: root });
+        assert.strictEqual(res.status, 1);
+        assert.match(res.stderr + res.stdout, /REPORT_FILE_MISSING/);
+      } finally {
+        cleanup();
+      }
+    });
+
+    // 12. caminho de relatório fora do repositório falha
+    it('12. Caminho de relatório fora do repositório falha', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          reportPath: '../outside_workspace_report.md'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.REPORT_PATH_INVALID);
+      } finally {
+        cleanup();
+      }
+    });
+
+    // 13. queried_at anterior à execução falha
+    it('13. queried_at anterior à execução falha', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        const bpPath = path.join(tempDir, 'branch-protection.json');
+        const bpData = JSON.parse(fs.readFileSync(bpPath, 'utf8'));
+        // Set queried_at to 2 hours prior to execution started_at
+        bpData.queried_at = new Date(Date.now() - 7200000).toISOString();
+        fs.writeFileSync(bpPath, JSON.stringify(bpData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID);
+      } finally {
+        cleanup();
+      }
+    });
+
+    // 14. queried_at demasiado futuro falha
+    it('14. queried_at demasiado futuro falha', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        const bpPath = path.join(tempDir, 'branch-protection.json');
+        const bpData = JSON.parse(fs.readFileSync(bpPath, 'utf8'));
+        // Set queried_at to 2 hours in the future
+        bpData.queried_at = new Date(Date.now() + 7200000).toISOString();
+        fs.writeFileSync(bpPath, JSON.stringify(bpData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID);
+      } finally {
+        cleanup();
+      }
+    });
+
+    // 15. query_actor divergente falha
+    it('15. query_actor divergente falha', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        const bpPath = path.join(tempDir, 'branch-protection.json');
+        const bpData = JSON.parse(fs.readFileSync(bpPath, 'utf8'));
+        bpData.query_actor = 'divergent-actor';
+        fs.writeFileSync(bpPath, JSON.stringify(bpData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          expectedQueryActor: 'victorinoaguiar-art'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID);
+      } finally {
+        cleanup();
+      }
+    });
+
+    // 16. pacote remoto incompleto não pode ser publicado
+    it('16. Pacote remoto incompleto não pode ser publicado', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        // Remove a required file
+        const fileToRemove = path.join(tempDir, 'npm-ci.log');
+        if (fs.existsSync(fileToRemove)) {
+          fs.unlinkSync(fileToRemove);
+        }
+
+        const res = verifyEvidenceBundle({
+          evidenceDir: tempDir,
+          headSha: testSha,
+          expectedRunId: 123456789,
+          reportPath: validReportRelPath,
+          classification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS'
+        });
+        assert.strictEqual(res.valid, false);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 17. hash final divergente depois do enriquecimento bloqueia o envio
+    it('17. Hash final divergente depois do enriquecimento bloqueia o envio', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        // Tamper with receipt file content without updating evidence-files.sha256
+        const rcPath = path.join(tempDir, 'github-actions-receipt.json');
+        fs.appendFileSync(rcPath, '\n/* tampered */\n');
+
+        const res = verifyEvidenceBundle({
+          evidenceDir: tempDir,
+          headSha: testSha,
+          expectedRunId: 123456789,
+          reportPath: validReportRelPath,
+          classification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS'
+        });
+        assert.strictEqual(res.valid, false);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 18. pacote completo e coerente passa e fica pronto para publicação
+    it('18. Pacote completo e coerente passa e fica pronto para publicação', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+
+        const res = verifyEvidenceBundle({
+          evidenceDir: tempDir,
+          headSha: testSha,
+          expectedRunId: 123456789,
+          reportPath: validReportRelPath,
+          classification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS'
+        });
+        assert.strictEqual(res.valid, true, `Bundle verification failed: ${res.error}`);
+        assert.strictEqual(res.filesCount >= 23, true);
+      } finally {
+        cleanup();
+        cleanupReport();
       }
     });
   });

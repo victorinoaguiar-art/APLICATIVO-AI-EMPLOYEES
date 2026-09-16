@@ -53,6 +53,8 @@ try {
   receipt.conclusion = runData.conclusion;
   receipt.started_at = runData.createdAt;
   receipt.completed_at = runData.updatedAt;
+  receipt.primary_run_id = runData.databaseId || Number(runId);
+  receipt.remote_synced_at = new Date().toISOString();
 
   const jobsOutput = execSync(`gh run view ${runId} --json jobs`, { encoding: 'utf8', cwd: ROOT_DIR });
   const jobsData = JSON.parse(jobsOutput);
@@ -103,7 +105,9 @@ try {
       source: 'GITHUB_REST_API',
       api_endpoint: 'repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/branches/master/protection',
       queried_at: new Date().toISOString(),
-      query_actor: process.env.GITHUB_ACTOR || 'GitHub Actions',
+      query_actor: process.env.GITHUB_ACTOR || 'victorinoaguiar-art',
+      query_run_id: runData.databaseId || Number(runId),
+      query_workflow: process.env.GITHUB_WORKFLOW || 'Evidence Remote Verification',
       source_sha: runData.headSha || headSha,
       http_status: 200,
       branch_protection_status: 'CONFIGURED',
@@ -146,16 +150,23 @@ try {
       }
     }
 
-    const lines = fs.readFileSync(indexPath, 'utf8').split('\n');
+    const lines = fs.readFileSync(indexPath, 'utf8').split('\n').filter(l => l.trim().length > 0);
+    const updatedFiles = new Set();
     const updatedLines = lines.map(line => {
       for (const [f, h] of Object.entries(hashes)) {
-        if (line.includes(`  ${f}`)) {
+        if (line.endsWith(`  ${f}`) || line.includes(`  ${f}`)) {
+          updatedFiles.add(f);
           return `${h}  ${f}`;
         }
       }
       return line;
     });
-    fs.writeFileSync(indexPath, updatedLines.join('\n'), 'utf8');
+    for (const [f, h] of Object.entries(hashes)) {
+      if (!updatedFiles.has(f)) {
+        updatedLines.push(`${h}  ${f}`);
+      }
+    }
+    fs.writeFileSync(indexPath, updatedLines.join('\n') + '\n', 'utf8');
     console.log(`[SYNC-REMOTE-RECEIPT] Recalculated index hashes in ${indexPath}.`);
   }
 } catch (err) {

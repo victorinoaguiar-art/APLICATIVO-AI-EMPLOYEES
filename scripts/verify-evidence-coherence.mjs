@@ -36,8 +36,18 @@ export const ERROR_CODES = {
   BRANCH_PROTECTION_RECEIPT_MISMATCH: 'BRANCH_PROTECTION_RECEIPT_MISMATCH',
   ADMIN_ENFORCEMENT_MISMATCH: 'ADMIN_ENFORCEMENT_MISMATCH',
   LOCAL_FILE_LINK_DETECTED: 'LOCAL_FILE_LINK_DETECTED',
-  EVIDENCE_PATH_INVALID: 'EVIDENCE_PATH_INVALID'
+  EVIDENCE_PATH_INVALID: 'EVIDENCE_PATH_INVALID',
+  CLASSIFICATION_MISSING: 'CLASSIFICATION_MISSING',
+  CLASSIFICATION_INVALID: 'CLASSIFICATION_INVALID',
+  REPORT_FILE_MISSING: 'REPORT_FILE_MISSING',
+  REPORT_PATH_INVALID: 'REPORT_PATH_INVALID'
 };
+
+export const ALLOWED_CLASSIFICATIONS = [
+  'PATCH_VERIFIED_AND_CI_ENFORCED',
+  'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+  'PATCH_VERIFIED_AND_CI_GREEN'
+];
 
 export const EXPECTED_PRE_MERGE_CHECKS = [
   'Clean Checkout Local Verification (22.x)',
@@ -515,18 +525,47 @@ export function verifyEvidenceCoherence(options = {}) {
           error: `api_endpoint in branch-protection.json mismatch: expected "${expectedEndpoint}", found "${bpData.api_endpoint}"`
         };
       }
-      if (!bpData.queried_at || isNaN(Date.parse(bpData.queried_at))) {
+      const isoUtcRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|\+00:00)$/;
+      if (!bpData.queried_at || typeof bpData.queried_at !== 'string' || !isoUtcRegex.test(bpData.queried_at) || isNaN(Date.parse(bpData.queried_at))) {
         return {
           valid: false,
           code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
-          error: `queried_at in branch-protection.json is missing or not a valid ISO timestamp: "${bpData.queried_at}"`
+          error: `queried_at in branch-protection.json must be a valid ISO-8601 UTC timestamp: "${bpData.queried_at}"`
         };
       }
+      const queriedAtTime = Date.parse(bpData.queried_at);
+      const now = Date.now();
+      if (queriedAtTime > now + 10 * 60 * 1000) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+          error: `queried_at is in the future beyond allowed tolerance (max 10min): "${bpData.queried_at}"`
+        };
+      }
+      if (receipt.started_at) {
+        const startedAtTime = Date.parse(receipt.started_at);
+        if (!isNaN(startedAtTime) && queriedAtTime < startedAtTime - 60 * 1000) {
+          return {
+            valid: false,
+            code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+            error: `queried_at ("${bpData.queried_at}") cannot be prior to primary execution started_at ("${receipt.started_at}")`
+          };
+        }
+      }
+
       if (!bpData.query_actor || typeof bpData.query_actor !== 'string' || !bpData.query_actor.trim()) {
         return {
           valid: false,
           code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
           error: `query_actor in branch-protection.json is missing or empty`
+        };
+      }
+      const expectedActor = options.expectedQueryActor || process.env.EXPECTED_QUERY_ACTOR;
+      if (expectedActor && bpData.query_actor !== expectedActor) {
+        return {
+          valid: false,
+          code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+          error: `query_actor mismatch in branch-protection.json: expected "${expectedActor}", found "${bpData.query_actor}"`
         };
       }
       if (!bpData.source_sha || bpData.source_sha.toLowerCase() !== expectedSha.toLowerCase()) {
@@ -745,28 +784,25 @@ export function verifyEvidenceCoherence(options = {}) {
     }
   }
 
-  // 6. Classification check (Prompt section 6)
-  const bpDataFinal = fs.existsSync(bpPath) ? JSON.parse(fs.readFileSync(bpPath, 'utf8')) : {};
-  if (options.targetClassification) {
-    if (options.targetClassification === 'PATCH_VERIFIED_AND_CI_ENFORCED' && !bpDataFinal.enforce_admins) {
+  // 6. Report local file links and path validation (Prompt section 7)
+  if (options.reportPath) {
+    const resolvedReport = path.resolve(ROOT_DIR, options.reportPath);
+    const relToRoot = path.relative(ROOT_DIR, resolvedReport);
+    if (relToRoot.startsWith('..') || (path.isAbsolute(relToRoot) && !resolvedReport.startsWith(ROOT_DIR))) {
       return {
         valid: false,
-        code: ERROR_CODES.ADMIN_ENFORCEMENT_MISMATCH,
-        error: 'enforce_admins is false; unqualified PATCH_VERIFIED_AND_CI_ENFORCED is prohibited. Use PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS.'
+        code: ERROR_CODES.REPORT_PATH_INVALID,
+        error: `Report path resolves outside repository: ${options.reportPath}`
       };
     }
-  }
-
-  // 7. Report local file links validation (Prompt section 7)
-  if (options.reportPath) {
-    if (!fs.existsSync(options.reportPath)) {
+    if (!fs.existsSync(resolvedReport)) {
       return {
         valid: false,
-        code: ERROR_CODES.EVIDENCE_FILE_MISSING,
+        code: ERROR_CODES.REPORT_FILE_MISSING,
         error: `Report file missing: ${options.reportPath}`
       };
     }
-    const reportContent = fs.readFileSync(options.reportPath, 'utf8');
+    const reportContent = fs.readFileSync(resolvedReport, 'utf8');
     if (/file:\/\/\/[a-z]:/i.test(reportContent) || /\]\(file:\/\//i.test(reportContent) || /<file:\/\//i.test(reportContent)) {
       return {
         valid: false,
@@ -774,6 +810,40 @@ export function verifyEvidenceCoherence(options = {}) {
         error: `Local file link (file:///) detected in report: ${options.reportPath}`
       };
     }
+  }
+
+  // 7. Classification check (Prompt section 6)
+  const bpDataFinal = fs.existsSync(bpPath) ? JSON.parse(fs.readFileSync(bpPath, 'utf8')) : {};
+  if (options.targetClassification) {
+    if (!ALLOWED_CLASSIFICATIONS.includes(options.targetClassification)) {
+      return {
+        valid: false,
+        code: ERROR_CODES.CLASSIFICATION_INVALID,
+        error: `Unknown classification: "${options.targetClassification}". Allowed: [${ALLOWED_CLASSIFICATIONS.join(', ')}]`
+      };
+    }
+    if (options.targetClassification === 'PATCH_VERIFIED_AND_CI_ENFORCED' && !bpDataFinal.enforce_admins) {
+      return {
+        valid: false,
+        code: ERROR_CODES.ADMIN_ENFORCEMENT_MISMATCH,
+        error: 'enforce_admins is false; unqualified PATCH_VERIFIED_AND_CI_ENFORCED is prohibited. Use PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS.'
+      };
+    }
+  } else if (enforceRemoteCi) {
+    return {
+      valid: false,
+      code: ERROR_CODES.CLASSIFICATION_MISSING,
+      error: 'targetClassification is mandatory in remote verification mode (--classification <value>).'
+    };
+  }
+
+  // Remote verification report mandatory check
+  if (enforceRemoteCi && !options.reportPath) {
+    return {
+      valid: false,
+      code: ERROR_CODES.REPORT_FILE_MISSING,
+      error: 'reportPath is mandatory in remote verification mode (--report <path>).'
+    };
   }
 
   return {
@@ -789,14 +859,51 @@ export function verifyEvidenceCoherence(options = {}) {
 // CLI entry point
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
-  const enforceRemoteCi = args.includes('--remote') || args.includes('--ci') || process.env.ENFORCE_REMOTE_CI === 'true';
-  const shaArgIndex = args.indexOf('--sha');
-  const targetSha = shaArgIndex !== -1 ? args[shaArgIndex + 1] : undefined;
-  const dirArgIndex = args.indexOf('--dir');
-  const evidenceDir = dirArgIndex !== -1 ? args[dirArgIndex + 1] : undefined;
+  let enforceRemoteCi = args.includes('--remote') || args.includes('--ci') || process.env.ENFORCE_REMOTE_CI === 'true';
+  let targetSha;
+  let evidenceDir;
+  let targetClassification;
+  let reportPath;
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === '--remote' || arg === '--ci') {
+      enforceRemoteCi = true;
+    } else if (arg === '--sha') {
+      if (i + 1 >= args.length || args[i + 1].startsWith('--')) {
+        console.error('[FAIL] CLI_ARGUMENT_ERROR: Argument --sha provided without value');
+        process.exit(1);
+      }
+      targetSha = args[++i];
+    } else if (arg === '--dir') {
+      if (i + 1 >= args.length || args[i + 1].startsWith('--')) {
+        console.error('[FAIL] CLI_ARGUMENT_ERROR: Argument --dir provided without value');
+        process.exit(1);
+      }
+      evidenceDir = args[++i];
+    } else if (arg === '--classification') {
+      if (i + 1 >= args.length || args[i + 1].startsWith('--')) {
+        console.error('[FAIL] CLASSIFICATION_INVALID: Argument --classification provided without value');
+        process.exit(1);
+      }
+      targetClassification = args[++i];
+    } else if (arg === '--report') {
+      if (i + 1 >= args.length || args[i + 1].startsWith('--')) {
+        console.error('[FAIL] REPORT_PATH_INVALID: Argument --report provided without value');
+        process.exit(1);
+      }
+      reportPath = args[++i];
+    }
+  }
 
   console.log(`[VERIFY:EVIDENCE-COHERENCE] Starting coherence audit (enforceRemoteCi: ${enforceRemoteCi})...`);
-  const result = verifyEvidenceCoherence({ targetSha, enforceRemoteCi, evidenceDir });
+  const result = verifyEvidenceCoherence({
+    targetSha,
+    enforceRemoteCi,
+    evidenceDir,
+    targetClassification,
+    reportPath
+  });
 
   if (!result.valid) {
     console.error(`[FAIL] ${result.code}: ${result.error}`);
@@ -807,4 +914,10 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   console.log(`       - ${result.filesChecked} required files present and verified`);
   console.log(`       - ${result.indexedFilesCount} physical SHA-256 byte hashes matched`);
   console.log(`       - Repository and commit_sha consistency: 100% verified`);
+  if (targetClassification) {
+    console.log(`       - Classification verified: ${targetClassification}`);
+  }
+  if (reportPath) {
+    console.log(`       - Report verified: ${reportPath}`);
+  }
 }

@@ -46,15 +46,30 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_ADMIN_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Run Evidence Remote Verification Gate
-        run: npm run verify:evidence-remote -- --dir .artifacts/evidence --sha ${{ github.event.workflow_run.head_sha }}
+        run: |
+          npm run verify:evidence-remote -- \
+            --dir .artifacts/evidence \
+            --sha "${{ github.event.workflow_run.head_sha }}" \
+            --classification PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS \
+            --report AETF500_Relatorio_Correccao_Final_Evidencias_CI.md
         env:
           GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN || secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_ADMIN_TOKEN || secrets.GITHUB_TOKEN }}
           ENFORCE_REMOTE_CI: 'true'
 
-      - name: Upload Verified Remote Receipt
+      - name: Validate Final Verified Evidence Bundle Consistency
+        run: |
+          node scripts/verify-evidence-bundle.mjs \
+            .artifacts/evidence \
+            "${{ github.event.workflow_run.head_sha }}" \
+            "${{ github.event.workflow_run.id }}" \
+            AETF500_Relatorio_Correccao_Final_Evidencias_CI.md \
+            PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS
+
+      - name: Upload Verified Remote Evidence Bundle
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
-          name: aetf-remote-verification-receipt-${{ github.event.workflow_run.head_sha }}
-          path: .artifacts/evidence/github-actions-receipt.json
+          name: aetf-verified-remote-evidence-bundle-${{ github.event.workflow_run.head_sha }}
+          path: .artifacts/evidence/
           if-no-files-found: error
+          retention-days: 30
