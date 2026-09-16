@@ -620,7 +620,7 @@ export function verifyEvidenceCoherence(options = {}) {
           };
         }
 
-        // Recalculate and match ID, attempt, started_at, url, actor, sha
+        // Recalculate and match ID, attempt, started_at, url, actor, sha, branch, repo, workflow
         if (Number(rawRemoteData.id) !== Number(receipt.remote_verification_run_id)) {
           return {
             valid: false,
@@ -628,7 +628,14 @@ export function verifyEvidenceCoherence(options = {}) {
             error: `Remote run ID mismatch between API response (${rawRemoteData.id}) and receipt (${receipt.remote_verification_run_id})`
           };
         }
-        if (Number(rawRemoteData.run_attempt || 1) !== Number(receipt.remote_run_attempt)) {
+        if (rawRemoteData.run_attempt === undefined || rawRemoteData.run_attempt === null || !Number.isInteger(Number(rawRemoteData.run_attempt)) || Number(rawRemoteData.run_attempt) < 1) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID,
+            error: `Remote run_attempt missing or invalid in API response: ${rawRemoteData.run_attempt}`
+          };
+        }
+        if (Number(rawRemoteData.run_attempt) !== Number(receipt.remote_run_attempt)) {
           return {
             valid: false,
             code: ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID,
@@ -657,6 +664,13 @@ export function verifyEvidenceCoherence(options = {}) {
           };
         }
         const rawRemoteActor = rawRemoteData.actor?.login || rawRemoteData.triggering_actor?.login;
+        if (!rawRemoteActor) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_ACTOR_MISMATCH,
+            error: 'Remote actor missing in API response'
+          };
+        }
         if (rawRemoteActor !== receipt.remote_actor) {
           return {
             valid: false,
@@ -664,11 +678,48 @@ export function verifyEvidenceCoherence(options = {}) {
             error: `Remote actor mismatch between API response (${rawRemoteActor}) and receipt (${receipt.remote_actor})`
           };
         }
-        if (rawRemoteData.head_sha && rawRemoteData.head_sha.toLowerCase() !== expectedSha.toLowerCase()) {
+        if (!rawRemoteData.head_sha) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_SHA_MISMATCH,
+            error: 'head_sha missing in remote API response'
+          };
+        }
+        if (rawRemoteData.head_sha.toLowerCase() !== expectedSha.toLowerCase()) {
           return {
             valid: false,
             code: ERROR_CODES.REMOTE_SHA_MISMATCH,
             error: `Remote run head_sha mismatch: expected ${expectedSha}, found ${rawRemoteData.head_sha}`
+          };
+        }
+        if (!rawRemoteData.head_branch || rawRemoteData.head_branch !== 'master') {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID,
+            error: `Remote run head_branch mismatch: expected master, found ${rawRemoteData.head_branch}`
+          };
+        }
+        if (!rawRemoteData.repository || rawRemoteData.repository.full_name !== expectedRepo) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID,
+            error: `Remote run repository mismatch: expected ${expectedRepo}, found ${rawRemoteData.repository?.full_name}`
+          };
+        }
+        const isExpectedWorkflow = rawRemoteData.name === 'Evidence Remote Verification' ||
+          (rawRemoteData.path && rawRemoteData.path.endsWith('evidence-remote-verification.yml'));
+        if (!isExpectedWorkflow) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID,
+            error: `Remote run workflow mismatch: expected Evidence Remote Verification, found ${rawRemoteData.name || rawRemoteData.path}`
+          };
+        }
+        if (rawRemoteData.created_at && rawRemoteData.updated_at && Date.parse(rawRemoteData.created_at) > Date.parse(rawRemoteData.updated_at)) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID,
+            error: `Remote run timestamps inverted: created_at (${rawRemoteData.created_at}) > updated_at (${rawRemoteData.updated_at})`
           };
         }
 
@@ -703,6 +754,13 @@ export function verifyEvidenceCoherence(options = {}) {
             valid: false,
             code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
             error: `Invalid remote_synced_at timestamp in receipt: "${receipt.remote_synced_at}"`
+          };
+        }
+        if (rStartTime > syncedAtTime) {
+          return {
+            valid: false,
+            code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+            error: `remote_started_at ("${effectiveRemoteStart}") cannot be posterior to remote_synced_at ("${receipt.remote_synced_at}")`
           };
         }
         if (queriedAtTime > syncedAtTime + 60 * 1000) {

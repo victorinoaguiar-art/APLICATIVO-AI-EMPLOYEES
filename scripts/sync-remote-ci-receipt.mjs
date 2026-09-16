@@ -15,8 +15,8 @@ const runId = process.env.PRIMARY_RUN_ID || process.argv[2];
 const headSha = process.env.HEAD_SHA || process.argv[3];
 const rawEvidenceDir = process.env.EVIDENCE_DIR || process.argv[4];
 const remoteRunId = process.env.REMOTE_VERIFICATION_RUN_ID || process.env.GITHUB_RUN_ID || process.argv[5];
-const remoteRunAttempt = process.env.REMOTE_RUN_ATTEMPT || process.env.GITHUB_RUN_ATTEMPT || process.argv[6] || '1';
-const queryActor = process.env.EXPECTED_QUERY_ACTOR || process.env.GITHUB_ACTOR || process.argv[7] || 'victorinoaguiar-art';
+const remoteRunAttempt = process.env.REMOTE_RUN_ATTEMPT || process.env.GITHUB_RUN_ATTEMPT || process.argv[6];
+const queryActor = process.env.EXPECTED_QUERY_ACTOR || process.env.GITHUB_ACTOR || process.argv[7];
 
 if (!runId || !headSha) {
   console.error('[ERROR] Missing PRIMARY_RUN_ID or HEAD_SHA.');
@@ -57,7 +57,6 @@ try {
   receipt.started_at = runData.createdAt;
   receipt.completed_at = runData.updatedAt;
   receipt.primary_run_id = runData.databaseId || Number(runId);
-  receipt.remote_synced_at = new Date().toISOString();
 
   // Query remote verification run details directly from GitHub API
   if (remoteRunId) {
@@ -75,26 +74,64 @@ try {
 
       const remoteRunResponseSha256 = crypto.createHash('sha256').update(remoteApiRaw).digest('hex');
 
+      if (!remoteApiData.id || !Number.isInteger(Number(remoteApiData.id)) || Number(remoteApiData.id) <= 0) {
+        console.error('[FATAL] REMOTE_RUN_ID_MISSING: remote API response missing valid integer id');
+        process.exit(1);
+      }
+      if (remoteApiData.run_attempt === undefined || remoteApiData.run_attempt === null || !Number.isInteger(Number(remoteApiData.run_attempt)) || Number(remoteApiData.run_attempt) < 1) {
+        console.error('[FATAL] REMOTE_RUN_ATTEMPT_MISSING: remote API response missing valid integer run_attempt >= 1');
+        process.exit(1);
+      }
+      if (!remoteApiData.head_sha || typeof remoteApiData.head_sha !== 'string' || !/^[0-9a-f]{40}$/i.test(remoteApiData.head_sha)) {
+        console.error('[FATAL] REMOTE_HEAD_SHA_MISSING: remote API response missing valid 40-character hex head_sha');
+        process.exit(1);
+      }
+      if (!remoteApiData.head_branch || remoteApiData.head_branch !== 'master') {
+        console.error('[FATAL] REMOTE_HEAD_BRANCH_INVALID: remote API response missing head_branch or not master');
+        process.exit(1);
+      }
+      if (!remoteApiData.status) {
+        console.error('[FATAL] REMOTE_STATUS_MISSING: remote API response missing status');
+        process.exit(1);
+      }
+      if (!remoteApiData.run_started_at || isNaN(Date.parse(remoteApiData.run_started_at))) {
+        console.error('[FATAL] REMOTE_STARTED_AT_MISSING: remote API response missing valid run_started_at');
+        process.exit(1);
+      }
+      if (!remoteApiData.created_at || isNaN(Date.parse(remoteApiData.created_at))) {
+        console.error('[FATAL] REMOTE_CREATED_AT_MISSING: remote API response missing valid created_at');
+        process.exit(1);
+      }
+      if (!remoteApiData.updated_at || isNaN(Date.parse(remoteApiData.updated_at))) {
+        console.error('[FATAL] REMOTE_UPDATED_AT_MISSING: remote API response missing valid updated_at');
+        process.exit(1);
+      }
+      if (Date.parse(remoteApiData.created_at) > Date.parse(remoteApiData.updated_at)) {
+        console.error('[FATAL] REMOTE_TIMESTAMPS_INVERTED: created_at cannot be posterior to updated_at');
+        process.exit(1);
+      }
+      if (!remoteApiData.html_url || typeof remoteApiData.html_url !== 'string' || !remoteApiData.html_url.includes(String(remoteApiData.id))) {
+        console.error('[FATAL] REMOTE_URL_MISSING: remote API response missing valid html_url containing run ID');
+        process.exit(1);
+      }
       const remoteActor = remoteApiData.actor?.login || remoteApiData.triggering_actor?.login;
-      if (!remoteActor) {
+      if (!remoteActor || typeof remoteActor !== 'string' || remoteActor.trim().length === 0) {
         console.error('[FATAL] REMOTE_ACTOR_MISSING: remote API response missing actor login');
         process.exit(1);
       }
-      if (!remoteApiData.run_started_at) {
-        console.error('[FATAL] REMOTE_STARTED_AT_MISSING: remote API response missing run_started_at');
+      if (!remoteApiData.repository || remoteApiData.repository.full_name !== 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES') {
+        console.error('[FATAL] REMOTE_REPOSITORY_INVALID: remote API response missing repository or mismatch');
         process.exit(1);
       }
-      if (!remoteApiData.id) {
-        console.error('[FATAL] REMOTE_RUN_ID_MISSING: remote API response missing id');
-        process.exit(1);
-      }
-      if (!remoteApiData.html_url) {
-        console.error('[FATAL] REMOTE_URL_MISSING: remote API response missing html_url');
+      const isExpectedWorkflow = remoteApiData.name === 'Evidence Remote Verification' ||
+        (remoteApiData.path && remoteApiData.path.endsWith('evidence-remote-verification.yml'));
+      if (!isExpectedWorkflow) {
+        console.error('[FATAL] REMOTE_WORKFLOW_INVALID: remote API response does not identify Evidence Remote Verification workflow');
         process.exit(1);
       }
 
       receipt.remote_verification_run_id = Number(remoteApiData.id);
-      receipt.remote_run_attempt = Number(remoteApiData.run_attempt || 1);
+      receipt.remote_run_attempt = Number(remoteApiData.run_attempt);
       receipt.remote_started_at = remoteApiData.run_started_at;
       receipt.remote_created_at = remoteApiData.created_at;
       receipt.remote_updated_at = remoteApiData.updated_at;
@@ -190,8 +227,16 @@ try {
     console.warn(`[SYNC-REMOTE-RECEIPT] Live branch protection query: ${bpErr.message}`);
   }
 
+  const syncTimestamp = new Date().toISOString();
+  receipt.remote_synced_at = syncTimestamp;
+
+  if (receipt.remote_started_at && Date.parse(receipt.remote_started_at) > Date.parse(receipt.remote_synced_at)) {
+    console.error(`[FATAL] REMOTE_STARTED_AFTER_SYNC: remote_started_at (${receipt.remote_started_at}) cannot be posterior to remote_synced_at (${receipt.remote_synced_at})`);
+    process.exit(1);
+  }
+
   fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2), 'utf8');
-  console.log(`[SYNC-REMOTE-RECEIPT] Updated ${receiptPath} with completed run data (Status: ${receipt.status}, Conclusion: ${receipt.conclusion}).`);
+  console.log(`[SYNC-REMOTE-RECEIPT] Updated ${receiptPath} with completed run data (Status: ${receipt.status}, Conclusion: ${receipt.conclusion}, remote_synced_at: ${receipt.remote_synced_at}).`);
 
   // Recalculate index hashes
   const indexPath = path.join(evidenceDir, 'evidence-files.sha256');

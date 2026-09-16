@@ -16,6 +16,8 @@ function parseArgs(argv) {
     else if (arg === '--sha') args.sha = argv[++i];
     else if (arg === '--primary-run-id') args.primaryRunId = argv[++i];
     else if (arg === '--remote-run-id') args.remoteRunId = argv[++i];
+    else if (arg === '--primary-conclusion') args.primaryConclusion = argv[++i];
+    else if (arg === '--remote-conclusion') args.remoteConclusion = argv[++i];
     else if (arg === '--actor') args.actor = argv[++i];
     else if (arg === '--classification') args.classification = argv[++i];
     else if (arg === '--artifact-id') args.artifactId = argv[++i];
@@ -23,6 +25,12 @@ function parseArgs(argv) {
   }
   return args;
 }
+
+const ALLOWED_CLASSIFICATIONS = [
+  'PATCH_VERIFIED_AND_CI_ENFORCED',
+  'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+  'PATCH_VERIFIED_AND_CI_GREEN'
+];
 
 export function generateFinalAttestation(options = {}) {
   const evidenceDir = path.resolve(ROOT_DIR, options.evidenceDir || '.artifacts/evidence');
@@ -45,14 +53,69 @@ export function generateFinalAttestation(options = {}) {
   const indexContent = fs.readFileSync(indexPath);
   const evidenceIndexSha256 = crypto.createHash('sha256').update(indexContent).digest('hex');
 
-  const commitSha = options.sha || receipt.commit_sha || bpData.source_sha || process.env.HEAD_SHA || process.env.GITHUB_SHA;
+  const commitSha = options.sha || receipt.commit_sha || bpData.source_sha;
+  if (!commitSha || typeof commitSha !== 'string' || !/^[0-9a-f]{40}$/i.test(commitSha)) {
+    throw new Error(`Invalid or missing commit SHA for attestation: ${commitSha}`);
+  }
+
   const primaryRunId = Number(options.primaryRunId || receipt.primary_run_id || receipt.run_id);
+  if (!primaryRunId || !Number.isInteger(primaryRunId) || primaryRunId <= 0) {
+    throw new Error(`Invalid or missing primary_run_id for attestation: ${primaryRunId}`);
+  }
+
   const remoteRunId = Number(options.remoteRunId || receipt.remote_verification_run_id || bpData.query_run_id);
-  const primaryRunUrl = receipt.run_url || (primaryRunId ? `https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${primaryRunId}` : '');
-  const remoteRunUrl = receipt.remote_run_url || (remoteRunId ? `https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${remoteRunId}` : '');
-  const queryActor = options.actor || receipt.remote_actor || bpData.query_actor || process.env.EXPECTED_QUERY_ACTOR || 'victorinoaguiar-art';
-  const classification = options.classification || 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS';
+  if (!remoteRunId || !Number.isInteger(remoteRunId) || remoteRunId <= 0) {
+    throw new Error(`Invalid or missing remote_verification_run_id for attestation: ${remoteRunId}`);
+  }
+
+  if (primaryRunId === remoteRunId) {
+    throw new Error(`primary_run_id (${primaryRunId}) and remote_verification_run_id (${remoteRunId}) cannot collide`);
+  }
+
+  const primaryRunUrl = receipt.run_url || (primaryRunId ? `https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${primaryRunId}` : null);
+  if (!primaryRunUrl) {
+    throw new Error('primary_run_url missing for attestation');
+  }
+
+  const remoteRunUrl = receipt.remote_run_url || (remoteRunId ? `https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${remoteRunId}` : null);
+  if (!remoteRunUrl) {
+    throw new Error('remote_run_url missing for attestation');
+  }
+
+  const queryActor = options.actor || receipt.remote_actor || bpData.query_actor;
+  if (!queryActor || typeof queryActor !== 'string' || queryActor.trim().length === 0) {
+    throw new Error('Validated query actor missing for attestation');
+  }
+
+  const primaryConclusion = options.primaryConclusion || receipt.conclusion;
+  if (!primaryConclusion) {
+    throw new Error('primary_conclusion missing in evidence for attestation');
+  }
+  if (primaryConclusion !== 'success') {
+    throw new Error(`primary_conclusion must be "success", found "${primaryConclusion}"`);
+  }
+
+  const remoteConclusion = options.remoteConclusion || receipt.remote_conclusion;
+  if (!remoteConclusion) {
+    throw new Error('remote_conclusion missing in evidence for attestation');
+  }
+  if (remoteConclusion !== 'success') {
+    throw new Error(`remote_conclusion must be "success", found "${remoteConclusion}"`);
+  }
+
+  if (!receipt.remote_started_at || isNaN(Date.parse(receipt.remote_started_at))) {
+    throw new Error(`remote_started_at missing or invalid in receipt: "${receipt.remote_started_at}"`);
+  }
+
+  const classification = options.classification || receipt.classification;
+  if (!classification || !ALLOWED_CLASSIFICATIONS.includes(classification)) {
+    throw new Error(`Invalid classification for attestation: "${classification}". Allowed: ${ALLOWED_CLASSIFICATIONS.join(', ')}`);
+  }
+
   const artifactName = options.artifactName || `aetf-verified-remote-evidence-bundle-${commitSha}`;
+  if (artifactName !== `aetf-verified-remote-evidence-bundle-${commitSha}`) {
+    throw new Error(`Artifact name mismatch: expected "aetf-verified-remote-evidence-bundle-${commitSha}", found "${artifactName}"`);
+  }
 
   const attestation = {
     repository: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES',
@@ -60,10 +123,10 @@ export function generateFinalAttestation(options = {}) {
     attested_commit_sha: commitSha,
     primary_run_id: primaryRunId,
     primary_run_url: primaryRunUrl,
-    primary_conclusion: receipt.conclusion || 'success',
+    primary_conclusion: primaryConclusion,
     remote_verification_run_id: remoteRunId,
     remote_run_url: remoteRunUrl,
-    remote_conclusion: 'success',
+    remote_conclusion: remoteConclusion,
     remote_started_at: receipt.remote_started_at,
     query_actor: queryActor,
     query_run_id: remoteRunId,
@@ -76,7 +139,11 @@ export function generateFinalAttestation(options = {}) {
   };
 
   if (options.artifactId) {
-    attestation.artifact_id = Number(options.artifactId);
+    const artId = Number(options.artifactId);
+    if (!Number.isInteger(artId) || artId <= 0) {
+      throw new Error(`Invalid artifact_id: ${options.artifactId}`);
+    }
+    attestation.artifact_id = artId;
   }
 
   if (!fs.existsSync(outputDir)) {
