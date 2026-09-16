@@ -56,6 +56,23 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
     }
     fs.mkdirSync(dir, { recursive: true });
 
+    const remoteStartedAt = new Date(Date.now() - 50000).toISOString();
+    const mockRemoteRunApiResponse = JSON.stringify({
+      id: 987654321,
+      run_attempt: 1,
+      head_sha: sha,
+      status: 'completed',
+      conclusion: 'success',
+      run_started_at: remoteStartedAt,
+      created_at: remoteStartedAt,
+      updated_at: new Date().toISOString(),
+      html_url: 'https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/987654321',
+      actor: { login: 'GitHub Actions' },
+      triggering_actor: { login: 'GitHub Actions' },
+      repository: { full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES', name: 'APLICATIVO-AI-EMPLOYEES' }
+    }, null, 2) + '\n';
+    const remoteRunResponseSha256 = crypto.createHash('sha256').update(mockRemoteRunApiResponse).digest('hex');
+
     // Create required JSON files
     const jsonFiles: Record<string, any> = {
       'environment.json': {
@@ -106,8 +123,12 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
         primary_run_id: 123456789,
         remote_verification_run_id: 987654321,
         remote_run_attempt: 1,
-        remote_started_at: new Date(Date.now() - 50000).toISOString(),
-        run_url: 'https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/123456789',
+        remote_started_at: remoteStartedAt,
+        remote_created_at: remoteStartedAt,
+        remote_updated_at: new Date().toISOString(),
+        remote_run_url: 'https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/987654321',
+        remote_actor: 'GitHub Actions',
+        remote_run_response_sha256: remoteRunResponseSha256,
         status: 'completed',
         conclusion: 'success',
         started_at: new Date(Date.now() - 300000).toISOString(),
@@ -199,6 +220,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
       'canonical-source-hashes.sha256': 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  data/liveTasks.json\n',
       'file-hashes.sha256': 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  data/liveTasks.json\n',
       'branch-protection-api-response.json': mockApiResponse,
+      'remote-workflow-run-api-response.json': mockRemoteRunApiResponse,
       'npm-ci.log': 'COMMAND: npm ci\nEXIT_CODE: 0\nREAL_INSTALL_VERIFIED: true\n',
       'npm-audit-production.log': 'found 0 vulnerabilities\n',
       'typecheck.log': 'typecheck success\n',
@@ -1609,7 +1631,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
           enforceRemoteCi: true,
           targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
           reportPath: validReportRelPath,
-          expectedQueryActor: 'victorinoaguiar-art'
+          expectedQueryActor: 'GitHub Actions'
         });
         assert.strictEqual(res.valid, false);
         assert.strictEqual(res.code, ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID);
@@ -1709,6 +1731,12 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
         rcData.remote_started_at = '2026-09-16T11:50:00.000Z';
         rcData.remote_synced_at = '2026-09-16T12:00:00.000Z';
         bpData.queried_at = '2026-09-16T12:05:00.000Z'; // 5 minutes after sync
+        const rawPath = path.join(tempDir, 'remote-workflow-run-api-response.json');
+        const rawData = JSON.parse(fs.readFileSync(rawPath, 'utf8'));
+        rawData.run_started_at = rcData.remote_started_at;
+        const newRawContent = JSON.stringify(rawData, null, 2) + '\n';
+        fs.writeFileSync(rawPath, newRawContent, 'utf8');
+        rcData.remote_run_response_sha256 = crypto.createHash('sha256').update(newRawContent).digest('hex');
         fs.writeFileSync(rcPath, JSON.stringify(rcData, null, 2), 'utf8');
         fs.writeFileSync(bpPath, JSON.stringify(bpData, null, 2), 'utf8');
         refreshEvidenceIndex(tempDir);
@@ -1743,6 +1771,12 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
         rcData.started_at = '2026-09-16T11:00:00.000Z';
         rcData.remote_started_at = '2026-09-16T12:00:00.000Z';
         bpData.queried_at = '2026-09-16T11:55:00.000Z'; // 5 minutes before remote start
+        const rawPath = path.join(tempDir, 'remote-workflow-run-api-response.json');
+        const rawData = JSON.parse(fs.readFileSync(rawPath, 'utf8'));
+        rawData.run_started_at = rcData.remote_started_at;
+        const newRawContent = JSON.stringify(rawData, null, 2) + '\n';
+        fs.writeFileSync(rawPath, newRawContent, 'utf8');
+        rcData.remote_run_response_sha256 = crypto.createHash('sha256').update(newRawContent).digest('hex');
         fs.writeFileSync(rcPath, JSON.stringify(rcData, null, 2), 'utf8');
         fs.writeFileSync(bpPath, JSON.stringify(bpData, null, 2), 'utf8');
         refreshEvidenceIndex(tempDir);
@@ -1837,7 +1871,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
           '--expected-query-actor', 'wrong-actor-name'
         ], { encoding: 'utf8', cwd: root });
         assert.strictEqual(res.status, 1);
-        assert.match(res.stderr + res.stdout, /BRANCH_PROTECTION_ORIGIN_INVALID|mismatch/);
+        assert.match(res.stderr + res.stdout, /REMOTE_ACTOR_MISMATCH|BRANCH_PROTECTION_ORIGIN_INVALID|mismatch/i);
       } finally {
         cleanup();
         cleanupReport();
@@ -1864,6 +1898,510 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
       } finally {
         cleanup();
         cleanupReport();
+      }
+    });
+  });
+
+  describe('Suite 33: Fecho Final de Proveniência, Início Real Remoto e Atestação SHA (12 Cenários Negativos & Integração CLI)', () => {
+    const validReportRelPath = 'generated/test_valid_report_33.md';
+    const validReportAbsPath = path.resolve(root, validReportRelPath);
+
+    const ensureValidReport = () => {
+      fs.mkdirSync(path.dirname(validReportAbsPath), { recursive: true });
+      fs.writeFileSync(validReportAbsPath, '# Relatório Válido Suite 33\nSem links locais.\n', 'utf8');
+    };
+
+    const cleanupReport = () => {
+      if (fs.existsSync(validReportAbsPath)) {
+        fs.unlinkSync(validReportAbsPath);
+      }
+    };
+
+    // 1. remote_started_at ausente falha com REMOTE_PROVENANCE_MISSING
+    it('1. remote_started_at ausente falha com REMOTE_PROVENANCE_MISSING', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const rcPath = path.join(tempDir, 'github-actions-receipt.json');
+        const rcData = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+        delete rcData.remote_started_at;
+        fs.writeFileSync(rcPath, JSON.stringify(rcData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          reportPath: validReportRelPath,
+          expectedQueryActor: 'GitHub Actions'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.REMOTE_PROVENANCE_MISSING);
+        assert.match(res.error, /remote_started_at/);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 2. remote_started_at divergente da resposta bruta falha com REMOTE_RESPONSE_DATA_INVALID
+    it('2. remote_started_at divergente da resposta bruta falha com REMOTE_RESPONSE_DATA_INVALID', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const rcPath = path.join(tempDir, 'github-actions-receipt.json');
+        const rcData = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+        rcData.remote_started_at = new Date(Date.now() - 123456).toISOString();
+        fs.writeFileSync(rcPath, JSON.stringify(rcData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          reportPath: validReportRelPath,
+          expectedQueryActor: 'GitHub Actions'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID);
+        assert.match(res.error, /Remote started_at mismatch/);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 3. queried_at anterior ao início remoto além da tolerância de 60s falha com BRANCH_PROTECTION_ORIGIN_INVALID
+    it('3. queried_at anterior ao início remoto além da tolerância de 60s falha com BRANCH_PROTECTION_ORIGIN_INVALID', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const bpPath = path.join(tempDir, 'branch-protection.json');
+        const bpData = JSON.parse(fs.readFileSync(bpPath, 'utf8'));
+        const rcPath = path.join(tempDir, 'github-actions-receipt.json');
+        const rcData = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+
+        const rStart = Date.parse(rcData.remote_started_at);
+        bpData.queried_at = new Date(rStart - 90 * 1000).toISOString(); // 90s prior (> 60s tolerance)
+        fs.writeFileSync(bpPath, JSON.stringify(bpData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          reportPath: validReportRelPath,
+          expectedQueryActor: 'GitHub Actions'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID);
+        assert.match(res.error, /cannot be prior to remote execution started_at.*60s/);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 4. queried_at posterior à sincronização além da tolerância de 60s falha com BRANCH_PROTECTION_ORIGIN_INVALID
+    it('4. queried_at posterior à sincronização além da tolerância de 60s falha com BRANCH_PROTECTION_ORIGIN_INVALID', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const bpPath = path.join(tempDir, 'branch-protection.json');
+        const bpData = JSON.parse(fs.readFileSync(bpPath, 'utf8'));
+        const rcPath = path.join(tempDir, 'github-actions-receipt.json');
+        const rcData = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+
+        const rSynced = Date.parse(rcData.remote_synced_at);
+        bpData.queried_at = new Date(rSynced + 90 * 1000).toISOString(); // 90s after (> 60s tolerance)
+        fs.writeFileSync(bpPath, JSON.stringify(bpData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          reportPath: validReportRelPath,
+          expectedQueryActor: 'GitHub Actions'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID);
+        assert.match(res.error, /cannot be posterior to remote sync timestamp.*60s/);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 5. ID remoto diverge da resposta da API falha com REMOTE_RESPONSE_DATA_INVALID
+    it('5. ID remoto diverge da resposta da API falha com REMOTE_RESPONSE_DATA_INVALID', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const rawPath = path.join(tempDir, 'remote-workflow-run-api-response.json');
+        const rawData = JSON.parse(fs.readFileSync(rawPath, 'utf8'));
+        rawData.id = 11223344;
+        rawData.html_url = 'https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/11223344';
+        const newRaw = JSON.stringify(rawData, null, 2) + '\n';
+        fs.writeFileSync(rawPath, newRaw, 'utf8');
+
+        const rcPath = path.join(tempDir, 'github-actions-receipt.json');
+        const rcData = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+        rcData.remote_run_response_sha256 = crypto.createHash('sha256').update(newRaw).digest('hex');
+        // rcData.remote_verification_run_id remains 987654321
+        fs.writeFileSync(rcPath, JSON.stringify(rcData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          reportPath: validReportRelPath,
+          expectedQueryActor: 'GitHub Actions'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID);
+        assert.match(res.error, /Remote run ID mismatch/);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 6. SHA remoto diverge do SHA esperado falha com REMOTE_SHA_MISMATCH
+    it('6. SHA remoto diverge do SHA esperado falha com REMOTE_SHA_MISMATCH', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const rawPath = path.join(tempDir, 'remote-workflow-run-api-response.json');
+        const rawData = JSON.parse(fs.readFileSync(rawPath, 'utf8'));
+        rawData.head_sha = 'b'.repeat(40);
+        const newRaw = JSON.stringify(rawData, null, 2) + '\n';
+        fs.writeFileSync(rawPath, newRaw, 'utf8');
+
+        const rcPath = path.join(tempDir, 'github-actions-receipt.json');
+        const rcData = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+        rcData.remote_run_response_sha256 = crypto.createHash('sha256').update(newRaw).digest('hex');
+        fs.writeFileSync(rcPath, JSON.stringify(rcData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          reportPath: validReportRelPath,
+          expectedQueryActor: 'GitHub Actions'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.REMOTE_SHA_MISMATCH);
+        assert.match(res.error, /Remote run head_sha mismatch/);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 7. Actor remoto diverge de query_actor ou EXPECTED_QUERY_ACTOR falha com REMOTE_ACTOR_MISMATCH
+    it('7. Actor remoto diverge de query_actor ou EXPECTED_QUERY_ACTOR falha com REMOTE_ACTOR_MISMATCH', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const rawPath = path.join(tempDir, 'remote-workflow-run-api-response.json');
+        const rawData = JSON.parse(fs.readFileSync(rawPath, 'utf8'));
+        rawData.actor.login = 'unauthorized-actor';
+        const newRaw = JSON.stringify(rawData, null, 2) + '\n';
+        fs.writeFileSync(rawPath, newRaw, 'utf8');
+
+        const rcPath = path.join(tempDir, 'github-actions-receipt.json');
+        const rcData = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+        rcData.remote_actor = 'unauthorized-actor';
+        rcData.remote_run_response_sha256 = crypto.createHash('sha256').update(newRaw).digest('hex');
+        fs.writeFileSync(rcPath, JSON.stringify(rcData, null, 2), 'utf8');
+
+        const bpPath = path.join(tempDir, 'branch-protection.json');
+        const bpData = JSON.parse(fs.readFileSync(bpPath, 'utf8'));
+        bpData.query_actor = 'unauthorized-actor';
+        fs.writeFileSync(bpPath, JSON.stringify(bpData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          reportPath: validReportRelPath,
+          expectedQueryActor: 'GitHub Actions'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.REMOTE_ACTOR_MISMATCH);
+        assert.match(res.error, /does not match expected actor/);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 8. Hash da resposta bruta diverge dos bytes físicos falha com REMOTE_RESPONSE_HASH_MISMATCH
+    it('8. Hash da resposta bruta diverge dos bytes físicos falha com REMOTE_RESPONSE_HASH_MISMATCH', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const rcPath = path.join(tempDir, 'github-actions-receipt.json');
+        const rcData = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+        rcData.remote_run_response_sha256 = '0'.repeat(64);
+        fs.writeFileSync(rcPath, JSON.stringify(rcData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          reportPath: validReportRelPath,
+          expectedQueryActor: 'GitHub Actions'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.REMOTE_RESPONSE_HASH_MISMATCH);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 9a. Resposta bruta ausente falha com REMOTE_RESPONSE_FILE_MISSING
+    it('9a. Resposta bruta ausente falha com REMOTE_RESPONSE_FILE_MISSING', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const rawPath = path.join(tempDir, 'remote-workflow-run-api-response.json');
+        fs.unlinkSync(rawPath);
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          reportPath: validReportRelPath,
+          expectedQueryActor: 'GitHub Actions'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.REMOTE_RESPONSE_FILE_MISSING);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 9b. Resposta bruta com JSON inválido falha com REMOTE_RESPONSE_DATA_INVALID
+    it('9b. Resposta bruta com JSON inválido falha com REMOTE_RESPONSE_DATA_INVALID', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const rawPath = path.join(tempDir, 'remote-workflow-run-api-response.json');
+        const invalidRaw = '{ invalid json content';
+        fs.writeFileSync(rawPath, invalidRaw, 'utf8');
+
+        const rcPath = path.join(tempDir, 'github-actions-receipt.json');
+        const rcData = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+        rcData.remote_run_response_sha256 = crypto.createHash('sha256').update(invalidRaw).digest('hex');
+        fs.writeFileSync(rcPath, JSON.stringify(rcData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          reportPath: validReportRelPath,
+          expectedQueryActor: 'GitHub Actions'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID);
+        assert.match(res.error, /invalid JSON/);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 10. query_run_id coincide com primary_run_id falha com QUERY_RUN_ID_COLLISION
+    it('10. query_run_id coincide com primary_run_id falha com QUERY_RUN_ID_COLLISION', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const bpPath = path.join(tempDir, 'branch-protection.json');
+        const bpData = JSON.parse(fs.readFileSync(bpPath, 'utf8'));
+        const rcPath = path.join(tempDir, 'github-actions-receipt.json');
+        const rcData = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+
+        bpData.query_run_id = rcData.run_id;
+        fs.writeFileSync(bpPath, JSON.stringify(bpData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          reportPath: validReportRelPath,
+          expectedQueryActor: 'GitHub Actions'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.QUERY_RUN_ID_COLLISION);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 11. URL remota não corresponde ao ID validado falha com REMOTE_RESPONSE_DATA_INVALID
+    it('11. URL remota não corresponde ao ID validado falha com REMOTE_RESPONSE_DATA_INVALID', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const rawPath = path.join(tempDir, 'remote-workflow-run-api-response.json');
+        const rawData = JSON.parse(fs.readFileSync(rawPath, 'utf8'));
+        rawData.html_url = 'https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/111222333';
+        const newRaw = JSON.stringify(rawData, null, 2) + '\n';
+        fs.writeFileSync(rawPath, newRaw, 'utf8');
+
+        const rcPath = path.join(tempDir, 'github-actions-receipt.json');
+        const rcData = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+        rcData.remote_run_url = rawData.html_url;
+        rcData.remote_run_response_sha256 = crypto.createHash('sha256').update(newRaw).digest('hex');
+        fs.writeFileSync(rcPath, JSON.stringify(rcData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = verifyEvidenceCoherence({
+          evidenceDir: tempDir,
+          targetSha: testSha,
+          enforceRemoteCi: true,
+          targetClassification: 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          reportPath: validReportRelPath,
+          expectedQueryActor: 'GitHub Actions'
+        });
+        assert.strictEqual(res.valid, false);
+        assert.strictEqual(res.code, ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID);
+        assert.match(res.error, /does not contain remote verification run ID/);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 12. Consulta de sincronização sem argumentos obrigatórios falha fechada com exit code 1
+    it('12. Consulta de sincronização sem argumentos obrigatórios falha fechada com exit code 1', () => {
+      const syncModulePath = path.resolve(root, 'scripts/sync-remote-ci-receipt.mjs');
+      const res = spawnSync(process.execPath, [syncModulePath], {
+        encoding: 'utf8',
+        cwd: root,
+        env: { ...process.env, PRIMARY_RUN_ID: '', HEAD_SHA: '' }
+      });
+      assert.strictEqual(res.status, 1);
+      assert.match(res.stderr + res.stdout, /Missing PRIMARY_RUN_ID or HEAD_SHA/);
+    });
+
+    // 13. Teste de integração CLI real com --remote valida com sucesso bundle íntegro
+    it('13. Teste de integração CLI real com --remote valida com sucesso bundle íntegro', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+
+        const res = spawnSync(process.execPath, [
+          coherenceModulePath,
+          '--remote',
+          '--dir', tempDir,
+          '--sha', testSha,
+          '--classification', 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          '--report', validReportRelPath,
+          '--expected-query-actor', 'GitHub Actions',
+          '--remote-run-id', '987654321'
+        ], { encoding: 'utf8', cwd: root });
+
+        assert.strictEqual(res.status, 0, `CLI failed: ${res.stderr}\n${res.stdout}`);
+        assert.match(res.stdout, /Evidence coherence gate cleared successfully/);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 14. Teste de integração CLI real com --remote falha com código de erro quando violado
+    it('14. Teste de integração CLI real com --remote falha com código de erro quando violado', () => {
+      try {
+        setupMockEvidenceBundle(tempDir);
+        ensureValidReport();
+        const rcPath = path.join(tempDir, 'github-actions-receipt.json');
+        const rcData = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+        delete rcData.remote_started_at;
+        fs.writeFileSync(rcPath, JSON.stringify(rcData, null, 2), 'utf8');
+        refreshEvidenceIndex(tempDir);
+
+        const res = spawnSync(process.execPath, [
+          coherenceModulePath,
+          '--remote',
+          '--dir', tempDir,
+          '--sha', testSha,
+          '--classification', 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          '--report', validReportRelPath,
+          '--expected-query-actor', 'GitHub Actions'
+        ], { encoding: 'utf8', cwd: root });
+
+        assert.strictEqual(res.status, 1);
+        assert.match(res.stderr + res.stdout, /REMOTE_PROVENANCE_MISSING/);
+      } finally {
+        cleanup();
+        cleanupReport();
+      }
+    });
+
+    // 15. Geração determinística da atestação final via generate-final-attestation.mjs
+    it('15. Geração determinística da atestação final via generate-final-attestation.mjs', () => {
+      const attestationScriptPath = path.resolve(root, 'scripts/generate-final-attestation.mjs');
+      const attestationOutDir = path.resolve(root, 'generated/tmp_test_attestation');
+      try {
+        setupMockEvidenceBundle(tempDir);
+        const res = spawnSync(process.execPath, [
+          attestationScriptPath,
+          '--dir', tempDir,
+          '--output', attestationOutDir,
+          '--sha', testSha,
+          '--primary-run-id', '123456789',
+          '--remote-run-id', '987654321',
+          '--actor', 'GitHub Actions',
+          '--classification', 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
+          '--artifact-id', '99887766'
+        ], { encoding: 'utf8', cwd: root });
+
+        assert.strictEqual(res.status, 0, `Attestation generation failed: ${res.stderr}\n${res.stdout}`);
+        const attestationJsonPath = path.join(attestationOutDir, 'final-attestation.json');
+        const attestationMdPath = path.join(attestationOutDir, 'final-attestation.md');
+
+        assert.strictEqual(fs.existsSync(attestationJsonPath), true);
+        assert.strictEqual(fs.existsSync(attestationMdPath), true);
+
+        const att = JSON.parse(fs.readFileSync(attestationJsonPath, 'utf8'));
+        assert.strictEqual(att.attested_commit_sha, testSha);
+        assert.strictEqual(att.primary_run_id, 123456789);
+        assert.strictEqual(att.remote_verification_run_id, 987654321);
+        assert.strictEqual(att.query_actor, 'GitHub Actions');
+        assert.strictEqual(att.classification, 'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS');
+        assert.strictEqual(att.operational_state, 'PRE-PRODUCTION / L2 HARDENED');
+        assert.strictEqual(att.status, 'PASS');
+        assert.strictEqual(att.artifact_id, 99887766);
+        assert.match(att.evidence_index_sha256, /^[a-f0-9]{64}$/);
+      } finally {
+        if (fs.existsSync(attestationOutDir)) {
+          fs.rmSync(attestationOutDir, { recursive: true, force: true });
+        }
+        cleanup();
       }
     });
   });

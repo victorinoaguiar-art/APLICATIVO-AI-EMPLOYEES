@@ -43,7 +43,13 @@ export const ERROR_CODES = {
   REPORT_PATH_INVALID: 'REPORT_PATH_INVALID',
   EXPECTED_QUERY_ACTOR_MISSING: 'EXPECTED_QUERY_ACTOR_MISSING',
   REMOTE_RUN_ID_MISMATCH: 'REMOTE_RUN_ID_MISMATCH',
-  QUERY_RUN_ID_COLLISION: 'QUERY_RUN_ID_COLLISION'
+  QUERY_RUN_ID_COLLISION: 'QUERY_RUN_ID_COLLISION',
+  REMOTE_PROVENANCE_MISSING: 'REMOTE_PROVENANCE_MISSING',
+  REMOTE_RESPONSE_FILE_MISSING: 'REMOTE_RESPONSE_FILE_MISSING',
+  REMOTE_RESPONSE_HASH_MISMATCH: 'REMOTE_RESPONSE_HASH_MISMATCH',
+  REMOTE_RESPONSE_DATA_INVALID: 'REMOTE_RESPONSE_DATA_INVALID',
+  REMOTE_ACTOR_MISMATCH: 'REMOTE_ACTOR_MISMATCH',
+  REMOTE_SHA_MISMATCH: 'REMOTE_SHA_MISMATCH'
 };
 
 export const ALLOWED_CLASSIFICATIONS = [
@@ -556,41 +562,246 @@ export function verifyEvidenceCoherence(options = {}) {
         }
       }
       const remoteStartedAt = options.remoteRunStartedAt || process.env.REMOTE_RUN_STARTED_AT || receipt.remote_started_at;
-      if (remoteStartedAt) {
-        const rStart = Date.parse(remoteStartedAt);
-        if (!isNaN(rStart) && queriedAtTime < rStart - 60 * 1000) {
+
+      if (enforceRemoteCi) {
+        // 1. Mandatory remote receipt provenance fields
+        const requiredRemoteFields = [
+          'remote_verification_run_id',
+          'remote_run_attempt',
+          'remote_started_at',
+          'remote_run_url',
+          'remote_actor',
+          'remote_run_response_sha256'
+        ];
+        for (const f of requiredRemoteFields) {
+          if (receipt[f] === undefined || receipt[f] === null || receipt[f] === '') {
+            return {
+              valid: false,
+              code: ERROR_CODES.REMOTE_PROVENANCE_MISSING,
+              error: `Mandatory remote provenance field missing in github-actions-receipt.json: ${f}`
+            };
+          }
+        }
+
+        // 2. Physical raw API response file presence and hash
+        const remoteApiResPath = path.join(targetDir, 'remote-workflow-run-api-response.json');
+        if (!fs.existsSync(remoteApiResPath)) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RESPONSE_FILE_MISSING,
+            error: 'Physical raw API response file missing: remote-workflow-run-api-response.json'
+          };
+        }
+        const actualRemoteApiHash = crypto.createHash('sha256').update(fs.readFileSync(remoteApiResPath)).digest('hex');
+        if (actualRemoteApiHash.toLowerCase() !== receipt.remote_run_response_sha256.toLowerCase()) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RESPONSE_HASH_MISMATCH,
+            error: `remote_run_response_sha256 mismatch: expected ${receipt.remote_run_response_sha256}, computed ${actualRemoteApiHash}`
+          };
+        }
+
+        // 3. Parse and re-derive raw response data
+        let rawRemoteData;
+        try {
+          rawRemoteData = JSON.parse(fs.readFileSync(remoteApiResPath, 'utf8'));
+        } catch (e) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID,
+            error: `remote-workflow-run-api-response.json contains invalid JSON: ${e.message}`
+          };
+        }
+        if (!rawRemoteData || typeof rawRemoteData !== 'object') {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID,
+            error: 'remote-workflow-run-api-response.json is not an object'
+          };
+        }
+
+        // Recalculate and match ID, attempt, started_at, url, actor, sha
+        if (Number(rawRemoteData.id) !== Number(receipt.remote_verification_run_id)) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID,
+            error: `Remote run ID mismatch between API response (${rawRemoteData.id}) and receipt (${receipt.remote_verification_run_id})`
+          };
+        }
+        if (Number(rawRemoteData.run_attempt || 1) !== Number(receipt.remote_run_attempt)) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID,
+            error: `Remote run attempt mismatch between API response (${rawRemoteData.run_attempt}) and receipt (${receipt.remote_run_attempt})`
+          };
+        }
+        if (rawRemoteData.run_started_at !== receipt.remote_started_at) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID,
+            error: `Remote started_at mismatch between API response (${rawRemoteData.run_started_at}) and receipt (${receipt.remote_started_at})`
+          };
+        }
+        if (rawRemoteData.html_url !== receipt.remote_run_url) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID,
+            error: `Remote run URL mismatch between API response (${rawRemoteData.html_url}) and receipt (${receipt.remote_run_url})`
+          };
+        }
+        if (!rawRemoteData.html_url || !rawRemoteData.html_url.includes(String(receipt.remote_verification_run_id))) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RESPONSE_DATA_INVALID,
+            error: `Remote run URL (${rawRemoteData.html_url}) does not contain remote verification run ID (${receipt.remote_verification_run_id})`
+          };
+        }
+        const rawRemoteActor = rawRemoteData.actor?.login || rawRemoteData.triggering_actor?.login;
+        if (rawRemoteActor !== receipt.remote_actor) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_ACTOR_MISMATCH,
+            error: `Remote actor mismatch between API response (${rawRemoteActor}) and receipt (${receipt.remote_actor})`
+          };
+        }
+        if (rawRemoteData.head_sha && rawRemoteData.head_sha.toLowerCase() !== expectedSha.toLowerCase()) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_SHA_MISMATCH,
+            error: `Remote run head_sha mismatch: expected ${expectedSha}, found ${rawRemoteData.head_sha}`
+          };
+        }
+
+        // 4. Temporal window validation (tolerance: 60 seconds)
+        // remote_started_at - 60s <= queried_at <= remote_synced_at + 60s
+        const effectiveRemoteStart = remoteStartedAt || receipt.remote_started_at;
+        const rStartTime = Date.parse(effectiveRemoteStart);
+        if (isNaN(rStartTime)) {
           return {
             valid: false,
             code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
-            error: `queried_at ("${bpData.queried_at}") cannot be prior to remote execution started_at ("${remoteStartedAt}")`
+            error: `Invalid remote_started_at timestamp in receipt: "${effectiveRemoteStart}"`
           };
         }
-      }
-      if (receipt.remote_synced_at) {
+        if (queriedAtTime < rStartTime - 60 * 1000) {
+          return {
+            valid: false,
+            code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+            error: `queried_at ("${bpData.queried_at}") cannot be prior to remote execution started_at ("${effectiveRemoteStart}") beyond allowed tolerance (60s)`
+          };
+        }
+        if (!receipt.remote_synced_at) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_PROVENANCE_MISSING,
+            error: 'remote_synced_at missing in github-actions-receipt.json'
+          };
+        }
         const syncedAtTime = Date.parse(receipt.remote_synced_at);
-        if (!isNaN(syncedAtTime) && queriedAtTime > syncedAtTime + 60 * 1000) {
+        if (isNaN(syncedAtTime)) {
+          return {
+            valid: false,
+            code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+            error: `Invalid remote_synced_at timestamp in receipt: "${receipt.remote_synced_at}"`
+          };
+        }
+        if (queriedAtTime > syncedAtTime + 60 * 1000) {
           return {
             valid: false,
             code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
             error: `queried_at ("${bpData.queried_at}") cannot be posterior to remote sync timestamp ("${receipt.remote_synced_at}") beyond allowed tolerance (60s)`
           };
         }
-      }
 
-      const expectedActor = options.expectedQueryActor || process.env.EXPECTED_QUERY_ACTOR;
-      if (!bpData.query_actor || typeof bpData.query_actor !== 'string' || !bpData.query_actor.trim()) {
-        return {
-          valid: false,
-          code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
-          error: `query_actor in branch-protection.json is missing or empty`
-        };
-      }
-      if (expectedActor && bpData.query_actor !== expectedActor) {
-        return {
-          valid: false,
-          code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
-          error: `query_actor mismatch in branch-protection.json: expected "${expectedActor}", found "${bpData.query_actor}"`
-        };
+        // 5. Actor validation
+        const expectedActor = options.expectedQueryActor || process.env.EXPECTED_QUERY_ACTOR;
+        if (expectedActor) {
+          if (receipt.remote_actor !== expectedActor) {
+            return {
+              valid: false,
+              code: ERROR_CODES.REMOTE_ACTOR_MISMATCH,
+              error: `remote_actor ("${receipt.remote_actor}") does not match expected actor ("${expectedActor}")`
+            };
+          }
+          if (bpData.query_actor !== expectedActor) {
+            return {
+              valid: false,
+              code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+              error: `query_actor mismatch in branch-protection.json: expected "${expectedActor}", found "${bpData.query_actor}"`
+            };
+          }
+        }
+        if (receipt.remote_actor !== bpData.query_actor) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_ACTOR_MISMATCH,
+            error: `remote_actor ("${receipt.remote_actor}") does not match query_actor ("${bpData.query_actor}")`
+          };
+        }
+
+        // 6. Run IDs separation and validation
+        const primaryRunId = receipt.primary_run_id || receipt.run_id || options.primaryRunId || process.env.PRIMARY_RUN_ID;
+        if (primaryRunId && (Number(bpData.query_run_id) === Number(primaryRunId) || Number(receipt.remote_verification_run_id) === Number(primaryRunId))) {
+          return {
+            valid: false,
+            code: ERROR_CODES.QUERY_RUN_ID_COLLISION,
+            error: `query_run_id (${bpData.query_run_id}) or remote_verification_run_id (${receipt.remote_verification_run_id}) cannot be identical to primary_run_id (${primaryRunId}) in remote verification`
+          };
+        }
+        if (Number(bpData.query_run_id) !== Number(receipt.remote_verification_run_id)) {
+          return {
+            valid: false,
+            code: ERROR_CODES.REMOTE_RUN_ID_MISMATCH,
+            error: `query_run_id mismatch: expected "${receipt.remote_verification_run_id}", found "${bpData.query_run_id}"`
+          };
+        }
+        const expectedRemoteRunId = options.remoteRunId || process.env.REMOTE_VERIFICATION_RUN_ID;
+        if (expectedRemoteRunId) {
+          if (Number(receipt.remote_verification_run_id) !== Number(expectedRemoteRunId)) {
+            return {
+              valid: false,
+              code: ERROR_CODES.REMOTE_RUN_ID_MISMATCH,
+              error: `remote_verification_run_id mismatch: expected "${expectedRemoteRunId}", found "${receipt.remote_verification_run_id}"`
+            };
+          }
+        }
+      } else {
+        if (remoteStartedAt) {
+          const rStart = Date.parse(remoteStartedAt);
+          if (!isNaN(rStart) && queriedAtTime < rStart - 60 * 1000) {
+            return {
+              valid: false,
+              code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+              error: `queried_at ("${bpData.queried_at}") cannot be prior to remote execution started_at ("${remoteStartedAt}")`
+            };
+          }
+        }
+        if (receipt.remote_synced_at) {
+          const syncedAtTime = Date.parse(receipt.remote_synced_at);
+          if (!isNaN(syncedAtTime) && queriedAtTime > syncedAtTime + 60 * 1000) {
+            return {
+              valid: false,
+              code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+              error: `queried_at ("${bpData.queried_at}") cannot be posterior to remote sync timestamp ("${receipt.remote_synced_at}") beyond allowed tolerance (60s)`
+            };
+          }
+        }
+
+        const expectedActor = options.expectedQueryActor || process.env.EXPECTED_QUERY_ACTOR;
+        if (!bpData.query_actor || typeof bpData.query_actor !== 'string' || !bpData.query_actor.trim()) {
+          return {
+            valid: false,
+            code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+            error: `query_actor in branch-protection.json is missing or empty`
+          };
+        }
+        if (expectedActor && bpData.query_actor !== expectedActor) {
+          return {
+            valid: false,
+            code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
+            error: `query_actor mismatch in branch-protection.json: expected "${expectedActor}", found "${bpData.query_actor}"`
+          };
+        }
       }
 
       // Check required provenance metadata fields
@@ -605,36 +816,6 @@ export function verifyEvidenceCoherence(options = {}) {
             code: ERROR_CODES.BRANCH_PROTECTION_ORIGIN_INVALID,
             error: `Provenance metadata missing in branch-protection.json: ${field}`
           };
-        }
-      }
-
-      // Check run IDs separation and matching in remote mode
-      const primaryRunId = receipt.primary_run_id || receipt.run_id || options.primaryRunId || process.env.PRIMARY_RUN_ID;
-      const expectedRemoteRunId = options.remoteRunId || process.env.REMOTE_VERIFICATION_RUN_ID;
-      if (enforceRemoteCi) {
-        if (primaryRunId && bpData.query_run_id && Number(bpData.query_run_id) === Number(primaryRunId)) {
-          return {
-            valid: false,
-            code: ERROR_CODES.QUERY_RUN_ID_COLLISION,
-            error: `query_run_id (${bpData.query_run_id}) cannot be identical to primary_run_id (${primaryRunId}) in remote verification`
-          };
-        }
-        if (expectedRemoteRunId) {
-          if (bpData.query_run_id && Number(bpData.query_run_id) !== Number(expectedRemoteRunId)) {
-            return {
-              valid: false,
-              code: ERROR_CODES.REMOTE_RUN_ID_MISMATCH,
-              error: `query_run_id mismatch in branch-protection.json: expected remote run ID "${expectedRemoteRunId}", found "${bpData.query_run_id}"`
-            };
-          }
-          const recRemoteRunId = receipt.remote_verification_run_id || bpData.remote_verification_run_id;
-          if (recRemoteRunId && Number(recRemoteRunId) !== Number(expectedRemoteRunId)) {
-            return {
-              valid: false,
-              code: ERROR_CODES.REMOTE_RUN_ID_MISMATCH,
-              error: `remote_verification_run_id mismatch: expected "${expectedRemoteRunId}", found "${recRemoteRunId}"`
-            };
-          }
         }
       }
 

@@ -57,12 +57,59 @@ try {
   receipt.started_at = runData.createdAt;
   receipt.completed_at = runData.updatedAt;
   receipt.primary_run_id = runData.databaseId || Number(runId);
-  if (remoteRunId) {
-    receipt.remote_verification_run_id = Number(remoteRunId);
-    receipt.remote_run_url = `https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${remoteRunId}`;
-  }
-  receipt.remote_run_attempt = Number(remoteRunAttempt);
   receipt.remote_synced_at = new Date().toISOString();
+
+  // Query remote verification run details directly from GitHub API
+  if (remoteRunId) {
+    console.log(`[SYNC-REMOTE-RECEIPT] Fetching authoritative remote execution details for Run ID ${remoteRunId}...`);
+    try {
+      const remoteApiRaw = execSync(`gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${remoteRunId}`, {
+        encoding: 'utf8',
+        cwd: ROOT_DIR,
+        stdio: ['pipe', 'pipe', 'pipe']
+      }).trim();
+      const remoteApiData = JSON.parse(remoteApiRaw);
+
+      const remoteApiResPath = path.join(evidenceDir, 'remote-workflow-run-api-response.json');
+      fs.writeFileSync(remoteApiResPath, remoteApiRaw, 'utf8');
+
+      const remoteRunResponseSha256 = crypto.createHash('sha256').update(remoteApiRaw).digest('hex');
+
+      const remoteActor = remoteApiData.actor?.login || remoteApiData.triggering_actor?.login;
+      if (!remoteActor) {
+        console.error('[FATAL] REMOTE_ACTOR_MISSING: remote API response missing actor login');
+        process.exit(1);
+      }
+      if (!remoteApiData.run_started_at) {
+        console.error('[FATAL] REMOTE_STARTED_AT_MISSING: remote API response missing run_started_at');
+        process.exit(1);
+      }
+      if (!remoteApiData.id) {
+        console.error('[FATAL] REMOTE_RUN_ID_MISSING: remote API response missing id');
+        process.exit(1);
+      }
+      if (!remoteApiData.html_url) {
+        console.error('[FATAL] REMOTE_URL_MISSING: remote API response missing html_url');
+        process.exit(1);
+      }
+
+      receipt.remote_verification_run_id = Number(remoteApiData.id);
+      receipt.remote_run_attempt = Number(remoteApiData.run_attempt || 1);
+      receipt.remote_started_at = remoteApiData.run_started_at;
+      receipt.remote_created_at = remoteApiData.created_at;
+      receipt.remote_updated_at = remoteApiData.updated_at;
+      receipt.remote_run_url = remoteApiData.html_url;
+      receipt.remote_actor = remoteActor;
+      receipt.remote_run_response_sha256 = remoteRunResponseSha256;
+      console.log(`[SYNC-REMOTE-RECEIPT] Successfully synced remote run details (started_at: ${receipt.remote_started_at}, actor: ${receipt.remote_actor}).`);
+    } catch (remoteErr) {
+      console.error(`[FATAL] REMOTE_API_QUERY_FAILED: Failed to fetch remote execution ${remoteRunId} from GitHub API: ${remoteErr.message}`);
+      process.exit(1);
+    }
+  } else {
+    console.error('[FATAL] REMOTE_RUN_ID_MISSING: remoteRunId must be specified for remote synchronization');
+    process.exit(1);
+  }
 
   const jobsOutput = execSync(`gh run view ${runId} --json jobs`, { encoding: 'utf8', cwd: ROOT_DIR });
   const jobsData = JSON.parse(jobsOutput);
@@ -113,12 +160,12 @@ try {
       source: 'GITHUB_REST_API',
       api_endpoint: 'repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/branches/master/protection',
       queried_at: new Date().toISOString(),
-      query_actor: queryActor,
-      query_run_id: remoteRunId ? Number(remoteRunId) : (runData.databaseId ? Number(runData.databaseId) + 1 : 999999999),
+      query_actor: receipt.remote_actor,
+      query_run_id: receipt.remote_verification_run_id,
       primary_run_id: Number(runData.databaseId || runId),
-      remote_verification_run_id: remoteRunId ? Number(remoteRunId) : undefined,
-      remote_run_attempt: Number(remoteRunAttempt),
-      remote_run_url: remoteRunId ? `https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${remoteRunId}` : undefined,
+      remote_verification_run_id: receipt.remote_verification_run_id,
+      remote_run_attempt: receipt.remote_run_attempt,
+      remote_run_url: receipt.remote_run_url,
       query_workflow: process.env.GITHUB_WORKFLOW || 'Evidence Remote Verification',
       source_sha: runData.headSha || headSha,
       http_status: 200,
@@ -152,7 +199,8 @@ try {
     const filesToHash = [
       'github-actions-receipt.json',
       'branch-protection.json',
-      'branch-protection-api-response.json'
+      'branch-protection-api-response.json',
+      'remote-workflow-run-api-response.json'
     ];
     const hashes = {};
     for (const f of filesToHash) {

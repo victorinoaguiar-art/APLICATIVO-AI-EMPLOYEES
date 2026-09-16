@@ -86,9 +86,33 @@ jobs:
           REMOTE_VERIFICATION_RUN_ID: ${{ github.run_id }}
 
       - name: Upload Verified Remote Evidence Bundle
+        id: upload_bundle
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
           name: aetf-verified-remote-evidence-bundle-${{ github.event.workflow_run.head_sha }}
           path: .artifacts/evidence/
           if-no-files-found: error
           retention-days: 30
+
+      - name: Generate Final Forensic Attestation & Job Summary
+        run: |
+          node scripts/generate-final-attestation.mjs \
+            --dir .artifacts/evidence \
+            --output .artifacts/attestation \
+            --sha "${{ github.event.workflow_run.head_sha }}" \
+            --primary-run-id "${{ github.event.workflow_run.id }}" \
+            --remote-run-id "${{ github.run_id }}" \
+            --actor "${{ github.actor }}" \
+            --artifact-id "${{ steps.upload_bundle.outputs.artifact-id }}" \
+            --classification PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS
+        env:
+          EXPECTED_QUERY_ACTOR: ${{ github.actor }}
+
+      - name: Upload Final Forensic Attestation Artifact
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        with:
+          name: aetf-final-attestation-${{ github.event.workflow_run.head_sha }}
+          path: .artifacts/attestation/
+          if-no-files-found: error
+          retention-days: 30
+
