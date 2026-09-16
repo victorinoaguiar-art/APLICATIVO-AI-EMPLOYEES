@@ -31,10 +31,14 @@ export const FINAL_ATTESTATION_SCHEMA = {
     'attested_commit_sha',
     'primary_run_id',
     'primary_run_url',
+    'primary_status',
     'primary_conclusion',
+    'primary_response_sha256',
     'remote_verification_run_id',
     'remote_run_url',
+    'remote_status',
     'remote_conclusion',
+    'remote_response_sha256',
     'remote_started_at',
     'query_actor',
     'query_run_id',
@@ -43,6 +47,7 @@ export const FINAL_ATTESTATION_SCHEMA = {
     'operational_state',
     'generated_at',
     'evidence_index_sha256',
+    'final_evidence_index_sha256',
     'status'
   ],
   properties: {
@@ -66,9 +71,17 @@ export const FINAL_ATTESTATION_SCHEMA = {
       type: 'string',
       pattern: '^https://github\\.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/\\d+$'
     },
+    primary_status: {
+      type: 'string',
+      const: 'completed'
+    },
     primary_conclusion: {
       type: 'string',
       const: 'success'
+    },
+    primary_response_sha256: {
+      type: 'string',
+      pattern: '^[0-9a-f]{64}$'
     },
     remote_verification_run_id: {
       type: 'integer',
@@ -78,9 +91,17 @@ export const FINAL_ATTESTATION_SCHEMA = {
       type: 'string',
       pattern: '^https://github\\.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/\\d+$'
     },
+    remote_status: {
+      type: 'string',
+      const: 'completed'
+    },
     remote_conclusion: {
       type: 'string',
       const: 'success'
+    },
+    remote_response_sha256: {
+      type: 'string',
+      pattern: '^[0-9a-f]{64}$'
     },
     remote_started_at: {
       type: 'string',
@@ -118,6 +139,10 @@ export const FINAL_ATTESTATION_SCHEMA = {
       type: 'string',
       pattern: '^[0-9a-f]{64}$'
     },
+    final_evidence_index_sha256: {
+      type: 'string',
+      pattern: '^[0-9a-f]{64}$'
+    },
     status: {
       type: 'string',
       const: 'PASS'
@@ -133,6 +158,10 @@ export function parseVerifyArgs(argv) {
     const arg = argv[i];
     if (arg === '--attestation') args.attestationPath = argv[++i];
     else if (arg === '--evidence-dir') args.evidenceDir = argv[++i];
+    else if (arg === '--primary-run-response') args.primaryRunResponse = argv[++i];
+    else if (arg === '--remote-run-response') args.remoteRunResponse = argv[++i];
+    else if (arg === '--final-evidence-index') args.finalEvidenceIndex = argv[++i];
+    else if (arg === '--artifacts-response') args.artifactsResponse = argv[++i];
     else if (arg === '--sha') args.sha = argv[++i];
     else if (arg === '--primary-run-id') args.primaryRunId = argv[++i];
     else if (arg === '--remote-run-id') args.remoteRunId = argv[++i];
@@ -151,6 +180,19 @@ export function verifyFinalAttestation(options = {}) {
     ? path.resolve(ROOT_DIR, options.evidenceDir)
     : path.resolve(ROOT_DIR, '.artifacts/evidence');
 
+  const primaryResPath = options.primaryRunResponse
+    ? path.resolve(ROOT_DIR, options.primaryRunResponse)
+    : path.resolve(ROOT_DIR, '.artifacts/final-evidence/final-primary-run-api-response.json');
+  const remoteResPath = options.remoteRunResponse
+    ? path.resolve(ROOT_DIR, options.remoteRunResponse)
+    : path.resolve(ROOT_DIR, '.artifacts/final-evidence/final-remote-run-api-response.json');
+  const finalIndexPath = options.finalEvidenceIndex
+    ? path.resolve(ROOT_DIR, options.finalEvidenceIndex)
+    : path.resolve(ROOT_DIR, '.artifacts/final-evidence/final-evidence-files.sha256');
+  const artifactsResPath = options.artifactsResponse
+    ? path.resolve(ROOT_DIR, options.artifactsResponse)
+    : path.resolve(ROOT_DIR, '.artifacts/final-evidence/final-remote-artifacts-api-response.json');
+
   // 1. Check mandatory caller arguments
   const requiredArgs = [
     { name: 'sha', val: options.sha },
@@ -166,6 +208,29 @@ export function verifyFinalAttestation(options = {}) {
         error: `Mandatory verification parameter missing: ${name}`
       };
     }
+  }
+
+  // Mandatory physical response file presence
+  if (!fs.existsSync(primaryResPath)) {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_FILE_MISSING',
+      error: `final-primary-run-api-response.json missing at: ${primaryResPath}`
+    };
+  }
+  if (!fs.existsSync(remoteResPath)) {
+    return {
+      valid: false,
+      code: 'REMOTE_RESPONSE_FILE_MISSING',
+      error: `final-remote-run-api-response.json missing at: ${remoteResPath}`
+    };
+  }
+  if (!fs.existsSync(finalIndexPath)) {
+    return {
+      valid: false,
+      code: 'FINAL_INDEX_FILE_MISSING',
+      error: `final-evidence-files.sha256 missing at: ${finalIndexPath}`
+    };
   }
 
   const expectedSha = String(options.sha).trim();
@@ -246,7 +311,7 @@ export function verifyFinalAttestation(options = {}) {
     };
   }
 
-  // 5. Semantic field validations
+  // 5. Semantic field validations on attestation itself
   if (attestation.attested_commit_sha.toLowerCase() !== expectedSha.toLowerCase()) {
     return {
       valid: false,
@@ -287,19 +352,19 @@ export function verifyFinalAttestation(options = {}) {
     };
   }
 
-  if (attestation.primary_conclusion !== 'success') {
+  if (attestation.primary_status !== 'completed' || attestation.primary_conclusion !== 'success') {
     return {
       valid: false,
       code: 'ATTESTATION_CONCLUSION_INVALID',
-      error: `primary_conclusion must be "success", found "${attestation.primary_conclusion}"`
+      error: `primary_conclusion/status invalid: ${attestation.primary_status} / ${attestation.primary_conclusion}`
     };
   }
 
-  if (attestation.remote_conclusion !== 'success') {
+  if (attestation.remote_status !== 'completed' || attestation.remote_conclusion !== 'success') {
     return {
       valid: false,
       code: 'ATTESTATION_CONCLUSION_INVALID',
-      error: `remote_conclusion must be "success", found "${attestation.remote_conclusion}"`
+      error: `remote_conclusion/status invalid: ${attestation.remote_status} / ${attestation.remote_conclusion}`
     };
   }
 
@@ -347,7 +412,347 @@ export function verifyFinalAttestation(options = {}) {
     }
   }
 
-  // 6. Cross-reference physical evidence directory
+  // 6. Physical validation of final-evidence-files.sha256
+  const finalIndexBytes = fs.readFileSync(finalIndexPath);
+  const computedFinalIndexHash = crypto.createHash('sha256').update(finalIndexBytes).digest('hex');
+  if (computedFinalIndexHash.toLowerCase() !== attestation.final_evidence_index_sha256.toLowerCase()) {
+    return {
+      valid: false,
+      code: 'FINAL_INDEX_HASH_MISMATCH',
+      error: `final_evidence_index_sha256 mismatch: attestation has ${attestation.final_evidence_index_sha256}, physical file is ${computedFinalIndexHash}`
+    };
+  }
+
+  // Parse lines in final-evidence-files.sha256
+  const finalIndexLines = finalIndexBytes.toString('utf8').split('\n').map(l => l.trim()).filter(Boolean);
+  const indexedFinalFiles = new Map();
+  for (const line of finalIndexLines) {
+    const parts = line.split(/\s+/);
+    if (parts.length !== 2) {
+      return {
+        valid: false,
+        code: 'FINAL_INDEX_INVALID',
+        error: `Malformed line in final-evidence-files.sha256: "${line}"`
+      };
+    }
+    const [hash, fname] = parts;
+    if (indexedFinalFiles.has(fname)) {
+      return {
+        valid: false,
+        code: 'FINAL_INDEX_INVALID',
+        error: `Duplicate entry in final-evidence-files.sha256: ${fname}`
+      };
+    }
+    indexedFinalFiles.set(fname, hash.toLowerCase());
+  }
+
+  // Check that all files in final index exist and match physical bytes
+  const finalEvidenceParentDir = path.dirname(finalIndexPath);
+  for (const [fname, expectedHash] of indexedFinalFiles.entries()) {
+    const fpath = path.join(finalEvidenceParentDir, fname);
+    if (!fs.existsSync(fpath)) {
+      return {
+        valid: false,
+        code: 'FINAL_INDEX_FILE_MISSING',
+        error: `Indexed file in final-evidence-files.sha256 missing on disk: ${fname}`
+      };
+    }
+    const computedH = crypto.createHash('sha256').update(fs.readFileSync(fpath)).digest('hex').toLowerCase();
+    if (computedH !== expectedHash) {
+      return {
+        valid: false,
+        code: 'FINAL_RESPONSE_HASH_MISMATCH',
+        error: `Byte-level hash mismatch for indexed file ${fname}: expected ${expectedHash}, computed ${computedH}`
+      };
+    }
+  }
+
+  // 7. Validate Physical Primary Run API Response
+  const primaryRaw = fs.readFileSync(primaryResPath);
+  const actualPrimaryHash = crypto.createHash('sha256').update(primaryRaw).digest('hex').toLowerCase();
+  if (actualPrimaryHash !== attestation.primary_response_sha256.toLowerCase()) {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_HASH_MISMATCH',
+      error: `primary_response_sha256 mismatch: attestation has ${attestation.primary_response_sha256}, computed is ${actualPrimaryHash}`
+    };
+  }
+
+  let primaryData;
+  try {
+    primaryData = JSON.parse(primaryRaw.toString('utf8'));
+  } catch (err) {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_DATA_INVALID',
+      error: `Invalid JSON in final-primary-run-api-response.json: ${err.message}`
+    };
+  }
+
+  if (Number(primaryData.id) !== expectedPrimaryRunId) {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_DATA_INVALID',
+      error: `primary run response ID (${primaryData.id}) mismatch with expectedPrimaryRunId (${expectedPrimaryRunId})`
+    };
+  }
+  if (primaryData.status !== 'completed') {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_DATA_INVALID',
+      error: `primary run response status is "${primaryData.status}", must be "completed"`
+    };
+  }
+  if (primaryData.conclusion !== 'success') {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_DATA_INVALID',
+      error: `primary run response conclusion is "${primaryData.conclusion}", must be "success"`
+    };
+  }
+  if (!primaryData.head_sha || primaryData.head_sha.toLowerCase() !== expectedSha.toLowerCase()) {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_DATA_INVALID',
+      error: `primary run response head_sha (${primaryData.head_sha}) does not match expected SHA (${expectedSha})`
+    };
+  }
+  if (primaryData.head_branch !== 'master') {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_DATA_INVALID',
+      error: `primary run response head_branch is "${primaryData.head_branch}", must be "master"`
+    };
+  }
+  if (!primaryData.repository || primaryData.repository.full_name !== 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES') {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_DATA_INVALID',
+      error: `primary run response repository is "${primaryData.repository?.full_name}", must be "victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES"`
+    };
+  }
+  const isPrimaryExpectedWorkflow = primaryData.name === 'CI / Production Readiness & Audit Gate' ||
+    (primaryData.path && primaryData.path.endsWith('ci.yml'));
+  if (!isPrimaryExpectedWorkflow) {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_DATA_INVALID',
+      error: `primary run response workflow is "${primaryData.name || primaryData.path}", expected CI / Production Readiness & Audit Gate`
+    };
+  }
+  if (!primaryData.run_attempt || !Number.isInteger(Number(primaryData.run_attempt)) || Number(primaryData.run_attempt) < 1) {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_DATA_INVALID',
+      error: `primary run response run_attempt is invalid: ${primaryData.run_attempt}`
+    };
+  }
+  if (!primaryData.html_url || !primaryData.html_url.includes(String(expectedPrimaryRunId)) || !primaryData.html_url.includes('victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES')) {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_DATA_INVALID',
+      error: `primary run response html_url is invalid: ${primaryData.html_url}`
+    };
+  }
+  const primaryActor = primaryData.actor?.login || primaryData.triggering_actor?.login;
+  if (!primaryActor) {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_DATA_INVALID',
+      error: 'primary run response actor is missing'
+    };
+  }
+  if (!primaryData.created_at || !primaryData.updated_at || isNaN(Date.parse(primaryData.created_at)) || isNaN(Date.parse(primaryData.updated_at))) {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_DATA_INVALID',
+      error: 'primary run response timestamps are invalid'
+    };
+  }
+  if (Date.parse(primaryData.created_at) > Date.parse(primaryData.updated_at)) {
+    return {
+      valid: false,
+      code: 'PRIMARY_RESPONSE_DATA_INVALID',
+      error: `primary run response created_at (${primaryData.created_at}) is posterior to updated_at (${primaryData.updated_at})`
+    };
+  }
+
+  // 8. Validate Physical Remote Run API Response
+  const remoteRaw = fs.readFileSync(remoteResPath);
+  const actualRemoteHash = crypto.createHash('sha256').update(remoteRaw).digest('hex').toLowerCase();
+  if (actualRemoteHash !== attestation.remote_response_sha256.toLowerCase()) {
+    return {
+      valid: false,
+      code: 'REMOTE_RESPONSE_HASH_MISMATCH',
+      error: `remote_response_sha256 mismatch: attestation has ${attestation.remote_response_sha256}, computed is ${actualRemoteHash}`
+    };
+  }
+
+  let remoteData;
+  try {
+    remoteData = JSON.parse(remoteRaw.toString('utf8'));
+  } catch (err) {
+    return {
+      valid: false,
+      code: 'REMOTE_RESPONSE_DATA_INVALID',
+      error: `Invalid JSON in final-remote-run-api-response.json: ${err.message}`
+    };
+  }
+
+  if (Number(remoteData.id) !== expectedRemoteRunId) {
+    return {
+      valid: false,
+      code: 'REMOTE_RESPONSE_DATA_INVALID',
+      error: `remote run response ID (${remoteData.id}) mismatch with expectedRemoteRunId (${expectedRemoteRunId})`
+    };
+  }
+  if (remoteData.status !== 'completed') {
+    return {
+      valid: false,
+      code: 'REMOTE_RESPONSE_DATA_INVALID',
+      error: `remote run response status is "${remoteData.status}", must be "completed"`
+    };
+  }
+  if (remoteData.conclusion !== 'success') {
+    return {
+      valid: false,
+      code: 'REMOTE_RESPONSE_DATA_INVALID',
+      error: `remote run response conclusion is "${remoteData.conclusion}", must be "success"`
+    };
+  }
+  if (!remoteData.head_sha || remoteData.head_sha.toLowerCase() !== expectedSha.toLowerCase()) {
+    return {
+      valid: false,
+      code: 'REMOTE_RESPONSE_DATA_INVALID',
+      error: `remote run response head_sha (${remoteData.head_sha}) does not match expected SHA (${expectedSha})`
+    };
+  }
+  if (remoteData.head_branch !== 'master') {
+    return {
+      valid: false,
+      code: 'REMOTE_RESPONSE_DATA_INVALID',
+      error: `remote run response head_branch is "${remoteData.head_branch}", must be "master"`
+    };
+  }
+  if (!remoteData.repository || remoteData.repository.full_name !== 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES') {
+    return {
+      valid: false,
+      code: 'REMOTE_RESPONSE_DATA_INVALID',
+      error: `remote run response repository is "${remoteData.repository?.full_name}", must be "victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES"`
+    };
+  }
+  const isRemoteExpectedWorkflow = remoteData.name === 'Evidence Remote Verification' ||
+    (remoteData.path && remoteData.path.endsWith('evidence-remote-verification.yml'));
+  if (!isRemoteExpectedWorkflow) {
+    return {
+      valid: false,
+      code: 'REMOTE_RESPONSE_DATA_INVALID',
+      error: `remote run response workflow is "${remoteData.name || remoteData.path}", expected Evidence Remote Verification`
+    };
+  }
+  if (!remoteData.run_attempt || !Number.isInteger(Number(remoteData.run_attempt)) || Number(remoteData.run_attempt) < 1) {
+    return {
+      valid: false,
+      code: 'REMOTE_RESPONSE_DATA_INVALID',
+      error: `remote run response run_attempt is invalid: ${remoteData.run_attempt}`
+    };
+  }
+  if (!remoteData.html_url || !remoteData.html_url.includes(String(expectedRemoteRunId)) || !remoteData.html_url.includes('victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES')) {
+    return {
+      valid: false,
+      code: 'REMOTE_RESPONSE_DATA_INVALID',
+      error: `remote run response html_url is invalid: ${remoteData.html_url}`
+    };
+  }
+  const actualRemoteActor = remoteData.actor?.login || remoteData.triggering_actor?.login;
+  if (!actualRemoteActor || actualRemoteActor !== expectedActor) {
+    return {
+      valid: false,
+      code: 'REMOTE_ACTOR_MISMATCH',
+      error: `remote run response actor (${actualRemoteActor}) does not match expectedActor (${expectedActor})`
+    };
+  }
+  if (!remoteData.created_at || !remoteData.updated_at || isNaN(Date.parse(remoteData.created_at)) || isNaN(Date.parse(remoteData.updated_at))) {
+    return {
+      valid: false,
+      code: 'REMOTE_RESPONSE_DATA_INVALID',
+      error: 'remote run response timestamps are invalid'
+    };
+  }
+  if (Date.parse(remoteData.created_at) > Date.parse(remoteData.updated_at)) {
+    return {
+      valid: false,
+      code: 'REMOTE_RESPONSE_DATA_INVALID',
+      error: `remote run response created_at (${remoteData.created_at}) is posterior to updated_at (${remoteData.updated_at})`
+    };
+  }
+
+  // 9. Validate Artifact Metadata Response if present
+  if (fs.existsSync(artifactsResPath)) {
+    let artApiData;
+    try {
+      artApiData = JSON.parse(fs.readFileSync(artifactsResPath, 'utf8'));
+    } catch (err) {
+      return {
+        valid: false,
+        code: 'ARTIFACTS_RESPONSE_DATA_INVALID',
+        error: `Invalid JSON in artifacts response: ${err.message}`
+      };
+    }
+    const matchingArtifacts = (artApiData.artifacts || []).filter(a => a.name === expectedArtifactName);
+    if (matchingArtifacts.length === 0) {
+      return {
+        valid: false,
+        code: 'ATTESTATION_ARTIFACT_INVALID',
+        error: `Artifact ${expectedArtifactName} not found in artifacts response`
+      };
+    }
+    if (matchingArtifacts.length > 1) {
+      return {
+        valid: false,
+        code: 'ATTESTATION_ARTIFACT_INVALID',
+        error: `Multiple duplicate artifacts with name ${expectedArtifactName} found`
+      };
+    }
+    const art = matchingArtifacts[0];
+    if (options.artifactId && art.id !== Number(options.artifactId)) {
+      return {
+        valid: false,
+        code: 'ATTESTATION_ARTIFACT_INVALID',
+        error: `Artifact ID mismatch: expected ${options.artifactId}, API response has ${art.id}`
+      };
+    }
+    if (art.expired === true) {
+      return {
+        valid: false,
+        code: 'ATTESTATION_ARTIFACT_INVALID',
+        error: `Artifact ${art.name} is expired`
+      };
+    }
+    if (!art.size_in_bytes || art.size_in_bytes <= 0) {
+      return {
+        valid: false,
+        code: 'ATTESTATION_ARTIFACT_INVALID',
+        error: `Artifact ${art.name} has invalid size: ${art.size_in_bytes}`
+      };
+    }
+    if (art.workflow_run?.id && Number(art.workflow_run.id) !== expectedRemoteRunId) {
+      return {
+        valid: false,
+        code: 'ATTESTATION_ARTIFACT_INVALID',
+        error: `Artifact associated run ID (${art.workflow_run.id}) does not match expectedRemoteRunId (${expectedRemoteRunId})`
+      };
+    }
+    if (art.workflow_run?.head_sha && art.workflow_run.head_sha.toLowerCase() !== expectedSha.toLowerCase()) {
+      return {
+        valid: false,
+        code: 'ATTESTATION_ARTIFACT_INVALID',
+        error: `Artifact associated head_sha (${art.workflow_run.head_sha}) does not match expectedSha (${expectedSha})`
+      };
+    }
+  }
+
+  // 10. Cross-reference physical evidence directory
   if (fs.existsSync(evidenceDir)) {
     const indexPath = path.join(evidenceDir, 'evidence-files.sha256');
     if (!fs.existsSync(indexPath)) {
@@ -367,45 +772,9 @@ export function verifyFinalAttestation(options = {}) {
         error: `evidence_index_sha256 mismatch: attestation has ${attestation.evidence_index_sha256}, physical file is ${physicalIndexHash}`
       };
     }
-
-    // Verify remote API response matches if present
-    const remoteApiResPath = path.join(evidenceDir, 'remote-workflow-run-api-response.json');
-    if (fs.existsSync(remoteApiResPath)) {
-      try {
-        const rawRemoteData = JSON.parse(fs.readFileSync(remoteApiResPath, 'utf8'));
-        if (Number(rawRemoteData.id) !== expectedRemoteRunId) {
-          return {
-            valid: false,
-            code: 'ATTESTATION_EVIDENCE_MISMATCH',
-            error: `remote-workflow-run-api-response.json ID (${rawRemoteData.id}) does not match expectedRemoteRunId (${expectedRemoteRunId})`
-          };
-        }
-        if (rawRemoteData.head_sha && rawRemoteData.head_sha.toLowerCase() !== expectedSha.toLowerCase()) {
-          return {
-            valid: false,
-            code: 'ATTESTATION_EVIDENCE_MISMATCH',
-            error: `remote-workflow-run-api-response.json head_sha (${rawRemoteData.head_sha}) does not match expected SHA (${expectedSha})`
-          };
-        }
-        const apiActor = rawRemoteData.actor?.login || rawRemoteData.triggering_actor?.login;
-        if (apiActor && apiActor !== expectedActor) {
-          return {
-            valid: false,
-            code: 'ATTESTATION_ACTOR_MISMATCH',
-            error: `remote-workflow-run-api-response.json actor (${apiActor}) does not match expectedActor (${expectedActor})`
-          };
-        }
-      } catch (e) {
-        return {
-          valid: false,
-          code: 'ATTESTATION_EVIDENCE_MISMATCH',
-          error: `Failed to verify remote-workflow-run-api-response.json against attestation: ${e.message}`
-        };
-      }
-    }
   }
 
-  // 7. Check that attestation and .artifacts are not tracked in git
+  // 11. Check that attestation and .artifacts are not tracked in git
   try {
     const trackedFiles = execSync('git ls-files .artifacts', {
       encoding: 'utf8',
@@ -419,9 +788,7 @@ export function verifyFinalAttestation(options = {}) {
         error: `Files inside .artifacts are tracked in git: ${trackedFiles}`
       };
     }
-  } catch {
-    // If git is not present or not in a git repo, ignore git tracking check
-  }
+  } catch {}
 
   return {
     valid: true,
@@ -431,7 +798,7 @@ export function verifyFinalAttestation(options = {}) {
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const args = parseVerifyArgs(process.argv.slice(2));
-  console.log('[VERIFY-FINAL-ATTESTATION] Verifying final forensic attestation...');
+  console.log('[VERIFY-FINAL-ATTESTATION] Verifying final forensic attestation from physical API responses...');
   const result = verifyFinalAttestation(args);
 
   if (!result.valid) {
@@ -442,8 +809,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   console.log(`[PASS] Final attestation strictly verified for commit ${result.attestation.attested_commit_sha}.`);
   console.log(`       Classification: ${result.attestation.classification}`);
   console.log(`       Operational State: ${result.attestation.operational_state}`);
-  console.log(`       Primary Run: ${result.attestation.primary_run_id} (${result.attestation.primary_conclusion})`);
-  console.log(`       Remote Run: ${result.attestation.remote_verification_run_id} (${result.attestation.remote_conclusion})`);
+  console.log(`       Primary Run: ${result.attestation.primary_run_id} (${result.attestation.primary_status} / ${result.attestation.primary_conclusion})`);
+  console.log(`       Remote Run: ${result.attestation.remote_verification_run_id} (${result.attestation.remote_status} / ${result.attestation.remote_conclusion})`);
   console.log(`       Query Actor: ${result.attestation.query_actor}`);
   console.log(`       Status: ${result.attestation.status}`);
   process.exit(0);

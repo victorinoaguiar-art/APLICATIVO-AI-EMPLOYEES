@@ -13,11 +13,13 @@ function parseArgs(argv) {
     const arg = argv[i];
     if (arg === '--dir') args.evidenceDir = argv[++i];
     else if (arg === '--output') args.outputDir = argv[++i];
+    else if (arg === '--primary-run-response') args.primaryRunResponse = argv[++i];
+    else if (arg === '--remote-run-response') args.remoteRunResponse = argv[++i];
+    else if (arg === '--final-evidence-index') args.finalEvidenceIndex = argv[++i];
+    else if (arg === '--artifacts-response') args.artifactsResponse = argv[++i];
     else if (arg === '--sha') args.sha = argv[++i];
     else if (arg === '--primary-run-id') args.primaryRunId = argv[++i];
     else if (arg === '--remote-run-id') args.remoteRunId = argv[++i];
-    else if (arg === '--primary-conclusion') args.primaryConclusion = argv[++i];
-    else if (arg === '--remote-conclusion') args.remoteConclusion = argv[++i];
     else if (arg === '--actor') args.actor = argv[++i];
     else if (arg === '--classification') args.classification = argv[++i];
     else if (arg === '--artifact-id') args.artifactId = argv[++i];
@@ -26,7 +28,7 @@ function parseArgs(argv) {
   return args;
 }
 
-const ALLOWED_CLASSIFICATIONS = [
+export const ALLOWED_CLASSIFICATIONS = [
   'PATCH_VERIFIED_AND_CI_ENFORCED',
   'PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS',
   'PATCH_VERIFIED_AND_CI_GREEN'
@@ -53,58 +55,117 @@ export function generateFinalAttestation(options = {}) {
   const indexContent = fs.readFileSync(indexPath);
   const evidenceIndexSha256 = crypto.createHash('sha256').update(indexContent).digest('hex');
 
-  const commitSha = options.sha || receipt.commit_sha || bpData.source_sha;
+  // Resolve and validate physical primary run API response
+  const primaryResPath = options.primaryRunResponse
+    ? path.resolve(ROOT_DIR, options.primaryRunResponse)
+    : path.resolve(ROOT_DIR, '.artifacts/final-evidence/final-primary-run-api-response.json');
+
+  if (!fs.existsSync(primaryResPath)) {
+    throw new Error(`final-primary-run-api-response.json missing at: ${primaryResPath}`);
+  }
+  const primaryResRaw = fs.readFileSync(primaryResPath);
+  const primaryResponseSha256 = crypto.createHash('sha256').update(primaryResRaw).digest('hex');
+  let primaryData;
+  try {
+    primaryData = JSON.parse(primaryResRaw.toString('utf8'));
+  } catch (err) {
+    throw new Error(`Invalid JSON in final-primary-run-api-response.json: ${err.message}`);
+  }
+
+  // Resolve and validate physical remote run API response
+  const remoteResPath = options.remoteRunResponse
+    ? path.resolve(ROOT_DIR, options.remoteRunResponse)
+    : path.resolve(ROOT_DIR, '.artifacts/final-evidence/final-remote-run-api-response.json');
+
+  if (!fs.existsSync(remoteResPath)) {
+    throw new Error(`final-remote-run-api-response.json missing at: ${remoteResPath}`);
+  }
+  const remoteResRaw = fs.readFileSync(remoteResPath);
+  const remoteResponseSha256 = crypto.createHash('sha256').update(remoteResRaw).digest('hex');
+  let remoteData;
+  try {
+    remoteData = JSON.parse(remoteResRaw.toString('utf8'));
+  } catch (err) {
+    throw new Error(`Invalid JSON in final-remote-run-api-response.json: ${err.message}`);
+  }
+
+  // Resolve final evidence index
+  const finalIndexPath = options.finalEvidenceIndex
+    ? path.resolve(ROOT_DIR, options.finalEvidenceIndex)
+    : path.resolve(ROOT_DIR, '.artifacts/final-evidence/final-evidence-files.sha256');
+
+  if (!fs.existsSync(finalIndexPath)) {
+    throw new Error(`final-evidence-files.sha256 missing at: ${finalIndexPath}`);
+  }
+  const finalIndexRaw = fs.readFileSync(finalIndexPath);
+  const finalEvidenceIndexSha256 = crypto.createHash('sha256').update(finalIndexRaw).digest('hex');
+
+  // Derive and validate fields strictly from physical responses
+  const primaryStatus = primaryData.status;
+  const primaryConclusion = primaryData.conclusion;
+  if (!primaryStatus || primaryStatus !== 'completed') {
+    throw new Error(`primary_status must be "completed" in primary run response, found "${primaryStatus}"`);
+  }
+  if (!primaryConclusion || primaryConclusion !== 'success') {
+    throw new Error(`primary_conclusion must be "success" in primary run response, found "${primaryConclusion}"`);
+  }
+
+  const remoteStatus = remoteData.status;
+  const remoteConclusion = remoteData.conclusion;
+  if (!remoteStatus || remoteStatus !== 'completed') {
+    throw new Error(`remote_status must be "completed" in remote run response, found "${remoteStatus}"`);
+  }
+  if (!remoteConclusion || remoteConclusion !== 'success') {
+    throw new Error(`remote_conclusion must be "success" in remote run response, found "${remoteConclusion}"`);
+  }
+
+  const commitSha = options.sha || primaryData.head_sha || remoteData.head_sha || receipt.commit_sha || bpData.source_sha;
   if (!commitSha || typeof commitSha !== 'string' || !/^[0-9a-f]{40}$/i.test(commitSha)) {
     throw new Error(`Invalid or missing commit SHA for attestation: ${commitSha}`);
   }
 
-  const primaryRunId = Number(options.primaryRunId || receipt.primary_run_id || receipt.run_id);
+  if (primaryData.head_sha && primaryData.head_sha.toLowerCase() !== commitSha.toLowerCase()) {
+    throw new Error(`Primary run response head_sha (${primaryData.head_sha}) does not match commitSha (${commitSha})`);
+  }
+  if (remoteData.head_sha && remoteData.head_sha.toLowerCase() !== commitSha.toLowerCase()) {
+    throw new Error(`Remote run response head_sha (${remoteData.head_sha}) does not match commitSha (${commitSha})`);
+  }
+
+  const primaryRunId = Number(options.primaryRunId || primaryData.id || receipt.primary_run_id || receipt.run_id);
   if (!primaryRunId || !Number.isInteger(primaryRunId) || primaryRunId <= 0) {
     throw new Error(`Invalid or missing primary_run_id for attestation: ${primaryRunId}`);
   }
+  if (Number(primaryData.id) !== primaryRunId) {
+    throw new Error(`Primary run response ID (${primaryData.id}) does not match primaryRunId (${primaryRunId})`);
+  }
 
-  const remoteRunId = Number(options.remoteRunId || receipt.remote_verification_run_id || bpData.query_run_id);
+  const remoteRunId = Number(options.remoteRunId || remoteData.id || receipt.remote_verification_run_id || bpData.query_run_id);
   if (!remoteRunId || !Number.isInteger(remoteRunId) || remoteRunId <= 0) {
     throw new Error(`Invalid or missing remote_verification_run_id for attestation: ${remoteRunId}`);
+  }
+  if (Number(remoteData.id) !== remoteRunId) {
+    throw new Error(`Remote run response ID (${remoteData.id}) does not match remoteRunId (${remoteRunId})`);
   }
 
   if (primaryRunId === remoteRunId) {
     throw new Error(`primary_run_id (${primaryRunId}) and remote_verification_run_id (${remoteRunId}) cannot collide`);
   }
 
-  const primaryRunUrl = receipt.run_url || (primaryRunId ? `https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${primaryRunId}` : null);
-  if (!primaryRunUrl) {
-    throw new Error('primary_run_url missing for attestation');
-  }
+  const primaryRunUrl = primaryData.html_url || receipt.run_url || `https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${primaryRunId}`;
+  const remoteRunUrl = remoteData.html_url || receipt.remote_run_url || `https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${remoteRunId}`;
 
-  const remoteRunUrl = receipt.remote_run_url || (remoteRunId ? `https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${remoteRunId}` : null);
-  if (!remoteRunUrl) {
-    throw new Error('remote_run_url missing for attestation');
-  }
-
-  const queryActor = options.actor || receipt.remote_actor || bpData.query_actor;
+  const remoteActor = remoteData.actor?.login || remoteData.triggering_actor?.login || receipt.remote_actor;
+  const queryActor = options.actor || remoteActor || bpData.query_actor;
   if (!queryActor || typeof queryActor !== 'string' || queryActor.trim().length === 0) {
     throw new Error('Validated query actor missing for attestation');
   }
-
-  const primaryConclusion = options.primaryConclusion || receipt.conclusion;
-  if (!primaryConclusion) {
-    throw new Error('primary_conclusion missing in evidence for attestation');
-  }
-  if (primaryConclusion !== 'success') {
-    throw new Error(`primary_conclusion must be "success", found "${primaryConclusion}"`);
+  if (remoteActor && remoteActor !== queryActor) {
+    throw new Error(`Remote run response actor (${remoteActor}) does not match queryActor (${queryActor})`);
   }
 
-  const remoteConclusion = options.remoteConclusion || receipt.remote_conclusion;
-  if (!remoteConclusion) {
-    throw new Error('remote_conclusion missing in evidence for attestation');
-  }
-  if (remoteConclusion !== 'success') {
-    throw new Error(`remote_conclusion must be "success", found "${remoteConclusion}"`);
-  }
-
-  if (!receipt.remote_started_at || isNaN(Date.parse(receipt.remote_started_at))) {
-    throw new Error(`remote_started_at missing or invalid in receipt: "${receipt.remote_started_at}"`);
+  const remoteStartedAt = remoteData.run_started_at || receipt.remote_started_at;
+  if (!remoteStartedAt || isNaN(Date.parse(remoteStartedAt))) {
+    throw new Error(`remote_started_at missing or invalid: "${remoteStartedAt}"`);
   }
 
   const classification = options.classification || receipt.classification;
@@ -123,11 +184,15 @@ export function generateFinalAttestation(options = {}) {
     attested_commit_sha: commitSha,
     primary_run_id: primaryRunId,
     primary_run_url: primaryRunUrl,
+    primary_status: primaryStatus,
     primary_conclusion: primaryConclusion,
+    primary_response_sha256: primaryResponseSha256,
     remote_verification_run_id: remoteRunId,
     remote_run_url: remoteRunUrl,
+    remote_status: remoteStatus,
     remote_conclusion: remoteConclusion,
-    remote_started_at: receipt.remote_started_at,
+    remote_response_sha256: remoteResponseSha256,
+    remote_started_at: remoteStartedAt,
     query_actor: queryActor,
     query_run_id: remoteRunId,
     artifact_name: artifactName,
@@ -135,6 +200,7 @@ export function generateFinalAttestation(options = {}) {
     operational_state: 'PRE-PRODUCTION / L2 HARDENED',
     generated_at: new Date().toISOString(),
     evidence_index_sha256: evidenceIndexSha256,
+    final_evidence_index_sha256: finalEvidenceIndexSha256,
     status: 'PASS'
   };
 
@@ -155,19 +221,22 @@ export function generateFinalAttestation(options = {}) {
 
   const mdContent = `# AETF-500 — Final Forensic Attestation & Remote Verification Receipt
 
-> **Receipt Notice:** This document is an authoritative execution receipt produced dynamically during GitHub Actions CI and is not a versioned repository source file.
+> **Receipt Notice:** This document is an authoritative execution receipt produced dynamically during GitHub Actions CI from physically preserved API responses and is not a versioned repository source file.
 
 | Property | Value |
 |---|---|
 | **Repository** | ${attestation.repository} |
 | **Branch** | ${attestation.branch} |
 | **Attested Commit SHA** | \`${attestation.attested_commit_sha}\` |
-| **Primary CI Run ID** | [${attestation.primary_run_id}](${attestation.primary_run_url}) (${attestation.primary_conclusion}) |
-| **Remote Verification Run ID** | [${attestation.remote_verification_run_id}](${attestation.remote_run_url}) (${attestation.remote_conclusion}) |
+| **Primary CI Run ID** | [${attestation.primary_run_id}](${attestation.primary_run_url}) (${attestation.primary_status} / ${attestation.primary_conclusion}) |
+| **Primary Run API Hash** | \`${attestation.primary_response_sha256}\` |
+| **Remote Verification Run ID** | [${attestation.remote_verification_run_id}](${attestation.remote_run_url}) (${attestation.remote_status} / ${attestation.remote_conclusion}) |
+| **Remote Run API Hash** | \`${attestation.remote_response_sha256}\` |
 | **Remote Run Started At** | \`${attestation.remote_started_at}\` |
 | **Validated Query Actor** | \`${attestation.query_actor}\` |
 | **Verified Evidence Bundle** | \`${attestation.artifact_name}\` |
 | **Evidence Index SHA-256** | \`${attestation.evidence_index_sha256}\` |
+| **Final Evidence Index SHA-256** | \`${attestation.final_evidence_index_sha256}\` |
 | **Classification** | \`${attestation.classification}\` |
 | **Operational State** | \`${attestation.operational_state}\` |
 | **Attestation Status** | **${attestation.status}** |

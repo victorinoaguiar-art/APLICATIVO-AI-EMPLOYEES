@@ -46,40 +46,46 @@ jobs:
           cd .artifacts/evidence
           sha256sum -c evidence-files.sha256
 
-      - name: Resolve Authoritative Remote Run Details & Artifact ID
-        id: remote_meta
+      - name: Preserve Physical Final API Responses & Generate Index
+        id: final_responses
         run: |
-          # Query remote execution API response to get authoritative metadata
-          REMOTE_RUN_RAW=$(gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${{ github.event.workflow_run.id }})
-          echo "$REMOTE_RUN_RAW" > .artifacts/evidence/final-remote-run-api-response.json
+          mkdir -p .artifacts/final-evidence
+          mkdir -p .artifacts/attestation
 
-          # Fetch artifact ID of aetf-verified-remote-evidence-bundle
-          ARTIFACTS_JSON=$(gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${{ github.event.workflow_run.id }}/artifacts)
-          ARTIFACT_ID=$(echo "$ARTIFACTS_JSON" | jq -r '.artifacts[] | select(.name=="aetf-verified-remote-evidence-bundle-${{ github.event.workflow_run.head_sha }}") | .id')
-
-          if [ -z "$ARTIFACT_ID" ] || [ "$ARTIFACT_ID" = "null" ]; then
-            echo "::error::Verified remote evidence bundle artifact not found on run ${{ github.event.workflow_run.id }}"
-            exit 1
-          fi
-
-          # Also get primary run id from github-actions-receipt.json
+          # 1. Resolve Primary Run ID from verified receipt
           PRIMARY_RUN_ID=$(jq -r '.primary_run_id // .run_id' .artifacts/evidence/github-actions-receipt.json)
           if [ -z "$PRIMARY_RUN_ID" ] || [ "$PRIMARY_RUN_ID" = "null" ]; then
             echo "::error::Could not resolve primary_run_id from receipt"
             exit 1
           fi
 
-          # Check primary run conclusion via API
-          PRIMARY_RUN_RAW=$(gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/$PRIMARY_RUN_ID)
-          PRIMARY_CONCLUSION=$(echo "$PRIMARY_RUN_RAW" | jq -r '.conclusion')
-          if [ "$PRIMARY_CONCLUSION" != "success" ]; then
-            echo "::error::Primary CI run conclusion is not success: $PRIMARY_CONCLUSION"
+          # 2. Query and preserve final physical response of Primary CI run
+          gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/$PRIMARY_RUN_ID > .artifacts/final-evidence/final-primary-run-api-response.json
+
+          # 3. Query and preserve final physical response of Remote Verification run
+          gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${{ github.event.workflow_run.id }} > .artifacts/final-evidence/final-remote-run-api-response.json
+
+          # 4. Query and preserve final physical response of Remote Artifacts
+          gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${{ github.event.workflow_run.id }}/artifacts > .artifacts/final-evidence/final-remote-artifacts-api-response.json
+
+          # 5. Extract authoritative artifact ID
+          ARTIFACT_ID=$(jq -r '.artifacts[] | select(.name=="aetf-verified-remote-evidence-bundle-${{ github.event.workflow_run.head_sha }}") | .id' .artifacts/final-evidence/final-remote-artifacts-api-response.json)
+          if [ -z "$ARTIFACT_ID" ] || [ "$ARTIFACT_ID" = "null" ]; then
+            echo "::error::Verified remote evidence bundle artifact not found in artifacts response"
             exit 1
           fi
 
-          echo "artifact_id=$ARTIFACT_ID" >> "$GITHUB_OUTPUT"
+          # 6. Generate final evidence files index
+          cd .artifacts/final-evidence
+          sha256sum final-primary-run-api-response.json final-remote-run-api-response.json final-remote-artifacts-api-response.json > final-evidence-files.sha256
+          sha256sum -c final-evidence-files.sha256
+          cd ../..
+
+          # 7. Copy preserved responses and index to attestation bundle
+          cp .artifacts/final-evidence/* .artifacts/attestation/
+
           echo "primary_run_id=$PRIMARY_RUN_ID" >> "$GITHUB_OUTPUT"
-          echo "primary_conclusion=$PRIMARY_CONCLUSION" >> "$GITHUB_OUTPUT"
+          echo "artifact_id=$ARTIFACT_ID" >> "$GITHUB_OUTPUT"
         env:
           GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN || secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_ADMIN_TOKEN || secrets.GITHUB_TOKEN }}
@@ -89,13 +95,15 @@ jobs:
           node scripts/generate-final-attestation.mjs \
             --dir .artifacts/evidence \
             --output .artifacts/attestation \
+            --primary-run-response .artifacts/final-evidence/final-primary-run-api-response.json \
+            --remote-run-response .artifacts/final-evidence/final-remote-run-api-response.json \
+            --final-evidence-index .artifacts/final-evidence/final-evidence-files.sha256 \
+            --artifacts-response .artifacts/final-evidence/final-remote-artifacts-api-response.json \
             --sha "${{ github.event.workflow_run.head_sha }}" \
-            --primary-run-id "${{ steps.remote_meta.outputs.primary_run_id }}" \
+            --primary-run-id "${{ steps.final_responses.outputs.primary_run_id }}" \
             --remote-run-id "${{ github.event.workflow_run.id }}" \
-            --primary-conclusion "${{ steps.remote_meta.outputs.primary_conclusion }}" \
-            --remote-conclusion "${{ github.event.workflow_run.conclusion }}" \
             --actor "${{ github.actor }}" \
-            --artifact-id "${{ steps.remote_meta.outputs.artifact_id }}" \
+            --artifact-id "${{ steps.final_responses.outputs.artifact_id }}" \
             --classification PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS
         env:
           EXPECTED_QUERY_ACTOR: ${{ github.actor }}
@@ -105,14 +113,18 @@ jobs:
           node scripts/verify-final-attestation.mjs \
             --attestation .artifacts/attestation/final-attestation.json \
             --evidence-dir .artifacts/evidence \
+            --primary-run-response .artifacts/final-evidence/final-primary-run-api-response.json \
+            --remote-run-response .artifacts/final-evidence/final-remote-run-api-response.json \
+            --final-evidence-index .artifacts/final-evidence/final-evidence-files.sha256 \
+            --artifacts-response .artifacts/final-evidence/final-remote-artifacts-api-response.json \
             --sha "${{ github.event.workflow_run.head_sha }}" \
-            --primary-run-id "${{ steps.remote_meta.outputs.primary_run_id }}" \
+            --primary-run-id "${{ steps.final_responses.outputs.primary_run_id }}" \
             --remote-run-id "${{ github.event.workflow_run.id }}" \
-            --artifact-id "${{ steps.remote_meta.outputs.artifact_id }}" \
+            --artifact-id "${{ steps.final_responses.outputs.artifact_id }}" \
             --expected-actor "${{ github.actor }}" \
             --expected-classification PATCH_VERIFIED_AND_CI_ENFORCED_WITH_ADMIN_BYPASS
 
-      - name: Upload Final Forensic Attestation Artifact
+      - name: Upload Final Forensic Attestation & Physical Evidence Artifact
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
           name: aetf-final-attestation-${{ github.event.workflow_run.head_sha }}
