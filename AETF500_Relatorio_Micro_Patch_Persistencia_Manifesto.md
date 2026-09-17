@@ -2,6 +2,7 @@
 
 **Repositório:** `victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES`  
 **Commit de Referência Auditado:** `db780b302674385d858315152308624241847b18`  
+**Commit SHA do Micro-Patch:** `c264f1647dfb430be85a2476706f675c8c598cab`  
 **Data:** 17 de Setembro de 2026  
 **Classificação Formal Estrita:**  
 `OPERATIONAL_PILOT_INFRASTRUCTURE_READY — AUTHENTICATED HUMAN REVIEW GATE READY — FAIL-CLOSED PERSISTENCE AND MANIFEST PROVENANCE VERIFIED — REAL PILOT NOT YET EXECUTED`
@@ -70,12 +71,11 @@ A suíte `packages/runtime/src/test/pilotPersistentIdentityStoreManifest.test.ts
 25. **exportPilotEvidence: Rejeita recibo de tarefa com versão divergente do SQLite:** Inconsistência relacional bloqueada.
 26. **exportPilotEvidence: Rejeita recibo de revisão com JSON corrompido:** Falha imediata na cadeia de custódia.
 27. **exportPilotEvidence: Rejeita recibo de revisão sem registo no SQLite:** Revisão órfão detectada.
-28. **exportPilotEvidence: Rejeita recibo de revisão sem registo no SQLite:** Revisão órfão detectada.
-29. **exportPilotEvidence: Rejeita recibo de entrega com JSON corrompido:** Falha na entrega sem integridade JSON.
-30. **exportPilotEvidence: Rejeita recibo de entrega sem registo no SQLite:** Entrega órfão bloqueada.
-31. **exportPilotEvidence: Rejeita ficheiro em `task-outputs/` sem registo no SQLite:** Ficheiro binário não autoritativo bloqueado.
-32. **exportPilotEvidence: Rejeita ficheiro em `task-outputs/` com hash divergente do SQLite:** Adulteração binária detectada.
-33. **exportPilotEvidence: Verificação bidirecional reversa detecta registo SQLite sem ficheiro físico no filesystem:** Incompletude física bloqueada (`SQLite -> Filesystem`).
+28. **exportPilotEvidence: Rejeita recibo de entrega com JSON corrompido:** Falha na entrega sem integridade JSON.
+29. **exportPilotEvidence: Rejeita recibo de entrega sem registo no SQLite:** Entrega órfão bloqueada.
+30. **exportPilotEvidence: Rejeita ficheiro em `task-outputs/` sem registo no SQLite:** Ficheiro binário não autoritativo bloqueado.
+31. **exportPilotEvidence: Rejeita ficheiro em `task-outputs/` com hash divergente do SQLite:** Adulteração binária detectada.
+32. **exportPilotEvidence: Verificação bidirecional reversa detecta registo SQLite sem ficheiro físico no filesystem:** Incompletude física bloqueada (`SQLite -> Filesystem`).
 
 ---
 
@@ -98,7 +98,23 @@ Todos os comandos foram executados localmente no workspace com êxito total:
 
 ---
 
-## 5. Conclusão & Declaração de Limitação
+## 5. Execuções do GitHub Actions (100% Verde no SHA `c264f1647dfb430be85a2476706f675c8c598cab`)
+
+Os três fluxos de CI/CD foram executados no GitHub Actions com sucesso total no mesmo SHA:
+
+| Workflow | Run ID | Status | Conclusão | Duração | URL |
+|---|---|---|---|---|---|
+| **CI / Production Readiness & Audit Gate** | `35242139898` | `completed` | `success` | 4m 42s | [Run 35242139898](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35242139898) |
+| **Evidence Remote Verification** | `35242648002` | `completed` | `success` | 29s | [Run 35242648002](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35242648002) |
+| **Final Forensic Attestation & Audit Verification** | `35242704298` | `completed` | `success` | 36s | [Run 35242704298](https://github.com/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/35242704298) |
+
+- **head_sha:** `c264f1647dfb430be85a2476706f675c8c598cab`
+- **Árvore de trabalho (`git status --short`):** Limpa (0 ficheiros pendentes).
+- **Consistência de Proveniência:** 100% dos recibos e ficheiros de evidência vinculados ao mesmo commit SHA.
+
+---
+
+## 6. Conclusão & Declaração de Limitação
 
 O sistema encontra-se com todas as travas fail-closed ativas, validações relacionais bidirecionais implementadas e zero fallbacks na persistência.
 
