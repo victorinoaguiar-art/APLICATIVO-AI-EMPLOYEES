@@ -11,8 +11,20 @@ import {
   PilotIncident,
   OperationalPilotMode,
   PilotReviewChallenge,
-  PilotDocumentValidationReceipt
+  PilotDocumentValidationReceipt,
+  PilotDocumentValidationType
 } from '@ai-employee/shared';
+
+function canonicalJson(obj: any): string {
+  if (obj === null || typeof obj !== 'object') {
+    return JSON.stringify(obj);
+  }
+  if (Array.isArray(obj)) {
+    return '[' + obj.map(canonicalJson).join(',') + ']';
+  }
+  const keys = Object.keys(obj).sort();
+  return '{' + keys.map(k => JSON.stringify(k) + ':' + canonicalJson(obj[k])).join(',') + '}';
+}
 
 export class TransactionalPilotStore {
   private db: any;
@@ -172,6 +184,10 @@ export class TransactionalPilotStore {
         receipt_id TEXT PRIMARY KEY,
         task_id TEXT NOT NULL,
         document_version INTEGER NOT NULL,
+        validation_type TEXT NOT NULL DEFAULT 'INDEPENDENT_LIBRARY_VALIDATION',
+        tenant_id TEXT,
+        pilot_id TEXT,
+        file_path TEXT,
         format TEXT NOT NULL,
         parser_name TEXT NOT NULL,
         parser_version TEXT NOT NULL,
@@ -179,8 +195,24 @@ export class TransactionalPilotStore {
         result TEXT NOT NULL,
         page_or_cell_count INTEGER,
         error TEXT,
+        error_details TEXT,
+        execution_started_at TEXT,
+        execution_completed_at TEXT,
+        commit_sha TEXT,
+        receipt_sha256 TEXT,
         validated_at TEXT NOT NULL,
         FOREIGN KEY (task_id) REFERENCES pilot_tasks(task_id) ON DELETE CASCADE
+      );
+
+      CREATE TABLE IF NOT EXISTS pilot_reviewer_sessions (
+        session_id TEXT PRIMARY KEY,
+        token_jti TEXT NOT NULL UNIQUE,
+        reviewer_id TEXT NOT NULL,
+        tenant_id TEXT NOT NULL,
+        pilot_id TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT 'ACTIVE',
+        created_at TEXT NOT NULL,
+        expires_at TEXT NOT NULL
       );
 
       CREATE TABLE IF NOT EXISTS human_reviews (
@@ -225,6 +257,41 @@ export class TransactionalPilotStore {
       const cols = this.db.prepare(`PRAGMA table_info(task_outputs)`).all() as any[];
       if (cols.length > 0 && !cols.some(c => c.name === 'file_bytes')) {
         this.db.exec(`ALTER TABLE task_outputs ADD COLUMN file_bytes BLOB NOT NULL DEFAULT (X'')`);
+      }
+    } catch {
+      // Ignored if table fresh
+    }
+
+    // Ensure backwards compatibility for task_document_validations columns
+    try {
+      const valCols = this.db.prepare(`PRAGMA table_info(task_document_validations)`).all() as any[];
+      const colNames = new Set(valCols.map(c => c.name));
+      if (!colNames.has('validation_type')) {
+        this.db.exec(`ALTER TABLE task_document_validations ADD COLUMN validation_type TEXT NOT NULL DEFAULT 'INDEPENDENT_LIBRARY_VALIDATION'`);
+      }
+      if (!colNames.has('tenant_id')) {
+        this.db.exec(`ALTER TABLE task_document_validations ADD COLUMN tenant_id TEXT`);
+      }
+      if (!colNames.has('pilot_id')) {
+        this.db.exec(`ALTER TABLE task_document_validations ADD COLUMN pilot_id TEXT`);
+      }
+      if (!colNames.has('file_path')) {
+        this.db.exec(`ALTER TABLE task_document_validations ADD COLUMN file_path TEXT`);
+      }
+      if (!colNames.has('error_details')) {
+        this.db.exec(`ALTER TABLE task_document_validations ADD COLUMN error_details TEXT`);
+      }
+      if (!colNames.has('execution_started_at')) {
+        this.db.exec(`ALTER TABLE task_document_validations ADD COLUMN execution_started_at TEXT`);
+      }
+      if (!colNames.has('execution_completed_at')) {
+        this.db.exec(`ALTER TABLE task_document_validations ADD COLUMN execution_completed_at TEXT`);
+      }
+      if (!colNames.has('commit_sha')) {
+        this.db.exec(`ALTER TABLE task_document_validations ADD COLUMN commit_sha TEXT`);
+      }
+      if (!colNames.has('receipt_sha256')) {
+        this.db.exec(`ALTER TABLE task_document_validations ADD COLUMN receipt_sha256 TEXT`);
       }
     } catch {
       // Ignored if table fresh
@@ -700,11 +767,15 @@ export class TransactionalPilotStore {
         throw new Error(`Desafio de revisão '${challenge_id}' expirou em ${challenge.expires_at}.`);
       }
 
+      const consumedAt = reviewReceipt.challenge_consumed_at || now;
+      reviewReceipt.challenge_consumed_at = consumedAt;
+      reviewReceipt.receipt_sha256 = createHash('sha256').update(canonicalJson(reviewReceipt)).digest('hex');
+
       this.db.prepare(`
         UPDATE pilot_review_challenges
         SET status = 'CONSUMED', consumed_at = ?, consumption_receipt_sha256 = ?
         WHERE challenge_id = ?
-      `).run(now, reviewReceipt.review_signature_sha256, challenge_id);
+      `).run(consumedAt, reviewReceipt.review_signature_sha256, challenge_id);
 
       this.saveReview(reviewReceipt);
       this.updateTask(task);
@@ -712,20 +783,130 @@ export class TransactionalPilotStore {
   }
 
   // -------------------------------------------------------------
-  // Document Validations (Pré-revisão e Auditoria)
+  // Reviewer Sessions (Pilar 1)
+  // -------------------------------------------------------------
+  public createReviewerSession(session: {
+    session_id: string;
+    token_jti: string;
+    reviewer_id: string;
+    tenant_id: string;
+    pilot_id: string;
+    status?: 'ACTIVE' | 'EXPIRED' | 'REVOKED';
+    created_at?: string;
+    expires_at: string;
+  }): void {
+    const stmt = this.db.prepare(`
+      INSERT OR REPLACE INTO pilot_reviewer_sessions (
+        session_id, token_jti, reviewer_id, tenant_id, pilot_id, status, created_at, expires_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+    stmt.run(
+      session.session_id,
+      session.token_jti,
+      session.reviewer_id,
+      session.tenant_id,
+      session.pilot_id,
+      session.status || 'ACTIVE',
+      session.created_at || new Date().toISOString(),
+      session.expires_at
+    );
+  }
+
+  public getReviewerSession(sessionId: string): {
+    session_id: string;
+    token_jti: string;
+    reviewer_id: string;
+    tenant_id: string;
+    pilot_id: string;
+    status: string;
+    created_at: string;
+    expires_at: string;
+  } | null {
+    const stmt = this.db.prepare(`
+      SELECT * FROM pilot_reviewer_sessions WHERE session_id = ?
+    `);
+    const row = stmt.get(sessionId) as any;
+    if (!row) return null;
+    return {
+      session_id: row.session_id,
+      token_jti: row.token_jti,
+      reviewer_id: row.reviewer_id,
+      tenant_id: row.tenant_id,
+      pilot_id: row.pilot_id,
+      status: row.status,
+      created_at: row.created_at,
+      expires_at: row.expires_at
+    };
+  }
+
+  public getActiveSessionForToken(
+    tokenJti: string,
+    tenantId?: string,
+    reviewerId?: string,
+    pilotId?: string
+  ): {
+    session_id: string;
+    token_jti: string;
+    reviewer_id: string;
+    tenant_id: string;
+    pilot_id: string;
+    status: string;
+    created_at: string;
+    expires_at: string;
+  } | null {
+    let row: any;
+    if (tenantId && reviewerId && pilotId) {
+      const stmt = this.db.prepare(`
+        SELECT * FROM pilot_reviewer_sessions
+        WHERE token_jti = ? AND tenant_id = ? AND reviewer_id = ? AND pilot_id = ? AND status = 'ACTIVE'
+      `);
+      row = stmt.get(tokenJti, tenantId, reviewerId, pilotId);
+    } else {
+      const stmt = this.db.prepare(`
+        SELECT * FROM pilot_reviewer_sessions
+        WHERE token_jti = ? AND status = 'ACTIVE'
+      `);
+      row = stmt.get(tokenJti);
+    }
+    if (!row) return null;
+    const now = new Date().toISOString();
+    if (now > row.expires_at) {
+      this.db.prepare(`UPDATE pilot_reviewer_sessions SET status = 'EXPIRED' WHERE session_id = ?`).run(row.session_id);
+      return null;
+    }
+    return {
+      session_id: row.session_id,
+      token_jti: row.token_jti,
+      reviewer_id: row.reviewer_id,
+      tenant_id: row.tenant_id,
+      pilot_id: row.pilot_id,
+      status: row.status,
+      created_at: row.created_at,
+      expires_at: row.expires_at
+    };
+  }
+
+  // -------------------------------------------------------------
+  // Document Validations (Pilar 5: Pré-revisão e Auditoria)
   // -------------------------------------------------------------
   public saveDocumentValidationReceipt(receipt: PilotDocumentValidationReceipt): void {
     const stmt = this.db.prepare(`
       INSERT OR REPLACE INTO task_document_validations (
-        receipt_id, task_id, document_version, format, parser_name,
-        parser_version, file_bytes_sha256, result, page_or_cell_count,
-        error, validated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        receipt_id, task_id, document_version, validation_type, tenant_id,
+        pilot_id, file_path, format, parser_name, parser_version,
+        file_bytes_sha256, result, page_or_cell_count, error, error_details,
+        execution_started_at, execution_completed_at, commit_sha, receipt_sha256,
+        validated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     stmt.run(
       receipt.receipt_id,
       receipt.task_id,
       receipt.document_version,
+      receipt.validation_type || 'INDEPENDENT_LIBRARY_VALIDATION',
+      receipt.tenant_id || null,
+      receipt.pilot_id || null,
+      receipt.file_path || null,
       receipt.format,
       receipt.parser_name,
       receipt.parser_version,
@@ -733,29 +914,108 @@ export class TransactionalPilotStore {
       receipt.result,
       receipt.page_or_cell_count || null,
       receipt.error || null,
+      receipt.error_details || receipt.error || null,
+      receipt.execution_started_at || null,
+      receipt.execution_completed_at || null,
+      receipt.commit_sha || null,
+      receipt.receipt_sha256 || null,
       receipt.validated_at
     );
   }
 
-  public getDocumentValidationReceipt(task_id: string, version: number): PilotDocumentValidationReceipt | null {
-    const stmt = this.db.prepare(`
-      SELECT * FROM task_document_validations WHERE task_id = ? AND document_version = ?
-    `);
-    const row = stmt.get(task_id, version) as any;
+  public getDocumentValidationReceipt(
+    task_id: string,
+    version: number,
+    validationType?: PilotDocumentValidationType
+  ): PilotDocumentValidationReceipt | null {
+    let row: any;
+    if (validationType) {
+      const stmt = this.db.prepare(`
+        SELECT * FROM task_document_validations
+        WHERE task_id = ? AND document_version = ? AND validation_type = ?
+      `);
+      row = stmt.get(task_id, version, validationType);
+    } else {
+      const stmt = this.db.prepare(`
+        SELECT * FROM task_document_validations
+        WHERE task_id = ? AND document_version = ?
+        ORDER BY CASE WHEN validation_type = 'INDEPENDENT_LIBRARY_VALIDATION' THEN 1 ELSE 2 END ASC
+        LIMIT 1
+      `);
+      row = stmt.get(task_id, version);
+    }
     if (!row) return null;
     return {
       receipt_id: row.receipt_id,
+      validation_id: row.receipt_id,
       task_id: row.task_id,
       document_version: row.document_version,
+      validation_type: row.validation_type as PilotDocumentValidationType,
+      tenant_id: row.tenant_id,
+      pilot_id: row.pilot_id,
+      file_path: row.file_path,
       format: row.format,
       parser_name: row.parser_name,
       parser_version: row.parser_version,
       file_bytes_sha256: row.file_bytes_sha256,
       result: row.result,
+      is_valid: row.result === 'PASS',
       page_or_cell_count: row.page_or_cell_count,
       error: row.error,
+      error_details: row.error_details,
+      execution_started_at: row.execution_started_at,
+      execution_completed_at: row.execution_completed_at,
+      commit_sha: row.commit_sha,
+      receipt_sha256: row.receipt_sha256,
       validated_at: row.validated_at
     };
+  }
+
+  public getDocumentValidationReceipts(task_id: string, version: number): PilotDocumentValidationReceipt[] {
+    const stmt = this.db.prepare(`
+      SELECT * FROM task_document_validations
+      WHERE task_id = ? AND document_version = ?
+      ORDER BY validation_type ASC
+    `);
+    const rows = stmt.all(task_id, version) as any[];
+    return rows.map(row => ({
+      receipt_id: row.receipt_id,
+      validation_id: row.receipt_id,
+      task_id: row.task_id,
+      document_version: row.document_version,
+      validation_type: row.validation_type as PilotDocumentValidationType,
+      tenant_id: row.tenant_id,
+      pilot_id: row.pilot_id,
+      file_path: row.file_path,
+      format: row.format,
+      parser_name: row.parser_name,
+      parser_version: row.parser_version,
+      file_bytes_sha256: row.file_bytes_sha256,
+      result: row.result,
+      is_valid: row.result === 'PASS',
+      page_or_cell_count: row.page_or_cell_count,
+      error: row.error,
+      error_details: row.error_details,
+      execution_started_at: row.execution_started_at,
+      execution_completed_at: row.execution_completed_at,
+      commit_sha: row.commit_sha,
+      receipt_sha256: row.receipt_sha256,
+      validated_at: row.validated_at
+    }));
+  }
+
+  public hasBothValidationsPassed(task_id: string, version: number, expectedHash?: string): boolean {
+    const receipts = this.getDocumentValidationReceipts(task_id, version);
+    const struct = receipts.find(r => r.validation_type === 'INTERNAL_STRUCTURAL_VALIDATION');
+    const indep = receipts.find(r => r.validation_type === 'INDEPENDENT_LIBRARY_VALIDATION');
+
+    if (!struct || !indep) return false;
+    if (struct.result !== 'PASS' || indep.result !== 'PASS') return false;
+    if (struct.file_bytes_sha256 !== indep.file_bytes_sha256) return false;
+    if (expectedHash && (struct.file_bytes_sha256 !== expectedHash || indep.file_bytes_sha256 !== expectedHash)) {
+      return false;
+    }
+    return true;
   }
 
   public getAllDocumentValidationReceipts(task_id?: string): PilotDocumentValidationReceipt[] {
@@ -765,15 +1025,26 @@ export class TransactionalPilotStore {
       `);
       return (stmt.all(task_id) as any[]).map(r => ({
         receipt_id: r.receipt_id,
+        validation_id: r.receipt_id,
         task_id: r.task_id,
         document_version: r.document_version,
+        validation_type: r.validation_type as PilotDocumentValidationType,
+        tenant_id: r.tenant_id,
+        pilot_id: r.pilot_id,
+        file_path: r.file_path,
         format: r.format,
         parser_name: r.parser_name,
         parser_version: r.parser_version,
         file_bytes_sha256: r.file_bytes_sha256,
         result: r.result,
+        is_valid: r.result === 'PASS',
         page_or_cell_count: r.page_or_cell_count,
         error: r.error,
+        error_details: r.error_details,
+        execution_started_at: r.execution_started_at,
+        execution_completed_at: r.execution_completed_at,
+        commit_sha: r.commit_sha,
+        receipt_sha256: r.receipt_sha256,
         validated_at: r.validated_at
       }));
     }
@@ -782,15 +1053,26 @@ export class TransactionalPilotStore {
     `);
     return (stmt.all() as any[]).map(r => ({
       receipt_id: r.receipt_id,
+      validation_id: r.receipt_id,
       task_id: r.task_id,
       document_version: r.document_version,
+      validation_type: r.validation_type as PilotDocumentValidationType,
+      tenant_id: r.tenant_id,
+      pilot_id: r.pilot_id,
+      file_path: r.file_path,
       format: r.format,
       parser_name: r.parser_name,
       parser_version: r.parser_version,
       file_bytes_sha256: r.file_bytes_sha256,
       result: r.result,
+      is_valid: r.result === 'PASS',
       page_or_cell_count: r.page_or_cell_count,
       error: r.error,
+      error_details: r.error_details,
+      execution_started_at: r.execution_started_at,
+      execution_completed_at: r.execution_completed_at,
+      commit_sha: r.commit_sha,
+      receipt_sha256: r.receipt_sha256,
       validated_at: r.validated_at
     }));
   }

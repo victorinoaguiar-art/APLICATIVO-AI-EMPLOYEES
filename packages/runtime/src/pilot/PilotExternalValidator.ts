@@ -188,10 +188,14 @@ export class PilotExternalValidator {
       issuedAt?: string;
       expires_at?: string;
       expiresAt?: string;
+      challenge_issued_at?: string;
+      event_signed_at?: string;
+      eventSignedAt?: string;
     },
     reviewerOrKey: string,
     decision?: string,
-    secretKey?: string
+    secretKey?: string,
+    eventSignedAtArg?: string
   ): string {
     let key: string;
     let reviewer: string;
@@ -211,7 +215,8 @@ export class PilotExternalValidator {
       throw new Error('Chave secreta de assinatura ausente ou inválida. Operação rejeitada.');
     }
 
-    const payload = [
+    const eventSignedAt = eventSignedAtArg || challengeOrParams.event_signed_at || challengeOrParams.eventSignedAt;
+    const parts = [
       challengeOrParams.challengeId || challengeOrParams.challenge_id,
       challengeOrParams.nonce,
       challengeOrParams.tenantId || challengeOrParams.tenant_id,
@@ -221,9 +226,13 @@ export class PilotExternalValidator {
       challengeOrParams.documentSha256 || challengeOrParams.document_sha256,
       reviewer,
       dec,
-      challengeOrParams.issuedAt || challengeOrParams.issued_at,
+      challengeOrParams.issuedAt || challengeOrParams.issued_at || challengeOrParams.challenge_issued_at,
       challengeOrParams.expiresAt || challengeOrParams.expires_at
-    ].join(':');
+    ];
+    if (eventSignedAt) {
+      parts.push(eventSignedAt);
+    }
+    const payload = parts.join(':');
 
     return createHmac('sha256', key).update(payload).digest('hex');
   }
@@ -233,16 +242,29 @@ export class PilotExternalValidator {
     reviewerOrKey: string,
     decisionOrSignature?: string,
     signatureOrKey?: string,
-    secretKeyArg?: string
+    secretKeyArg?: string,
+    eventSignedAtArg?: string
   ): boolean {
     let expected: string;
     let sig: string;
 
     if (secretKeyArg !== undefined) {
-      expected = this.generateCanonicalChallengeSignature(challengeOrParams, reviewerOrKey, decisionOrSignature, secretKeyArg);
+      expected = this.generateCanonicalChallengeSignature(
+        challengeOrParams,
+        reviewerOrKey,
+        decisionOrSignature,
+        secretKeyArg,
+        eventSignedAtArg
+      );
       sig = signatureOrKey!;
     } else {
-      expected = this.generateCanonicalChallengeSignature(challengeOrParams, reviewerOrKey);
+      expected = this.generateCanonicalChallengeSignature(
+        challengeOrParams,
+        reviewerOrKey,
+        undefined,
+        undefined,
+        eventSignedAtArg
+      );
       sig = challengeOrParams.signature;
     }
 
@@ -331,7 +353,8 @@ export class PilotExternalValidator {
     token: string,
     expectedTenantId: string,
     expectedReviewerId: string,
-    tokenService?: TokenService
+    tokenService?: TokenService,
+    expectedPilotId?: string
   ): { isValid: boolean; payload?: any; error?: string } {
     if (!token) {
       return { isValid: false, error: 'Token de revisor ausente.' };
@@ -356,7 +379,12 @@ export class PilotExternalValidator {
       return { isValid: false, error: `Impersonação detectada e rejeitada: token pertence a '${tokenUserId}', mas a revisão foi declarada como '${expectedReviewerId}'.` };
     }
 
-    // 3. Authorized role
+    // 2b. Pilot ID match if present
+    if (expectedPilotId && payload.pilot_id && payload.pilot_id !== expectedPilotId) {
+      return { isValid: false, error: `Piloto divergente: token vinculado ao piloto '${payload.pilot_id}', esperado '${expectedPilotId}'.` };
+    }
+
+    // 3. Authorized role (HUMAN_REVIEWER or ADMIN)
     const roles: string[] = Array.isArray(payload.roles) ? payload.roles : [];
     const hasAuthorizedRole = roles.includes('HUMAN_REVIEWER') || roles.includes('ADMIN');
     if (!hasAuthorizedRole) {
@@ -369,6 +397,53 @@ export class PilotExternalValidator {
       return { isValid: false, error: `Permissão explícita 'PILOT_REVIEW' ausente no token do revisor '${expectedReviewerId}'.` };
     }
 
+    // 5. Active tenant membership check in identity store
+    const account = tokenService.getAccount(expectedReviewerId);
+    if (account) {
+      if (account.status !== 'ACTIVE') {
+        return { isValid: false, error: `Vínculo inactivo do utilizador '${expectedReviewerId}': estado actual '${account.status}'.` };
+      }
+      if (account.tenant_id !== expectedTenantId) {
+        return { isValid: false, error: `Vínculo do utilizador '${expectedReviewerId}' pertence a outro tenant ('${account.tenant_id}').` };
+      }
+    }
+
     return { isValid: true, payload };
+  }
+
+  public static validateReviewerSession(
+    sessionId: string,
+    tokenJti: string,
+    reviewerId: string,
+    tenantId: string,
+    pilotId: string,
+    store: any
+  ): { isValid: boolean; session?: any; error?: string } {
+    if (!sessionId) {
+      return { isValid: false, error: 'Identificador de sessão de revisão ausente.' };
+    }
+    const session = store.getReviewerSession(sessionId);
+    if (!session) {
+      return { isValid: false, error: `Sessão de revisão '${sessionId}' inexistente.` };
+    }
+    if (session.status !== 'ACTIVE') {
+      return { isValid: false, error: `Sessão de revisão '${sessionId}' inactiva (estado: ${session.status}).` };
+    }
+    if (new Date() > new Date(session.expires_at)) {
+      return { isValid: false, error: `Sessão de revisão '${sessionId}' expirou em ${session.expires_at}.` };
+    }
+    if (session.token_jti !== tokenJti) {
+      return { isValid: false, error: `Sessão incompatível: token JTI divergente da sessão.` };
+    }
+    if (session.reviewer_id !== reviewerId) {
+      return { isValid: false, error: `Sessão pertence a outro revisor ('${session.reviewer_id}').` };
+    }
+    if (session.tenant_id !== tenantId) {
+      return { isValid: false, error: `Sessão pertence a outro tenant ('${session.tenant_id}').` };
+    }
+    if (session.pilot_id !== pilotId) {
+      return { isValid: false, error: `Sessão pertence a outro piloto ('${session.pilot_id}').` };
+    }
+    return { isValid: true, session };
   }
 }

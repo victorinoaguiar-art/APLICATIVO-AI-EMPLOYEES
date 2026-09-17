@@ -100,6 +100,18 @@
           "document_version": {
             "type": "integer"
           },
+          "document_id": {
+            "type": "string"
+          },
+          "delivery_id": {
+            "type": "string"
+          },
+          "review_id": {
+            "type": "string"
+          },
+          "validation_type": {
+            "type": "string"
+          },
           "receipt_type": {
             "type": "string"
           },

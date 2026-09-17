@@ -2,9 +2,12 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { createHash } from 'node:crypto';
 import * as zlib from 'node:zlib';
+import { execFileSync } from 'node:child_process';
 import { PDFDocument } from 'pdf-lib';
 import JSZip from 'jszip';
-import { OperationalPilotMode, PilotDocumentValidationReceipt } from '@ai-employee/shared';
+import * as mammoth from 'mammoth';
+import ExcelJS from 'exceljs';
+import { OperationalPilotMode, PilotDocumentValidationReceipt, PilotDocumentValidationType } from '@ai-employee/shared';
 
 // Standard CRC32 table
 const CRC_TABLE = new Uint32Array(256);
@@ -134,6 +137,18 @@ export class SimpleZip {
   }
 }
 
+function getCommitSha(): string {
+  let commitSha = (process.env.GITHUB_SHA || process.env.GIT_COMMIT_SHA || '').trim();
+  if (!commitSha || commitSha.length !== 40) {
+    try {
+      commitSha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+    } catch {
+      commitSha = '';
+    }
+  }
+  return /^[0-9a-f]{40}$/i.test(commitSha) ? commitSha : '0000000000000000000000000000000000000000';
+}
+
 export class PhysicalDocumentValidator {
   public static validate(
     filePathOrBuffer: string | Buffer,
@@ -252,95 +267,63 @@ export class PhysicalDocumentValidator {
     }
   }
 
-  public static async validateIndependentDocx(buf: Buffer): Promise<{ isValid: boolean; files?: string[]; error?: string }> {
+  public static async validateIndependentDocx(buf: Buffer): Promise<{ isValid: boolean; files?: string[]; text?: string; error?: string }> {
     try {
+      // 1. Leitor independente real de documentos DOCX (mammoth)
+      const mammothResult = await mammoth.extractRawText({ buffer: buf });
+      const rawText = (mammothResult.value || '').trim();
+      if (!rawText) {
+        return { isValid: false, error: 'Documento DOCX independente rejeitado: mammoth extraiu texto vazio.' };
+      }
+      this.checkPlaceholders(rawText);
+
+      // 2. Validação estrutural de integridade OpenXML
       const zip = await JSZip.loadAsync(buf);
       const fileNames = Object.keys(zip.files);
       if (!fileNames.includes('[Content_Types].xml') || !fileNames.includes('word/document.xml')) {
-        return { isValid: false, error: 'DOCX inválido no parser jszip: [Content_Types].xml ou word/document.xml ausente.' };
+        return { isValid: false, error: 'DOCX inválido no parser OpenXML: [Content_Types].xml ou word/document.xml ausente.' };
       }
       const docXml = await zip.files['word/document.xml'].async('string');
       if (!docXml.includes('w:document') && !docXml.includes('w:body')) {
-        return { isValid: false, error: 'DOCX corrompido no parser jszip: estrutura OpenXML Word ausente.' };
+        return { isValid: false, error: 'DOCX corrompido no parser OpenXML: estrutura OpenXML Word ausente.' };
       }
       this.checkPlaceholders(docXml);
-      return { isValid: true, files: fileNames };
+      return { isValid: true, files: fileNames, text: rawText };
     } catch (err: any) {
-      return { isValid: false, error: `Falha no leitor independente jszip para DOCX: ${err.message}` };
+      return { isValid: false, error: `Falha no leitor independente mammoth para DOCX: ${err.message}` };
     }
   }
 
-  public static async validateIndependentXlsx(buf: Buffer): Promise<{ isValid: boolean; files?: string[]; error?: string; cellCount?: number; rowCount?: number }> {
+  public static async validateIndependentXlsx(buf: Buffer): Promise<{ isValid: boolean; cellCount?: number; rowCount?: number; error?: string }> {
     try {
-      const zip = await JSZip.loadAsync(buf);
-      const fileNames = Object.keys(zip.files);
-      if (!fileNames.includes('[Content_Types].xml') || (!fileNames.includes('xl/workbook.xml') && !fileNames.includes('xl/worksheets/sheet1.xml'))) {
-        return { isValid: false, error: 'XLSX inválido no parser OpenXML: ficheiros de manifesto obrigatórios ausentes.' };
+      // 1. Leitor independente real de folhas de cálculo XLSX (ExcelJS)
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(buf as any);
+
+      if (workbook.worksheets.length === 0) {
+        return { isValid: false, error: 'Documento XLSX independente rejeitado: 0 folhas de cálculo encontradas.' };
       }
 
-      // Validar CRC e integridade descompactando todos os ficheiros
-      for (const fn of fileNames) {
-        const entry = zip.files[fn];
-        if (!entry.dir) {
-          await entry.async('uint8array');
-        }
+      let totalCells = 0;
+      let totalRows = 0;
+      for (const sheet of workbook.worksheets) {
+        totalRows += sheet.rowCount;
+        sheet.eachRow((row) => {
+          row.eachCell((cell) => {
+            totalCells++;
+            const textVal = cell.text || String(cell.value ?? '');
+            this.checkPlaceholders(textVal);
+          });
+        });
       }
 
-      // Validar estrutura do workbook
-      const wbEntry = zip.files['xl/workbook.xml'];
-      if (!wbEntry) {
-        return { isValid: false, error: 'XLSX inválido: xl/workbook.xml ausente.' };
-      }
-      const wbXml = await wbEntry.async('string');
-      if (!wbXml.includes('<sheets') || !wbXml.includes('<sheet')) {
-        return { isValid: false, error: 'XLSX inválido: nenhuma worksheet declarada no workbook.' };
+      if (totalCells === 0) {
+        return { isValid: false, error: 'Documento XLSX independente rejeitado: nenhuma célula preenchida encontrada pelo ExcelJS.' };
       }
 
-      // Validar estrutura da worksheet e presença de células
-      const sheetEntry = zip.files['xl/worksheets/sheet1.xml'] || wbEntry;
-      const sheetXml = await sheetEntry.async('string');
-      if (!sheetXml.includes('<sheetData') || (!sheetXml.includes('<c ') && !sheetXml.includes('<c>'))) {
-        return { isValid: false, error: 'XLSX inválido: folha de cálculo sem dados de células.' };
-      }
-
-      this.checkPlaceholders(sheetXml);
-
-      // Interpretação estrutural de linhas e células
-      const rowMatches = sheetXml.match(/<row\b[^>]*>/g) || [];
-      if (rowMatches.length === 0) {
-        return { isValid: false, error: 'XLSX inválido: nenhuma linha <row> encontrada na folha de cálculo.' };
-      }
-
-      // Extrai e valida todas as células <c r="..." t="...">
-      const cellRegex = /<c\b([^>]*)>(.*?)<\/c>|<c\b([^>]*)\/>/gs;
-      let cellCount = 0;
-      let match;
-      while ((match = cellRegex.exec(sheetXml)) !== null) {
-        cellCount++;
-        const attrs = match[1] || match[3] || '';
-        const body = match[2] || '';
-
-        // Valida se a célula possui coordenada (ex: r="A1")
-        if (!/r="[A-Z]+[0-9]+"/.test(attrs)) {
-          return { isValid: false, error: `XLSX inválido: célula sem coordenada r válida encontrada.` };
-        }
-
-        // Se tiver tipo especificado, valida o tipo
-        if (/t="n"/.test(attrs)) {
-          const valMatch = /<v>(.*?)<\/v>/.exec(body);
-          if (valMatch && isNaN(Number(valMatch[1].trim()))) {
-            return { isValid: false, error: `XLSX inválido: célula numérica com valor não-numérico '${valMatch[1]}'.` };
-          }
-        }
-      }
-
-      if (cellCount === 0) {
-        return { isValid: false, error: 'XLSX inválido: nenhuma célula de dados encontrada.' };
-      }
-
-      return { isValid: true, files: fileNames, cellCount, rowCount: rowMatches.length };
+      return { isValid: true, cellCount: totalCells, rowCount: totalRows };
     } catch (err: any) {
-      return { isValid: false, error: `Falha no leitor estrutural para XLSX: ${err.message}` };
+      return { isValid: false, error: `Falha no leitor independente exceljs para XLSX: ${err.message}` };
     }
   }
 
@@ -455,68 +438,69 @@ export class PhysicalDocumentValidator {
     return detectedMime;
   }
 
-  public static createDocumentValidationReceipt(
+  // -------------------------------------------------------------
+  // Validation Receipts (Pilar 5: INTERNAL_STRUCTURAL vs INDEPENDENT_LIBRARY)
+  // -------------------------------------------------------------
+  public static createStructuralReceipt(
     buf: Buffer,
     format: 'PDF' | 'DOCX' | 'XLSX' | 'JSON',
     taskId: string,
     version: number,
-    mode: OperationalPilotMode = 'OPERATIONAL_PILOT'
+    tenantId?: string,
+    pilotId?: string,
+    mode: OperationalPilotMode = 'OPERATIONAL_PILOT',
+    filePath?: string
   ): PilotDocumentValidationReceipt {
+    const startedAt = new Date().toISOString();
     const sha = createHash('sha256').update(buf).digest('hex');
     const validatedAt = new Date().toISOString();
-    const receiptId = `VAL_${taskId}_v${version}_${createHash('sha256').update(sha + validatedAt).digest('hex').slice(0, 12)}`;
+    const receiptId = `VAL_STRUCT_${taskId}_v${version}_${createHash('sha256').update(sha + validatedAt).digest('hex').slice(0, 10)}`;
 
-    let parserName = 'PhysicalDocumentValidator';
+    let parserName = 'internal-structural-parser';
     let parserVersion = '2.0.0';
     let result: 'PASS' | 'FAIL' = 'PASS';
     let pageOrCellCount: number | undefined;
     let error: string | null = null;
 
     try {
-      if (format === 'PDF') {
+      const val = this.validate(buf, format, mode);
+      if (!val.isValid) {
+        result = 'FAIL';
+        error = val.error || 'Falha na validação estrutural interna.';
+      } else if (format === 'PDF') {
         parserName = 'native-pdf-structural-parser';
         parserVersion = '1.7.0';
-        const val = this.validate(buf, 'PDF', mode);
-        if (!val.isValid) {
-          result = 'FAIL';
-          error = val.error || 'Falha na validação de PDF.';
-        } else {
-          const text = buf.toString('utf8');
-          const countMatch = /\/Count\s+(\d+)/.exec(text);
-          pageOrCellCount = countMatch ? parseInt(countMatch[1], 10) : 1;
-        }
+        const text = buf.toString('utf8');
+        const countMatch = /\/Count\s+(\d+)/.exec(text);
+        pageOrCellCount = countMatch ? parseInt(countMatch[1], 10) : 1;
       } else if (format === 'DOCX') {
         parserName = 'openxml-wordprocessingml-parser';
         parserVersion = '3.10.2';
-        const val = this.validate(buf, 'DOCX', mode);
-        if (!val.isValid) {
-          result = 'FAIL';
-          error = val.error || 'Falha na validação de DOCX.';
-        } else {
-          const entries = SimpleZip.readEntries(buf);
-          pageOrCellCount = entries.size;
-        }
+        const entries = SimpleZip.readEntries(buf);
+        pageOrCellCount = entries.size;
       } else if (format === 'XLSX') {
         parserName = 'openxml-spreadsheetml-parser';
         parserVersion = '3.10.2';
-        const val = this.validateIndependentXlsxSync(buf);
-        if (!val.isValid) {
-          result = 'FAIL';
-          error = val.error || 'Falha na validação de XLSX.';
-        } else {
-          pageOrCellCount = val.cellCount;
-        }
+        const valXlsx = this.validateIndependentXlsxSync(buf);
+        pageOrCellCount = valXlsx.cellCount;
       }
     } catch (err: any) {
       result = 'FAIL';
       error = err.message || String(err);
     }
 
-    return {
+    const completedAt = new Date().toISOString();
+    const commitSha = getCommitSha();
+
+    const receipt: PilotDocumentValidationReceipt = {
       receipt_id: receiptId,
       validation_id: receiptId,
+      validation_type: 'INTERNAL_STRUCTURAL_VALIDATION',
       task_id: taskId,
       document_version: version,
+      tenant_id: tenantId,
+      pilot_id: pilotId,
+      file_path: filePath || `${taskId}_v${version}.${format.toLowerCase()}`,
       format,
       parser_name: parserName,
       parser_version: parserVersion,
@@ -526,8 +510,307 @@ export class PhysicalDocumentValidator {
       page_or_cell_count: pageOrCellCount,
       error,
       error_details: error,
-      validated_at: validatedAt
+      execution_started_at: startedAt,
+      execution_completed_at: completedAt,
+      commit_sha: commitSha,
+      validated_at: validatedAt,
+      receipt_sha256: ''
     };
+    receipt.receipt_sha256 = createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
+    return receipt;
+  }
+
+  public static async createIndependentReceipt(
+    buf: Buffer,
+    format: 'PDF' | 'DOCX' | 'XLSX' | 'JSON',
+    taskId: string,
+    version: number,
+    tenantId?: string,
+    pilotId?: string,
+    mode: OperationalPilotMode = 'OPERATIONAL_PILOT',
+    filePath?: string
+  ): Promise<PilotDocumentValidationReceipt> {
+    const startedAt = new Date().toISOString();
+    const sha = createHash('sha256').update(buf).digest('hex');
+    const validatedAt = new Date().toISOString();
+    const receiptId = `VAL_INDEP_${taskId}_v${version}_${createHash('sha256').update(sha + validatedAt).digest('hex').slice(0, 10)}`;
+
+    let parserName = 'independent-library-parser';
+    let parserVersion = '1.0.0';
+    let result: 'PASS' | 'FAIL' = 'PASS';
+    let pageOrCellCount: number | undefined;
+    let error: string | null = null;
+
+    try {
+      if (format === 'PDF') {
+        parserName = 'pdf-lib';
+        parserVersion = '1.17.1';
+        const pdfRes = await this.validateIndependentPdf(buf);
+        if (!pdfRes.isValid) {
+          result = 'FAIL';
+          error = pdfRes.error || 'Falha no leitor independente pdf-lib.';
+        } else {
+          pageOrCellCount = pdfRes.pageCount;
+        }
+      } else if (format === 'DOCX') {
+        parserName = 'mammoth';
+        parserVersion = '1.12.3';
+        const docxRes = await this.validateIndependentDocx(buf);
+        if (!docxRes.isValid) {
+          result = 'FAIL';
+          error = docxRes.error || 'Falha no leitor independente mammoth.';
+        }
+      } else if (format === 'XLSX') {
+        parserName = 'exceljs';
+        parserVersion = '4.4.0';
+        const xlsxRes = await this.validateIndependentXlsx(buf);
+        if (!xlsxRes.isValid) {
+          result = 'FAIL';
+          error = xlsxRes.error || 'Falha no leitor independente exceljs.';
+        } else {
+          pageOrCellCount = xlsxRes.cellCount;
+        }
+      }
+    } catch (err: any) {
+      result = 'FAIL';
+      error = err.message || String(err);
+    }
+
+    const completedAt = new Date().toISOString();
+    const commitSha = getCommitSha();
+
+    const receipt: PilotDocumentValidationReceipt = {
+      receipt_id: receiptId,
+      validation_id: receiptId,
+      validation_type: 'INDEPENDENT_LIBRARY_VALIDATION',
+      task_id: taskId,
+      document_version: version,
+      tenant_id: tenantId,
+      pilot_id: pilotId,
+      file_path: filePath || `${taskId}_v${version}.${format.toLowerCase()}`,
+      format,
+      parser_name: parserName,
+      parser_version: parserVersion,
+      file_bytes_sha256: sha,
+      result,
+      is_valid: result === 'PASS',
+      page_or_cell_count: pageOrCellCount,
+      error,
+      error_details: error,
+      execution_started_at: startedAt,
+      execution_completed_at: completedAt,
+      commit_sha: commitSha,
+      validated_at: validatedAt,
+      receipt_sha256: ''
+    };
+    receipt.receipt_sha256 = createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
+    return receipt;
+  }
+
+  public static createIndependentReceiptSync(
+    buf: Buffer,
+    format: 'PDF' | 'DOCX' | 'XLSX' | 'JSON',
+    taskId: string,
+    version: number,
+    tenantId?: string,
+    pilotId?: string,
+    mode: OperationalPilotMode = 'OPERATIONAL_PILOT',
+    filePath?: string
+  ): PilotDocumentValidationReceipt {
+    const startedAt = new Date().toISOString();
+    const sha = createHash('sha256').update(buf).digest('hex');
+    const validatedAt = new Date().toISOString();
+    const receiptId = `VAL_INDEP_${taskId}_v${version}_${createHash('sha256').update(sha + validatedAt).digest('hex').slice(0, 10)}`;
+
+    let parserName = 'independent-library-parser';
+    let parserVersion = '1.0.0';
+    let result: 'PASS' | 'FAIL' = 'PASS';
+    let pageOrCellCount: number | undefined;
+    let error: string | null = null;
+
+    try {
+      if (format === 'PDF') {
+        parserName = 'pdf-lib';
+        parserVersion = '1.17.1';
+        const runnerScript = `
+          const { PDFDocument } = require('pdf-lib');
+          const chunks = [];
+          process.stdin.on('data', c => chunks.push(c));
+          process.stdin.on('end', async () => {
+            try {
+              const doc = await PDFDocument.load(Buffer.concat(chunks), { ignoreEncryption: true });
+              const cnt = doc.getPageCount();
+              if (cnt === 0) {
+                process.stdout.write(JSON.stringify({ isValid: false, error: 'Documento PDF com 0 páginas.' }));
+              } else {
+                process.stdout.write(JSON.stringify({ isValid: true, pageCount: cnt }));
+              }
+            } catch (e) {
+              process.stdout.write(JSON.stringify({ isValid: false, error: e.message }));
+            }
+          });
+        `;
+        const res = execFileSync(process.execPath, ['-e', runnerScript], { input: buf, encoding: 'utf8' });
+        const parsed = JSON.parse(res);
+        if (!parsed.isValid) {
+          result = 'FAIL';
+          error = parsed.error || 'Falha no leitor independente pdf-lib.';
+        } else {
+          pageOrCellCount = parsed.pageCount;
+        }
+      } else if (format === 'DOCX') {
+        parserName = 'mammoth';
+        parserVersion = '1.12.3';
+        const runnerScript = `
+          const mammoth = require('mammoth');
+          const chunks = [];
+          process.stdin.on('data', c => chunks.push(c));
+          process.stdin.on('end', async () => {
+            try {
+              const res = await mammoth.extractRawText({ buffer: Buffer.concat(chunks) });
+              const txt = (res.value || '').trim();
+              if (!txt) {
+                process.stdout.write(JSON.stringify({ isValid: false, error: 'Documento DOCX vazio extraído pelo mammoth.' }));
+              } else {
+                process.stdout.write(JSON.stringify({ isValid: true, textLength: txt.length }));
+              }
+            } catch (e) {
+              process.stdout.write(JSON.stringify({ isValid: false, error: e.message }));
+            }
+          });
+        `;
+        const res = execFileSync(process.execPath, ['-e', runnerScript], { input: buf, encoding: 'utf8' });
+        const parsed = JSON.parse(res);
+        if (!parsed.isValid) {
+          result = 'FAIL';
+          error = parsed.error || 'Falha no leitor independente mammoth.';
+        }
+      } else if (format === 'XLSX') {
+        parserName = 'exceljs';
+        parserVersion = '4.4.0';
+        const runnerScript = `
+          const ExcelJS = require('exceljs');
+          const chunks = [];
+          process.stdin.on('data', c => chunks.push(c));
+          process.stdin.on('end', async () => {
+            try {
+              const wb = new ExcelJS.Workbook();
+              await wb.xlsx.load(Buffer.concat(chunks));
+              if (wb.worksheets.length === 0) {
+                process.stdout.write(JSON.stringify({ isValid: false, error: '0 folhas encontradas no XLSX.' }));
+                return;
+              }
+              let totalCells = 0;
+              wb.worksheets.forEach(ws => {
+                ws.eachRow(r => r.eachCell(() => totalCells++));
+              });
+              if (totalCells === 0) {
+                process.stdout.write(JSON.stringify({ isValid: false, error: 'XLSX sem células de dados.' }));
+              } else {
+                process.stdout.write(JSON.stringify({ isValid: true, cellCount: totalCells }));
+              }
+            } catch (e) {
+              process.stdout.write(JSON.stringify({ isValid: false, error: e.message }));
+            }
+          });
+        `;
+        const res = execFileSync(process.execPath, ['-e', runnerScript], { input: buf, encoding: 'utf8' });
+        const parsed = JSON.parse(res);
+        if (!parsed.isValid) {
+          result = 'FAIL';
+          error = parsed.error || 'Falha no leitor independente exceljs.';
+        } else {
+          pageOrCellCount = parsed.cellCount;
+        }
+      }
+    } catch (err: any) {
+      result = 'FAIL';
+      error = err.message || String(err);
+    }
+
+    const completedAt = new Date().toISOString();
+    const commitSha = getCommitSha();
+
+    const receipt: PilotDocumentValidationReceipt = {
+      receipt_id: receiptId,
+      validation_id: receiptId,
+      validation_type: 'INDEPENDENT_LIBRARY_VALIDATION',
+      task_id: taskId,
+      document_version: version,
+      tenant_id: tenantId,
+      pilot_id: pilotId,
+      file_path: filePath || `${taskId}_v${version}.${format.toLowerCase()}`,
+      format,
+      parser_name: parserName,
+      parser_version: parserVersion,
+      file_bytes_sha256: sha,
+      result,
+      is_valid: result === 'PASS',
+      page_or_cell_count: pageOrCellCount,
+      error,
+      error_details: error,
+      execution_started_at: startedAt,
+      execution_completed_at: completedAt,
+      commit_sha: commitSha,
+      validated_at: validatedAt,
+      receipt_sha256: ''
+    };
+    receipt.receipt_sha256 = createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
+    return receipt;
+  }
+
+  public static createDocumentValidationReceipt(
+    buf: Buffer,
+    format: 'PDF' | 'DOCX' | 'XLSX' | 'JSON',
+    taskId: string,
+    version: number,
+    mode: OperationalPilotMode = 'OPERATIONAL_PILOT',
+    tenantId?: string,
+    pilotId?: string
+  ): PilotDocumentValidationReceipt {
+    return this.createIndependentReceiptSync(buf, format, taskId, version, tenantId, pilotId, mode);
+  }
+
+  public static readWithIndependentLibrary(
+    buf: Buffer,
+    format: 'PDF' | 'DOCX' | 'XLSX' | 'JSON'
+  ): { success: boolean; error?: string } {
+    if (format === 'JSON') return { success: true };
+    const receipt = this.createIndependentReceiptSync(buf, format, 'EXPORT_CHECK', 1);
+    return {
+      success: receipt.result === 'PASS',
+      error: receipt.error || undefined
+    };
+  }
+
+  public static createBothValidationReceipts(
+    buf: Buffer,
+    format: 'PDF' | 'DOCX' | 'XLSX' | 'JSON',
+    taskId: string,
+    version: number,
+    tenantId?: string,
+    pilotId?: string,
+    mode: OperationalPilotMode = 'OPERATIONAL_PILOT',
+    filePath?: string
+  ): [PilotDocumentValidationReceipt, PilotDocumentValidationReceipt] {
+    const struct = this.createStructuralReceipt(buf, format, taskId, version, tenantId, pilotId, mode, filePath);
+    const indep = this.createIndependentReceiptSync(buf, format, taskId, version, tenantId, pilotId, mode, filePath);
+    return [struct, indep];
+  }
+
+  public static async createBothValidationReceiptsAsync(
+    buf: Buffer,
+    format: 'PDF' | 'DOCX' | 'XLSX' | 'JSON',
+    taskId: string,
+    version: number,
+    tenantId?: string,
+    pilotId?: string,
+    mode: OperationalPilotMode = 'OPERATIONAL_PILOT',
+    filePath?: string
+  ): Promise<[PilotDocumentValidationReceipt, PilotDocumentValidationReceipt]> {
+    const struct = this.createStructuralReceipt(buf, format, taskId, version, tenantId, pilotId, mode, filePath);
+    const indep = await this.createIndependentReceipt(buf, format, taskId, version, tenantId, pilotId, mode, filePath);
+    return [struct, indep];
   }
 
   public static async validateWithIndependentReaders(
@@ -564,7 +847,7 @@ export class PhysicalDocumentValidator {
       if (!ind.isValid) {
         return { isValid: false, sha256: baseResult.sha256, error: ind.error };
       }
-      return { isValid: true, sha256: baseResult.sha256, files: ind.files, cellCount: ind.cellCount };
+      return { isValid: true, sha256: baseResult.sha256, cellCount: ind.cellCount };
     }
 
     return baseResult;
@@ -666,9 +949,14 @@ export class PhysicalDocumentValidator {
   <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
 </Relationships>`;
 
+    const wbRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
+</Relationships>`;
+
     const workbookXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-  <sheets><sheet name="${escapeXml(sheetTitle)}" sheetId="1" r:id="rId1" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"/></sheets>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <sheets><sheet name="${escapeXml(sheetTitle)}" sheetId="1" r:id="rId1"/></sheets>
 </workbook>`;
 
     const sheetXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -686,6 +974,7 @@ export class PhysicalDocumentValidator {
     return SimpleZip.create([
       { path: '[Content_Types].xml', data: Buffer.from(contentTypes, 'utf8') },
       { path: '_rels/.rels', data: Buffer.from(rels, 'utf8') },
+      { path: 'xl/_rels/workbook.xml.rels', data: Buffer.from(wbRels, 'utf8') },
       { path: 'xl/workbook.xml', data: Buffer.from(workbookXml, 'utf8') },
       { path: 'xl/worksheets/sheet1.xml', data: Buffer.from(sheetXml, 'utf8') }
     ]);

@@ -198,28 +198,51 @@ if (phase === 'execute' || phase === 'all') {
 
   for (const taskDef of taskDefinitions) {
     taskIndex++;
-    const idempKey = `IDEMP_${taskDef.id || taskDef.task_id}_2026`;
-    const taskId = taskDef.id || taskDef.task_id;
-    const empId = taskDef.empId || taskDef.employee_id;
+    const taskId = taskDef.task_id || taskDef.id;
+    const empId = taskDef.employee_id || taskDef.empId;
     const taskFormat = taskDef.format;
     const taskTitle = taskDef.title;
     const taskInstruction = taskDef.instruction;
-    const taskInput = taskDef.input || taskDef.input_data;
-    const requester = taskDef.requested_by || (mode === 'OPERATIONAL_PILOT' ? null : 'operador_saso_01');
+    const taskInput = taskDef.input_data || taskDef.input;
+    const requester = taskDef.requested_by;
+    const receivedAt = taskDef.received_at;
+    const idempKey = taskDef.idempotency_key;
+    const pilotId = taskDef.pilot_id;
+    const tenantId = taskDef.tenant_id;
 
-    if (!requester && mode === 'OPERATIONAL_PILOT') {
-      console.error(`[ERRO FATAL] Solicitante ausente para a tarefa ${taskId} em modo operacional.`);
+    if (!taskId) {
+      console.error(`[ERRO FATAL] task_id ausente na definição da tarefa #${taskIndex}.`);
+      process.exit(1);
+    }
+    if (!idempKey) {
+      console.error(`[ERRO FATAL] idempotency_key ausente na tarefa '${taskId}'. Fabricação de chaves proibida.`);
+      process.exit(1);
+    }
+    if (!receivedAt) {
+      console.error(`[ERRO FATAL] received_at ausente na tarefa '${taskId}'. Fabricação de timestamp proibida.`);
+      process.exit(1);
+    }
+    if (!requester) {
+      console.error(`[ERRO FATAL] requested_by ausente na tarefa '${taskId}'.`);
+      process.exit(1);
+    }
+    if (!pilotId || pilotId !== pilotConfig.pilot_id) {
+      console.error(`[ERRO FATAL] pilot_id divergente ou ausente na tarefa '${taskId}': esperado '${pilotConfig.pilot_id}', obtido '${pilotId}'.`);
+      process.exit(1);
+    }
+    if (!tenantId || tenantId !== pilotConfig.tenant_id) {
+      console.error(`[ERRO FATAL] tenant_id divergente ou ausente na tarefa '${taskId}': esperado '${pilotConfig.tenant_id}', obtido '${tenantId}'.`);
       process.exit(1);
     }
 
     // 1. Executar tarefa (inclui validação física independente prévia e emissão do desafio Fase A)
     const receipt = engine.executeTask({
       task_id: taskId,
-      pilot_id: pilotConfig.pilot_id,
-      tenant_id: pilotConfig.tenant_id,
+      pilot_id: pilotId,
+      tenant_id: tenantId,
       employee_id: empId,
       requested_by: requester,
-      received_at: new Date().toISOString(),
+      received_at: receivedAt,
       title: taskTitle,
       instruction: taskInstruction,
       input_data: taskInput,
@@ -251,13 +274,15 @@ if (phase === 'execute' || phase === 'all') {
     const reviewerKey = reviewerCfg?.secret_or_key || 'SIMULATION_PILOT_DEV_REVIEW_KEY';
 
     const decision = taskDef.needsCorrection ? 'APPROVED_WITH_CORRECTIONS' : 'APPROVED';
+    const eventSignedAt = new Date().toISOString();
 
-    // Gerar assinatura canônica do desafio HMAC com o timestamp do servidor
+    // Gerar assinatura canônica do desafio HMAC com o eventSignedAt
     const reviewerSig = PilotExternalValidator.generateCanonicalChallengeSignature(
       challenge,
       reviewer,
       decision,
-      reviewerKey
+      reviewerKey,
+      eventSignedAt
     );
 
     engine.reviewTask({
@@ -271,6 +296,7 @@ if (phase === 'execute' || phase === 'all') {
         : 'Revisão humana simulada concluída. Documento aprovado.',
       corrections_requested: taskDef.needsCorrection ? ['Ajuste de cláusula / valor exato'] : undefined,
       corrected_content: taskDef.needsCorrection ? (taskDef.correctionText || 'CONTEUDO_CORRIGIDO_V2') : undefined,
+      event_signed_at: eventSignedAt,
       signature: reviewerSig
     });
 

@@ -1,4 +1,4 @@
-﻿import { PhysicalDocumentValidator } from '../../packages/runtime/dist/pilot/PhysicalDocumentValidator.js';
+import { PhysicalDocumentValidator } from '../../packages/runtime/dist/pilot/PhysicalDocumentValidator.js';
 
 export function getSimulationPilotConfig() {
   return {
@@ -22,7 +22,7 @@ export function getSimulationPilotConfig() {
 }
 
 export function getSimulationTaskDefinitions() {
-  return [
+  const rawTasks = [
     // Employee 66: Document Classification (Accounting)
     {
       id: 'TASK_SASO_001',
@@ -316,4 +316,24 @@ export function getSimulationTaskDefinitions() {
       input: { period: 'Exercicio 2026 - Trimestre 2' }
     }
   ];
+
+  return rawTasks.map((t, idx) => ({
+    task_id: t.id,
+    id: t.id,
+    pilot_id: 'PILOT_SASO_2026_09',
+    tenant_id: 'tenant_pilot_angola_ops_01',
+    employee_id: t.empId,
+    empId: t.empId,
+    requested_by: 'operador_saso_01',
+    received_at: `2026-09-15T09:${String(10 + Math.floor(idx / 2)).padStart(2, '0')}:${String((idx % 2) * 30).padStart(2, '0')}.000Z`,
+    idempotency_key: `IDEMP_${t.id}_2026`,
+    title: t.title,
+    instruction: t.instruction,
+    input_data: t.input,
+    input: t.input,
+    format: t.format,
+    execution_mode: 'SIMULATION',
+    needsCorrection: t.needsCorrection,
+    correctionText: t.correctionText
+  }));
 }

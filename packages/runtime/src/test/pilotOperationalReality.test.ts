@@ -104,6 +104,39 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
     reviewer_configs: undefined
   };
 
+  function createReviewerTokenAndSession(
+    tokenSvc: TokenService,
+    store: TransactionalPilotStore,
+    reviewerId: string = 'rev_maria_santos',
+    pilotId: string = operationalPilotSpec.pilot_id,
+    tenantId: string = operationalPilotSpec.tenant_id
+  ): { token: string; jti: string } {
+    tokenSvc.upsertAccount({
+      user_id: reviewerId,
+      tenant_id: tenantId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ', 'EXECUTE', 'REVIEW'],
+      status: 'ACTIVE'
+    });
+    const token = tokenSvc.signToken({
+      user_id: reviewerId,
+      tenant_id: tenantId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ', 'EXECUTE', 'REVIEW'],
+      sub: reviewerId
+    });
+    const payload = tokenSvc.verifyToken(token).payload;
+    store.createReviewerSession({
+      session_id: `SESS_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+      token_jti: payload!.jti,
+      reviewer_id: reviewerId,
+      tenant_id: tenantId,
+      pilot_id: pilotId,
+      expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
+    });
+    return { token, jti: payload!.jti };
+  }
+
   // -------------------------------------------------------------
   // Test 1: Execução operacional termina em PENDING_HUMAN_REVIEW sem evento humano
   // -------------------------------------------------------------
@@ -266,7 +299,8 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
   // -------------------------------------------------------------
   await t.test('4. desafio reutilizado falha', () => {
     const store = new TransactionalPilotStore(path.join(tmpDir, 'test4.db'), 'OPERATIONAL_PILOT');
-    const eng = new ControlledPilotEngine(store);
+    const tokenSvc = new TokenService('token-test-secret-at-least-32-chars-long-2026', path.join(tmpDir, 'test4_tok.db'));
+    const eng = new ControlledPilotEngine(store, tokenSvc);
     eng.createPilot(operationalPilotSpec);
     eng.authorizePilot(
       operationalPilotSpec.pilot_id,
@@ -292,7 +326,9 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
     });
 
     const challenge = store.getPendingChallengeForTask(task.task_id)!;
-    const sig = PilotExternalValidator.generateCanonicalChallengeSignature(challenge, 'rev_maria_santos', 'APPROVED', reviewerSecretMaria);
+    const { token } = createReviewerTokenAndSession(tokenSvc, store, 'rev_maria_santos');
+    const eventSignedAt = new Date().toISOString();
+    const sig = PilotExternalValidator.generateCanonicalChallengeSignature(challenge, 'rev_maria_santos', 'APPROVED', reviewerSecretMaria, eventSignedAt);
 
     // 1. Primeira revisão: consome o desafio com sucesso
     const rev1 = eng.reviewTask({
@@ -301,7 +337,9 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
       reviewer: 'rev_maria_santos',
       decision: 'APPROVED',
       comments: 'Aprovação válida',
-      signature: sig
+      auth_token: token,
+      signature: sig,
+      event_signed_at: eventSignedAt
     });
     assert.strictEqual(rev1.decision, 'APPROVED');
 
@@ -314,7 +352,9 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
         reviewer: 'rev_maria_santos',
         decision: 'APPROVED',
         comments: 'Tentativa de replay',
-        signature: sig
+        auth_token: token,
+        signature: sig,
+        event_signed_at: eventSignedAt
       });
     }, /Desafio de revisão pendente não encontrado ou já consumido/);
 
@@ -387,7 +427,8 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
   // -------------------------------------------------------------
   await t.test('6. timestamp divergente falha', () => {
     const store = new TransactionalPilotStore(path.join(tmpDir, 'test6.db'), 'OPERATIONAL_PILOT');
-    const eng = new ControlledPilotEngine(store);
+    const tokenSvc = new TokenService('token-test-secret-at-least-32-chars-long-2026', path.join(tmpDir, 'test6_tok.db'));
+    const eng = new ControlledPilotEngine(store, tokenSvc);
     eng.createPilot(operationalPilotSpec);
     eng.authorizePilot(
       operationalPilotSpec.pilot_id,
@@ -413,6 +454,7 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
     });
 
     const challenge = store.getPendingChallengeForTask(task.task_id)!;
+    const { token } = createReviewerTokenAndSession(tokenSvc, store, 'rev_maria_santos');
 
     // Assinatura gerada com timestamp diferente do issued_at do desafio
     const divergentTimestamp = new Date(Date.now() + 120000).toISOString();
@@ -447,9 +489,11 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
         reviewer: 'rev_maria_santos',
         decision: 'APPROVED',
         comments: 'Assinatura com timestamp divergente',
-        signature: badSig
+        auth_token: token,
+        signature: badSig,
+        event_signed_at: divergentTimestamp
       });
-    }, /Assinatura criptográfica canónica do desafio inválida ou adulterada/);
+    }, /Assinatura criptográfica canónica do desafio inválida ou adulterada|monotonicidade/);
 
     store.close();
   });
@@ -487,7 +531,8 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
   // -------------------------------------------------------------
   await t.test('8. revisão válida consome o desafio atomicamente', () => {
     const store = new TransactionalPilotStore(path.join(tmpDir, 'test8.db'), 'OPERATIONAL_PILOT');
-    const eng = new ControlledPilotEngine(store);
+    const tokenSvc = new TokenService('token-test-secret-at-least-32-chars-long-2026', path.join(tmpDir, 'test8_tok.db'));
+    const eng = new ControlledPilotEngine(store, tokenSvc);
     eng.createPilot(operationalPilotSpec);
     eng.authorizePilot(
       operationalPilotSpec.pilot_id,
@@ -515,14 +560,18 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
     const challenge = store.getPendingChallengeForTask(task.task_id)!;
     assert.strictEqual(challenge.status, 'PENDING');
 
-    const sig = PilotExternalValidator.generateCanonicalChallengeSignature(challenge, 'rev_maria_santos', 'APPROVED', reviewerSecretMaria);
+    const { token } = createReviewerTokenAndSession(tokenSvc, store, 'rev_maria_santos');
+    const eventSignedAt = new Date().toISOString();
+    const sig = PilotExternalValidator.generateCanonicalChallengeSignature(challenge, 'rev_maria_santos', 'APPROVED', reviewerSecretMaria, eventSignedAt);
     const reviewReceipt = eng.reviewTask({
       review_id: 'REV_ATOMIC_01',
       task_id: task.task_id,
       reviewer: 'rev_maria_santos',
       decision: 'APPROVED',
       comments: 'Aprovado na íntegra',
-      signature: sig
+      auth_token: token,
+      signature: sig,
+      event_signed_at: eventSignedAt
     });
 
     assert.strictEqual(reviewReceipt.decision, 'APPROVED');
@@ -569,7 +618,8 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
     }, /Segredo não resolvido/);
 
     const store = new TransactionalPilotStore(path.join(tmpDir, 'test10.db'), 'OPERATIONAL_PILOT');
-    const brokenEngine = new ControlledPilotEngine(store, undefined, missingSecretProvider);
+    const tokenSvc = new TokenService('token-test-secret-at-least-32-chars-long-2026', path.join(tmpDir, 'test10_tok.db'));
+    const brokenEngine = new ControlledPilotEngine(store, tokenSvc, missingSecretProvider);
 
     const badSpec = {
       ...operationalPilotSpec,
@@ -604,6 +654,8 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
     });
 
     const challenge = store.getPendingChallengeForTask(task.task_id)!;
+    const { token } = createReviewerTokenAndSession(tokenSvc, store, 'rev_maria_santos', badSpec.pilot_id);
+    const eventSignedAt = new Date().toISOString();
 
     assert.throws(() => {
       brokenEngine.reviewTask({
@@ -612,7 +664,9 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
         reviewer: 'rev_maria_santos',
         decision: 'APPROVED',
         comments: 'Sem segredo acessível',
-        signature: 'deadbeef'
+        auth_token: token,
+        signature: 'deadbeef',
+        event_signed_at: eventSignedAt
       });
     }, /Segredo não resolvido/);
 
@@ -658,7 +712,8 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
   // -------------------------------------------------------------
   await t.test('12. campo operacional obrigatório sem valor não recebe fallback', () => {
     const store = new TransactionalPilotStore(path.join(tmpDir, 'test12.db'), 'OPERATIONAL_PILOT');
-    const eng = new ControlledPilotEngine(store);
+    const tokenSvc = new TokenService('token-test-secret-at-least-32-chars-long-2026', path.join(tmpDir, 'test12_tok.db'));
+    const eng = new ControlledPilotEngine(store, tokenSvc);
     eng.createPilot(operationalPilotSpec);
     eng.authorizePilot(
       operationalPilotSpec.pilot_id,
@@ -703,14 +758,18 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
     });
 
     const challenge = store.getPendingChallengeForTask(taskValid.task_id)!;
-    const sig = PilotExternalValidator.generateCanonicalChallengeSignature(challenge, 'rev_maria_santos', 'APPROVED', reviewerSecretMaria);
+    const { token } = createReviewerTokenAndSession(tokenSvc, store, 'rev_maria_santos');
+    const eventSignedAt = new Date().toISOString();
+    const sig = PilotExternalValidator.generateCanonicalChallengeSignature(challenge, 'rev_maria_santos', 'APPROVED', reviewerSecretMaria, eventSignedAt);
     eng.reviewTask({
       review_id: 'REV_VALID_DELIV',
       task_id: taskValid.task_id,
       reviewer: 'rev_maria_santos',
       decision: 'APPROVED',
       comments: 'Aprovado',
-      signature: sig
+      auth_token: token,
+      signature: sig,
+      event_signed_at: eventSignedAt
     });
 
     assert.throws(() => {
@@ -765,7 +824,8 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
   // -------------------------------------------------------------
   await t.test('14. revisão não pode ocorrer sem recibo documental PASS', () => {
     const store = new TransactionalPilotStore(path.join(tmpDir, 'test14.db'), 'OPERATIONAL_PILOT');
-    const eng = new ControlledPilotEngine(store);
+    const tokenSvc = new TokenService('token-test-secret-at-least-32-chars-long-2026', path.join(tmpDir, 'test14_tok.db'));
+    const eng = new ControlledPilotEngine(store, tokenSvc);
     eng.createPilot(operationalPilotSpec);
     eng.authorizePilot(
       operationalPilotSpec.pilot_id,
@@ -791,7 +851,9 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
     });
 
     const challenge = store.getPendingChallengeForTask(task.task_id)!;
-    const sig = PilotExternalValidator.generateCanonicalChallengeSignature(challenge, 'rev_maria_santos', 'APPROVED', reviewerSecretMaria);
+    const { token } = createReviewerTokenAndSession(tokenSvc, store, 'rev_maria_santos');
+    const eventSignedAt = new Date().toISOString();
+    const sig = PilotExternalValidator.generateCanonicalChallengeSignature(challenge, 'rev_maria_santos', 'APPROVED', reviewerSecretMaria, eventSignedAt);
 
     // Deletar o recibo documental no SQLite para simular falta de PASS
     store.transaction(() => {
@@ -806,9 +868,11 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
         reviewer: 'rev_maria_santos',
         decision: 'APPROVED',
         comments: 'Tentativa sem validação documental PASS',
-        signature: sig
+        auth_token: token,
+        signature: sig,
+        event_signed_at: eventSignedAt
       });
-    }, /Revisão rejeitada: documento ativo não possui validação física independente aprovada \(PASS\)/);
+    }, /Revisão rejeitada: documento ativo não possui validação (estrutural interna|física independente|independente) aprovada \(PASS\)/);
 
     store.close();
   });

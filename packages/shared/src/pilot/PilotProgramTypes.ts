@@ -50,17 +50,26 @@ export interface PilotReviewChallenge {
   reviewer_id?: string | null;
   nonce: string;
   issued_at: string;
+  challenge_issued_at?: string;
   expires_at: string;
   status: 'PENDING' | 'CONSUMED' | 'EXPIRED';
   consumed_at?: string | null;
   consumption_receipt_sha256?: string | null;
 }
 
+export type PilotDocumentValidationType =
+  | 'INTERNAL_STRUCTURAL_VALIDATION'
+  | 'INDEPENDENT_LIBRARY_VALIDATION';
+
 export interface PilotDocumentValidationReceipt {
   receipt_id: string;
   validation_id?: string;
+  validation_type: PilotDocumentValidationType;
   task_id: string;
   document_version: number;
+  tenant_id?: string;
+  pilot_id?: string;
+  file_path?: string;
   format: 'PDF' | 'DOCX' | 'XLSX' | 'JSON';
   parser_name: string;
   parser_version: string;
@@ -70,6 +79,10 @@ export interface PilotDocumentValidationReceipt {
   page_or_cell_count?: number;
   error?: string | null;
   error_details?: string | null;
+  execution_started_at?: string;
+  execution_completed_at?: string;
+  commit_sha?: string;
+  receipt_sha256?: string;
   validated_at: string;
 }
 
@@ -161,6 +174,14 @@ export interface PilotHumanReviewReceipt {
   auth_method: 'SESSION_TOKEN' | 'HMAC_SIGNATURE' | 'API_KEY';
   review_signature_sha256: string;
   receipt_sha256: string;
+  challenge_issued_at?: string;
+  event_signed_at?: string;
+  review_received_at?: string;
+  review_accepted_at?: string;
+  challenge_consumed_at?: string;
+  auth_token_sha256?: string;
+  session_id?: string;
+  session_reference?: string;
 }
 
 export interface PilotDeliveryReceipt {
