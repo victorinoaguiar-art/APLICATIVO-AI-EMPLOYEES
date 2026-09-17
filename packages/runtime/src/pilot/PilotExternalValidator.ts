@@ -298,6 +298,9 @@ export class PilotExternalValidator {
       throw new Error('Chave secreta de assinatura ausente ou inválida. Operação rejeitada.');
     }
     if (params.challengeId && params.nonce && params.tenantId && params.pilotId) {
+      if (params.documentVersion === undefined || params.documentVersion === null || typeof params.documentVersion !== 'number' || !Number.isInteger(params.documentVersion) || params.documentVersion < 1) {
+        throw new Error("generateReviewerSignature: 'documentVersion' obrigatório e deve ser inteiro positivo.");
+      }
       return this.generateCanonicalChallengeSignature(
         {
           challengeId: params.challengeId,
@@ -305,7 +308,7 @@ export class PilotExternalValidator {
           tenantId: params.tenantId,
           pilotId: params.pilotId,
           taskId: params.taskId,
-          documentVersion: params.documentVersion || 1,
+          documentVersion: params.documentVersion,
           documentSha256: params.targetDocumentHash,
           reviewerId: params.reviewerId,
           decision: params.decision,

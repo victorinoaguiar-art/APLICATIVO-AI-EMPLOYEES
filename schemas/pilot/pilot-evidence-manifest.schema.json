@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://ai-employee.net/schemas/pilot/pilotEvidenceManifest.schema.json",
+  "$id": "https://ai-employee.net/schemas/pilot/pilot-evidence-manifest.schema.json",
   "title": "PilotEvidenceManifest",
   "type": "object",
   "additionalProperties": false,

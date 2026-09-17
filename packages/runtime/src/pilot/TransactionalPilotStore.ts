@@ -22,7 +22,7 @@ function canonicalJson(obj: any): string {
   if (Array.isArray(obj)) {
     return '[' + obj.map(canonicalJson).join(',') + ']';
   }
-  const keys = Object.keys(obj).sort();
+  const keys = Object.keys(obj).filter(k => obj[k] !== undefined).sort();
   return '{' + keys.map(k => JSON.stringify(k) + ':' + canonicalJson(obj[k])).join(',') + '}';
 }
 
@@ -468,15 +468,38 @@ export class TransactionalPilotStore {
     if (task.received_at !== existing.received_at) {
       throw new Error(`updateTask: violação de integridade. 'received_at' não pode ser alterado após a criação (existente '${existing.received_at}', recebido '${task.received_at}').`);
     }
+    // Validar version do existing sem qualquer fallback
+    if (existing.version === undefined || existing.version === null || typeof existing.version !== 'number' || !Number.isInteger(existing.version) || existing.version < 1) {
+      throw new Error(`updateTask: versão persistida inválida ou ausente no registo existente para a tarefa '${task.task_id}'.`);
+    }
+
     if (task.version === undefined || task.version === null || typeof task.version !== 'number' || !Number.isInteger(task.version) || task.version < 1) {
       throw new Error("updateTask: 'version' obrigatória e deve ser inteiro positivo.");
     }
-    const existingVersion = existing.version ?? 1;
+    const existingVersion = existing.version;
     if (task.version < existingVersion) {
       throw new Error(`updateTask: redução de versão proibida (existente ${existingVersion}, recebida ${task.version}).`);
     }
     if (task.version > existingVersion + 1) {
       throw new Error(`updateTask: salto de versão injustificado proibido (existente ${existingVersion}, recebida ${task.version}).`);
+    }
+
+    // Validar input_snapshot_sha256 obrigatório e imutável
+    if (!task.input_snapshot_sha256 || typeof task.input_snapshot_sha256 !== 'string' || !/^[a-f0-9]{64}$/i.test(task.input_snapshot_sha256)) {
+      throw new Error("updateTask: 'input_snapshot_sha256' obrigatório e deve ser hash SHA-256 de 64 caracteres hexadecimais.");
+    }
+    if (task.input_snapshot_sha256 !== existing.input_snapshot_sha256) {
+      throw new Error(`updateTask: alteração ou remoção de 'input_snapshot_sha256' proibida (existente '${existing.input_snapshot_sha256}', recebido '${task.input_snapshot_sha256}').`);
+    }
+
+    // Validar congruência entre a coluna relacional do SQLite e o receipt_json existente
+    const row = this.db.prepare(`
+      SELECT input_snapshot_sha256, version, idempotency_key FROM pilot_tasks WHERE task_id = ?
+    `).get(task.task_id) as any;
+    if (row) {
+      if (row.input_snapshot_sha256 !== existing.input_snapshot_sha256 || row.input_snapshot_sha256 !== task.input_snapshot_sha256) {
+        throw new Error(`updateTask: divergência entre a coluna relacional 'input_snapshot_sha256' e o recibo para tarefa '${task.task_id}'.`);
+      }
     }
 
     const stmt = this.db.prepare(`
@@ -571,6 +594,39 @@ export class TransactionalPilotStore {
       throw new Error(`saveOutput: SHA-256 divergente para output ${output.output_id}: declarado ${output.file_bytes_sha256}, calculado ${computedSha}.`);
     }
     const sha = output.file_bytes_sha256;
+
+    if (!output.file_name || typeof output.file_name !== 'string' || output.file_name.trim() === '') {
+      throw new Error("saveOutput: 'file_name' obrigatório e não pode ser vazio.");
+    }
+    const cleanFileName = output.file_name.trim();
+    if (cleanFileName.includes('..') || cleanFileName.includes('/') || cleanFileName.includes('\\')) {
+      throw new Error(`saveOutput: Path traversal detectado. Nome de ficheiro de output não pode conter directórios ou '..': '${cleanFileName}'.`);
+    }
+    if (output.file_path && typeof output.file_path === 'string') {
+      const cleanPath = output.file_path.trim();
+      if (cleanPath.startsWith('..') || cleanPath.includes('/../') || cleanPath.includes('\\..\\')) {
+        throw new Error(`saveOutput: Path traversal detectado em file_path: '${cleanPath}'.`);
+      }
+    }
+
+    // Check duplicate output_id across different tasks or file names
+    const existingOutput = this.db.prepare(`SELECT output_id, task_id, file_name FROM task_outputs WHERE output_id = ?`).get(output.output_id) as { output_id: string; task_id: string; file_name: string } | undefined;
+    if (existingOutput && (existingOutput.task_id !== output.task_id || existingOutput.file_name !== cleanFileName)) {
+      throw new Error(`saveOutput: output_id '${output.output_id}' já existe para outra tarefa ou ficheiro. Re-utilização de output_id é proibida.`);
+    }
+
+    // Check case-insensitive collision in SQLite for the same tenant
+    const currentTask = this.db.prepare(`SELECT tenant_id FROM pilot_tasks WHERE task_id = ?`).get(output.task_id) as { tenant_id: string } | undefined;
+    if (currentTask) {
+      const collision = this.db.prepare(`
+        SELECT o.file_name FROM task_outputs o
+        JOIN pilot_tasks t ON t.task_id = o.task_id
+        WHERE LOWER(o.file_name) = LOWER(?) AND t.tenant_id = ? AND o.output_id != ?
+      `).get(cleanFileName, currentTask.tenant_id, output.output_id) as { file_name: string } | undefined;
+      if (collision) {
+        throw new Error(`saveOutput: Colisão case-insensitive de nome de output no tenant '${currentTask.tenant_id}': '${cleanFileName}' colide com existente '${collision.file_name}'.`);
+      }
+    }
 
     // Deactivate prior versions if new active version
     if (output.is_active !== false) {
@@ -881,6 +937,7 @@ export class TransactionalPilotStore {
 
       const consumedAt = reviewReceipt.challenge_consumed_at || now;
       reviewReceipt.challenge_consumed_at = consumedAt;
+      reviewReceipt.receipt_sha256 = '';
       reviewReceipt.receipt_sha256 = createHash('sha256').update(canonicalJson(reviewReceipt)).digest('hex');
 
       this.db.prepare(`

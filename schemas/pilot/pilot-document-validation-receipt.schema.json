@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employee.net/schemas/pilot/pilot-document-validation-receipt.schema.json",
+  "title": "PilotDocumentValidationReceipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receipt_id",
+    "validation_type",
+    "task_id",
+    "document_version",
+    "format",
+    "parser_name",
+    "parser_version",
+    "file_bytes_sha256",
+    "result",
+    "is_valid",
+    "tenant_id",
+    "pilot_id",
+    "commit_sha",
+    "receipt_sha256",
+    "validated_at"
+  ],
+  "properties": {
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "validation_id": {
+      "type": "string"
+    },
+    "validation_type": {
+      "type": "string",
+      "enum": [
+        "INTERNAL_STRUCTURAL_VALIDATION",
+        "INDEPENDENT_LIBRARY_VALIDATION"
+      ]
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "document_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "tenant_id": {
+      "type": "string"
+    },
+    "pilot_id": {
+      "type": "string"
+    },
+    "file_path": {
+      "type": "string"
+    },
+    "format": {
+      "type": "string",
+      "enum": [
+        "PDF",
+        "DOCX",
+        "XLSX",
+        "JSON"
+      ]
+    },
+    "parser_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parser_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "file_bytes_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
+    },
+    "is_valid": {
+      "type": "boolean"
+    },
+    "page_or_cell_count": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "error": {
+      "type": ["string", "null"]
+    },
+    "error_details": {
+      "type": ["string", "null"]
+    },
+    "execution_started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "execution_completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "receipt_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "validated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

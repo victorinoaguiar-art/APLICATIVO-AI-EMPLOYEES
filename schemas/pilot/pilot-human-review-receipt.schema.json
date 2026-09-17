@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employee.net/schemas/pilot/pilot-human-review-receipt.schema.json",
+  "title": "PilotHumanReviewReceipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "review_id",
+    "task_id",
+    "pilot_id",
+    "reviewer",
+    "reviewed_at",
+    "decision",
+    "comments",
+    "auth_method",
+    "review_signature_sha256",
+    "receipt_sha256",
+    "challenge_issued_at",
+    "event_signed_at",
+    "review_received_at",
+    "review_accepted_at",
+    "challenge_consumed_at"
+  ],
+  "properties": {
+    "review_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "pilot_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "reviewer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "PENDING_REVIEW",
+        "APPROVED",
+        "APPROVED_WITH_CORRECTIONS",
+        "REJECTED",
+        "BLOCKED"
+      ]
+    },
+    "comments": {
+      "type": "string"
+    },
+    "corrections_requested": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "previous_output_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "new_output_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "auth_method": {
+      "type": "string",
+      "enum": [
+        "SESSION_TOKEN",
+        "HMAC_SIGNATURE",
+        "API_KEY"
+      ]
+    },
+    "review_signature_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "receipt_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "challenge_issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "event_signed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "review_received_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "review_accepted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "challenge_consumed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "auth_token_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "session_id": {
+      "type": "string"
+    },
+    "session_reference": {
+      "type": "string"
+    }
+  }
+}

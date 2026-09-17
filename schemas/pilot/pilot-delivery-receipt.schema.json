@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employee.net/schemas/pilot/pilot-delivery-receipt.schema.json",
+  "title": "PilotDeliveryReceipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "delivery_id",
+    "task_id",
+    "pilot_id",
+    "tenant_id",
+    "delivered_to",
+    "channel",
+    "delivered_at",
+    "output_hashes",
+    "status",
+    "is_external_confirmed",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "delivery_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "pilot_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "tenant_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "delivered_to": {
+      "type": "string",
+      "minLength": 1
+    },
+    "channel": {
+      "type": "string",
+      "minLength": 1
+    },
+    "delivered_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "output_hashes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{64}$"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "ARCHIVED",
+        "READY_FOR_MANUAL_DELIVERY",
+        "DELIVERED",
+        "BLOCKED",
+        "FAILED"
+      ]
+    },
+    "is_external_confirmed": {
+      "type": "boolean"
+    },
+    "external_provider_response": {
+      "type": "object"
+    },
+    "receipt_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  }
+}

@@ -76,7 +76,7 @@ export interface PilotDocumentValidationReceipt {
   file_bytes_sha256: string;
   result: 'PASS' | 'FAIL';
   is_valid?: boolean;
-  page_or_cell_count?: number;
+  page_or_cell_count?: number | null;
   error?: string | null;
   error_details?: string | null;
   execution_started_at?: string;

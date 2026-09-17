@@ -27,6 +27,17 @@ function crc32(buf: Buffer): number {
   return (crc ^ 0xFFFFFFFF) >>> 0;
 }
 
+function canonicalJson(obj: any): string {
+  if (obj === null || typeof obj !== 'object') {
+    return JSON.stringify(obj);
+  }
+  if (Array.isArray(obj)) {
+    return '[' + obj.map(canonicalJson).join(',') + ']';
+  }
+  const keys = Object.keys(obj).filter(k => obj[k] !== undefined).sort();
+  return '{' + keys.map(k => JSON.stringify(k) + ':' + canonicalJson(obj[k])).join(',') + '}';
+}
+
 export interface ZipEntry {
   path: string;
   data: Buffer;
@@ -507,16 +518,16 @@ export class PhysicalDocumentValidator {
       file_bytes_sha256: sha,
       result,
       is_valid: result === 'PASS',
-      page_or_cell_count: pageOrCellCount,
-      error,
-      error_details: error,
+      page_or_cell_count: pageOrCellCount !== undefined ? pageOrCellCount : null,
+      error: error !== undefined ? error : null,
+      error_details: error !== undefined ? error : null,
       execution_started_at: startedAt,
       execution_completed_at: completedAt,
       commit_sha: commitSha,
       validated_at: validatedAt,
       receipt_sha256: ''
     };
-    receipt.receipt_sha256 = createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
+    receipt.receipt_sha256 = createHash('sha256').update(canonicalJson(receipt)).digest('hex');
     return receipt;
   }
 
@@ -594,16 +605,16 @@ export class PhysicalDocumentValidator {
       file_bytes_sha256: sha,
       result,
       is_valid: result === 'PASS',
-      page_or_cell_count: pageOrCellCount,
-      error,
-      error_details: error,
+      page_or_cell_count: pageOrCellCount !== undefined ? pageOrCellCount : null,
+      error: error !== undefined ? error : null,
+      error_details: error !== undefined ? error : null,
       execution_started_at: startedAt,
       execution_completed_at: completedAt,
       commit_sha: commitSha,
       validated_at: validatedAt,
       receipt_sha256: ''
     };
-    receipt.receipt_sha256 = createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
+    receipt.receipt_sha256 = createHash('sha256').update(canonicalJson(receipt)).digest('hex');
     return receipt;
   }
 
@@ -746,16 +757,16 @@ export class PhysicalDocumentValidator {
       file_bytes_sha256: sha,
       result,
       is_valid: result === 'PASS',
-      page_or_cell_count: pageOrCellCount,
-      error,
-      error_details: error,
+      page_or_cell_count: pageOrCellCount !== undefined ? pageOrCellCount : null,
+      error: error !== undefined ? error : null,
+      error_details: error !== undefined ? error : null,
       execution_started_at: startedAt,
       execution_completed_at: completedAt,
       commit_sha: commitSha,
       validated_at: validatedAt,
       receipt_sha256: ''
     };
-    receipt.receipt_sha256 = createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
+    receipt.receipt_sha256 = createHash('sha256').update(canonicalJson(receipt)).digest('hex');
     return receipt;
   }
 

@@ -1,0 +1,151 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employee.net/schemas/pilot/pilot-task-receipt.schema.json",
+  "title": "PilotTaskReceipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_id",
+    "pilot_id",
+    "tenant_id",
+    "employee_id",
+    "requested_by",
+    "received_at",
+    "input_snapshot_sha256",
+    "execution_started_at",
+    "execution_completed_at",
+    "output_files",
+    "output_hashes",
+    "human_review_status",
+    "corrections_required",
+    "delivery_status",
+    "final_status",
+    "version",
+    "idempotency_key",
+    "execution_mode",
+    "is_simulation",
+    "classification_level",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "pilot_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "tenant_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "employee_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "requested_by": {
+      "type": "string",
+      "minLength": 1
+    },
+    "received_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "input_snapshot_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "execution_started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "execution_completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "output_files": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "output_hashes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{64}$"
+      }
+    },
+    "human_review_status": {
+      "type": "string",
+      "enum": [
+        "PENDING_REVIEW",
+        "APPROVED",
+        "APPROVED_WITH_CORRECTIONS",
+        "REJECTED",
+        "BLOCKED"
+      ]
+    },
+    "reviewed_by": {
+      "type": ["string", "null"]
+    },
+    "reviewed_at": {
+      "type": ["string", "null"]
+    },
+    "corrections_required": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "delivery_status": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "ARCHIVED",
+        "READY_FOR_MANUAL_DELIVERY",
+        "DELIVERED",
+        "BLOCKED",
+        "FAILED"
+      ]
+    },
+    "final_status": {
+      "type": "string",
+      "enum": [
+        "SUCCESS",
+        "REJECTED",
+        "FAILED",
+        "BLOCKED"
+      ]
+    },
+    "error_code": {
+      "type": ["string", "null"]
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "receipt_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "execution_mode": {
+      "type": "string",
+      "enum": [
+        "SIMULATION",
+        "OPERATIONAL_PILOT"
+      ]
+    },
+    "is_simulation": {
+      "type": "boolean"
+    },
+    "classification_level": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

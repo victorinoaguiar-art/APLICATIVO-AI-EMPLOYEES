@@ -26,6 +26,7 @@ import { TransactionalPilotStore } from './TransactionalPilotStore.js';
 import { PhysicalDocumentValidator } from './PhysicalDocumentValidator.js';
 import { PilotExternalValidator } from './PilotExternalValidator.js';
 import { EnvironmentSecretProvider, scanAndRejectSensitiveFields } from './PilotSecretProvider.js';
+import { PilotAjvValidator } from './PilotAjvValidator.js';
 import { TokenService } from '@ai-employee/shared/server';
 
 function sha256(content: string | Buffer): string {
@@ -39,7 +40,7 @@ function canonicalJson(obj: any): string {
   if (Array.isArray(obj)) {
     return '[' + obj.map(canonicalJson).join(',') + ']';
   }
-  const keys = Object.keys(obj).sort();
+  const keys = Object.keys(obj).filter(k => obj[k] !== undefined).sort();
   return '{' + keys.map(k => JSON.stringify(k) + ':' + canonicalJson(obj[k])).join(',') + '}';
 }
 
@@ -412,6 +413,7 @@ export class ControlledPilotEngine {
       classification_level: classificationLevel
     };
 
+    receipt.receipt_sha256 = '';
     receipt.receipt_sha256 = sha256(canonicalJson(receipt));
 
     // Save task, output and physical BLOB atomically with immediate read verification (Passo 1)
@@ -845,6 +847,7 @@ export class ControlledPilotEngine {
     task.human_review_status = params.decision;
     task.reviewed_by = params.reviewer;
     task.reviewed_at = reviewAcceptedAt;
+    task.receipt_sha256 = '';
     task.receipt_sha256 = sha256(canonicalJson(task));
 
     const reviewReceipt: PilotHumanReviewReceipt = {
@@ -916,7 +919,10 @@ export class ControlledPilotEngine {
     }
 
     // Require independent document validation pass prior to delivery
-    const docReceipt = this.store.getDocumentValidationReceipt(params.taskId, task.version || 1);
+    if (task.version === undefined || task.version === null || typeof task.version !== 'number' || !Number.isInteger(task.version) || task.version < 1) {
+      throw new Error(`Entrega bloqueada: Versão da tarefa '${params.taskId}' inválida ou ausente.`);
+    }
+    const docReceipt = this.store.getDocumentValidationReceipt(params.taskId, task.version);
     if (!docReceipt || (!docReceipt.is_valid && docReceipt.result !== 'PASS')) {
       throw new Error(`Entrega bloqueada: Documento da tarefa '${params.taskId}' não possui validação física independente aprovada.`);
     }
@@ -943,6 +949,7 @@ export class ControlledPilotEngine {
     }
 
     task.delivery_status = status;
+    task.receipt_sha256 = '';
     task.receipt_sha256 = sha256(canonicalJson(task));
 
     const deliveryReceipt: PilotDeliveryReceipt = {
@@ -1251,13 +1258,15 @@ export class ControlledPilotEngine {
     };
   }
 
-  // -------------------------------------------------------------
-  // 7. Evidence Bundle Export & Manifest Generation
-  // -------------------------------------------------------------
-  public exportPilotEvidence(pilotId: string, outputDir: string): { files: string[]; indexHash: string } {
+  public exportPilotEvidence(
+    pilotId: string,
+    outputDir: string,
+    ajvValidator?: PilotAjvValidator
+  ): { files: string[]; indexHash: string } {
     const pilot = this.getPilot(pilotId);
     const metrics = this.calculatePilotMetrics(pilotId);
     const gates = this.evaluatePilotGates(pilotId);
+    const ajv = ajvValidator || new PilotAjvValidator();
 
     fs.mkdirSync(outputDir, { recursive: true });
     const exportSubdirs = ['task-receipts', 'review-receipts', 'delivery-receipts', 'task-outputs', 'document-validation-receipts'];
@@ -1267,6 +1276,13 @@ export class ControlledPilotEngine {
         fs.rmSync(subPath, { recursive: true, force: true });
       }
       fs.mkdirSync(subPath, { recursive: true });
+    }
+    const staleFiles = ['pilot-evidence-manifest.json', 'pilot-evidence-files.sha256'];
+    for (const f of staleFiles) {
+      const p = path.join(outputDir, f);
+      if (fs.existsSync(p)) {
+        fs.rmSync(p, { force: true });
+      }
     }
 
     // 1. Authorization receipt
@@ -1360,7 +1376,7 @@ export class ControlledPilotEngine {
       operationalState = 'PRE-PRODUCTION / L2 HARDENED (SIMULATION HARNESS)';
     } else if (pilot.execution_mode === 'OPERATIONAL_PILOT') {
       classificationStatus = 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY';
-      operationalState = 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY — AUTHENTICATED HUMAN REVIEW GATE READY — FAIL-CLOSED PERSISTENCE AND MANIFEST PROVENANCE VERIFIED — REAL PILOT NOT YET EXECUTED';
+      operationalState = 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY — AUTHENTICATED HUMAN REVIEW GATE READY — FAIL-CLOSED PERSISTENCE, AJV RECEIPTS AND RELATIONAL MANIFEST VERIFIED — REAL PILOT NOT YET EXECUTED';
     }
 
     const attestation: PilotFinalAttestation = {
@@ -1382,7 +1398,7 @@ export class ControlledPilotEngine {
     fs.writeFileSync(path.join(outputDir, 'pilot-final-attestation.json'), JSON.stringify(attestation, null, 2), 'utf8');
 
     // 10. Verify evidence directory and collect manifest entries (bidirectional validation)
-    const verified = this.verifyEvidenceDirectory(pilotId, outputDir);
+    const verified = this.verifyEvidenceDirectory(pilotId, outputDir, ajv);
 
     const manifestData = {
       manifest_version: '2.0',
@@ -1395,6 +1411,9 @@ export class ControlledPilotEngine {
       persistence_fingerprint: this.store.getPersistenceFingerprint(),
       files: verified.files
     };
+
+    // Validar manifesto gerado via Ajv Schema estrito antes de persistir no disco
+    ajv.validateEvidenceManifest(manifestData, 'pilot-evidence-manifest.json');
 
     fs.writeFileSync(
       path.join(outputDir, 'pilot-evidence-manifest.json'),
@@ -1431,7 +1450,8 @@ export class ControlledPilotEngine {
   // -------------------------------------------------------------
   public verifyEvidenceDirectory(
     pilotId: string,
-    outputDir: string
+    outputDir: string,
+    ajvValidator?: PilotAjvValidator
   ): {
     files: any[];
     totalFiles: number;
@@ -1439,6 +1459,7 @@ export class ControlledPilotEngine {
     scanDirRecursive: (baseDir: string) => { relativePath: string; fullPath: string }[];
   } {
     const pilot = this.getPilot(pilotId);
+    const ajv = ajvValidator || new PilotAjvValidator();
 
     const scanDirRecursive = (baseDir: string): { relativePath: string; fullPath: string }[] => {
       const visitedDirs = new Set<string>();
@@ -1523,10 +1544,49 @@ export class ControlledPilotEngine {
       f => f.relativePath !== 'pilot-evidence-manifest.json' && f.relativePath !== 'pilot-evidence-files.sha256'
     );
 
+    // Ponto 5: Rejeitar ambiguidades de nomes de output, colisões case-insensitive e path traversal
     const taskOutputs = this.store.getOutputsForTenant(pilot.tenant_id);
-    const outputMap = new Map<string, { task_id: string; version: number; output_id: string }>();
+    const outputMap = new Map<string, { task_id: string; version: number; output_id: string; file_bytes_sha256: string }>();
+    const dbSeenLowerNames = new Map<string, string>();
     for (const out of taskOutputs) {
-      outputMap.set(out.file_name, { task_id: out.task_id, version: out.version, output_id: out.output_id });
+      if (!out.file_name || out.file_name.trim() === '' || out.file_name.includes('..') || out.file_name.includes('/') || out.file_name.includes('\\')) {
+        throw new Error(`Output registado no SQLite com nome de ficheiro ambíguo ou inválido: '${out.file_name}'.`);
+      }
+      const lower = out.file_name.toLowerCase();
+      if (dbSeenLowerNames.has(lower) && dbSeenLowerNames.get(lower) !== out.file_name) {
+        throw new Error(`Colisão case-insensitive de outputs registada no SQLite para o tenant '${pilot.tenant_id}': '${out.file_name}' colide com '${dbSeenLowerNames.get(lower)}'.`);
+      }
+      dbSeenLowerNames.set(lower, out.file_name);
+      if (outputMap.has(out.file_name)) {
+        const prev = outputMap.get(out.file_name)!;
+        if (prev.output_id !== out.output_id) {
+          throw new Error(`Colisão de nome de output no SQLite: '${out.file_name}' associado a múltiplos output_ids ('${prev.output_id}', '${out.output_id}').`);
+        }
+      }
+      outputMap.set(out.file_name, {
+        task_id: out.task_id,
+        version: out.version,
+        output_id: out.output_id,
+        file_bytes_sha256: out.file_bytes_sha256
+      });
+    }
+
+    const diskSeenLowerOutputs = new Map<string, string>();
+    for (const f of initialFiles) {
+      if (f.relativePath.startsWith('task-outputs/')) {
+        const fileName = path.basename(f.relativePath);
+        if (f.relativePath !== `task-outputs/${fileName}`) {
+          throw new Error(`Path traversal ou subdirectório proibido em 'task-outputs': '${f.relativePath}'.`);
+        }
+        if (!fileName || fileName.trim() === '' || fileName === '.' || fileName === '..' || fileName.includes('..') || fileName.includes('/') || fileName.includes('\\')) {
+          throw new Error(`Nome de ficheiro de output inválido ou ambíguo: '${fileName}'.`);
+        }
+        const lower = fileName.toLowerCase();
+        if (diskSeenLowerOutputs.has(lower)) {
+          throw new Error(`Colisão case-insensitive em 'task-outputs' no disco: '${fileName}' colide com '${diskSeenLowerOutputs.get(lower)}'.`);
+        }
+        diskSeenLowerOutputs.set(lower, fileName);
+      }
     }
 
     const manifestFiles = initialFiles.map(f => {
@@ -1569,6 +1629,9 @@ export class ControlledPilotEngine {
         if (diskHash !== dbHash) {
           throw new Error(`Hash divergente entre filesystem e SQLite para '${fileName}': disk=${diskHash}, db=${dbHash}.`);
         }
+        if (mapped.file_bytes_sha256 !== diskHash) {
+          throw new Error(`Hash do registo SQLite diverge do ficheiro em disco para '${fileName}': registrado=${mapped.file_bytes_sha256}, disco=${diskHash}.`);
+        }
 
         const detectedMime = PhysicalDocumentValidator.detectMimeType(bytes);
         PhysicalDocumentValidator.validateMimeCoherence(detectedMime, ext, f.relativePath);
@@ -1590,16 +1653,54 @@ export class ControlledPilotEngine {
         } catch (err: any) {
           throw new Error(`Ficheiro de recibo de validação '${f.relativePath}' contém JSON inválido: ${err.message}`);
         }
+
         if (!parsed.task_id || parsed.document_version === undefined || parsed.document_version === null) {
-          throw new Error(`Recibo de validação '${f.relativePath}' incompleto: 'task_id' e 'document_version' obrigatórios.`);
+          throw new Error(`Recibo de validação '${f.relativePath}' inválido: 'task_id' e 'document_version' obrigatórios.`);
         }
         taskId = parsed.task_id;
         docVersion = parsed.document_version;
         validationType = parsed.validation_type;
 
+        // Ponto 4: Registo SQLite obrigatório
         const dbReceipt = this.store.getDocumentValidationReceipt(taskId!, docVersion!, validationType as any);
         if (!dbReceipt) {
           throw new Error(`Recibo de validação '${f.relativePath}' (task: ${taskId}, v: ${docVersion}) não possui registo correspondente no SQLite.`);
+        }
+
+        // Ponto 3: Validação Ajv estrita
+        ajv.validateDocumentValidationReceipt(parsed, f.relativePath);
+
+        // Ponto 4: Comparação Criptográfica
+        const recomputedSha = sha256(canonicalJson({ ...parsed, receipt_sha256: '' }));
+        if (recomputedSha !== parsed.receipt_sha256) {
+          throw new Error(`Recibo de validação documental '${f.relativePath}' com receipt_sha256 corrompido ou adulterado: declarado='${parsed.receipt_sha256}', recalculado='${recomputedSha}'.`);
+        }
+
+        const recId = parsed.receipt_id || parsed.validation_id;
+        const dbRecId = dbReceipt.receipt_id || dbReceipt.validation_id;
+        if (recId !== dbRecId) {
+          throw new Error(`Divergência de receipt_id em '${f.relativePath}': recibo='${recId}', sqlite='${dbRecId}'.`);
+        }
+        if (parsed.tenant_id !== dbReceipt.tenant_id) {
+          throw new Error(`Divergência de tenant_id em '${f.relativePath}': recibo='${parsed.tenant_id}', sqlite='${dbReceipt.tenant_id}'.`);
+        }
+        if (parsed.pilot_id !== dbReceipt.pilot_id) {
+          throw new Error(`Divergência de pilot_id em '${f.relativePath}': recibo='${parsed.pilot_id}', sqlite='${dbReceipt.pilot_id}'.`);
+        }
+        if (parsed.result !== dbReceipt.result) {
+          throw new Error(`Divergência de result em '${f.relativePath}': recibo='${parsed.result}', sqlite='${dbReceipt.result}'.`);
+        }
+        if (Boolean(parsed.is_valid) !== Boolean(dbReceipt.is_valid)) {
+          throw new Error(`Divergência de is_valid em '${f.relativePath}': recibo='${parsed.is_valid}', sqlite='${dbReceipt.is_valid}'.`);
+        }
+        if (parsed.file_bytes_sha256 !== dbReceipt.file_bytes_sha256) {
+          throw new Error(`Divergência de file_bytes_sha256 em '${f.relativePath}': recibo='${parsed.file_bytes_sha256}', sqlite='${dbReceipt.file_bytes_sha256}'.`);
+        }
+        if (parsed.commit_sha !== dbReceipt.commit_sha) {
+          throw new Error(`Divergência de commit_sha em '${f.relativePath}': recibo='${parsed.commit_sha}', sqlite='${dbReceipt.commit_sha}'.`);
+        }
+        if (parsed.receipt_sha256 !== dbReceipt.receipt_sha256) {
+          throw new Error(`Divergência de receipt_sha256 em '${f.relativePath}': recibo='${parsed.receipt_sha256}', sqlite='${dbReceipt.receipt_sha256}'.`);
         }
       } else if (f.relativePath.startsWith('task-receipts/')) {
         origin = 'EXECUTION_TASK_RECEIPT';
@@ -1610,17 +1711,63 @@ export class ControlledPilotEngine {
         } catch (err: any) {
           throw new Error(`Ficheiro de recibo de tarefa '${f.relativePath}' contém JSON inválido: ${err.message}`);
         }
+
         if (!parsed.task_id || parsed.version === undefined || parsed.version === null) {
-          throw new Error(`Recibo de tarefa '${f.relativePath}' incompleto: 'task_id' e 'version' obrigatórios.`);
+          throw new Error(`Recibo de tarefa '${f.relativePath}' inválido: 'task_id' e 'version' obrigatórios.`);
         }
         taskId = parsed.task_id;
-        docVersion = parsed.version; // Proibido fallback silencioso || 1
+        docVersion = parsed.version;
+
+        // Ponto 4: Registo SQLite obrigatório
         const dbTask = this.store.getTask(taskId!);
         if (!dbTask) {
           throw new Error(`Recibo de tarefa '${f.relativePath}' (task: ${taskId}) não possui registo correspondente no SQLite.`);
         }
         if (dbTask.version !== docVersion) {
           throw new Error(`Versão divergente para tarefa '${taskId}': SQLite possui versão ${dbTask.version}, recibo possui ${docVersion}.`);
+        }
+
+        // Ponto 3: Validação Ajv estrita
+        ajv.validateTaskReceipt(parsed, f.relativePath);
+
+        // Ponto 4: Comparação Criptográfica
+        const recomputedSha = sha256(canonicalJson({ ...parsed, receipt_sha256: '' }));
+        if (recomputedSha !== parsed.receipt_sha256) {
+          throw new Error(`Recibo de tarefa '${f.relativePath}' com receipt_sha256 corrompido ou adulterado: declarado='${parsed.receipt_sha256}', recalculado='${recomputedSha}'.`);
+        }
+
+        if (dbTask.tenant_id !== parsed.tenant_id) {
+          throw new Error(`Divergência de tenant_id em '${f.relativePath}': recibo='${parsed.tenant_id}', sqlite='${dbTask.tenant_id}'.`);
+        }
+        if (dbTask.pilot_id !== parsed.pilot_id) {
+          throw new Error(`Divergência de pilot_id em '${f.relativePath}': recibo='${parsed.pilot_id}', sqlite='${dbTask.pilot_id}'.`);
+        }
+        if (dbTask.employee_id !== parsed.employee_id) {
+          throw new Error(`Divergência de employee_id em '${f.relativePath}': recibo='${parsed.employee_id}', sqlite='${dbTask.employee_id}'.`);
+        }
+        if (dbTask.final_status !== parsed.final_status) {
+          throw new Error(`Divergência de final_status em '${f.relativePath}': recibo='${parsed.final_status}', sqlite='${dbTask.final_status}'.`);
+        }
+        if (dbTask.human_review_status !== parsed.human_review_status) {
+          throw new Error(`Divergência de human_review_status em '${f.relativePath}': recibo='${parsed.human_review_status}', sqlite='${dbTask.human_review_status}'.`);
+        }
+        if (dbTask.delivery_status !== parsed.delivery_status) {
+          throw new Error(`Divergência de delivery_status em '${f.relativePath}': recibo='${parsed.delivery_status}', sqlite='${dbTask.delivery_status}'.`);
+        }
+        if (dbTask.input_snapshot_sha256 !== parsed.input_snapshot_sha256) {
+          throw new Error(`Divergência de input_snapshot_sha256 em '${f.relativePath}': recibo='${parsed.input_snapshot_sha256}', sqlite='${dbTask.input_snapshot_sha256}'.`);
+        }
+        if (dbTask.idempotency_key !== parsed.idempotency_key) {
+          throw new Error(`Divergência de idempotency_key em '${f.relativePath}': recibo='${parsed.idempotency_key}', sqlite='${dbTask.idempotency_key}'.`);
+        }
+        if (dbTask.execution_mode !== parsed.execution_mode) {
+          throw new Error(`Divergência de execution_mode em '${f.relativePath}': recibo='${parsed.execution_mode}', sqlite='${dbTask.execution_mode}'.`);
+        }
+        if (dbTask.receipt_sha256 !== parsed.receipt_sha256) {
+          throw new Error(`Divergência de receipt_sha256 em '${f.relativePath}': recibo='${parsed.receipt_sha256}', sqlite='${dbTask.receipt_sha256}'.`);
+        }
+        if (JSON.stringify(dbTask.output_hashes) !== JSON.stringify(parsed.output_hashes)) {
+          throw new Error(`Divergência de output_hashes em '${f.relativePath}': recibo='${JSON.stringify(parsed.output_hashes)}', sqlite='${JSON.stringify(dbTask.output_hashes)}'.`);
         }
       } else if (f.relativePath.startsWith('review-receipts/')) {
         origin = 'HUMAN_REVIEW_RECEIPT';
@@ -1631,14 +1778,58 @@ export class ControlledPilotEngine {
         } catch (err: any) {
           throw new Error(`Ficheiro de recibo de revisão '${f.relativePath}' contém JSON inválido: ${err.message}`);
         }
+
         if (!parsed.task_id || !parsed.review_id) {
-          throw new Error(`Recibo de revisão '${f.relativePath}' incompleto: 'task_id' e 'review_id' obrigatórios.`);
+          throw new Error(`Recibo de revisão '${f.relativePath}' inválido: 'task_id' e 'review_id' obrigatórios.`);
         }
         taskId = parsed.task_id;
         reviewId = parsed.review_id;
+
+        // Ponto 4: Registo SQLite obrigatório
         const dbReviews = this.store.listReviewsForTask(taskId!);
-        if (!dbReviews.some(r => r.review_id === reviewId)) {
-          throw new Error(`Recibo de revisão '${f.relativePath}' (review: ${reviewId}) não possui registo correspondente no SQLite.`);
+        const dbReview = dbReviews.find(r => r.review_id === reviewId);
+        if (!dbReview) {
+          throw new Error(`Recibo de revisão '${f.relativePath}' não possui registo correspondente no SQLite.`);
+        }
+
+        // Ponto 3: Validação Ajv estrita
+        ajv.validateHumanReviewReceipt(parsed, f.relativePath);
+
+        // Ponto 4: Comparação Criptográfica
+        const recomputedSha = sha256(canonicalJson({ ...parsed, receipt_sha256: '' }));
+        if (recomputedSha !== parsed.receipt_sha256) {
+          throw new Error(`Recibo de revisão '${f.relativePath}' com receipt_sha256 corrompido ou adulterado: declarado='${parsed.receipt_sha256}', recalculado='${recomputedSha}'.`);
+        }
+
+        if (dbReview.task_id !== parsed.task_id) {
+          throw new Error(`Divergência de task_id em '${f.relativePath}': recibo='${parsed.task_id}', sqlite='${dbReview.task_id}'.`);
+        }
+        if (dbReview.pilot_id !== parsed.pilot_id) {
+          throw new Error(`Divergência de pilot_id em '${f.relativePath}': recibo='${parsed.pilot_id}', sqlite='${dbReview.pilot_id}'.`);
+        }
+        if (dbReview.reviewer !== parsed.reviewer) {
+          throw new Error(`Divergência de reviewer em '${f.relativePath}': recibo='${parsed.reviewer}', sqlite='${dbReview.reviewer}'.`);
+        }
+        if (dbReview.decision !== parsed.decision) {
+          throw new Error(`Divergência de decision em '${f.relativePath}': recibo='${parsed.decision}', sqlite='${dbReview.decision}'.`);
+        }
+        if (dbReview.comments !== parsed.comments) {
+          throw new Error(`Divergência de comments em '${f.relativePath}': recibo='${parsed.comments}', sqlite='${dbReview.comments}'.`);
+        }
+        if (dbReview.auth_method !== parsed.auth_method) {
+          throw new Error(`Divergência de auth_method em '${f.relativePath}': recibo='${parsed.auth_method}', sqlite='${dbReview.auth_method}'.`);
+        }
+        if (dbReview.review_signature_sha256 !== parsed.review_signature_sha256) {
+          throw new Error(`Divergência de review_signature_sha256 em '${f.relativePath}': recibo='${parsed.review_signature_sha256}', sqlite='${dbReview.review_signature_sha256}'.`);
+        }
+        if (dbReview.receipt_sha256 !== parsed.receipt_sha256) {
+          throw new Error(`Divergência de receipt_sha256 em '${f.relativePath}': recibo='${parsed.receipt_sha256}', sqlite='${dbReview.receipt_sha256}'.`);
+        }
+        if (dbReview.previous_output_hash !== parsed.previous_output_hash) {
+          throw new Error(`Divergência de previous_output_hash em '${f.relativePath}': recibo='${parsed.previous_output_hash}', sqlite='${dbReview.previous_output_hash}'.`);
+        }
+        if (dbReview.new_output_hash !== parsed.new_output_hash) {
+          throw new Error(`Divergência de new_output_hash em '${f.relativePath}': recibo='${parsed.new_output_hash}', sqlite='${dbReview.new_output_hash}'.`);
         }
       } else if (f.relativePath.startsWith('delivery-receipts/')) {
         origin = 'DELIVERY_RECEIPT';
@@ -1649,14 +1840,50 @@ export class ControlledPilotEngine {
         } catch (err: any) {
           throw new Error(`Ficheiro de recibo de entrega '${f.relativePath}' contém JSON inválido: ${err.message}`);
         }
+
         if (!parsed.task_id || !parsed.delivery_id) {
-          throw new Error(`Recibo de entrega '${f.relativePath}' incompleto: 'task_id' e 'delivery_id' obrigatórios.`);
+          throw new Error(`Recibo de entrega '${f.relativePath}' inválido: 'task_id' e 'delivery_id' obrigatórios.`);
         }
         taskId = parsed.task_id;
         deliveryId = parsed.delivery_id;
+
+        // Ponto 4: Confrontação Relacional Campo a Campo com SQLite
         const dbDelivery = this.store.getDeliveryForTask(taskId!);
         if (!dbDelivery || dbDelivery.delivery_id !== deliveryId) {
-          throw new Error(`Recibo de entrega '${f.relativePath}' (delivery: ${deliveryId}) não possui registo correspondente no SQLite.`);
+          throw new Error(`Recibo de entrega '${f.relativePath}' não possui registo correspondente no SQLite.`);
+        }
+
+        // Ponto 3: Validação Ajv estrita
+        ajv.validateDeliveryReceipt(parsed, f.relativePath);
+
+        // Ponto 4: Comparação Criptográfica
+        const recomputedSha = sha256(canonicalJson({ ...parsed, receipt_sha256: '' }));
+        if (recomputedSha !== parsed.receipt_sha256) {
+          throw new Error(`Recibo de entrega '${f.relativePath}' com receipt_sha256 corrompido ou adulterado: declarado='${parsed.receipt_sha256}', recalculado='${recomputedSha}'.`);
+        }
+        if (dbDelivery.tenant_id !== parsed.tenant_id) {
+          throw new Error(`Divergência de tenant_id em '${f.relativePath}': recibo='${parsed.tenant_id}', sqlite='${dbDelivery.tenant_id}'.`);
+        }
+        if (dbDelivery.pilot_id !== parsed.pilot_id) {
+          throw new Error(`Divergência de pilot_id em '${f.relativePath}': recibo='${parsed.pilot_id}', sqlite='${dbDelivery.pilot_id}'.`);
+        }
+        if (dbDelivery.delivered_to !== parsed.delivered_to) {
+          throw new Error(`Divergência de delivered_to em '${f.relativePath}': recibo='${parsed.delivered_to}', sqlite='${dbDelivery.delivered_to}'.`);
+        }
+        if (dbDelivery.channel !== parsed.channel) {
+          throw new Error(`Divergência de channel em '${f.relativePath}': recibo='${parsed.channel}', sqlite='${dbDelivery.channel}'.`);
+        }
+        if (dbDelivery.status !== parsed.status) {
+          throw new Error(`Divergência de status em '${f.relativePath}': recibo='${parsed.status}', sqlite='${dbDelivery.status}'.`);
+        }
+        if (Boolean(dbDelivery.is_external_confirmed) !== Boolean(parsed.is_external_confirmed)) {
+          throw new Error(`Divergência de is_external_confirmed em '${f.relativePath}': recibo='${parsed.is_external_confirmed}', sqlite='${dbDelivery.is_external_confirmed}'.`);
+        }
+        if (dbDelivery.receipt_sha256 !== parsed.receipt_sha256) {
+          throw new Error(`Divergência de receipt_sha256 em '${f.relativePath}': recibo='${parsed.receipt_sha256}', sqlite='${dbDelivery.receipt_sha256}'.`);
+        }
+        if (JSON.stringify(dbDelivery.output_hashes) !== JSON.stringify(parsed.output_hashes)) {
+          throw new Error(`Divergência de output_hashes em '${f.relativePath}': recibo='${JSON.stringify(parsed.output_hashes)}', sqlite='${JSON.stringify(dbDelivery.output_hashes)}'.`);
         }
       } else if (f.relativePath === 'pilot-authorization-receipt.json') {
         origin = 'AUTHORIZATION_RECEIPT';
@@ -1747,6 +1974,27 @@ export class ControlledPilotEngine {
       const valPath = path.join(outputDir, 'document-validation-receipts', `${valId}.json`);
       if (!fs.existsSync(valPath)) {
         throw new Error(`Verificação bidirecional falhou: validação documental SQLite '${valId}' sem ficheiro em '${valPath}'.`);
+      }
+    }
+
+    // Se o manifesto existir no directório, validar contra o schema Ajv e conformidade
+    const manifestJsonPath = path.join(outputDir, 'pilot-evidence-manifest.json');
+    if (fs.existsSync(manifestJsonPath)) {
+      let parsedManifest: any;
+      try {
+        parsedManifest = JSON.parse(fs.readFileSync(manifestJsonPath, 'utf8'));
+      } catch (err: any) {
+        throw new Error(`Ficheiro de manifesto 'pilot-evidence-manifest.json' contém JSON inválido: ${err.message}`);
+      }
+      ajv.validateEvidenceManifest(parsedManifest, 'pilot-evidence-manifest.json');
+      if (parsedManifest.commit_sha !== commitSha) {
+        throw new Error(`Manifesto 'pilot-evidence-manifest.json' possui commit_sha divergente: esperado='${commitSha}', obtido='${parsedManifest.commit_sha}'.`);
+      }
+      if (parsedManifest.pilot_id !== pilot.pilot_id) {
+        throw new Error(`Manifesto 'pilot-evidence-manifest.json' possui pilot_id divergente: esperado='${pilot.pilot_id}', obtido='${parsedManifest.pilot_id}'.`);
+      }
+      if (parsedManifest.tenant_id !== pilot.tenant_id) {
+        throw new Error(`Manifesto 'pilot-evidence-manifest.json' possui tenant_id divergente: esperado='${pilot.tenant_id}', obtido='${parsedManifest.tenant_id}'.`);
       }
     }
 
