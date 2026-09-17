@@ -383,6 +383,50 @@ export class TransactionalPilotStore {
   // Pilot Tasks
   // -------------------------------------------------------------
   public saveTask(task: PilotTaskReceipt): void {
+    if (!task) {
+      throw new Error('saveTask: objecto task obrigatório.');
+    }
+    if (!task.task_id || typeof task.task_id !== 'string' || task.task_id.trim() === '') {
+      throw new Error("saveTask: 'task_id' obrigatório e não pode ser vazio.");
+    }
+    if (!task.pilot_id || typeof task.pilot_id !== 'string' || task.pilot_id.trim() === '') {
+      throw new Error("saveTask: 'pilot_id' obrigatório e não pode ser vazio.");
+    }
+    if (!task.tenant_id || typeof task.tenant_id !== 'string' || task.tenant_id.trim() === '') {
+      throw new Error("saveTask: 'tenant_id' obrigatório e não pode ser vazio.");
+    }
+    if (task.employee_id === undefined || task.employee_id === null || typeof task.employee_id !== 'number' || task.employee_id <= 0) {
+      throw new Error("saveTask: 'employee_id' obrigatório e deve ser um número positivo.");
+    }
+    if (!task.idempotency_key || typeof task.idempotency_key !== 'string' || task.idempotency_key.trim() === '') {
+      throw new Error("saveTask: 'idempotency_key' obrigatória e não pode ser vazia ou assumida por fallback.");
+    }
+    if (!task.received_at || typeof task.received_at !== 'string' || isNaN(Date.parse(task.received_at))) {
+      throw new Error("saveTask: 'received_at' obrigatório, deve ser data ISO-8601 válida e não pode ser assumido por fallback.");
+    }
+    if (task.version === undefined || task.version === null || typeof task.version !== 'number' || !Number.isInteger(task.version) || task.version < 1) {
+      throw new Error("saveTask: 'version' obrigatória, deve ser inteiro positivo e não pode ser assumida por fallback.");
+    }
+    if (!task.input_snapshot_sha256 || typeof task.input_snapshot_sha256 !== 'string' || !/^[a-f0-9]{64}$/i.test(task.input_snapshot_sha256)) {
+      throw new Error("saveTask: 'input_snapshot_sha256' obrigatório, deve ser hash SHA-256 hexadecimal de 64 caracteres e não pode ser vazio ou assumido por fallback.");
+    }
+    if (!task.requested_by || typeof task.requested_by !== 'string' || task.requested_by.trim() === '') {
+      throw new Error("saveTask: 'requested_by' obrigatório e não pode ser vazio.");
+    }
+    if (!task.human_review_status) {
+      throw new Error("saveTask: 'human_review_status' obrigatório.");
+    }
+    if (!task.delivery_status) {
+      throw new Error("saveTask: 'delivery_status' obrigatório.");
+    }
+    if (!task.final_status) {
+      throw new Error("saveTask: 'final_status' obrigatório.");
+    }
+    const executionCompletedAt = task.execution_completed_at;
+    if (!executionCompletedAt || typeof executionCompletedAt !== 'string' || isNaN(Date.parse(executionCompletedAt))) {
+      throw new Error("saveTask: 'execution_completed_at' obrigatório e deve ser data ISO-8601 válida.");
+    }
+
     const stmt = this.db.prepare(`
       INSERT INTO pilot_tasks (
         task_id, pilot_id, tenant_id, employee_id, idempotency_key,
@@ -395,20 +439,46 @@ export class TransactionalPilotStore {
       task.pilot_id,
       task.tenant_id,
       task.employee_id,
-      task.idempotency_key || task.task_id,
+      task.idempotency_key,
       task.requested_by,
-      task.human_review_status || 'PENDING_REVIEW',
-      task.delivery_status || 'PENDING',
-      task.final_status || 'PENDING',
-      task.version || 1,
-      task.input_snapshot_sha256 || '',
+      task.human_review_status,
+      task.delivery_status,
+      task.final_status,
+      task.version,
+      task.input_snapshot_sha256,
       JSON.stringify(task),
-      task.received_at || new Date().toISOString(),
-      task.execution_completed_at || new Date().toISOString()
+      task.received_at,
+      executionCompletedAt
     );
   }
 
   public updateTask(task: PilotTaskReceipt): void {
+    if (!task || !task.task_id) {
+      throw new Error("updateTask: 'task_id' obrigatório.");
+    }
+    const existing = this.getTask(task.task_id);
+    if (!existing) {
+      throw new Error(`updateTask: tarefa '${task.task_id}' não encontrada para atualização.`);
+    }
+
+    // Regras de integridade em atualizações
+    if (task.idempotency_key !== existing.idempotency_key) {
+      throw new Error(`updateTask: violação de integridade. 'idempotency_key' não pode ser alterada após a criação (existente '${existing.idempotency_key}', recebida '${task.idempotency_key}').`);
+    }
+    if (task.received_at !== existing.received_at) {
+      throw new Error(`updateTask: violação de integridade. 'received_at' não pode ser alterado após a criação (existente '${existing.received_at}', recebido '${task.received_at}').`);
+    }
+    if (task.version === undefined || task.version === null || typeof task.version !== 'number' || !Number.isInteger(task.version) || task.version < 1) {
+      throw new Error("updateTask: 'version' obrigatória e deve ser inteiro positivo.");
+    }
+    const existingVersion = existing.version ?? 1;
+    if (task.version < existingVersion) {
+      throw new Error(`updateTask: redução de versão proibida (existente ${existingVersion}, recebida ${task.version}).`);
+    }
+    if (task.version > existingVersion + 1) {
+      throw new Error(`updateTask: salto de versão injustificado proibido (existente ${existingVersion}, recebida ${task.version}).`);
+    }
+
     const stmt = this.db.prepare(`
       UPDATE pilot_tasks SET
         human_review_status = ?,
@@ -423,7 +493,7 @@ export class TransactionalPilotStore {
       task.human_review_status,
       task.delivery_status,
       task.final_status,
-      task.version || 1,
+      task.version,
       JSON.stringify(task),
       new Date().toISOString(),
       task.task_id,
@@ -477,14 +547,30 @@ export class TransactionalPilotStore {
     file_bytes_sha256?: string;
     is_active?: boolean;
   }): void {
-    if (!output.file_bytes || !Buffer.isBuffer(output.file_bytes)) {
-      throw new Error(`saveOutput: file_bytes obrigatório e deve ser um Buffer para o output ${output.output_id}`);
+    if (!output) {
+      throw new Error('saveOutput: objecto output obrigatório.');
     }
+    if (!output.output_id || typeof output.output_id !== 'string' || output.output_id.trim() === '') {
+      throw new Error("saveOutput: 'output_id' obrigatório e não pode ser vazio.");
+    }
+    if (!output.task_id || typeof output.task_id !== 'string' || output.task_id.trim() === '') {
+      throw new Error("saveOutput: 'task_id' obrigatório e não pode ser vazio.");
+    }
+    if (output.version === undefined || output.version === null || typeof output.version !== 'number' || !Number.isInteger(output.version) || output.version < 1) {
+      throw new Error("saveOutput: 'version' obrigatória e deve ser inteiro positivo.");
+    }
+    if (!output.file_bytes || !Buffer.isBuffer(output.file_bytes) || output.file_bytes.length === 0) {
+      throw new Error(`saveOutput: file_bytes obrigatório e deve ser Buffer não-vazio para o output ${output.output_id}.`);
+    }
+    if (!output.file_bytes_sha256 || typeof output.file_bytes_sha256 !== 'string' || !/^[a-f0-9]{64}$/i.test(output.file_bytes_sha256)) {
+      throw new Error(`saveOutput: 'file_bytes_sha256' obrigatório, deve ser hash SHA-256 hexadecimal de 64 caracteres e não pode ser assumido por fallback para output ${output.output_id}.`);
+    }
+
     const computedSha = createHash('sha256').update(output.file_bytes).digest('hex');
-    if (output.file_bytes_sha256 && output.file_bytes_sha256 !== computedSha) {
-      throw new Error(`saveOutput: SHA-256 divergente para output ${output.output_id}: esperado ${output.file_bytes_sha256}, calculado ${computedSha}`);
+    if (output.file_bytes_sha256 !== computedSha) {
+      throw new Error(`saveOutput: SHA-256 divergente para output ${output.output_id}: declarado ${output.file_bytes_sha256}, calculado ${computedSha}.`);
     }
-    const sha = output.file_bytes_sha256 || computedSha;
+    const sha = output.file_bytes_sha256;
 
     // Deactivate prior versions if new active version
     if (output.is_active !== false) {
@@ -511,7 +597,7 @@ export class TransactionalPilotStore {
       output.file_path,
       output.file_bytes,
       sha,
-      output.is_active !== false ? 1 : 0,
+      output.is_active === false ? 0 : 1,
       new Date().toISOString()
     );
   }
@@ -611,8 +697,12 @@ export class TransactionalPilotStore {
         throw new Error(`Verificação pós-gravação falhou: output ativo de ${task.task_id} não recuperável.`);
       }
 
+      if (!output.file_bytes_sha256 || typeof output.file_bytes_sha256 !== 'string' || !/^[a-f0-9]{64}$/i.test(output.file_bytes_sha256)) {
+        throw new Error(`saveTaskWithOutputAndVerify: 'file_bytes_sha256' obrigatório e deve ser hash SHA-256 de 64 caracteres.`);
+      }
+
       const verifiedHash = createHash('sha256').update(activeOut.bytes).digest('hex');
-      const expectedHash = output.file_bytes_sha256 || createHash('sha256').update(output.file_bytes).digest('hex');
+      const expectedHash = output.file_bytes_sha256;
 
       if (verifiedHash !== expectedHash) {
         throw new Error(`Verificação pós-gravação falhou: SHA-256 divergente no SQLite (esperado ${expectedHash}, lido ${verifiedHash}).`);
@@ -624,6 +714,28 @@ export class TransactionalPilotStore {
   // Human Reviews
   // -------------------------------------------------------------
   public saveReview(review: PilotHumanReviewReceipt): void {
+    if (!review) {
+      throw new Error('saveReview: objecto review obrigatório.');
+    }
+    if (!review.review_id || typeof review.review_id !== 'string' || review.review_id.trim() === '') {
+      throw new Error("saveReview: 'review_id' obrigatório e não pode ser vazio.");
+    }
+    if (!review.task_id || typeof review.task_id !== 'string' || review.task_id.trim() === '') {
+      throw new Error("saveReview: 'task_id' obrigatório e não pode ser vazio.");
+    }
+    if (!review.reviewer || typeof review.reviewer !== 'string' || review.reviewer.trim() === '') {
+      throw new Error("saveReview: 'reviewer' obrigatório e não pode ser vazio.");
+    }
+    if (!review.decision || !['APPROVED', 'REJECTED', 'CORRECTION_REQUIRED', 'APPROVED_WITH_CORRECTIONS'].includes(review.decision)) {
+      throw new Error(`saveReview: 'decision' inválida '${(review as any).decision}'.`);
+    }
+    if (!review.review_signature_sha256 || typeof review.review_signature_sha256 !== 'string' || !/^[a-f0-9]{64}$/i.test(review.review_signature_sha256)) {
+      throw new Error("saveReview: 'review_signature_sha256' obrigatório e deve ser SHA-256 de 64 caracteres.");
+    }
+    if (!review.reviewed_at || typeof review.reviewed_at !== 'string' || isNaN(Date.parse(review.reviewed_at))) {
+      throw new Error("saveReview: 'reviewed_at' obrigatório e deve ser data ISO válida.");
+    }
+
     const stmt = this.db.prepare(`
       INSERT INTO human_reviews (
         review_id, task_id, pilot_id, reviewer_id, decision, signature, receipt_json, created_at
@@ -890,6 +1002,37 @@ export class TransactionalPilotStore {
   // Document Validations (Pilar 5: Pré-revisão e Auditoria)
   // -------------------------------------------------------------
   public saveDocumentValidationReceipt(receipt: PilotDocumentValidationReceipt): void {
+    if (!receipt) {
+      throw new Error('saveDocumentValidationReceipt: objecto receipt obrigatório.');
+    }
+    if (!receipt.receipt_id || typeof receipt.receipt_id !== 'string' || receipt.receipt_id.trim() === '') {
+      throw new Error("saveDocumentValidationReceipt: 'receipt_id' obrigatório e não pode ser vazio.");
+    }
+    if (!receipt.task_id || typeof receipt.task_id !== 'string' || receipt.task_id.trim() === '') {
+      throw new Error("saveDocumentValidationReceipt: 'task_id' obrigatório e não pode ser vazio.");
+    }
+    if (receipt.document_version === undefined || receipt.document_version === null || typeof receipt.document_version !== 'number' || !Number.isInteger(receipt.document_version) || receipt.document_version < 1) {
+      throw new Error("saveDocumentValidationReceipt: 'document_version' obrigatório e deve ser inteiro positivo.");
+    }
+    if (!receipt.format || typeof receipt.format !== 'string' || receipt.format.trim() === '') {
+      throw new Error("saveDocumentValidationReceipt: 'format' obrigatório.");
+    }
+    if (!receipt.parser_name || typeof receipt.parser_name !== 'string' || receipt.parser_name.trim() === '') {
+      throw new Error("saveDocumentValidationReceipt: 'parser_name' obrigatório.");
+    }
+    if (!receipt.parser_version || typeof receipt.parser_version !== 'string' || receipt.parser_version.trim() === '') {
+      throw new Error("saveDocumentValidationReceipt: 'parser_version' obrigatório.");
+    }
+    if (!receipt.file_bytes_sha256 || typeof receipt.file_bytes_sha256 !== 'string' || !/^[a-f0-9]{64}$/i.test(receipt.file_bytes_sha256)) {
+      throw new Error("saveDocumentValidationReceipt: 'file_bytes_sha256' obrigatório e deve ser hash SHA-256 de 64 caracteres.");
+    }
+    if (!receipt.result || !['PASS', 'FAIL'].includes(receipt.result)) {
+      throw new Error(`saveDocumentValidationReceipt: 'result' deve ser PASS ou FAIL (recebido: '${receipt.result}').`);
+    }
+    if (!receipt.validated_at || typeof receipt.validated_at !== 'string' || isNaN(Date.parse(receipt.validated_at))) {
+      throw new Error("saveDocumentValidationReceipt: 'validated_at' obrigatório e deve ser data ISO válida.");
+    }
+
     const stmt = this.db.prepare(`
       INSERT OR REPLACE INTO task_document_validations (
         receipt_id, task_id, document_version, validation_type, tenant_id,
@@ -1081,6 +1224,31 @@ export class TransactionalPilotStore {
   // Deliveries
   // -------------------------------------------------------------
   public saveDelivery(delivery: PilotDeliveryReceipt): void {
+    if (!delivery) {
+      throw new Error('saveDelivery: objecto delivery obrigatório.');
+    }
+    if (!delivery.delivery_id || typeof delivery.delivery_id !== 'string' || delivery.delivery_id.trim() === '') {
+      throw new Error("saveDelivery: 'delivery_id' obrigatório e não pode ser vazio.");
+    }
+    if (!delivery.task_id || typeof delivery.task_id !== 'string' || delivery.task_id.trim() === '') {
+      throw new Error("saveDelivery: 'task_id' obrigatório e não pode ser vazio.");
+    }
+    if (!delivery.pilot_id || typeof delivery.pilot_id !== 'string' || delivery.pilot_id.trim() === '') {
+      throw new Error("saveDelivery: 'pilot_id' obrigatório e não pode ser vazio.");
+    }
+    if (!delivery.tenant_id || typeof delivery.tenant_id !== 'string' || delivery.tenant_id.trim() === '') {
+      throw new Error("saveDelivery: 'tenant_id' obrigatório e não pode ser vazio.");
+    }
+    if (!delivery.channel || typeof delivery.channel !== 'string' || delivery.channel.trim() === '') {
+      throw new Error("saveDelivery: 'channel' obrigatório e não pode ser vazio.");
+    }
+    if (!delivery.status || typeof delivery.status !== 'string' || delivery.status.trim() === '') {
+      throw new Error("saveDelivery: 'status' obrigatório e não pode ser vazio.");
+    }
+    if (!delivery.delivered_at || typeof delivery.delivered_at !== 'string' || isNaN(Date.parse(delivery.delivered_at))) {
+      throw new Error("saveDelivery: 'delivered_at' obrigatório e deve ser data ISO válida.");
+    }
+
     const stmt = this.db.prepare(`
       INSERT INTO pilot_deliveries (
         delivery_id, task_id, pilot_id, tenant_id, channel, status,

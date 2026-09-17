@@ -1260,9 +1260,14 @@ export class ControlledPilotEngine {
     const gates = this.evaluatePilotGates(pilotId);
 
     fs.mkdirSync(outputDir, { recursive: true });
-    fs.mkdirSync(path.join(outputDir, 'task-receipts'), { recursive: true });
-    fs.mkdirSync(path.join(outputDir, 'review-receipts'), { recursive: true });
-    fs.mkdirSync(path.join(outputDir, 'delivery-receipts'), { recursive: true });
+    const exportSubdirs = ['task-receipts', 'review-receipts', 'delivery-receipts', 'task-outputs', 'document-validation-receipts'];
+    for (const sub of exportSubdirs) {
+      const subPath = path.join(outputDir, sub);
+      if (fs.existsSync(subPath)) {
+        fs.rmSync(subPath, { recursive: true, force: true });
+      }
+      fs.mkdirSync(subPath, { recursive: true });
+    }
 
     // 1. Authorization receipt
     const authReceipt = {
@@ -1355,7 +1360,7 @@ export class ControlledPilotEngine {
       operationalState = 'PRE-PRODUCTION / L2 HARDENED (SIMULATION HARNESS)';
     } else if (pilot.execution_mode === 'OPERATIONAL_PILOT') {
       classificationStatus = 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY';
-      operationalState = 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY — REAL PILOT NOT YET EXECUTED';
+      operationalState = 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY — AUTHENTICATED HUMAN REVIEW GATE READY — FAIL-CLOSED PERSISTENCE AND MANIFEST PROVENANCE VERIFIED — REAL PILOT NOT YET EXECUTED';
     }
 
     const attestation: PilotFinalAttestation = {
@@ -1376,7 +1381,65 @@ export class ControlledPilotEngine {
     };
     fs.writeFileSync(path.join(outputDir, 'pilot-final-attestation.json'), JSON.stringify(attestation, null, 2), 'utf8');
 
-    // Recursive directory discovery function with strict anti-symlink and anti-traversal gates
+    // 10. Verify evidence directory and collect manifest entries (bidirectional validation)
+    const verified = this.verifyEvidenceDirectory(pilotId, outputDir);
+
+    const manifestData = {
+      manifest_version: '2.0',
+      pilot_id: pilot.pilot_id,
+      tenant_id: pilot.tenant_id,
+      execution_mode: pilot.execution_mode,
+      commit_sha: verified.commitSha,
+      total_files: verified.totalFiles,
+      created_at: new Date().toISOString(),
+      persistence_fingerprint: this.store.getPersistenceFingerprint(),
+      files: verified.files
+    };
+
+    fs.writeFileSync(
+      path.join(outputDir, 'pilot-evidence-manifest.json'),
+      JSON.stringify(manifestData, null, 2),
+      'utf8'
+    );
+
+    // 11. Generate pilot-evidence-files.sha256 covering all files (including manifest)
+    const allDiscoveredFiles = verified.scanDirRecursive(outputDir).filter(
+      f => f.relativePath !== 'pilot-evidence-files.sha256'
+    );
+
+    const indexLines: string[] = [];
+    const exportedFileList: string[] = [];
+
+    for (const f of allDiscoveredFiles) {
+      const fileBytes = fs.readFileSync(f.fullPath);
+      const hash = sha256(fileBytes);
+      indexLines.push(`${hash}  ${f.relativePath}`);
+      exportedFileList.push(f.relativePath);
+    }
+
+    const indexContent = indexLines.join('\n') + '\n';
+    fs.writeFileSync(path.join(outputDir, 'pilot-evidence-files.sha256'), indexContent, 'utf8');
+
+    return {
+      files: exportedFileList,
+      indexHash: sha256(indexContent)
+    };
+  }
+
+  // -------------------------------------------------------------
+  // 7b. Strict Relational Evidence Directory Verification
+  // -------------------------------------------------------------
+  public verifyEvidenceDirectory(
+    pilotId: string,
+    outputDir: string
+  ): {
+    files: any[];
+    totalFiles: number;
+    commitSha: string;
+    scanDirRecursive: (baseDir: string) => { relativePath: string; fullPath: string }[];
+  } {
+    const pilot = this.getPilot(pilotId);
+
     const scanDirRecursive = (baseDir: string): { relativePath: string; fullPath: string }[] => {
       const visitedDirs = new Set<string>();
       const normalizedBaseDir = path.resolve(baseDir);
@@ -1443,7 +1506,6 @@ export class ControlledPilotEngine {
       return walk(normalizedBaseDir).sort((a, b) => a.relativePath.localeCompare(b.relativePath));
     };
 
-    // Obter commit_sha de 40 caracteres com garantia determinística do ambiente Git real (sem fallback fixo)
     let commitSha: string = (process.env.GITHUB_SHA || process.env.GIT_COMMIT_SHA || '').trim();
     if (!commitSha || commitSha.length !== 40) {
       try {
@@ -1457,12 +1519,10 @@ export class ControlledPilotEngine {
       throw new Error(`Commit SHA inválido: esperado 40 caracteres hexadecimais do repositório Git, obtido '${commitSha}'.`);
     }
 
-    // 10. Generate enriched pilot-evidence-manifest.json
     const initialFiles = scanDirRecursive(outputDir).filter(
       f => f.relativePath !== 'pilot-evidence-manifest.json' && f.relativePath !== 'pilot-evidence-files.sha256'
     );
 
-    // Mapeamento de tarefas e outputs da base SQLite
     const taskOutputs = this.store.getOutputsForTenant(pilot.tenant_id);
     const outputMap = new Map<string, { task_id: string; version: number; output_id: string }>();
     for (const out of taskOutputs) {
@@ -1493,17 +1553,27 @@ export class ControlledPilotEngine {
         receiptType = 'OUTPUT_DOCUMENT';
         const fileName = path.basename(f.relativePath);
         const mapped = outputMap.get(fileName);
-        if (mapped) {
-          taskId = mapped.task_id;
-          docVersion = mapped.version;
-          documentId = mapped.output_id;
+        if (!mapped) {
+          throw new Error(`Ficheiro de output '${fileName}' no filesystem não tem registo correspondente no SQLite para o tenant '${pilot.tenant_id}'.`);
         }
-        // Determinar MIME type inspecionando magic bytes reais e validar coerência
+        taskId = mapped.task_id;
+        docVersion = mapped.version;
+        documentId = mapped.output_id;
+
+        const dbOutputBytes = this.store.getOutputBytes(mapped.output_id);
+        if (!dbOutputBytes) {
+          throw new Error(`Output '${mapped.output_id}' presente no filesystem não possui bytes no SQLite.`);
+        }
+        const diskHash = sha256(bytes);
+        const dbHash = sha256(dbOutputBytes);
+        if (diskHash !== dbHash) {
+          throw new Error(`Hash divergente entre filesystem e SQLite para '${fileName}': disk=${diskHash}, db=${dbHash}.`);
+        }
+
         const detectedMime = PhysicalDocumentValidator.detectMimeType(bytes);
         PhysicalDocumentValidator.validateMimeCoherence(detectedMime, ext, f.relativePath);
         mimeType = detectedMime;
 
-        // Releitura independente adicional sobre o ficheiro exportado
         if (ext === '.docx' || ext === '.xlsx' || ext === '.pdf') {
           const format = ext === '.docx' ? 'DOCX' : ext === '.xlsx' ? 'XLSX' : 'PDF';
           const indep = PhysicalDocumentValidator.readWithIndependentLibrary(bytes, format);
@@ -1514,36 +1584,80 @@ export class ControlledPilotEngine {
       } else if (f.relativePath.startsWith('document-validation-receipts/')) {
         origin = 'INDEPENDENT_PARSER_RECEIPT';
         receiptType = 'DOCUMENT_VALIDATION_RECEIPT';
+        let parsed: any;
         try {
-          const parsed = JSON.parse(bytes.toString('utf8'));
-          taskId = parsed.task_id;
-          docVersion = parsed.document_version;
-          validationType = parsed.validation_type;
-        } catch {}
+          parsed = JSON.parse(bytes.toString('utf8'));
+        } catch (err: any) {
+          throw new Error(`Ficheiro de recibo de validação '${f.relativePath}' contém JSON inválido: ${err.message}`);
+        }
+        if (!parsed.task_id || parsed.document_version === undefined || parsed.document_version === null) {
+          throw new Error(`Recibo de validação '${f.relativePath}' incompleto: 'task_id' e 'document_version' obrigatórios.`);
+        }
+        taskId = parsed.task_id;
+        docVersion = parsed.document_version;
+        validationType = parsed.validation_type;
+
+        const dbReceipt = this.store.getDocumentValidationReceipt(taskId!, docVersion!, validationType as any);
+        if (!dbReceipt) {
+          throw new Error(`Recibo de validação '${f.relativePath}' (task: ${taskId}, v: ${docVersion}) não possui registo correspondente no SQLite.`);
+        }
       } else if (f.relativePath.startsWith('task-receipts/')) {
         origin = 'EXECUTION_TASK_RECEIPT';
         receiptType = 'TASK_RECEIPT';
+        let parsed: any;
         try {
-          const parsed = JSON.parse(bytes.toString('utf8'));
-          taskId = parsed.task_id;
-          docVersion = parsed.version || 1;
-        } catch {}
+          parsed = JSON.parse(bytes.toString('utf8'));
+        } catch (err: any) {
+          throw new Error(`Ficheiro de recibo de tarefa '${f.relativePath}' contém JSON inválido: ${err.message}`);
+        }
+        if (!parsed.task_id || parsed.version === undefined || parsed.version === null) {
+          throw new Error(`Recibo de tarefa '${f.relativePath}' incompleto: 'task_id' e 'version' obrigatórios.`);
+        }
+        taskId = parsed.task_id;
+        docVersion = parsed.version; // Proibido fallback silencioso || 1
+        const dbTask = this.store.getTask(taskId!);
+        if (!dbTask) {
+          throw new Error(`Recibo de tarefa '${f.relativePath}' (task: ${taskId}) não possui registo correspondente no SQLite.`);
+        }
+        if (dbTask.version !== docVersion) {
+          throw new Error(`Versão divergente para tarefa '${taskId}': SQLite possui versão ${dbTask.version}, recibo possui ${docVersion}.`);
+        }
       } else if (f.relativePath.startsWith('review-receipts/')) {
         origin = 'HUMAN_REVIEW_RECEIPT';
         receiptType = 'REVIEW_RECEIPT';
+        let parsed: any;
         try {
-          const parsed = JSON.parse(bytes.toString('utf8'));
-          taskId = parsed.task_id;
-          reviewId = parsed.review_id;
-        } catch {}
+          parsed = JSON.parse(bytes.toString('utf8'));
+        } catch (err: any) {
+          throw new Error(`Ficheiro de recibo de revisão '${f.relativePath}' contém JSON inválido: ${err.message}`);
+        }
+        if (!parsed.task_id || !parsed.review_id) {
+          throw new Error(`Recibo de revisão '${f.relativePath}' incompleto: 'task_id' e 'review_id' obrigatórios.`);
+        }
+        taskId = parsed.task_id;
+        reviewId = parsed.review_id;
+        const dbReviews = this.store.listReviewsForTask(taskId!);
+        if (!dbReviews.some(r => r.review_id === reviewId)) {
+          throw new Error(`Recibo de revisão '${f.relativePath}' (review: ${reviewId}) não possui registo correspondente no SQLite.`);
+        }
       } else if (f.relativePath.startsWith('delivery-receipts/')) {
         origin = 'DELIVERY_RECEIPT';
         receiptType = 'DELIVERY_RECEIPT';
+        let parsed: any;
         try {
-          const parsed = JSON.parse(bytes.toString('utf8'));
-          taskId = parsed.task_id;
-          deliveryId = parsed.delivery_id;
-        } catch {}
+          parsed = JSON.parse(bytes.toString('utf8'));
+        } catch (err: any) {
+          throw new Error(`Ficheiro de recibo de entrega '${f.relativePath}' contém JSON inválido: ${err.message}`);
+        }
+        if (!parsed.task_id || !parsed.delivery_id) {
+          throw new Error(`Recibo de entrega '${f.relativePath}' incompleto: 'task_id' e 'delivery_id' obrigatórios.`);
+        }
+        taskId = parsed.task_id;
+        deliveryId = parsed.delivery_id;
+        const dbDelivery = this.store.getDeliveryForTask(taskId!);
+        if (!dbDelivery || dbDelivery.delivery_id !== deliveryId) {
+          throw new Error(`Recibo de entrega '${f.relativePath}' (delivery: ${deliveryId}) não possui registo correspondente no SQLite.`);
+        }
       } else if (f.relativePath === 'pilot-authorization-receipt.json') {
         origin = 'AUTHORIZATION_RECEIPT';
         receiptType = 'AUTHORIZATION';
@@ -1589,45 +1703,58 @@ export class ControlledPilotEngine {
       };
     });
 
-    const manifestData = {
-      manifest_version: '2.0',
-      pilot_id: pilot.pilot_id,
-      tenant_id: pilot.tenant_id,
-      execution_mode: pilot.execution_mode,
-      commit_sha: commitSha,
-      total_files: manifestFiles.length,
-      created_at: new Date().toISOString(),
-      persistence_fingerprint: this.store.getPersistenceFingerprint(),
-      files: manifestFiles
-    };
+    // Verificação Bidirecional Estrita: SQLite -> Filesystem
+    const pilotTasks = this.store.listTasks(pilotId);
+    const allReviews = this.store.listAllReviews(pilotId);
+    const allDeliveries = this.store.listDeliveries(pilotId);
+    const pilotTaskIds = new Set(pilotTasks.map(t => t.task_id));
+    const allDocValidations = this.store.getAllDocumentValidationReceipts().filter(v => pilotTaskIds.has(v.task_id));
 
-    fs.writeFileSync(
-      path.join(outputDir, 'pilot-evidence-manifest.json'),
-      JSON.stringify(manifestData, null, 2),
-      'utf8'
-    );
-
-    // 11. Generate pilot-evidence-files.sha256 covering all files (including manifest)
-    const allDiscoveredFiles = scanDirRecursive(outputDir).filter(
-      f => f.relativePath !== 'pilot-evidence-files.sha256'
-    );
-
-    const indexLines: string[] = [];
-    const exportedFileList: string[] = [];
-
-    for (const f of allDiscoveredFiles) {
-      const fileBytes = fs.readFileSync(f.fullPath);
-      const hash = sha256(fileBytes);
-      indexLines.push(`${hash}  ${f.relativePath}`);
-      exportedFileList.push(f.relativePath);
+    for (const t of pilotTasks) {
+      const taskReceiptPath = path.join(outputDir, 'task-receipts', `${t.task_id}.json`);
+      if (!fs.existsSync(taskReceiptPath)) {
+        throw new Error(`Verificação bidirecional falhou: tarefa SQLite '${t.task_id}' sem ficheiro em '${taskReceiptPath}'.`);
+      }
+      const tOutputs = this.store.getOutputsForTask(t.task_id);
+      for (const out of tOutputs) {
+        const outPath = path.join(outputDir, 'task-outputs', out.file_name);
+        if (!fs.existsSync(outPath)) {
+          throw new Error(`Verificação bidirecional falhou: output SQLite '${out.output_id}' (${out.file_name}) sem ficheiro em '${outPath}'.`);
+        }
+        const diskSha = sha256(fs.readFileSync(outPath));
+        if (diskSha !== out.file_bytes_sha256) {
+          throw new Error(`Verificação bidirecional falhou: SHA-256 de '${out.file_name}' diverge (SQLite: ${out.file_bytes_sha256}, Disco: ${diskSha}).`);
+        }
+      }
     }
 
-    const indexContent = indexLines.join('\n') + '\n';
-    fs.writeFileSync(path.join(outputDir, 'pilot-evidence-files.sha256'), indexContent, 'utf8');
+    for (const rev of allReviews) {
+      const revPath = path.join(outputDir, 'review-receipts', `${rev.review_id}.json`);
+      if (!fs.existsSync(revPath)) {
+        throw new Error(`Verificação bidirecional falhou: revisão SQLite '${rev.review_id}' sem ficheiro em '${revPath}'.`);
+      }
+    }
+
+    for (const deliv of allDeliveries) {
+      const delivPath = path.join(outputDir, 'delivery-receipts', `${deliv.delivery_id}.json`);
+      if (!fs.existsSync(delivPath)) {
+        throw new Error(`Verificação bidirecional falhou: entrega SQLite '${deliv.delivery_id}' sem ficheiro em '${delivPath}'.`);
+      }
+    }
+
+    for (const val of allDocValidations) {
+      const valId = val.receipt_id || val.validation_id || '';
+      const valPath = path.join(outputDir, 'document-validation-receipts', `${valId}.json`);
+      if (!fs.existsSync(valPath)) {
+        throw new Error(`Verificação bidirecional falhou: validação documental SQLite '${valId}' sem ficheiro em '${valPath}'.`);
+      }
+    }
 
     return {
-      files: exportedFileList,
-      indexHash: sha256(indexContent)
+      files: manifestFiles,
+      totalFiles: manifestFiles.length,
+      commitSha,
+      scanDirRecursive
     };
   }
 

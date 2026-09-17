@@ -397,15 +397,37 @@ export class PilotExternalValidator {
       return { isValid: false, error: `Permissão explícita 'PILOT_REVIEW' ausente no token do revisor '${expectedReviewerId}'.` };
     }
 
-    // 5. Active tenant membership check in identity store
-    const account = tokenService.getAccount(expectedReviewerId);
-    if (account) {
-      if (account.status !== 'ACTIVE') {
-        return { isValid: false, error: `Vínculo inactivo do utilizador '${expectedReviewerId}': estado actual '${account.status}'.` };
-      }
-      if (account.tenant_id !== expectedTenantId) {
-        return { isValid: false, error: `Vínculo do utilizador '${expectedReviewerId}' pertence a outro tenant ('${account.tenant_id}').` };
-      }
+    // 5. Persistent identity account verification in identity store (Fail-Closed)
+    let account: any;
+    try {
+      account = tokenService.getAccount(expectedReviewerId);
+    } catch (err: any) {
+      return { isValid: false, error: `Falha ao aceder ao armazenamento de identidades do revisor '${expectedReviewerId}': ${err.message}` };
+    }
+
+    if (!account) {
+      return { isValid: false, error: `Vínculo persistente do revisor '${expectedReviewerId}' não encontrado no serviço de identidade.` };
+    }
+    if (account.status !== 'ACTIVE') {
+      return { isValid: false, error: `Vínculo inactivo do utilizador '${expectedReviewerId}': estado actual '${account.status}'.` };
+    }
+    if (account.tenant_id !== expectedTenantId) {
+      return { isValid: false, error: `Vínculo do utilizador '${expectedReviewerId}' pertence a outro tenant ('${account.tenant_id}').` };
+    }
+    if (account.user_id !== expectedReviewerId) {
+      return { isValid: false, error: `Identidade da conta persistente ('${account.user_id}') diverge do revisor esperado ('${expectedReviewerId}').` };
+    }
+
+    // 6. Persistent roles & permissions check (claims no token não podem conceder privilégios ausentes na conta)
+    const persistentRoles: string[] = Array.isArray(account.roles) ? account.roles : [];
+    const hasPersistentAuthorizedRole = persistentRoles.includes('HUMAN_REVIEWER') || persistentRoles.includes('ADMIN');
+    if (!hasPersistentAuthorizedRole) {
+      return { isValid: false, error: `Função não autorizada na conta persistente do revisor '${expectedReviewerId}'. Requer 'HUMAN_REVIEWER' ou 'ADMIN'.` };
+    }
+
+    const persistentPerms: string[] = Array.isArray(account.permissions) ? account.permissions : [];
+    if (!persistentPerms.includes('PILOT_REVIEW')) {
+      return { isValid: false, error: `Permissão explícita 'PILOT_REVIEW' ausente na conta persistente do revisor '${expectedReviewerId}'.` };
     }
 
     return { isValid: true, payload };

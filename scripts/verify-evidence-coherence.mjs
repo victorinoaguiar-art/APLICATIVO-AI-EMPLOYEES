@@ -7,7 +7,9 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.resolve(__dirname, '..');
-const EVIDENCE_DIR = path.resolve(ROOT_DIR, 'evidence');
+const EVIDENCE_DIR = fs.existsSync(path.resolve(ROOT_DIR, '.artifacts', 'evidence'))
+  ? path.resolve(ROOT_DIR, '.artifacts', 'evidence')
+  : path.resolve(ROOT_DIR, 'evidence');
 
 export const ERROR_CODES = {
   EVIDENCE_FILE_MISSING: 'EVIDENCE_FILE_MISSING',
