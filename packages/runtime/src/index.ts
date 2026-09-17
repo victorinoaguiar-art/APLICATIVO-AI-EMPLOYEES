@@ -94,6 +94,7 @@ export * from './competency/ExecutionModeEvidenceEngine.js';
 export * from './competency/AIOmnichannelEngine.js';
 export * from './competency/KnowledgeCenterEngine.js';
 export * from './competency/KnowledgeNecessityEngine.js';
+export * from './pilot/ControlledPilotEngine.js';
 
 
 

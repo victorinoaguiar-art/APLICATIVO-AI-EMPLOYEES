@@ -54,6 +54,7 @@ export * from './competency/employeeRuntimeTypes.js';
 export * from './competency/omnichannelTypes.js';
 export * from './competency/knowledgeCenterTypes.js';
 export * from './competency/knowledgeNecessityTypes.js';
+export * from './pilot/PilotProgramTypes.js';
 
 
 
