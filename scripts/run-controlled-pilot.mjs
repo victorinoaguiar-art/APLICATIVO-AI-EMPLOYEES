@@ -3,6 +3,64 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { execSync } from 'node:child_process';
 import { ControlledPilotEngine } from '../packages/runtime/dist/pilot/ControlledPilotEngine.js';
+import { TransactionalPilotStore } from '../packages/runtime/dist/pilot/TransactionalPilotStore.js';
+import { PhysicalDocumentValidator } from '../packages/runtime/dist/pilot/PhysicalDocumentValidator.js';
+
+const args = process.argv.slice(2);
+
+// Suporte ao comando/flag check-readiness
+const isCheckReadiness = args.includes('check-readiness') || args.includes('--check-readiness');
+if (isCheckReadiness) {
+  console.log('================================================================');
+  console.log('AUDITORIA DE PRONTIDÃO OPERACIONAL DO PILOTO (CHECK-READINESS)');
+  console.log('================================================================');
+  let ready = true;
+
+  const dbPath = process.env.PILOT_DB_PATH;
+  if (!dbPath || dbPath === ':memory:') {
+    console.log('[FAIL] Persistência SQLite Durável: ausente (PILOT_DB_PATH não configurado ou :memory:).');
+    ready = false;
+  } else {
+    console.log(`[PASS] Persistência SQLite Durável: ${dbPath}`);
+  }
+
+  const docArg = args.find(a => a.startsWith('--auth-doc='));
+  const authDocPath = docArg ? docArg.split('=')[1] : process.env.PILOT_AUTH_DOC_PATH;
+  if (!authDocPath || !fs.existsSync(authDocPath)) {
+    console.log('[FAIL] Ficheiro Físico de Autorização Externa: ausente ou não encontrado.');
+    ready = false;
+  } else {
+    console.log(`[PASS] Ficheiro Físico de Autorização Externa: ${authDocPath}`);
+  }
+
+  const tasksArg = args.find(a => a.startsWith('--tasks-file='));
+  const tasksFilePath = tasksArg ? tasksArg.split('=')[1] : process.env.PILOT_TASKS_FILE;
+  if (!tasksFilePath || !fs.existsSync(tasksFilePath)) {
+    console.log('[FAIL] Fonte de Tarefas Operacionais Reais: não configurada (--tasks-file ausente).');
+    ready = false;
+  } else {
+    console.log(`[PASS] Fonte de Tarefas Operacionais Reais: ${tasksFilePath}`);
+  }
+
+  const revConfigStr = process.env.PILOT_REVIEWER_CONFIGS;
+  if (!revConfigStr) {
+    console.log('[FAIL] Credenciais de Revisores Seguras: ausentes (PILOT_REVIEWER_CONFIGS não configurado).');
+    ready = false;
+  } else {
+    console.log('[PASS] Credenciais de Revisores Seguras: configuradas.');
+  }
+
+  console.log('----------------------------------------------------------------');
+  if (!ready) {
+    console.error('\n[RESULTADO] PRONTIDÃO OPERACIONAL INCOMPLETA — FALTAM FONTES EXTERNAS REAIS.');
+    console.error('Classificação Estrita Mantida:');
+    console.error('OPERATIONAL_PILOT_INFRASTRUCTURE_READY — REAL PILOT NOT YET EXECUTED\n');
+    process.exit(1);
+  } else {
+    console.log('\n[RESULTADO] TODAS AS FONTES OPERACIONAIS EXTERNAS FORAM FORNECIDAS.');
+    process.exit(0);
+  }
+}
 
 const pilotId = 'PILOT_SASO_2026_09';
 const tenantId = 'tenant_pilot_angola_ops_01';
@@ -15,13 +73,12 @@ const endAt = '2026-10-15T18:00:00Z';
 const selectedEmployees = [66, 263, 58, 52, 73];
 const humanReviewers = ['rev_maria_santos', 'rev_joao_manuel'];
 
-const args = process.argv.slice(2);
 const modeArg = args.find(a => a.startsWith('--mode='));
 const rawMode = modeArg ? modeArg.split('=')[1].toLowerCase() : 'simulation';
 const mode = rawMode === 'operational' ? 'OPERATIONAL_PILOT' : 'SIMULATION';
 
 console.log('================================================================');
-console.log(`PILOTO OPERACIONAL CONTROLADO — MODO: ${mode}`);
+console.log(`PILOTO CONTROLADO — MODO: ${mode}`);
 console.log('================================================================');
 console.log(`Organização: ${orgName}`);
 console.log(`Tenant: ${tenantId}`);
@@ -30,10 +87,15 @@ console.log(`Autorização: ${authRef} (por ${authorizedBy})`);
 console.log(`Employees Selecionados: ${selectedEmployees.join(', ')}`);
 console.log('----------------------------------------------------------------\n');
 
-const engine = ControlledPilotEngine.getInstance();
+// 1. Inicializar Persistência Durável
+const artifactsDir = path.resolve(process.cwd(), '.artifacts', 'pilot');
+fs.mkdirSync(artifactsDir, { recursive: true });
+const dbPath = process.env.PILOT_DB_PATH || path.join(artifactsDir, `pilot-${rawMode}.db`);
+const store = new TransactionalPilotStore(dbPath, mode);
+const engine = ControlledPilotEngine.getInstance(store);
 engine.reset();
 
-// 1. Criar e autorizar o piloto
+// 2. Criar e autorizar o piloto
 console.log('[1/5] Inicializando e Autorizando o Piloto...');
 
 let authDocPath;
@@ -42,12 +104,21 @@ let reviewerConfigs;
 
 if (mode === 'OPERATIONAL_PILOT') {
   const docArg = args.find(a => a.startsWith('--auth-doc='));
-  authDocPath = docArg ? docArg.split('=')[1] : undefined;
+  authDocPath = docArg ? docArg.split('=')[1] : process.env.PILOT_AUTH_DOC_PATH;
   if (!authDocPath || !fs.existsSync(authDocPath)) {
-    console.warn('\n[AVISO OPERACIONAL] Ficheiro de autorização física externa não fornecido via --auth-doc=<caminho>.');
-    console.warn('Classificação Atual: OPERATIONAL_PILOT_INFRASTRUCTURE_READY — REAL PILOT NOT YET EXECUTED');
-    console.warn('A infraestrutura está 100% pronta e com falha fechada ativa.\n');
-    process.exit(0);
+    console.error('\n[ERRO OPERACIONAL FATAL] Ficheiro físico de autorização não fornecido ou inexistente (--auth-doc=<path>).');
+    console.error('Falha fechada (fail-closed) ativada: execução abortada com exit 1.');
+    console.error('Classificação Estrita: OPERATIONAL_PILOT_INFRASTRUCTURE_READY — REAL PILOT NOT YET EXECUTED\n');
+    process.exit(1);
+  }
+
+  const tasksArg = args.find(a => a.startsWith('--tasks-file='));
+  const tasksFilePath = tasksArg ? tasksArg.split('=')[1] : process.env.PILOT_TASKS_FILE;
+  if (!tasksFilePath || !fs.existsSync(tasksFilePath)) {
+    console.error('\n[ERRO OPERACIONAL FATAL] Ficheiro de tarefas operacionais reais ausente (--tasks-file=<path>).');
+    console.error('É proibido executar fixtures ou dados simulados em modo OPERATIONAL_PILOT.');
+    console.error('Classificação Estrita: OPERATIONAL_PILOT_INFRASTRUCTURE_READY — REAL PILOT NOT YET EXECUTED\n');
+    process.exit(1);
   }
 }
 
@@ -138,7 +209,16 @@ const taskDefinitions = [
     instruction: 'Redigir notificação formal de prorrogação contratual',
     input: { letter_ref: 'SASO/DIR-LOG/2026/041', recipient: 'Transportes Rápidos de Viana Lda', subject: 'Prorrogação de Prestação de Serviços' },
     needsCorrection: true,
-    correctionText: '[DOCX DOCUMENT]\nSASO - SOCIEDADE ANGOLANA DE SERVIÇOS & OPERAÇÕES LDA\nLuanda, 17 de Setembro de 2026\nRef: SASO/DIR-LOG/2026/041-REV\nPara: Transportes Rápidos de Viana Lda\nAssunto: Prorrogação de Prestação de Serviços - Prazo Exato 31/12/2026\n\nExmos. Senhores,\nConfirmamos a prorrogação formal do contrato de transportes até 31 de Dezembro de 2026.\nCom os melhores cumprimentos,\nA Administração Executiva'
+    correctionText: PhysicalDocumentValidator.buildRealBinaryDocx(
+      'SASO - Notificação de Aditamento',
+      [
+        'Ref: SASO/DIR-LOG/2026/041-REV',
+        'Para: Transportes Rápidos de Viana Lda',
+        'Assunto: Prorrogação de Prestação de Serviços até 31/12/2026',
+        'Confirmamos a prorrogação formal do contrato de transportes até 31 de Dezembro de 2026.',
+        'Com os melhores cumprimentos, A Administração Executiva'
+      ]
+    )
   },
   {
     id: 'TASK_SASO_008',
@@ -206,7 +286,14 @@ const taskDefinitions = [
     instruction: 'Calcular EBITDA e margem unitária dos serviços de logística',
     input: { budget_kz: 21000000, actual_kz: 22800000 },
     needsCorrection: true,
-    correctionText: '[XLSX SPREADSHEET]\nMAPA DE ANÁLISE FINANCEIRA & VARIANÇA ORÇAMENTAL - REVISÃO 2\nORGANIZAÇÃO: SASO LDA | PERÍODO: SETEMBRO 2026\nANALISTA: AI Employee #58 (Financial Analysis)\nRUBRICA | ORÇADO (KZ) | REALIZADO (KZ) | DESVIO (KZ) | VARIANÇA %\nCustos de Transporte | 21000000.00 | 22800000.00 | -1800000.00 | -8.57%\nMargem Contribuição Ajustada | 30000000.00 | 32500000.00 | +2500000.00 | +8.33%\nSTATUS: RECONCILIAÇÃO RETIFICADA COM SUCESSO'
+    correctionText: PhysicalDocumentValidator.buildRealBinaryXlsx(
+      'Margem_Contribuicao_v2',
+      [
+        ['Rubrica', 'Orcado (KZ)', 'Realizado (KZ)', 'Desvio (KZ)', 'Varianca %'],
+        ['Custos de Transporte', 21000000, 22800000, -1800000, '-8.57%'],
+        ['Margem Contribuicao Ajustada', 30000000, 32500000, 2500000, '+8.33%']
+      ]
+    )
   },
   {
     id: 'TASK_SASO_016',
@@ -250,7 +337,18 @@ const taskDefinitions = [
     instruction: 'Elaborar aviso formal de mora com cálculo de juros legais',
     input: { client_name: 'Empreendimentos Turísticos de Benguela Lda', invoice_number: 'FT 2026/0290', amount_kz: 4200000.00 },
     needsCorrection: true,
-    correctionText: '[DOCX DOCUMENT]\nSASO - DEPARTAMENTO FINANCEIRO & COBRANÇAS\nAVISO FORMAL DE REGULARIZAÇÃO DE CONTA (GRAU 2)\nData: 17 de Setembro de 2026\nDestinatário: Empreendimentos Turísticos de Benguela Lda\nFactura em Mora: FT 2026/0290\nValor Pendente Atualizado: 4.200.000,00 KZ (Juros de Mora Isentos sob Acordo)\nVencimento Original: 15 de Julho de 2026\n\nSolicitamos contacto urgente com a tesouraria no prazo de 48 horas para formalização.\nCom os melhores cumprimentos,\nDepartamento de Cobranças'
+    correctionText: PhysicalDocumentValidator.buildRealBinaryDocx(
+      'SASO - Aviso de Regularização Grau 2',
+      [
+        'SASO - Departamento Financeiro & Cobranças',
+        'Data: 17 de Setembro de 2026',
+        'Destinatário: Empreendimentos Turísticos de Benguela Lda',
+        'Factura em Mora: FT 2026/0290',
+        'Valor Pendente Atualizado: 4.200.000,00 KZ',
+        'Vencimento Original: 15 de Julho de 2026',
+        'Com os melhores cumprimentos, Departamento de Cobranças'
+      ]
+    )
   },
   {
     id: 'TASK_SASO_021',
@@ -302,7 +400,15 @@ const taskDefinitions = [
     instruction: 'Apresentar volumetria processada e tempos médios de resposta',
     input: { period: 'Q3 2026' },
     needsCorrection: true,
-    correctionText: '%PDF-1.7\n1 0 obj << /Type /Catalog >> endobj\n[PDF DOCUMENT]\nRELATÓRIO DE GESTÃO EXECUTIVO - SASO LDA (VERSÃO AUDITADA)\nPERÍODO DE REFERÊNCIA: Q3 2026\nDATA DE EMISSÃO: 17 de Setembro de 2026\nRESPONSÁVEL: AI Employee #73 (Management Reporting)\n\n== 1. DESEMPENHO OPERACIONAL AUDITADO ==\nTaxa de Cumprimento de SLA: 98.9%\nTotal de Processos Executados: 1.480\nÍndice de Eficiência Administrativa: 95.5%\n\n== 2. INDICADORES FINANCEIROS DE GESTÃO ==\nMargem Operacional Bruta: 34.1%\nGrau de Autonomia Financeira: 46.8%\n\n== 3. CONCLUSÕES & RECOMENDAÇÕES ==\nPiloto com desempenho estável e métricas aprovadas.\nxref\n0 2\n0000000000 65535 f \n0000000009 00000 n \ntrailer << /Size 2 /Root 1 0 R >>\nstartxref\n50\n%%EOF'
+    correctionText: PhysicalDocumentValidator.buildRealBinaryPdf(
+      'Relatório Executivo de Produtividade Q3 - SASO Lda',
+      [
+        'BT /F1 12 Tf 50 750 Td (SASO LDA - RELATORIO DE GESTAO Q3 2026 AUDITADO) Tj ET',
+        'BT /F1 10 Tf 50 720 Td (Taxa de Cumprimento SLA: 98.9%) Tj ET',
+        'BT /F1 10 Tf 50 700 Td (Total Processos: 1480 | Indice Eficiencia: 95.5%) Tj ET',
+        'BT /F1 10 Tf 50 680 Td (Margem Operacional Bruta: 34.1%) Tj ET'
+      ]
+    )
   },
   {
     id: 'TASK_SASO_027',
@@ -423,33 +529,18 @@ console.log(`      Directório de saída: ${outputDir}`);
 console.log(`      Ficheiros indexados: ${exportResult.files.length}`);
 console.log(`      Hash do índice: ${exportResult.indexHash}\n`);
 
-// 6. Validar criptograficamente com sha256sum -c pilot-evidence-files.sha256
+// 6. Validar criptograficamente com scripts/verify-pilot-manifest.mjs
 console.log('[5/5] Verificando Integridade Criptográfica do Pacote de Evidências...');
 try {
-  const indexFile = path.join(outputDir, 'pilot-evidence-files.sha256');
-  const indexContent = fs.readFileSync(indexFile, 'utf-8');
-  const lines = indexContent.trim().split('\n');
-  for (const line of lines) {
-    const parts = line.trim().split(/\s+/);
-    if (parts.length === 2) {
-      const expectedHash = parts[0];
-      const fileName = parts[1];
-      const fileBytes = fs.readFileSync(path.join(outputDir, fileName));
-      const actualHash = ControlledPilotEngine.getInstance().getTask ? 
-        execSync(`node -e "const { createHash } = require('crypto'); console.log(createHash('sha256').update(fs.readFileSync('${path.join(outputDir, fileName).replace(/\\/g, '\\\\')}')).digest('hex'));"`).toString().trim() : '';
-      if (expectedHash !== actualHash) {
-        throw new Error(`Divergência de hash no ficheiro ${fileName}: esperado ${expectedHash}, obtido ${actualHash}`);
-      }
-      console.log(`      [OK] ${fileName} -> ${actualHash.substring(0, 16)}...`);
-    }
-  }
+  const verifyScript = path.resolve(process.cwd(), 'scripts', 'verify-pilot-manifest.mjs');
+  execSync(`node "${verifyScript}" --dir="${outputDir}"`, { stdio: 'inherit' });
   console.log('\n[PASS] Pacote de Evidências do Piloto verificado e íntegro a 100%!');
   const finalClass = mode === 'OPERATIONAL_PILOT'
     ? 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY'
     : 'CONTROLLED_PILOT_SIMULATOR_IMPLEMENTED';
   const finalState = mode === 'OPERATIONAL_PILOT'
     ? 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY — REAL PILOT NOT YET EXECUTED'
-    : 'SIMULATION_EXECUTED — OPERATIONAL_PILOT_INFRASTRUCTURE_READY (REAL PILOT NOT YET EXECUTED)';
+    : 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY — SIMULATION EVIDENCE VERIFIED — REAL PILOT NOT YET EXECUTED';
   console.log(`       Classificação Alcançada: ${finalClass}`);
   console.log(`       Estado Operacional: ${finalState}`);
 } catch (err) {

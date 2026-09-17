@@ -110,6 +110,23 @@ jobs:
       - name: Multi-Tenant Authentication & Authorization Verification
         run: npm run verify:auth
 
+      - name: Controlled Pilot Simulation & Durability Verification
+        run: node scripts/run-controlled-pilot.mjs --mode=simulation
+        env:
+          PILOT_DB_PATH: .artifacts/pilot/pilot-ci-simulation.db
+
+      - name: Pilot Evidence Manifest Independent Verification
+        run: node scripts/verify-pilot-manifest.mjs --dir=.artifacts/pilot/PILOT_SASO_2026_09
+
+      - name: Pilot Operational Readiness Check (Fail-Closed Gate)
+        run: |
+          if node scripts/run-controlled-pilot.mjs check-readiness; then
+            echo "[FATAL] check-readiness should fail without operational sources"
+            exit 1
+          else
+            echo "[OK] check-readiness properly failed-closed (exit 1) in absence of operational sources."
+          fi
+
       - name: Generate CI Forensic Evidence Bundle
         run: node scripts/generate-evidence.mjs --output .artifacts/evidence
         env:
@@ -125,6 +142,14 @@ jobs:
         with:
           name: aetf-evidence-bundle-${{ github.sha }}
           path: .artifacts/evidence/
+          retention-days: 30
+
+      - name: Upload Pilot Simulation Evidence Bundle
+        if: always()
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        with:
+          name: pilot-simulation-evidence-${{ github.sha }}
+          path: .artifacts/pilot/
           retention-days: 30
 
       - name: Ensure Clean Working Tree

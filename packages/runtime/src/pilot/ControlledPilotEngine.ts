@@ -22,6 +22,7 @@ import {
 import { TransactionalPilotStore } from './TransactionalPilotStore.js';
 import { PhysicalDocumentValidator } from './PhysicalDocumentValidator.js';
 import { PilotExternalValidator } from './PilotExternalValidator.js';
+import { TokenService } from '@ai-employee/shared/server';
 
 function sha256(content: string | Buffer): string {
   return createHash('sha256').update(content).digest('hex');
@@ -207,30 +208,7 @@ export class ControlledPilotEngine {
   public executeTask(request: PilotTaskRequest): PilotTaskReceipt {
     const pilot = this.getPilot(request.pilot_id);
 
-    // 1. Validate external task request against pilot contract
-    const taskValidation = PilotExternalValidator.validateTaskRequest(request, pilot);
-    if (!taskValidation.isValid) {
-      throw new Error(`Tarefa inválida rejeitada:\n${taskValidation.errors.join('\n')}`);
-    }
-
-    // 2. Pilot Status Gate
-    if (pilot.status !== 'ACTIVE') {
-      throw new Error(`Execução rejeitada: Piloto '${pilot.pilot_id}' não está activo (estado actual: ${pilot.status}).`);
-    }
-
-    // 3. Expiration Gate
-    const now = new Date();
-    if (now > new Date(pilot.end_at)) {
-      throw new Error(`Execução rejeitada: Piloto '${pilot.pilot_id}' expirou em ${pilot.end_at}.`);
-    }
-
-    // 4. Task Limit Gate
-    const currentTasks = this.store.listTasks(pilot.pilot_id);
-    if (currentTasks.length >= pilot.task_limit) {
-      throw new Error(`Execução rejeitada: Limite de ${pilot.task_limit} tarefas atingido no piloto.`);
-    }
-
-    // 5. Tenant Isolation Gate
+    // 1. Tenant Isolation Gate
     if (request.tenant_id !== pilot.tenant_id) {
       this.recordIncident({
         incident_id: `INC_CROSS_${Date.now()}`,
@@ -244,8 +222,8 @@ export class ControlledPilotEngine {
       throw new Error(`Acesso negado: Isolamento multi-tenant violado. Tenant '${request.tenant_id}' difere do piloto '${pilot.tenant_id}'.`);
     }
 
-    // 6. Prohibited Action Gate
-    if (request.action_type && pilot.prohibited_actions.includes(request.action_type)) {
+    // 2. Prohibited Action Gate
+    if (request.action_type && pilot.prohibited_actions?.includes(request.action_type)) {
       this.recordIncident({
         incident_id: `INC_UNAUTH_${Date.now()}`,
         pilot_id: pilot.pilot_id,
@@ -256,6 +234,29 @@ export class ControlledPilotEngine {
         resolved: false
       });
       throw new Error(`Acção proibida pelo regulamento do piloto: '${request.action_type}'.`);
+    }
+
+    // 3. Validate external task request against pilot contract
+    const taskValidation = PilotExternalValidator.validateTaskRequest(request, pilot);
+    if (!taskValidation.isValid) {
+      throw new Error(`Tarefa inválida rejeitada:\n${taskValidation.errors.join('\n')}`);
+    }
+
+    // 4. Pilot Status Gate
+    if (pilot.status !== 'ACTIVE') {
+      throw new Error(`Execução rejeitada: Piloto '${pilot.pilot_id}' não está activo (estado actual: ${pilot.status}).`);
+    }
+
+    // 5. Expiration Gate
+    const now = new Date();
+    if (now > new Date(pilot.end_at)) {
+      throw new Error(`Execução rejeitada: Piloto '${pilot.pilot_id}' expirou em ${pilot.end_at}.`);
+    }
+
+    // 6. Task Limit Gate
+    const currentTasks = this.store.listTasks(pilot.pilot_id);
+    if (currentTasks.length >= pilot.task_limit) {
+      throw new Error(`Execução rejeitada: Limite de ${pilot.task_limit} tarefas atingido no piloto.`);
     }
 
     // 7. Idempotency Check in Transactional Persistence
@@ -316,18 +317,16 @@ export class ControlledPilotEngine {
 
     receipt.receipt_sha256 = sha256(canonicalJson(receipt));
 
-    // Save task and output atomically in transactional store
-    this.store.transaction(() => {
-      this.store.saveTask(receipt);
-      this.store.saveOutput({
-        output_id: `OUT_${request.task_id}_v1`,
-        task_id: request.task_id,
-        version: 1,
-        file_name: generated.fileName,
-        file_path: generated.fileName,
-        file_bytes_sha256: outputHash,
-        is_active: true
-      });
+    // Save task, output and physical BLOB atomically with immediate read verification
+    this.store.saveTaskWithOutputAndVerify(receipt, {
+      output_id: `OUT_${request.task_id}_v1`,
+      task_id: request.task_id,
+      version: 1,
+      file_name: generated.fileName,
+      file_path: generated.fileName,
+      file_bytes: generated.buffer,
+      file_bytes_sha256: outputHash,
+      is_active: true
     });
 
     this.taskCache.set(receipt.task_id, receipt);
@@ -344,6 +343,9 @@ export class ControlledPilotEngine {
     decision: HumanReviewStatus;
     comments: string;
     auth_method?: 'SESSION_TOKEN' | 'HMAC_SIGNATURE' | 'API_KEY';
+    auth_token?: string;
+    reviewer_token?: string;
+    session_reference?: string;
     signature?: string;
     corrections_requested?: string[];
     corrected_content?: string | Buffer;
@@ -374,9 +376,38 @@ export class ControlledPilotEngine {
     const prevHash = activeOutput.file_bytes_sha256;
     let newHash = prevHash;
 
-    // 3. Verify cryptographic review signature
+    // 3. Verify reviewer authentication & cryptographic review signature
+    const authToken = params.auth_token || params.reviewer_token;
+    let sessionRef = params.session_reference;
+
+    if (authToken) {
+      const tokenValidation = PilotExternalValidator.validateReviewerToken(
+        authToken,
+        pilot.tenant_id,
+        params.reviewer
+      );
+      if (!tokenValidation.isValid) {
+        throw new Error(`Autenticação de revisor por token rejeitada: ${tokenValidation.error}`);
+      }
+      sessionRef = sessionRef || tokenValidation.payload?.jti || sha256(authToken).slice(0, 16);
+    }
+
     const reviewerConfig = pilot.reviewer_configs?.find(r => r.reviewer_id === params.reviewer);
-    const secretKey = reviewerConfig?.secret_or_key || 'SASO_PILOT_DEFAULT_REVIEW_SECRET';
+    let secretKey = reviewerConfig?.secret_or_key;
+
+    if (pilot.execution_mode === 'OPERATIONAL_PILOT') {
+      if (!secretKey && !authToken) {
+        throw new Error(`Chave ou token de autenticação de revisão ausente para o revisor '${params.reviewer}' em modo OPERATIONAL_PILOT.`);
+      }
+      if (!secretKey && authToken) {
+        secretKey = sha256(authToken);
+      }
+    } else {
+      // Modo SIMULATION
+      if (!secretKey) {
+        secretKey = authToken ? sha256(authToken) : 'SIMULATION_PILOT_DEV_REVIEW_KEY';
+      }
+    }
 
     let signature = params.signature;
     if (!signature) {
@@ -391,7 +422,7 @@ export class ControlledPilotEngine {
           targetDocumentHash: prevHash,
           reviewedAt
         },
-        secretKey
+        secretKey!
       );
     } else {
       const isValidSig = PilotExternalValidator.validateReviewerSignature(
@@ -403,7 +434,7 @@ export class ControlledPilotEngine {
           reviewedAt,
           signature
         },
-        secretKey
+        secretKey!
       );
       if (!isValidSig) {
         throw new Error('Assinatura criptográfica de revisão inválida ou adulterada.');
@@ -445,6 +476,7 @@ export class ControlledPilotEngine {
         version: 2,
         file_name: v2FileName,
         file_path: v2FileName,
+        file_bytes: correctedBuf,
         file_bytes_sha256: newHash,
         is_active: true
       });
@@ -472,10 +504,13 @@ export class ControlledPilotEngine {
       corrections_requested: params.corrections_requested,
       previous_output_hash: prevHash,
       new_output_hash: newHash,
-      auth_method: params.auth_method || 'HMAC_SIGNATURE',
+      auth_method: authToken ? 'SESSION_TOKEN' : (params.auth_method || 'HMAC_SIGNATURE'),
       review_signature_sha256: signature,
       receipt_sha256: ''
     };
+    if (sessionRef) {
+      (reviewReceipt as any).session_reference = sessionRef;
+    }
     reviewReceipt.receipt_sha256 = sha256(canonicalJson(reviewReceipt));
 
     this.store.transaction(() => {
@@ -884,10 +919,20 @@ export class ControlledPilotEngine {
     }));
     fs.writeFileSync(path.join(outputDir, 'selected-employees.json'), JSON.stringify(selectedEmployees, null, 2), 'utf8');
 
-    // 4. Task receipts
+    // 4. Task receipts & Physical Outputs
+    fs.mkdirSync(path.join(outputDir, 'task-outputs'), { recursive: true });
     const pilotTasks = this.store.listTasks(pilotId);
     for (const t of pilotTasks) {
       fs.writeFileSync(path.join(outputDir, 'task-receipts', `${t.task_id}.json`), JSON.stringify(t, null, 2), 'utf8');
+
+      // Export physical output files stored as BLOBs in SQLite
+      const outputs = this.store.getOutputsForTask(t.task_id);
+      for (const out of outputs) {
+        const bytes = this.store.getOutputBytes(out.output_id);
+        if (bytes) {
+          fs.writeFileSync(path.join(outputDir, 'task-outputs', out.file_name), bytes);
+        }
+      }
     }
 
     // 5. Review receipts
@@ -939,29 +984,72 @@ export class ControlledPilotEngine {
     };
     fs.writeFileSync(path.join(outputDir, 'pilot-final-attestation.json'), JSON.stringify(attestation, null, 2), 'utf8');
 
-    // 10. Generate index file (pilot-evidence-files.sha256)
-    const indexFiles = [
-      'pilot-authorization-receipt.json',
-      'pilot-configuration.json',
-      'selected-employees.json',
-      'pilot-metrics.json',
-      'pilot-incidents.json',
-      'pilot-final-attestation.json'
-    ];
+    // Recursive directory discovery function
+    const scanDirRecursive = (dir: string, baseDir: string): { relativePath: string; fullPath: string }[] => {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      const results: { relativePath: string; fullPath: string }[] = [];
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          results.push(...scanDirRecursive(fullPath, baseDir));
+        } else if (entry.isFile()) {
+          const rel = path.relative(baseDir, fullPath).replace(/\\/g, '/');
+          results.push({ relativePath: rel, fullPath });
+        }
+      }
+      return results.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+    };
+
+    // 10. Generate full pilot-evidence-manifest.json
+    const initialFiles = scanDirRecursive(outputDir, outputDir).filter(
+      f => f.relativePath !== 'pilot-evidence-manifest.json' && f.relativePath !== 'pilot-evidence-files.sha256'
+    );
+
+    const manifestFiles = initialFiles.map(f => {
+      const bytes = fs.readFileSync(f.fullPath);
+      return {
+        relative_path: f.relativePath,
+        sha256: sha256(bytes),
+        byte_size: bytes.length
+      };
+    });
+
+    const manifestData = {
+      manifest_version: '1.0',
+      pilot_id: pilot.pilot_id,
+      tenant_id: pilot.tenant_id,
+      execution_mode: pilot.execution_mode,
+      total_files: manifestFiles.length,
+      created_at: new Date().toISOString(),
+      files: manifestFiles
+    };
+
+    fs.writeFileSync(
+      path.join(outputDir, 'pilot-evidence-manifest.json'),
+      JSON.stringify(manifestData, null, 2),
+      'utf8'
+    );
+
+    // 11. Generate pilot-evidence-files.sha256 covering all files (including manifest)
+    const allDiscoveredFiles = scanDirRecursive(outputDir, outputDir).filter(
+      f => f.relativePath !== 'pilot-evidence-files.sha256'
+    );
 
     const indexLines: string[] = [];
-    for (const f of indexFiles) {
-      const fullPath = path.join(outputDir, f);
-      const fileBytes = fs.readFileSync(fullPath);
+    const exportedFileList: string[] = [];
+
+    for (const f of allDiscoveredFiles) {
+      const fileBytes = fs.readFileSync(f.fullPath);
       const hash = sha256(fileBytes);
-      indexLines.push(`${hash}  ${f}`);
+      indexLines.push(`${hash}  ${f.relativePath}`);
+      exportedFileList.push(f.relativePath);
     }
 
     const indexContent = indexLines.join('\n') + '\n';
     fs.writeFileSync(path.join(outputDir, 'pilot-evidence-files.sha256'), indexContent, 'utf8');
 
     return {
-      files: indexFiles,
+      files: exportedFileList,
       indexHash: sha256(indexContent)
     };
   }

@@ -34,14 +34,40 @@ const lines = manifestContent.trim().split('\n').filter(l => l.trim().length > 0
 
 console.log(`Total de ficheiros indexados no manifesto: ${lines.length}\n`);
 
+function scanDirRecursive(dir, baseDir) {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  const results = [];
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      results.push(...scanDirRecursive(fullPath, baseDir));
+    } else if (entry.isFile()) {
+      const rel = path.relative(baseDir, fullPath).replace(/\\/g, '/');
+      results.push({ relativePath: rel, fullPath });
+    }
+  }
+  return results.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+}
+
 let verifiedCount = 0;
 let hasError = false;
+const indexedRelativePaths = new Set();
 
 for (const line of lines) {
   const parts = line.trim().split(/\s+/);
   if (parts.length < 2) continue;
   const expectedHash = parts[0];
-  const relativeFileName = parts.slice(1).join(' ');
+  const relativeFileName = parts.slice(1).join(' ').replace(/\\/g, '/');
+
+  // Security: Path traversal protection
+  const normalized = path.normalize(relativeFileName).replace(/\\/g, '/');
+  if (normalized.startsWith('..') || path.isAbsolute(relativeFileName) || relativeFileName.includes('../')) {
+    console.error(`[FALHA DE SEGURANÇA] Caminho malicioso / path traversal detectado: ${relativeFileName}`);
+    hasError = true;
+    continue;
+  }
+
+  indexedRelativePaths.add(relativeFileName);
   const filePath = path.join(targetDir, relativeFileName);
 
   if (!fs.existsSync(filePath)) {
@@ -59,9 +85,24 @@ for (const line of lines) {
     console.error(`        Obtido:   ${actualHash}`);
     hasError = true;
   } else {
-    console.log(`[OK] ${relativeFileName.padEnd(35)} -> SHA256: ${actualHash.slice(0, 16)}...`);
+    console.log(`[OK] ${relativeFileName.padEnd(45)} -> SHA256: ${actualHash.slice(0, 16)}...`);
     verifiedCount++;
   }
+}
+
+// Verificação Bidirecional: Rejeitar ficheiros órfãos no filesystem não indexados
+console.log('\n--- Verificação Bidirecional do Filesystem ---');
+const diskFiles = scanDirRecursive(targetDir, targetDir);
+for (const df of diskFiles) {
+  // O próprio arquivo de manifesto sha256 não precisa estar listado dentro de si mesmo
+  if (df.relativePath === 'pilot-evidence-files.sha256') continue;
+  if (!indexedRelativePaths.has(df.relativePath)) {
+    console.error(`[FALHA] Ficheiro órfão não rastreado no manifesto detectado no disco: ${df.relativePath}`);
+    hasError = true;
+  }
+}
+if (!hasError) {
+  console.log(`[OK] Verificação bidirecional confirmada: todos os ${diskFiles.length - 1} ficheiros do directório estão registados no manifesto.`);
 }
 
 // Validação semântica da Atestação Final
@@ -87,9 +128,11 @@ if (fs.existsSync(attestationFile)) {
       }
     }
 
-    if (attestation.gates_result !== 'PASS') {
+    if (attestation.gates_result !== 'PASS' && !args.includes('--allow-partial-gates')) {
       console.error(`[FALHA] Resultado dos gates não é PASS: ${attestation.gates_result}`);
       hasError = true;
+    } else if (attestation.gates_result !== 'PASS') {
+      console.log(`[INFO] Resultado dos gates parciais: ${attestation.gates_result} (permitido via --allow-partial-gates).`);
     }
   } catch (err) {
     console.error(`[FALHA] Erro ao analisar pilot-final-attestation.json: ${err.message}`);

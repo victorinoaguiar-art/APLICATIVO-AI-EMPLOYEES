@@ -6,6 +6,7 @@ import {
   OperationalPilotMode,
   HumanReviewStatus
 } from '@ai-employee/shared';
+import { TokenService } from '@ai-employee/shared/server';
 
 function sha256(content: string | Buffer): string {
   return createHash('sha256').update(content).digest('hex');
@@ -174,6 +175,9 @@ export class PilotExternalValidator {
     },
     secretKey: string
   ): string {
+    if (!secretKey || typeof secretKey !== 'string' || secretKey.trim().length === 0) {
+      throw new Error('Chave secreta de assinatura ausente ou inválida. Operação rejeitada.');
+    }
     const payload = `${params.taskId}:${params.reviewerId}:${params.decision}:${params.targetDocumentHash}:${params.reviewedAt}`;
     return createHmac('sha256', secretKey).update(payload).digest('hex');
   }
@@ -189,7 +193,33 @@ export class PilotExternalValidator {
     },
     secretKey: string
   ): boolean {
+    if (!secretKey || typeof secretKey !== 'string' || secretKey.trim().length === 0) {
+      throw new Error('Chave secreta de assinatura ausente ou inválida. Validação rejeitada.');
+    }
     const expected = this.generateReviewerSignature(params, secretKey);
     return params.signature === expected;
+  }
+
+  public static validateReviewerToken(
+    token: string,
+    expectedTenantId: string,
+    expectedReviewerId: string,
+    tokenService?: TokenService
+  ): { isValid: boolean; payload?: any; error?: string } {
+    if (!token) {
+      return { isValid: false, error: 'Token de revisor ausente.' };
+    }
+    const ts = tokenService || new TokenService();
+    const result = ts.verifyToken(token);
+    if (!result.valid || !result.payload) {
+      return { isValid: false, error: `Token inválido: ${result.error} (${result.code})` };
+    }
+    if (result.payload.tenant_id !== expectedTenantId) {
+      return { isValid: false, error: `Isolamento multi-tenant violado: token pertence ao tenant ${result.payload.tenant_id}, esperado ${expectedTenantId}.` };
+    }
+    if (!result.payload.roles.includes('HUMAN_REVIEWER') && !result.payload.roles.includes('ADMIN') && result.payload.user_id !== expectedReviewerId && result.payload.sub !== expectedReviewerId) {
+      return { isValid: false, error: `Permissões insuficientes no token para o revisor ${expectedReviewerId}.` };
+    }
+    return { isValid: true, payload: result.payload };
   }
 }

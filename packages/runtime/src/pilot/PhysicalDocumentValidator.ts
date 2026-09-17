@@ -1,6 +1,8 @@
 import * as fs from 'node:fs';
 import { createHash } from 'node:crypto';
 import * as zlib from 'node:zlib';
+import { PDFDocument } from 'pdf-lib';
+import JSZip from 'jszip';
 import { OperationalPilotMode } from '@ai-employee/shared';
 
 // Standard CRC32 table
@@ -231,6 +233,96 @@ export class PhysicalDocumentValidator {
         throw new Error(`Documento contém placeholder residual não preenchido (${pat}).`);
       }
     }
+  }
+
+  // -------------------------------------------------------------
+  // Independent Parsers Validation (pdf-lib & jszip)
+  // -------------------------------------------------------------
+  public static async validateIndependentPdf(buf: Buffer): Promise<{ isValid: boolean; pageCount?: number; error?: string }> {
+    try {
+      const pdfDoc = await PDFDocument.load(buf, { ignoreEncryption: true });
+      const count = pdfDoc.getPageCount();
+      if (count === 0) {
+        return { isValid: false, error: 'Documento PDF independente rejeitado: 0 páginas encontradas.' };
+      }
+      return { isValid: true, pageCount: count };
+    } catch (err: any) {
+      return { isValid: false, error: `Falha no leitor independente pdf-lib: ${err.message}` };
+    }
+  }
+
+  public static async validateIndependentDocx(buf: Buffer): Promise<{ isValid: boolean; files?: string[]; error?: string }> {
+    try {
+      const zip = await JSZip.loadAsync(buf);
+      const fileNames = Object.keys(zip.files);
+      if (!fileNames.includes('[Content_Types].xml') || !fileNames.includes('word/document.xml')) {
+        return { isValid: false, error: 'DOCX inválido no parser jszip: [Content_Types].xml ou word/document.xml ausente.' };
+      }
+      const docXml = await zip.files['word/document.xml'].async('string');
+      if (!docXml.includes('w:document') && !docXml.includes('w:body')) {
+        return { isValid: false, error: 'DOCX corrompido no parser jszip: estrutura OpenXML Word ausente.' };
+      }
+      this.checkPlaceholders(docXml);
+      return { isValid: true, files: fileNames };
+    } catch (err: any) {
+      return { isValid: false, error: `Falha no leitor independente jszip para DOCX: ${err.message}` };
+    }
+  }
+
+  public static async validateIndependentXlsx(buf: Buffer): Promise<{ isValid: boolean; files?: string[]; error?: string }> {
+    try {
+      const zip = await JSZip.loadAsync(buf);
+      const fileNames = Object.keys(zip.files);
+      if (!fileNames.includes('[Content_Types].xml') || (!fileNames.includes('xl/workbook.xml') && !fileNames.includes('xl/worksheets/sheet1.xml'))) {
+        return { isValid: false, error: 'XLSX inválido no parser jszip: ficheiros OpenXML ausentes.' };
+      }
+      const sheetEntry = zip.files['xl/worksheets/sheet1.xml'] || zip.files['xl/workbook.xml'];
+      const sheetXml = await sheetEntry.async('string');
+      this.checkPlaceholders(sheetXml);
+      return { isValid: true, files: fileNames };
+    } catch (err: any) {
+      return { isValid: false, error: `Falha no leitor independente jszip para XLSX: ${err.message}` };
+    }
+  }
+
+  public static async validateWithIndependentReaders(
+    filePathOrBuffer: string | Buffer,
+    format: 'PDF' | 'DOCX' | 'XLSX' | 'JSON',
+    mode: OperationalPilotMode = 'OPERATIONAL_PILOT'
+  ): Promise<{ isValid: boolean; sha256: string; error?: string; pageCount?: number; files?: string[] }> {
+    const baseResult = this.validate(filePathOrBuffer, format, mode);
+    if (!baseResult.isValid) {
+      return baseResult;
+    }
+
+    let buf: Buffer;
+    if (typeof filePathOrBuffer === 'string') {
+      buf = fs.readFileSync(filePathOrBuffer);
+    } else {
+      buf = filePathOrBuffer;
+    }
+
+    if (format === 'PDF') {
+      const ind = await this.validateIndependentPdf(buf);
+      if (!ind.isValid) {
+        return { isValid: false, sha256: baseResult.sha256, error: ind.error };
+      }
+      return { isValid: true, sha256: baseResult.sha256, pageCount: ind.pageCount };
+    } else if (format === 'DOCX') {
+      const ind = await this.validateIndependentDocx(buf);
+      if (!ind.isValid) {
+        return { isValid: false, sha256: baseResult.sha256, error: ind.error };
+      }
+      return { isValid: true, sha256: baseResult.sha256, files: ind.files };
+    } else if (format === 'XLSX') {
+      const ind = await this.validateIndependentXlsx(buf);
+      if (!ind.isValid) {
+        return { isValid: false, sha256: baseResult.sha256, error: ind.error };
+      }
+      return { isValid: true, sha256: baseResult.sha256, files: ind.files };
+    }
+
+    return baseResult;
   }
 
   // -------------------------------------------------------------
