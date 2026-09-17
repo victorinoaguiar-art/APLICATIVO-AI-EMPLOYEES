@@ -758,6 +758,157 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests', async (t) 
     store.close();
   });
 
+  // Test 21: getDbPath() preserva caminho configurado e nunca converte para :memory:
+  await t.test('21. getDbPath() preserva caminho configurado e nunca converte para :memory:', () => {
+    const testCustomDb = path.join(tmpDir, 'custom_preserve_path.db');
+    const store = new TransactionalPilotStore(testCustomDb);
+    assert.strictEqual(store.getDbPath(), testCustomDb);
+    assert.notStrictEqual(store.getDbPath(), ':memory:');
+
+    // Executa transações e operações de escrita
+    store.transaction(() => {
+      store.savePilot(simulationPilotSpec as any);
+    });
+    assert.strictEqual(store.getDbPath(), testCustomDb);
+
+    const fp = store.getPersistenceFingerprint();
+    assert.ok(fp.startsWith('sqlite://custom_preserve_path.db:'));
+    assert.notStrictEqual(fp, 'sqlite://memory');
+    store.close();
+  });
+
+  // Test 22: Tentativa de personificação de revisor A usado por revisor B é rejeitada
+  await t.test('22. Tentativa de personificação com token do revisor A usado por revisor B é rejeitada', () => {
+    const tokenDbPath = path.join(tmpDir, 'impersonation_test_token.db');
+    const tokenService = new TokenService('token-test-secret-at-least-32-chars-long-2026', tokenDbPath);
+
+    // Gera token legítimo para revisor A
+    const tokenA = tokenService.signToken({
+      sub: 'rev_maria_santos',
+      user_id: 'rev_maria_santos',
+      tenant_id: operationalPilotSpec.tenant_id,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW']
+    });
+
+    // Revisor B (rev_joao_manuel) tenta usar o token de rev_maria_santos
+    const result = PilotExternalValidator.validateReviewerToken(
+      tokenA,
+      operationalPilotSpec.tenant_id,
+      'rev_joao_manuel', // Esperado revisor B
+      tokenService
+    );
+
+    assert.strictEqual(result.isValid, false);
+    assert.ok(result.error?.includes('Impersonação detectada') || result.error?.includes('diverge'));
+  });
+
+  // Test 23: Reabertura durável de base SQLite em nova conexão e conferência estrita de cardinalidades
+  await t.test('23. Reabertura durável de base SQLite em nova conexão e conferência de cardinalidades', () => {
+    const durableDbPath = path.join(tmpDir, 'durable_cardinality_check.db');
+    
+    // Conexão 1: Gravar dados via TransactionalPilotStore
+    const conn1 = new TransactionalPilotStore(durableDbPath);
+    conn1.savePilot({
+      ...simulationPilotSpec,
+      status: 'ACTIVE'
+    } as any);
+
+    const testTask = {
+      task_id: 'TASK_DURABLE_CARDINALITY_01',
+      pilot_id: simulationPilotSpec.pilot_id,
+      tenant_id: simulationPilotSpec.tenant_id,
+      employee_id: 66,
+      requested_by: 'op_durable',
+      received_at: new Date().toISOString(),
+      input_snapshot_sha256: sha256('input_test'),
+      execution_started_at: new Date().toISOString(),
+      execution_completed_at: new Date().toISOString(),
+      output_files: ['doc_durabilidade.pdf'],
+      output_hashes: [sha256('pdf_content_bytes')],
+      human_review_status: 'PENDING_REVIEW' as const,
+      reviewed_by: null,
+      reviewed_at: null,
+      corrections_required: 0,
+      delivery_status: 'PENDING' as const,
+      final_status: 'SUCCESS' as const,
+      error_code: null,
+      receipt_sha256: sha256('receipt_1'),
+      version: 1,
+      idempotency_key: 'IDEMP_DURABLE_01',
+      execution_mode: 'SIMULATION' as const,
+      is_simulation: true,
+      classification_level: 'CONFIDENTIAL' as const
+    };
+
+    conn1.saveTaskWithOutputAndVerify(testTask, {
+      output_id: 'OUT_TASK_DURABLE_01_v1',
+      task_id: testTask.task_id,
+      version: 1,
+      file_name: 'doc_durabilidade.pdf',
+      file_path: 'doc_durabilidade.pdf',
+      file_bytes: Buffer.from('pdf_content_bytes'),
+      file_bytes_sha256: sha256('pdf_content_bytes'),
+      is_active: true
+    });
+
+    // Fecha Conexão 1
+    conn1.close();
+
+    // Conexão 2: Nova conexão independente reabrindo o mesmo ficheiro SQLite
+    const conn2 = new TransactionalPilotStore(durableDbPath);
+    const reloadedPilot = conn2.getPilot(simulationPilotSpec.pilot_id);
+    assert.ok(reloadedPilot);
+    assert.strictEqual(reloadedPilot.pilot_id, simulationPilotSpec.pilot_id);
+
+    const reloadedTask = conn2.getTask(testTask.task_id);
+    assert.ok(reloadedTask);
+    assert.strictEqual(reloadedTask.task_id, testTask.task_id);
+
+    const reloadedOutput = conn2.getActiveOutput(testTask.task_id);
+    assert.ok(reloadedOutput);
+    assert.strictEqual(reloadedOutput.file_bytes_sha256, sha256('pdf_content_bytes'));
+
+    const reloadedBytes = conn2.getActiveOutputBytes(testTask.task_id);
+    assert.ok(reloadedBytes);
+    assert.strictEqual(reloadedBytes.bytes.toString(), 'pdf_content_bytes');
+
+    conn2.close();
+  });
+
+  // Test 24: Rejeição estrita de symlinks no manifesto e arquivos órfãos
+  await t.test('24. Rejeição estrita de symlinks no manifesto e arquivos órfãos', () => {
+    const symlinkTestDir = path.join(tmpDir, 'symlink_bundle_test');
+    fs.mkdirSync(symlinkTestDir, { recursive: true });
+
+    let verifyScript = path.resolve(process.cwd(), 'scripts', 'verify-pilot-manifest.mjs');
+    if (!fs.existsSync(verifyScript)) {
+      verifyScript = path.resolve(process.cwd(), '..', '..', 'scripts', 'verify-pilot-manifest.mjs');
+    }
+
+    // Criar symlink se o sistema operacional permitir
+    const targetFile = path.join(tmpDir, 'target_file.txt');
+    fs.writeFileSync(targetFile, 'Target file content');
+    const linkPath = path.join(symlinkTestDir, 'symlink_file.txt');
+
+    let symlinkCreated = false;
+    try {
+      fs.symlinkSync(targetFile, linkPath);
+      symlinkCreated = true;
+    } catch {
+      // No Windows sem privilégios de administrador ou Developer Mode, symlinks podem falhar
+      symlinkCreated = false;
+    }
+
+    if (symlinkCreated) {
+      // O validador deve falhar imediatamente ao encontrar a ligação simbólica
+      assert.throws(() => {
+        execSync(`node "${verifyScript}" --dir="${symlinkTestDir}" --allow-partial-gates`, { stdio: 'pipe' });
+      });
+      fs.unlinkSync(linkPath);
+    }
+  });
+
   // Limpeza de diretório temporário
   try {
     fs.rmSync(tmpDir, { recursive: true, force: true });

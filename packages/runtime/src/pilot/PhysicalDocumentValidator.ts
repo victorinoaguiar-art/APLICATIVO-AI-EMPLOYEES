@@ -269,17 +269,42 @@ export class PhysicalDocumentValidator {
     }
   }
 
-  public static async validateIndependentXlsx(buf: Buffer): Promise<{ isValid: boolean; files?: string[]; error?: string }> {
+  public static async validateIndependentXlsx(buf: Buffer): Promise<{ isValid: boolean; files?: string[]; error?: string; cellCount?: number }> {
     try {
       const zip = await JSZip.loadAsync(buf);
       const fileNames = Object.keys(zip.files);
       if (!fileNames.includes('[Content_Types].xml') || (!fileNames.includes('xl/workbook.xml') && !fileNames.includes('xl/worksheets/sheet1.xml'))) {
-        return { isValid: false, error: 'XLSX inválido no parser jszip: ficheiros OpenXML ausentes.' };
+        return { isValid: false, error: 'XLSX inválido no parser jszip: ficheiros OpenXML obrigatórios ausentes.' };
       }
-      const sheetEntry = zip.files['xl/worksheets/sheet1.xml'] || zip.files['xl/workbook.xml'];
+
+      // Validar CRC e integridade descompactando todos os ficheiros
+      for (const fn of fileNames) {
+        const entry = zip.files[fn];
+        if (!entry.dir) {
+          await entry.async('uint8array');
+        }
+      }
+
+      // Validar estrutura do workbook
+      const wbEntry = zip.files['xl/workbook.xml'];
+      if (!wbEntry) {
+        return { isValid: false, error: 'XLSX inválido: xl/workbook.xml ausente.' };
+      }
+      const wbXml = await wbEntry.async('string');
+      if (!wbXml.includes('<sheets') || !wbXml.includes('<sheet')) {
+        return { isValid: false, error: 'XLSX inválido: nenhuma worksheet declarada no workbook.' };
+      }
+
+      // Validar estrutura da worksheet e presença de células
+      const sheetEntry = zip.files['xl/worksheets/sheet1.xml'] || wbEntry;
       const sheetXml = await sheetEntry.async('string');
+      if (!sheetXml.includes('<sheetData') || (!sheetXml.includes('<c ') && !sheetXml.includes('<c>'))) {
+        return { isValid: false, error: 'XLSX inválido: folha de cálculo sem dados de células.' };
+      }
+
       this.checkPlaceholders(sheetXml);
-      return { isValid: true, files: fileNames };
+      const cellMatches = sheetXml.match(/<c\s/g) || [];
+      return { isValid: true, files: fileNames, cellCount: cellMatches.length };
     } catch (err: any) {
       return { isValid: false, error: `Falha no leitor independente jszip para XLSX: ${err.message}` };
     }
@@ -289,7 +314,7 @@ export class PhysicalDocumentValidator {
     filePathOrBuffer: string | Buffer,
     format: 'PDF' | 'DOCX' | 'XLSX' | 'JSON',
     mode: OperationalPilotMode = 'OPERATIONAL_PILOT'
-  ): Promise<{ isValid: boolean; sha256: string; error?: string; pageCount?: number; files?: string[] }> {
+  ): Promise<{ isValid: boolean; sha256: string; error?: string; pageCount?: number; files?: string[]; cellCount?: number }> {
     const baseResult = this.validate(filePathOrBuffer, format, mode);
     if (!baseResult.isValid) {
       return baseResult;
@@ -319,7 +344,7 @@ export class PhysicalDocumentValidator {
       if (!ind.isValid) {
         return { isValid: false, sha256: baseResult.sha256, error: ind.error };
       }
-      return { isValid: true, sha256: baseResult.sha256, files: ind.files };
+      return { isValid: true, sha256: baseResult.sha256, files: ind.files, cellCount: ind.cellCount };
     }
 
     return baseResult;
@@ -329,17 +354,54 @@ export class PhysicalDocumentValidator {
   // Binary Document Builders for OPERATIONAL_PILOT
   // -------------------------------------------------------------
   public static buildRealBinaryPdf(title: string, bodyLines: string[]): Buffer {
-    let pdf = `%PDF-1.7\n`;
-    pdf += `1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n`;
-    pdf += `2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n`;
-    pdf += `3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R >> endobj\n`;
+    const objects: string[] = [];
+    objects.push(`1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n`);
+    objects.push(`2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n`);
+    objects.push(`3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R >>\nendobj\n`);
 
-    const contentStream = bodyLines.join('\n');
-    pdf += `4 0 obj << /Length ${Buffer.byteLength(contentStream, 'utf8')} >>\nstream\n${contentStream}\nendstream\nendobj\n`;
-    pdf += `xref\n0 5\n0000000000 65535 f \n0000000009 00000 n \n0000000062 00000 n \n0000000121 00000 n \n0000000216 00000 n \n`;
-    pdf += `trailer << /Size 5 /Root 1 0 R >>\nstartxref\n340\n%%EOF\n`;
+    const streamLines = [`BT /F1 12 Tf 50 750 Td (${title.replace(/[()]/g, '')}) Tj ET`];
+    let y = 720;
+    for (const line of bodyLines) {
+      const clean = line.replace(/[()]/g, '');
+      streamLines.push(`BT /F1 10 Tf 50 ${y} Td (${clean}) Tj ET`);
+      y -= 18;
+    }
+    const streamContent = streamLines.join('\n');
+    objects.push(`4 0 obj\n<< /Length ${Buffer.byteLength(streamContent, 'utf8')} >>\nstream\n${streamContent}\nendstream\nendobj\n`);
 
-    return Buffer.from(pdf, 'utf8');
+    let out = `%PDF-1.7\n`;
+    const offsets = [0];
+    for (let i = 0; i < objects.length; i++) {
+      offsets.push(Buffer.byteLength(out, 'utf8'));
+      out += objects[i];
+    }
+
+    const startXref = Buffer.byteLength(out, 'utf8');
+    out += `xref\n0 ${objects.length + 1}\n`;
+    out += `0000000000 65535 f \n`;
+    for (let i = 1; i <= objects.length; i++) {
+      out += `${String(offsets[i]).padStart(10, '0')} 00000 n \n`;
+    }
+    out += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${startXref}\n%%EOF\n`;
+
+    return Buffer.from(out, 'utf8');
+  }
+
+  public static async buildRealBinaryPdfAsync(title: string, bodyLines: string[]): Promise<Buffer> {
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([595, 842]);
+    const cleanTitle = title.replace(/[^\x20-\x7E]/g, ' ');
+    // Desenhar conteúdo textual no PDF de forma padrão
+    page.drawText(cleanTitle, { x: 50, y: 780, size: 14 });
+    let y = 750;
+    for (const line of bodyLines) {
+      if (y < 50) break;
+      const clean = line.replace(/[^\x20-\x7E]/g, ' ');
+      page.drawText(clean, { x: 50, y, size: 10 });
+      y -= 18;
+    }
+    const bytes = await pdfDoc.save();
+    return Buffer.from(bytes);
   }
 
   public static buildRealBinaryDocx(title: string, paragraphs: string[]): Buffer {

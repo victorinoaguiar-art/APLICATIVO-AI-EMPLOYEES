@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PilotEvidenceManifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_version",
+    "pilot_id",
+    "tenant_id",
+    "execution_mode",
+    "commit_sha",
+    "total_files",
+    "created_at",
+    "files"
+  ],
+  "properties": {
+    "manifest_version": {
+      "type": "string",
+      "const": "2.0"
+    },
+    "pilot_id": {
+      "type": "string",
+      "pattern": "^[A-Z0-9_-]{5,64}$"
+    },
+    "tenant_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_-]{5,64}$"
+    },
+    "execution_mode": {
+      "type": "string",
+      "enum": [
+        "SIMULATION",
+        "OPERATIONAL_PILOT"
+      ]
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "total_files": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "persistence_fingerprint": {
+      "type": "string"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "relative_path",
+          "sha256",
+          "byte_size",
+          "mime_type",
+          "origin",
+          "commit_sha",
+          "tenant_id",
+          "pilot_id",
+          "receipt_type",
+          "generated_at"
+        ],
+        "properties": {
+          "relative_path": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_.-]+(/[a-zA-Z0-9_.-]+)*$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "byte_size": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "mime_type": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "commit_sha": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "tenant_id": {
+            "type": "string"
+          },
+          "pilot_id": {
+            "type": "string"
+          },
+          "task_id": {
+            "type": "string"
+          },
+          "document_version": {
+            "type": "integer"
+          },
+          "receipt_type": {
+            "type": "string"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

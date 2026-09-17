@@ -15,6 +15,7 @@ import {
 export class TransactionalPilotStore {
   private db: any;
   private readonly dbPath: string;
+  private readonly executionMode: OperationalPilotMode;
 
   public constructor(customPath?: string, executionMode?: OperationalPilotMode) {
     if (customPath) {
@@ -25,7 +26,8 @@ export class TransactionalPilotStore {
       this.dbPath = ':memory:';
     }
 
-    const mode = executionMode || (process.env.PILOT_MODE as OperationalPilotMode);
+    const mode = executionMode || (process.env.PILOT_MODE as OperationalPilotMode) || 'SIMULATION';
+    this.executionMode = mode;
     if ((mode === 'OPERATIONAL_PILOT' || String(mode).toLowerCase() === 'operational') && this.dbPath === ':memory:') {
       throw new Error('Operational pilot requires a persistent SQLite database path, :memory: is forbidden.');
     }
@@ -39,6 +41,56 @@ export class TransactionalPilotStore {
 
     this.db = new DatabaseSync(this.dbPath);
     this.runMigrations();
+  }
+
+  public getDbPath(): string {
+    return this.dbPath;
+  }
+
+  public getMode(): OperationalPilotMode {
+    return this.executionMode;
+  }
+
+  public getPersistenceFingerprint(): string {
+    if (this.dbPath === ':memory:') {
+      return 'sqlite://memory';
+    }
+    const baseName = path.basename(this.dbPath);
+    const pathSha = createHash('sha256').update(this.dbPath).digest('hex').slice(0, 16);
+    return `sqlite://${baseName}:${pathSha}`;
+  }
+
+  public getDatabaseMetrics(): {
+    pilotCount: number;
+    taskCount: number;
+    outputCount: number;
+    reviewCount: number;
+    deliveryCount: number;
+    incidentCount: number;
+  } {
+    const getCount = (table: string): number => {
+      const row = this.db.prepare(`SELECT count(*) as cnt FROM ${table}`).get() as any;
+      return row ? Number(row.cnt) : 0;
+    };
+    return {
+      pilotCount: getCount('pilot_programs'),
+      taskCount: getCount('pilot_tasks'),
+      outputCount: getCount('task_outputs'),
+      reviewCount: getCount('human_reviews'),
+      deliveryCount: getCount('pilot_deliveries'),
+      incidentCount: getCount('pilot_incidents')
+    };
+  }
+
+  public clearTablesForTests(): void {
+    this.db.exec(`
+      DELETE FROM pilot_deliveries;
+      DELETE FROM human_reviews;
+      DELETE FROM task_outputs;
+      DELETE FROM pilot_tasks;
+      DELETE FROM pilot_incidents;
+      DELETE FROM pilot_programs;
+    `);
   }
 
   private runMigrations(): void {
@@ -136,10 +188,6 @@ export class TransactionalPilotStore {
     } catch {
       // Ignored if table fresh
     }
-  }
-
-  public getDbPath(): string {
-    return this.dbPath;
   }
 
   public transaction<T>(fn: () => T): T {

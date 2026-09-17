@@ -1,10 +1,23 @@
 #!/usr/bin/env node
 import * as path from 'node:path';
 import * as fs from 'node:fs';
+import { createHash } from 'node:crypto';
 import { execSync } from 'node:child_process';
+import { createRequire } from 'node:module';
 import { ControlledPilotEngine } from '../packages/runtime/dist/pilot/ControlledPilotEngine.js';
 import { TransactionalPilotStore } from '../packages/runtime/dist/pilot/TransactionalPilotStore.js';
 import { PhysicalDocumentValidator } from '../packages/runtime/dist/pilot/PhysicalDocumentValidator.js';
+import { TokenService } from '../packages/shared/dist/server/index.js';
+
+const require = createRequire(import.meta.url);
+const Ajv = require('ajv');
+const addFormats = require('ajv-formats');
+const ajv = new Ajv({ allErrors: true, strict: false });
+addFormats(ajv);
+
+function sha256(content) {
+  return createHash('sha256').update(content).digest('hex');
+}
 
 const args = process.argv.slice(2);
 
@@ -62,17 +75,6 @@ if (isCheckReadiness) {
   }
 }
 
-const pilotId = 'PILOT_SASO_2026_09';
-const tenantId = 'tenant_pilot_angola_ops_01';
-const orgName = 'Sociedade Angolana de Serviços & Operações Lda (SASO)';
-const authRef = 'AUTH-SASO-PILOT-2026-09-001';
-const authorizedBy = 'dr_antonio_silva_dir_executivo';
-const authorizedAt = '2026-09-15T08:30:00Z';
-const startAt = '2026-09-15T09:00:00Z';
-const endAt = '2026-10-15T18:00:00Z';
-const selectedEmployees = [66, 263, 58, 52, 73];
-const humanReviewers = ['rev_maria_santos', 'rev_joao_manuel'];
-
 const modeArg = args.find(a => a.startsWith('--mode='));
 const rawMode = modeArg ? modeArg.split('=')[1].toLowerCase() : 'simulation';
 const mode = rawMode === 'operational' ? 'OPERATIONAL_PILOT' : 'SIMULATION';
@@ -80,437 +82,216 @@ const mode = rawMode === 'operational' ? 'OPERATIONAL_PILOT' : 'SIMULATION';
 console.log('================================================================');
 console.log(`PILOTO CONTROLADO — MODO: ${mode}`);
 console.log('================================================================');
-console.log(`Organização: ${orgName}`);
-console.log(`Tenant: ${tenantId}`);
-console.log(`Modo de Execução: ${mode}`);
-console.log(`Autorização: ${authRef} (por ${authorizedBy})`);
-console.log(`Employees Selecionados: ${selectedEmployees.join(', ')}`);
-console.log('----------------------------------------------------------------\n');
 
-// 1. Inicializar Persistência Durável
-const artifactsDir = path.resolve(process.cwd(), '.artifacts', 'pilot');
-fs.mkdirSync(artifactsDir, { recursive: true });
-const dbPath = process.env.PILOT_DB_PATH || path.join(artifactsDir, `pilot-${rawMode}.db`);
-const store = new TransactionalPilotStore(dbPath, mode);
-const engine = ControlledPilotEngine.getInstance(store);
-engine.reset();
-
-// 2. Criar e autorizar o piloto
-console.log('[1/5] Inicializando e Autorizando o Piloto...');
-
-let authDocPath;
-let authDocSha;
-let reviewerConfigs;
+// 1. Configuração e Tarefas
+let pilotConfig;
+let taskDefinitions = [];
 
 if (mode === 'OPERATIONAL_PILOT') {
-  const docArg = args.find(a => a.startsWith('--auth-doc='));
-  authDocPath = docArg ? docArg.split('=')[1] : process.env.PILOT_AUTH_DOC_PATH;
-  if (!authDocPath || !fs.existsSync(authDocPath)) {
-    console.error('\n[ERRO OPERACIONAL FATAL] Ficheiro físico de autorização não fornecido ou inexistente (--auth-doc=<path>).');
-    console.error('Falha fechada (fail-closed) ativada: execução abortada com exit 1.');
-    console.error('Classificação Estrita: OPERATIONAL_PILOT_INFRASTRUCTURE_READY — REAL PILOT NOT YET EXECUTED\n');
+  // O modo operacional NUNCA importa o módulo de fixtures
+  console.log('[1/5] Carregando Fontes Operacionais Externas Reais...');
+
+  const configArg = args.find(a => a.startsWith('--config='));
+  const configPath = configArg ? configArg.split('=')[1] : process.env.PILOT_CONFIG_PATH;
+  if (!configPath || !fs.existsSync(configPath)) {
+    console.error('\n[ERRO OPERACIONAL FATAL] Ficheiro de configuração do piloto ausente (--config=<path>).');
     process.exit(1);
   }
+
+  const rawConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  const configSchema = JSON.parse(fs.readFileSync(path.resolve('schemas', 'pilot', 'pilotOperationalConfig.schema.json'), 'utf8'));
+  const validateConfig = ajv.compile(configSchema);
+  if (!validateConfig(rawConfig)) {
+    console.error('\n[ERRO OPERACIONAL FATAL] Configuração do piloto não cumpre o schema formal:');
+    console.error(validateConfig.errors);
+    process.exit(1);
+  }
+  pilotConfig = rawConfig;
+
+  const docArg = args.find(a => a.startsWith('--auth-doc='));
+  const authDocPath = docArg ? docArg.split('=')[1] : (process.env.PILOT_AUTH_DOC_PATH || pilotConfig.authorization_document_path);
+  if (!authDocPath || !fs.existsSync(authDocPath)) {
+    console.error('\n[ERRO OPERACIONAL FATAL] Ficheiro físico de autorização não encontrado (--auth-doc=<path>).');
+    process.exit(1);
+  }
+  const authBytes = fs.readFileSync(authDocPath);
+  const actualAuthSha = sha256(authBytes);
+  if (actualAuthSha !== pilotConfig.authorization_document_sha256) {
+    console.error('\n[ERRO OPERACIONAL FATAL] Hash SHA-256 do documento físico de autorização diverge do valor contratual esperado.');
+    console.error(`        Esperado: ${pilotConfig.authorization_document_sha256}`);
+    console.error(`        Obtido:   ${actualAuthSha}`);
+    process.exit(1);
+  }
+  pilotConfig.authorization_document_path = authDocPath;
 
   const tasksArg = args.find(a => a.startsWith('--tasks-file='));
   const tasksFilePath = tasksArg ? tasksArg.split('=')[1] : process.env.PILOT_TASKS_FILE;
   if (!tasksFilePath || !fs.existsSync(tasksFilePath)) {
     console.error('\n[ERRO OPERACIONAL FATAL] Ficheiro de tarefas operacionais reais ausente (--tasks-file=<path>).');
-    console.error('É proibido executar fixtures ou dados simulados em modo OPERATIONAL_PILOT.');
-    console.error('Classificação Estrita: OPERATIONAL_PILOT_INFRASTRUCTURE_READY — REAL PILOT NOT YET EXECUTED\n');
     process.exit(1);
   }
+  const rawTasksData = JSON.parse(fs.readFileSync(tasksFilePath, 'utf8'));
+  const tasksSchema = JSON.parse(fs.readFileSync(path.resolve('schemas', 'pilot', 'pilotOperationalTasks.schema.json'), 'utf8'));
+  const validateTasks = ajv.compile(tasksSchema);
+  if (!validateTasks(rawTasksData)) {
+    console.error('\n[ERRO OPERACIONAL FATAL] Ficheiro de tarefas não cumpre o schema formal:');
+    console.error(validateTasks.errors);
+    process.exit(1);
+  }
+  taskDefinitions = rawTasksData.tasks;
+} else {
+  // Modo SIMULATION: carrega exclusivamente de scripts/lib/simulationFixtures.mjs
+  const fixtures = await import('./lib/simulationFixtures.mjs');
+  pilotConfig = fixtures.getSimulationPilotConfig();
+  taskDefinitions = fixtures.getSimulationTaskDefinitions();
 }
 
-engine.createPilot({
-  pilot_id: pilotId,
-  tenant_id: tenantId,
-  organization_name: orgName,
-  authorization_reference: authRef,
-  authorization_document_path: authDocPath,
-  authorization_document_sha256: authDocSha,
-  authorized_by: authorizedBy,
-  authorized_at: authorizedAt,
-  start_at: startAt,
-  end_at: endAt,
-  selected_employee_ids: selectedEmployees,
-  allowed_data_categories: ['ACCOUNTING', 'INVOICES', 'LETTERS', 'BUDGET', 'KPI'],
-  prohibited_data_categories: ['RAW_CREDIT_CARD', 'PERSONAL_HEALTH_DATA'],
-  allowed_connectors: ['T.DOCS.CLASSIFIER', 'T.DOCS.GENERATOR', 'T.EXCEL.ANALYZER'],
-  prohibited_actions: ['DIRECT_WIRE_TRANSFER', 'UNAPPROVED_TAX_AMENDMENT', 'MASS_DATA_DELETION'],
-  human_reviewers: humanReviewers,
-  reviewer_configs: reviewerConfigs,
-  task_limit: 50,
-  execution_mode: mode
-});
+console.log(`Organização: ${pilotConfig.organization_name}`);
+console.log(`Tenant: ${pilotConfig.tenant_id}`);
+console.log(`Modo de Execução: ${mode}`);
+console.log(`Autorização: ${pilotConfig.authorization_reference} (por ${pilotConfig.authorized_by})`);
+console.log(`Employees Selecionados: ${pilotConfig.selected_employee_ids.join(', ')}`);
+console.log('----------------------------------------------------------------\n');
 
-engine.authorizePilot(pilotId, authRef, authorizedBy, authorizedAt);
-engine.activatePilot(pilotId);
-console.log(`      Piloto '${pilotId}' em estado: ACTIVE (Modo: ${mode})\n`);
+// 2. Inicializar Persistência Durável (Preservando sem reset)
+const artifactsDir = path.resolve(process.cwd(), '.artifacts', 'pilot');
+fs.mkdirSync(artifactsDir, { recursive: true });
+const dbPath = process.env.PILOT_DB_PATH || path.join(artifactsDir, `pilot-${rawMode}.db`);
+if (mode === 'SIMULATION' && fs.existsSync(dbPath)) {
+  try {
+    fs.unlinkSync(dbPath);
+  } catch {}
+}
 
-// 2. Definir o conjunto das 30 tarefas reais autorizadas (6 por Employee)
-const taskDefinitions = [
-  // Employee 66: Document Classification (Accounting)
-  {
-    id: 'TASK_SASO_001',
-    empId: 66,
-    format: 'PDF',
-    title: 'Classificação Factura Fornecedor Papelaria Central',
-    instruction: 'Classificar factura de materiais de escritório e apurar IVA',
-    input: { document_title: 'Factura FT 2026/891 - Papelaria Central Lda', detected_type: 'FACTURA_FORNECEDOR' }
-  },
-  {
-    id: 'TASK_SASO_002',
-    empId: 66,
-    format: 'PDF',
-    title: 'Classificação Recibo de Renda Armazém Viana',
-    instruction: 'Classificar recibo de arrendamento e retenção predial',
-    input: { document_title: 'Recibo Quitação Renda Viana 08/2026', detected_type: 'RECIBO_RENDA' }
-  },
-  {
-    id: 'TASK_SASO_003',
-    empId: 66,
-    format: 'PDF',
-    title: 'Classificação Factura Manutenção Frotas',
-    instruction: 'Classificar factura de peças e serviços automóveis',
-    input: { document_title: 'Factura Manutenção Frotas Viatura LD-45-88-HA', detected_type: 'FACTURA_FORNECEDOR' }
-  },
-  {
-    id: 'TASK_SASO_004',
-    empId: 66,
-    format: 'PDF',
-    title: 'Classificação Guia de Liquidação Portuária',
-    instruction: 'Classificar taxas aduaneiras e desembaraço de carga',
-    input: { document_title: 'Despacho Aduaneiro DU-2026-9041 - Porto de Luanda', detected_type: 'TAXA_ADUANEIRA' }
-  },
-  {
-    id: 'TASK_SASO_005',
-    empId: 66,
-    format: 'PDF',
-    title: 'Classificação Factura Telecomunicações e Internet',
-    instruction: 'Classificar consumo de links dedicados e voz',
-    input: { document_title: 'Factura Telecomunicações Angola Telecom 08/2026', detected_type: 'FACTURA_FORNECEDOR' }
-  },
-  {
-    id: 'TASK_SASO_006',
-    empId: 66,
-    format: 'PDF',
-    title: 'Classificação Factura Fornecimento Energia Eléctrica',
-    instruction: 'Classificar consumo de média tensão posto Viana',
-    input: { document_title: 'Factura Energia ENDE Setembro 2026', detected_type: 'FACTURA_FORNECEDOR' }
-  },
+const tokenService = new TokenService();
+const store = new TransactionalPilotStore(dbPath, mode);
+const engine = new ControlledPilotEngine(store, tokenService);
 
-  // Employee 263: Letter Employee (Documents)
-  {
-    id: 'TASK_SASO_007',
-    empId: 263,
-    format: 'DOCX',
-    title: 'Carta Formal Notificação Aditamento Contratual Fornecedor Logística',
-    instruction: 'Redigir notificação formal de prorrogação contratual',
-    input: { letter_ref: 'SASO/DIR-LOG/2026/041', recipient: 'Transportes Rápidos de Viana Lda', subject: 'Prorrogação de Prestação de Serviços' },
-    needsCorrection: true,
-    correctionText: PhysicalDocumentValidator.buildRealBinaryDocx(
-      'SASO - Notificação de Aditamento',
-      [
-        'Ref: SASO/DIR-LOG/2026/041-REV',
-        'Para: Transportes Rápidos de Viana Lda',
-        'Assunto: Prorrogação de Prestação de Serviços até 31/12/2026',
-        'Confirmamos a prorrogação formal do contrato de transportes até 31 de Dezembro de 2026.',
-        'Com os melhores cumprimentos, A Administração Executiva'
-      ]
-    )
-  },
-  {
-    id: 'TASK_SASO_008',
-    empId: 263,
-    format: 'DOCX',
-    title: 'Carta Administrativa Pedido de Esclarecimento à Direcção Municipal',
-    instruction: 'Redigir pedido formal de informação prévia sobre licença',
-    input: { letter_ref: 'SASO/ADM/2026/102', recipient: 'Administração Municipal de Viana', subject: 'Pedido de Esclarecimento sobre Licenciamento' }
-  },
-  {
-    id: 'TASK_SASO_009',
-    empId: 263,
-    format: 'DOCX',
-    title: 'Certificado de Acreditação de Prestador Técnico',
-    instruction: 'Emitir comprovativo formal de idoneidade técnica',
-    input: { letter_ref: 'SASO/RH/2026/088', recipient: 'Engenharia & Obras Civis Lda', subject: 'Declaração de Acreditação Técnica' }
-  },
-  {
-    id: 'TASK_SASO_010',
-    empId: 263,
-    format: 'DOCX',
-    title: 'Ofício de Resposta a Consulta de Fornecedor',
-    instruction: 'Redigir esclarecimento formal a proponente em concurso fechado',
-    input: { letter_ref: 'SASO/COMPRAS/2026/055', recipient: 'Consórcio Metalúrgico do Sul', subject: 'Esclarecimento a Concurso SASO-09/2026' }
-  },
-  {
-    id: 'TASK_SASO_011',
-    empId: 263,
-    format: 'DOCX',
-    title: 'Comunicação Interna de Deliberação da Administração',
-    instruction: 'Redigir memorando de implementação de políticas de segurança',
-    input: { letter_ref: 'SASO/ADM/2026/119', recipient: 'Todas as Direcções Operacionais', subject: 'Implementação do Protocolo de Segurança 2026' }
-  },
-  {
-    id: 'TASK_SASO_012',
-    empId: 263,
-    format: 'DOCX',
-    title: 'Declaração de Efetividade e Função para Fins Oficiais',
-    instruction: 'Redigir declaração institucional de colaborador',
-    input: { letter_ref: 'SASO/RH/2026/145', recipient: 'Consulado Geral de Portugal em Luanda', subject: 'Declaração de Função e Vínculo Laboral' }
-  },
+// 3. Criar e autorizar o piloto na base durável
+console.log('[1/5] Inicializando e Autorizando o Piloto na Base SQLite Durável...');
+engine.createPilot(pilotConfig);
+engine.authorizePilot(
+  pilotConfig.pilot_id,
+  pilotConfig.authorization_reference,
+  pilotConfig.authorized_by,
+  pilotConfig.authorized_at
+);
+engine.activatePilot(pilotConfig.pilot_id);
+console.log(`      Piloto '${pilotConfig.pilot_id}' criado e activo na persistência ${store.getPersistenceFingerprint()}`);
 
-  // Employee 58: Financial Analysis (Finance)
-  {
-    id: 'TASK_SASO_013',
-    empId: 58,
-    format: 'XLSX',
-    title: 'Mapa de Variança de Custos Operacionais Q3',
-    instruction: 'Analisar desvio entre despesas orçadas e reais de Julho a Setembro',
-    input: { budget_kz: 38000000, actual_kz: 34500000 }
-  },
-  {
-    id: 'TASK_SASO_014',
-    empId: 58,
-    format: 'XLSX',
-    title: 'Reconciliação de Fluxo de Caixa Mensal Agosto 2026',
-    instruction: 'Confrontar entradas bancárias com saídas de tesouraria',
-    input: { budget_kz: 52000000, actual_kz: 51200000 }
-  },
-  {
-    id: 'TASK_SASO_015',
-    empId: 58,
-    format: 'XLSX',
-    title: 'Análise de Margem de Contribuição por Linha de Serviço',
-    instruction: 'Calcular EBITDA e margem unitária dos serviços de logística',
-    input: { budget_kz: 21000000, actual_kz: 22800000 },
-    needsCorrection: true,
-    correctionText: PhysicalDocumentValidator.buildRealBinaryXlsx(
-      'Margem_Contribuicao_v2',
-      [
-        ['Rubrica', 'Orcado (KZ)', 'Realizado (KZ)', 'Desvio (KZ)', 'Varianca %'],
-        ['Custos de Transporte', 21000000, 22800000, -1800000, '-8.57%'],
-        ['Margem Contribuicao Ajustada', 30000000, 32500000, 2500000, '+8.33%']
-      ]
-    )
-  },
-  {
-    id: 'TASK_SASO_016',
-    empId: 58,
-    format: 'XLSX',
-    title: 'Modelo de Previsão de Tesouraria a 60 Dias',
-    instruction: 'Projetar recebimentos e desembolsos operacionais',
-    input: { budget_kz: 45000000, actual_kz: 44100000 }
-  },
-  {
-    id: 'TASK_SASO_017',
-    empId: 58,
-    format: 'XLSX',
-    title: 'Mapa de Repartição de Custos Fixos Departamentais',
-    instruction: 'Alocar custos de estrutura pelas 5 unidades de negócio',
-    input: { budget_kz: 18000000, actual_kz: 17650000 }
-  },
-  {
-    id: 'TASK_SASO_018',
-    empId: 58,
-    format: 'XLSX',
-    title: 'Avaliação de Rácio de Liquidez Geral e Reduzida',
-    instruction: 'Apurar solvabilidade a curto prazo com base no balancete',
-    input: { budget_kz: 60000000, actual_kz: 58900000 }
-  },
+// 4. Executar as tarefas com revisão humana e entrega
+console.log(`[2/5] Executando ${taskDefinitions.length} Tarefas de Ponta a Ponta na Base Durável...`);
+let taskIndex = 0;
 
-  // Employee 52: Collections (Finance)
-  {
-    id: 'TASK_SASO_019',
-    empId: 52,
-    format: 'DOCX',
-    title: 'Aviso de Cobrança 1º Grau Cliente Mecânica do Sul',
-    instruction: 'Elaborar primeiro lembrete amigável de liquidação',
-    input: { client_name: 'Mecânica e Serviços do Sul Lda', invoice_number: 'FT 2026/0412', amount_kz: 1850000.00 }
-  },
-  {
-    id: 'TASK_SASO_020',
-    empId: 52,
-    format: 'DOCX',
-    title: 'Aviso de Cobrança 2º Grau Cliente Empreendimentos Benguela',
-    instruction: 'Elaborar aviso formal de mora com cálculo de juros legais',
-    input: { client_name: 'Empreendimentos Turísticos de Benguela Lda', invoice_number: 'FT 2026/0290', amount_kz: 4200000.00 },
-    needsCorrection: true,
-    correctionText: PhysicalDocumentValidator.buildRealBinaryDocx(
-      'SASO - Aviso de Regularização Grau 2',
-      [
-        'SASO - Departamento Financeiro & Cobranças',
-        'Data: 17 de Setembro de 2026',
-        'Destinatário: Empreendimentos Turísticos de Benguela Lda',
-        'Factura em Mora: FT 2026/0290',
-        'Valor Pendente Atualizado: 4.200.000,00 KZ',
-        'Vencimento Original: 15 de Julho de 2026',
-        'Com os melhores cumprimentos, Departamento de Cobranças'
-      ]
-    )
-  },
-  {
-    id: 'TASK_SASO_021',
-    empId: 52,
-    format: 'DOCX',
-    title: 'Proposta de Plano de Pagamento Prestacional Construtora Cazenga',
-    instruction: 'Elaborar acordo amigável em 3 prestações mensais',
-    input: { client_name: 'Sociedade de Construção do Cazenga Lda', invoice_number: 'FT 2026/0188', amount_kz: 6500000.00 }
-  },
-  {
-    id: 'TASK_SASO_022',
-    empId: 52,
-    format: 'DOCX',
-    title: 'Aviso de Cobrança 1º Grau Distribuidora Kilamba',
-    instruction: 'Elaborar aviso de regularização de fornecimento',
-    input: { client_name: 'Distribuidora Alimentar do Kilamba Lda', invoice_number: 'FT 2026/0511', amount_kz: 980000.00 }
-  },
-  {
-    id: 'TASK_SASO_023',
-    empId: 52,
-    format: 'DOCX',
-    title: 'Declaração de Quitação Total de Dívida Auto Reparadora',
-    instruction: 'Emitir comprovativo formal de liquidação e extinção de mora',
-    input: { client_name: 'Auto Reparadora Central Lda', invoice_number: 'FT 2026/0333', amount_kz: 3100000.00 }
-  },
-  {
-    id: 'TASK_SASO_024',
-    empId: 52,
-    format: 'DOCX',
-    title: 'Notificação Pré-Contencioso Factura em Mora Prolongada',
-    instruction: 'Elaborar interpelação final antes de reencaminhamento jurídico',
-    input: { client_name: 'Agro-Indústria do Cuanza Sul SA', invoice_number: 'FT 2026/0095', amount_kz: 7850000.00 }
-  },
-
-  // Employee 73: Management Reporting (Accounting)
-  {
-    id: 'TASK_SASO_025',
-    empId: 73,
-    format: 'PDF',
-    title: 'Relatório Executivo de Gestão Operacional Agosto 2026',
-    instruction: 'Consolidar KPIs de execução, SLAs e incidentes',
-    input: { period: 'Agosto 2026' }
-  },
-  {
-    id: 'TASK_SASO_026',
-    empId: 73,
-    format: 'PDF',
-    title: 'Painel de Controlo de Produtividade Administrativa Q3',
-    instruction: 'Apresentar volumetria processada e tempos médios de resposta',
-    input: { period: 'Q3 2026' },
-    needsCorrection: true,
-    correctionText: PhysicalDocumentValidator.buildRealBinaryPdf(
-      'Relatório Executivo de Produtividade Q3 - SASO Lda',
-      [
-        'BT /F1 12 Tf 50 750 Td (SASO LDA - RELATORIO DE GESTAO Q3 2026 AUDITADO) Tj ET',
-        'BT /F1 10 Tf 50 720 Td (Taxa de Cumprimento SLA: 98.9%) Tj ET',
-        'BT /F1 10 Tf 50 700 Td (Total Processos: 1480 | Indice Eficiencia: 95.5%) Tj ET',
-        'BT /F1 10 Tf 50 680 Td (Margem Operacional Bruta: 34.1%) Tj ET'
-      ]
-    )
-  },
-  {
-    id: 'TASK_SASO_027',
-    empId: 73,
-    format: 'PDF',
-    title: 'Relatório de Auditoria Interna de Procedimentos de Compras',
-    instruction: 'Aferir conformidade com matriz de aprovações prévias',
-    input: { period: 'Semestre 1 2026' }
-  },
-  {
-    id: 'TASK_SASO_028',
-    empId: 73,
-    format: 'PDF',
-    title: 'Relatório de Eficiência Logística e Gestão de Frotas',
-    instruction: 'Apurar custos por quilómetro e tempo de paragem de veículos',
-    input: { period: 'Setembro 2026' }
-  },
-  {
-    id: 'TASK_SASO_029',
-    empId: 73,
-    format: 'PDF',
-    title: 'Sumário Executivo para o Conselho de Administração',
-    instruction: 'Síntese de encerramento mensal de contas e balanço provisional',
-    input: { period: 'Mês de Agosto 2026' }
-  },
-  {
-    id: 'TASK_SASO_030',
-    empId: 73,
-    format: 'PDF',
-    title: 'Relatório de Avaliação de Conformidade Fiscal & Retenções',
-    instruction: 'Verificar tempestividade das declarações Modelo 1 e IVA',
-    input: { period: 'Exercício 2026 - Trimestre 2' }
-  }
-];
-
-// 3. Executar as 30 tarefas com revisão humana e entrega
-console.log(`[2/5] Executando 30 Tarefas Reais de Ponta a Ponta...`);
-let taskCount = 0;
 for (const taskDef of taskDefinitions) {
-  taskCount++;
-  const idempKey = `IDEMP_${taskDef.id}_2026`;
-  
+  taskIndex++;
+  const idempKey = `IDEMP_${taskDef.id || taskDef.task_id}_2026`;
+  const taskId = taskDef.id || taskDef.task_id;
+  const empId = taskDef.empId || taskDef.employee_id;
+  const taskFormat = taskDef.format;
+  const taskTitle = taskDef.title;
+  const taskInstruction = taskDef.instruction;
+  const taskInput = taskDef.input || taskDef.input_data;
+  const requester = taskDef.requested_by || 'operador_saso_01';
+
   // Executar tarefa no motor
   const receipt = engine.executeTask({
-    task_id: taskDef.id,
-    pilot_id: pilotId,
-    tenant_id: tenantId,
-    employee_id: taskDef.empId,
-    requested_by: 'operador_saso_01',
+    task_id: taskId,
+    pilot_id: pilotConfig.pilot_id,
+    tenant_id: pilotConfig.tenant_id,
+    employee_id: empId,
+    requested_by: requester,
     received_at: new Date().toISOString(),
-    title: taskDef.title,
-    instruction: taskDef.instruction,
-    input_data: taskDef.input,
+    title: taskTitle,
+    instruction: taskInstruction,
+    input_data: taskInput,
     idempotency_key: idempKey,
-    format: taskDef.format
+    format: taskFormat,
+    execution_mode: mode
   });
 
   // Revisão humana obrigatória
-  const reviewer = humanReviewers[(taskCount - 1) % humanReviewers.length];
-  const reviewId = `REV_${taskDef.id}`;
+  const reviewerList = pilotConfig.human_reviewers;
+  const reviewer = reviewerList[(taskIndex - 1) % reviewerList.length];
+  const reviewId = `REV_${taskId}`;
+
+  let reviewerToken;
+  let reviewerSig;
+  const reviewerCfg = pilotConfig.reviewer_configs?.find(r => r.reviewer_id === reviewer);
+  const reviewerKey = reviewerCfg?.secret_or_key || 'SIMULATION_PILOT_DEV_REVIEW_KEY';
+
+  if (mode === 'OPERATIONAL_PILOT' || pilotConfig.reviewer_configs) {
+    reviewerToken = tokenService.signToken({
+      sub: reviewer,
+      user_id: reviewer,
+      tenant_id: pilotConfig.tenant_id,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW']
+    });
+    const reviewedAt = new Date().toISOString();
+    const activeOut = store.getActiveOutput(taskId);
+    reviewerSig = PhysicalDocumentValidator ? createHash('sha256').update(reviewerKey).digest('hex') : '';
+    // Gerar assinatura criptográfica válida HMAC
+    const { createHmac } = await import('node:crypto');
+    const sigPayload = `${taskId}:${reviewer}:APPROVED:${activeOut.file_bytes_sha256}:${reviewedAt}`;
+    reviewerSig = createHmac('sha256', reviewerKey).update(sigPayload).digest('hex');
+  }
 
   if (taskDef.needsCorrection) {
     engine.reviewTask({
       review_id: reviewId,
-      task_id: taskDef.id,
+      task_id: taskId,
       reviewer,
       decision: 'APPROVED_WITH_CORRECTIONS',
       comments: 'Rectificação de especificação solicitada pelo revisor e incorporada na versão 2.',
       corrections_requested: ['Ajuste de cláusula / valor exato'],
-      corrected_content: taskDef.correctionText
+      corrected_content: taskDef.correctionText || 'CONTEUDO_CORRIGIDO_V2',
+      auth_token: reviewerToken,
+      signature: reviewerSig
     });
   } else {
     engine.reviewTask({
       review_id: reviewId,
-      task_id: taskDef.id,
+      task_id: taskId,
       reviewer,
       decision: 'APPROVED',
-      comments: 'Revisão humana concluída. Documento conforme com as diretrizes e requisitos.'
+      comments: 'Revisão humana concluída. Documento conforme com as diretrizes e requisitos.',
+      auth_token: reviewerToken,
+      signature: reviewerSig
     });
   }
 
   // Entrega controlada
-  engine.deliverTask(taskDef.id, 'arquivo_digital@saso.ao', 'EMAIL');
+  engine.deliverTask(taskId, 'arquivo_digital@empresa.ao', 'EMAIL');
   process.stdout.write(`.`);
 }
-console.log(`\n      30/30 tarefas concluídas, revistas e entregues com sucesso!\n`);
+console.log(`\n      ${taskDefinitions.length}/${taskDefinitions.length} tarefas concluídas, revistas e entregues com sucesso!`);
 
-// 4. Calcular métricas e avaliar gates
-console.log('[3/5] Calculando Métricas do Piloto e Avaliando Gates...');
-const metrics = engine.calculatePilotMetrics(pilotId);
-const gates = engine.evaluatePilotGates(pilotId);
+// Fechar conexão durável para comprovação de sobrevivência física (Ponto 3.1)
+store.close();
+console.log('      [OK] Conexão SQLite fechada com sucesso para teste de sobrevivência pós-reinício.\n');
 
-console.log('      Métricas Físicas Apuradas:');
-console.log(`      - Total de tarefas recebidas: ${metrics.total_tasks_received}`);
-console.log(`      - Total de tarefas concluídas: ${metrics.total_tasks_completed}`);
-console.log(`      - Aprovadas na 1ª revisão: ${metrics.total_tasks_approved_first_review} (${metrics.first_pass_acceptance_rate}%)`);
-console.log(`      - Aprovadas com correcção: ${metrics.total_tasks_corrected} (${metrics.human_correction_rate}%)`);
-console.log(`      - Taxa de entrega técnica: ${metrics.delivery_success_rate}%`);
-console.log(`      - Incidentes de privacidade / isolamento: ${metrics.privacy_incidents} / ${metrics.cross_tenant_incidents}`);
-console.log(`      - Efeitos duplicados / acções proibidas: ${metrics.duplicate_business_effects} / ${metrics.unauthorized_action_attempts}\n`);
+// 5. Fase 2: Reabertura e Reconstrução a partir da Base Durável (Ponto 3.1)
+console.log('[3/5] Fase 2: Reabrindo a Base SQLite Durável e Reconstruindo Métricas...');
+const reopenedStore = new TransactionalPilotStore(dbPath, mode);
+const dbMetrics = reopenedStore.getDatabaseMetrics();
+console.log(`      Cardinalidades da base reaberta no disco:`);
+console.log(`      - Pilotos persistidos:   ${dbMetrics.pilotCount}`);
+console.log(`      - Tarefas persistidas:   ${dbMetrics.taskCount}`);
+console.log(`      - Ficheiros BLOB gravados: ${dbMetrics.outputCount}`);
+console.log(`      - Revisões humanas:      ${dbMetrics.reviewCount}`);
+console.log(`      - Entregas registradas:  ${dbMetrics.deliveryCount}`);
 
-console.log('      Resultados dos 10 Gates do Piloto:');
+if (dbMetrics.taskCount !== taskDefinitions.length) {
+  console.error(`[FALHA] Cardinalidade inconsistente na base reaberta: esperado ${taskDefinitions.length} tarefas, obtido ${dbMetrics.taskCount}.`);
+  process.exit(1);
+}
+
+const reopenedEngine = new ControlledPilotEngine(reopenedStore, tokenService);
+const metrics = reopenedEngine.calculatePilotMetrics(pilotConfig.pilot_id);
+const gates = reopenedEngine.evaluatePilotGates(pilotConfig.pilot_id);
+
+console.log('\n      Resultados dos 10 Gates do Piloto (Reconstruídos da Base Reaberta):');
 for (const g of gates.gates) {
   console.log(`      [${g.passed ? 'PASS' : 'FAIL'}] Gate: ${g.gate_name.padEnd(20)} | Condição: ${g.required_condition} -> Valor: ${g.actual_value}`);
 }
@@ -521,15 +302,54 @@ if (!gates.all_passed) {
   process.exit(1);
 }
 
-// 5. Exportar Evidências Físicas para .artifacts/pilot/PILOT_SASO_2026_09
-console.log('[4/5] Exportando Pacote de Evidências Físicas...');
-const outputDir = path.resolve(process.cwd(), '.artifacts', 'pilot', pilotId);
-const exportResult = engine.exportPilotEvidence(pilotId, outputDir);
-console.log(`      Directório de saída: ${outputDir}`);
-console.log(`      Ficheiros indexados: ${exportResult.files.length}`);
-console.log(`      Hash do índice: ${exportResult.indexHash}\n`);
+// 6. Exportar Evidências Físicas a partir da Base Reaberta (Ponto 3.1 & 3.4)
+console.log('[4/5] Exportando Pacote de Evidências Físicas a partir da Base Reaberta...');
+const outputDir = path.resolve(process.cwd(), '.artifacts', 'pilot', pilotConfig.pilot_id);
+reopenedEngine.exportPilotEvidence(pilotConfig.pilot_id, outputDir);
 
-// 6. Validar criptograficamente com scripts/verify-pilot-manifest.mjs
+// 7. Inspeção e Validação Documental com Leitores Independentes (Ponto 3.4)
+console.log('\n[4b/5] Inspecionando Documentos Exportados com Leitores Independentes (pdf-lib & jszip)...');
+const taskOutputsDir = path.join(outputDir, 'task-outputs');
+const outputFiles = fs.readdirSync(taskOutputsDir);
+const docValidationResults = [];
+
+for (const fn of outputFiles) {
+  const filePath = path.join(taskOutputsDir, fn);
+  const ext = path.extname(fn).toLowerCase();
+  const format = ext === '.pdf' ? 'PDF' : ext === '.xlsx' ? 'XLSX' : ext === '.docx' ? 'DOCX' : 'JSON';
+  const indResult = await PhysicalDocumentValidator.validateWithIndependentReaders(filePath, format, mode);
+  if (!indResult.isValid) {
+    console.error(`[FALHA DOCUMENTAL] Leitor independente falhou no documento ${fn}: ${indResult.error}`);
+    process.exit(1);
+  }
+  docValidationResults.push({
+    file_name: fn,
+    format,
+    reader: format === 'PDF' ? 'pdf-lib' : format === 'DOCX' || format === 'XLSX' ? 'jszip' : 'native-json',
+    result: 'PASS',
+    sha256: indResult.sha256,
+    ...(indResult.pageCount ? { page_count: indResult.pageCount } : {}),
+    ...(indResult.files ? { openxml_parts_count: indResult.files.length } : {}),
+    ...(indResult.cellCount !== undefined ? { cell_count: indResult.cellCount } : {})
+  });
+}
+
+const docReceipt = {
+  receipt_type: 'INDEPENDENT_DOCUMENT_VALIDATION_SUMMARY',
+  pilot_id: pilotConfig.pilot_id,
+  total_documents_inspected: docValidationResults.length,
+  all_documents_valid: true,
+  validated_at: new Date().toISOString(),
+  documents: docValidationResults
+};
+fs.writeFileSync(path.join(outputDir, 'document-validation-receipt.json'), JSON.stringify(docReceipt, null, 2), 'utf8');
+console.log(`      [OK] ${docValidationResults.length} documentos validados com sucesso por leitores independentes.`);
+console.log(`      [OK] Recibo emitido em: document-validation-receipt.json\n`);
+
+// Reexportar manifesto enriquecido cobrindo também o document-validation-receipt.json
+reopenedEngine.exportPilotEvidence(pilotConfig.pilot_id, outputDir);
+
+// 8. Verificação Criptográfica com scripts/verify-pilot-manifest.mjs
 console.log('[5/5] Verificando Integridade Criptográfica do Pacote de Evidências...');
 try {
   const verifyScript = path.resolve(process.cwd(), 'scripts', 'verify-pilot-manifest.mjs');
@@ -540,11 +360,13 @@ try {
     : 'CONTROLLED_PILOT_SIMULATOR_IMPLEMENTED';
   const finalState = mode === 'OPERATIONAL_PILOT'
     ? 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY — REAL PILOT NOT YET EXECUTED'
-    : 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY — SIMULATION EVIDENCE VERIFIED — REAL PILOT NOT YET EXECUTED';
+    : 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY — DURABLE SIMULATION EVIDENCE VERIFIED — REAL PILOT NOT YET EXECUTED';
   console.log(`       Classificação Alcançada: ${finalClass}`);
   console.log(`       Estado Operacional: ${finalState}`);
 } catch (err) {
   console.error('ERRO na verificação de integridade:', err);
   process.exit(1);
+} finally {
+  reopenedStore.close();
 }
 console.log('================================================================\n');

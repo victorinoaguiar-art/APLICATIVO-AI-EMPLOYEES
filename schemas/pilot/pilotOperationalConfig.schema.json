@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PilotOperationalConfig",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "pilot_id",
+    "tenant_id",
+    "organization_name",
+    "authorization_reference",
+    "authorization_document_path",
+    "authorization_document_sha256",
+    "authorized_by",
+    "authorized_at",
+    "start_at",
+    "end_at",
+    "selected_employee_ids",
+    "allowed_data_categories",
+    "prohibited_data_categories",
+    "allowed_connectors",
+    "prohibited_actions",
+    "human_reviewers",
+    "reviewer_configs",
+    "task_limit",
+    "execution_mode"
+  ],
+  "properties": {
+    "pilot_id": {
+      "type": "string",
+      "pattern": "^[A-Z0-9_-]{5,64}$"
+    },
+    "tenant_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_-]{5,64}$"
+    },
+    "organization_name": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 200
+    },
+    "authorization_reference": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 100
+    },
+    "authorization_document_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authorization_document_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "authorized_by": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 100
+    },
+    "authorized_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "start_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "selected_employee_ids": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 500
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "allowed_data_categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "prohibited_data_categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "allowed_connectors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "prohibited_actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "human_reviewers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 2
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "reviewer_configs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reviewer_id",
+          "display_name",
+          "role",
+          "secret_or_key"
+        ],
+        "properties": {
+          "reviewer_id": {
+            "type": "string",
+            "minLength": 2
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 2
+          },
+          "role": {
+            "type": "string",
+            "minLength": 2
+          },
+          "secret_or_key": {
+            "type": "string",
+            "minLength": 16
+          }
+        }
+      }
+    },
+    "task_limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 500
+    },
+    "execution_mode": {
+      "type": "string",
+      "enum": [
+        "OPERATIONAL_PILOT"
+      ]
+    }
+  }
+}

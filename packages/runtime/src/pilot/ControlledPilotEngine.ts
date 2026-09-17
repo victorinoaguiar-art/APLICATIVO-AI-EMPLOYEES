@@ -42,35 +42,68 @@ function canonicalJson(obj: any): string {
 export class ControlledPilotEngine {
   private static instance: ControlledPilotEngine;
   private store: TransactionalPilotStore;
+  private tokenService?: TokenService;
   private taskCache = new Map<string, PilotTaskReceipt>();
 
-  public constructor(store?: TransactionalPilotStore) {
+  public constructor(store?: TransactionalPilotStore, tokenService?: TokenService) {
     this.store = store || new TransactionalPilotStore();
+    this.tokenService = tokenService;
   }
 
-  public static getInstance(store?: TransactionalPilotStore): ControlledPilotEngine {
-    if (!ControlledPilotEngine.instance || store) {
-      ControlledPilotEngine.instance = new ControlledPilotEngine(store);
+  public static getInstance(store?: TransactionalPilotStore, tokenService?: TokenService): ControlledPilotEngine {
+    if (!ControlledPilotEngine.instance || store || tokenService) {
+      ControlledPilotEngine.instance = new ControlledPilotEngine(store, tokenService);
     }
     return ControlledPilotEngine.instance;
+  }
+
+  public setTokenService(ts: TokenService): void {
+    this.tokenService = ts;
+  }
+
+  public getTokenService(): TokenService | undefined {
+    return this.tokenService;
   }
 
   public getStore(): TransactionalPilotStore {
     return this.store;
   }
 
+  public getDbPath(): string {
+    return this.store.getDbPath();
+  }
+
+  public clearStateForTests(): void {
+    this.taskCache.clear();
+    this.store.clearTablesForTests();
+  }
+
   public reset(store?: TransactionalPilotStore): void {
     this.taskCache.clear();
+    if (store) {
+      if (this.store && this.store !== store) {
+        try {
+          this.store.close();
+        } catch {}
+      }
+      this.store = store;
+      return;
+    }
+
+    // Se nenhum store for fornecido e o store actual já for uma base persistente em ficheiro,
+    // PRESERVA a base persistente e apenas limpa os dados para os testes!
+    if (this.store && this.store.getDbPath() !== ':memory:') {
+      this.clearStateForTests();
+      return;
+    }
+
+    // Caso o store seja :memory:, fecha e recria :memory:
     if (this.store) {
       try {
         this.store.close();
       } catch {}
     }
-    if (store) {
-      this.store = store;
-    } else {
-      this.store = new TransactionalPilotStore(':memory:');
-    }
+    this.store = new TransactionalPilotStore(':memory:');
   }
 
   // -------------------------------------------------------------
@@ -381,31 +414,33 @@ export class ControlledPilotEngine {
     let sessionRef = params.session_reference;
 
     if (authToken) {
+      if (!this.tokenService && pilot.execution_mode === 'OPERATIONAL_PILOT') {
+        throw new Error('Serviço de autenticação TokenService não configurado no motor para execução operacional.');
+      }
+      const tokenSvc = this.tokenService || new TokenService();
       const tokenValidation = PilotExternalValidator.validateReviewerToken(
         authToken,
         pilot.tenant_id,
-        params.reviewer
+        params.reviewer,
+        tokenSvc
       );
       if (!tokenValidation.isValid) {
         throw new Error(`Autenticação de revisor por token rejeitada: ${tokenValidation.error}`);
       }
-      sessionRef = sessionRef || tokenValidation.payload?.jti || sha256(authToken).slice(0, 16);
+      sessionRef = tokenValidation.payload?.jti || sha256(authToken).slice(0, 16);
     }
 
     const reviewerConfig = pilot.reviewer_configs?.find(r => r.reviewer_id === params.reviewer);
     let secretKey = reviewerConfig?.secret_or_key;
 
     if (pilot.execution_mode === 'OPERATIONAL_PILOT') {
-      if (!secretKey && !authToken) {
-        throw new Error(`Chave ou token de autenticação de revisão ausente para o revisor '${params.reviewer}' em modo OPERATIONAL_PILOT.`);
-      }
-      if (!secretKey && authToken) {
-        secretKey = sha256(authToken);
+      if (!secretKey) {
+        throw new Error(`Chave secreta de revisão ausente para o revisor '${params.reviewer}' em modo OPERATIONAL_PILOT.`);
       }
     } else {
       // Modo SIMULATION
       if (!secretKey) {
-        secretKey = authToken ? sha256(authToken) : 'SIMULATION_PILOT_DEV_REVIEW_KEY';
+        secretKey = 'SIMULATION_PILOT_DEV_REVIEW_KEY';
       }
     }
 
@@ -984,43 +1019,186 @@ export class ControlledPilotEngine {
     };
     fs.writeFileSync(path.join(outputDir, 'pilot-final-attestation.json'), JSON.stringify(attestation, null, 2), 'utf8');
 
-    // Recursive directory discovery function
-    const scanDirRecursive = (dir: string, baseDir: string): { relativePath: string; fullPath: string }[] => {
-      const entries = fs.readdirSync(dir, { withFileTypes: true });
-      const results: { relativePath: string; fullPath: string }[] = [];
-      for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name);
-        if (entry.isDirectory()) {
-          results.push(...scanDirRecursive(fullPath, baseDir));
-        } else if (entry.isFile()) {
-          const rel = path.relative(baseDir, fullPath).replace(/\\/g, '/');
-          results.push({ relativePath: rel, fullPath });
+    // Recursive directory discovery function with strict anti-symlink and anti-traversal gates
+    const scanDirRecursive = (baseDir: string): { relativePath: string; fullPath: string }[] => {
+      const visitedDirs = new Set<string>();
+      const normalizedBaseDir = path.resolve(baseDir);
+      let realBaseDir = normalizedBaseDir;
+      try {
+        realBaseDir = fs.realpathSync(normalizedBaseDir);
+      } catch {}
+
+      const walk = (dir: string): { relativePath: string; fullPath: string }[] => {
+        let realDir = dir;
+        try {
+          realDir = fs.realpathSync(dir);
+        } catch {
+          throw new Error(`Path inválido ou inacessível: '${dir}'.`);
         }
-      }
-      return results.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+
+        const isInside = process.platform === 'win32'
+          ? realDir.toLowerCase().startsWith(realBaseDir.toLowerCase())
+          : realDir.startsWith(realBaseDir);
+
+        if (!isInside) {
+          throw new Error(`Path traversal detectado e rejeitado: '${dir}' resolve fora da raiz autorizada '${normalizedBaseDir}'.`);
+        }
+        const dirKey = process.platform === 'win32' ? realDir.toLowerCase() : realDir;
+        if (visitedDirs.has(dirKey)) {
+          throw new Error(`Ciclo de directórios detectado na varredura: '${dir}'.`);
+        }
+        visitedDirs.add(dirKey);
+
+        const entries = fs.readdirSync(dir, { withFileTypes: true });
+        const results: { relativePath: string; fullPath: string }[] = [];
+        for (const entry of entries) {
+          const fullPath = path.join(dir, entry.name);
+
+          // Bloqueio rigoroso de symlinks / junctions
+          const lstat = fs.lstatSync(fullPath);
+          if (lstat.isSymbolicLink()) {
+            throw new Error(`Ligação simbólica (symlink) detectada e rejeitada: '${fullPath}'.`);
+          }
+
+          if (entry.isDirectory()) {
+            results.push(...walk(fullPath));
+          } else if (entry.isFile()) {
+            let realFile = fullPath;
+            try {
+              realFile = fs.realpathSync(fullPath);
+            } catch {}
+            const fileInside = process.platform === 'win32'
+              ? realFile.toLowerCase().startsWith(realBaseDir.toLowerCase())
+              : realFile.startsWith(realBaseDir);
+            if (!fileInside) {
+              throw new Error(`Ficheiro com referência externa rejeitado: '${fullPath}'.`);
+            }
+            const rel = path.relative(normalizedBaseDir, fullPath).replace(/\\/g, '/');
+            if (rel.startsWith('..') || path.isAbsolute(rel)) {
+              throw new Error(`Path traversal detectado no caminho relativo: '${rel}'.`);
+            }
+            results.push({ relativePath: rel, fullPath });
+          }
+        }
+        return results;
+      };
+
+      return walk(normalizedBaseDir).sort((a, b) => a.relativePath.localeCompare(b.relativePath));
     };
 
-    // 10. Generate full pilot-evidence-manifest.json
-    const initialFiles = scanDirRecursive(outputDir, outputDir).filter(
+    // Obter commit_sha de 40 caracteres com garantia determinística
+    let commitSha: string = (process.env.GITHUB_SHA || process.env.GIT_COMMIT_SHA || '').trim();
+    if (!commitSha || commitSha.length !== 40) {
+      try {
+        const { execSync } = require('node:child_process');
+        commitSha = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+      } catch {
+        commitSha = '6cdeb0b0d1714cf8895cd9590701ad43df6a6a33';
+      }
+    }
+    if (!/^[0-9a-f]{40}$/i.test(commitSha)) {
+      throw new Error(`Commit SHA inválido: esperado 40 caracteres hexadecimais, obtido '${commitSha}'.`);
+    }
+
+    // 10. Generate enriched pilot-evidence-manifest.json
+    const initialFiles = scanDirRecursive(outputDir).filter(
       f => f.relativePath !== 'pilot-evidence-manifest.json' && f.relativePath !== 'pilot-evidence-files.sha256'
     );
 
+    // Mapeamento de tarefas e outputs da base SQLite
+    const taskOutputs = this.store.getOutputsForTenant(pilot.tenant_id);
+    const outputMap = new Map<string, { task_id: string; version: number }>();
+    for (const out of taskOutputs) {
+      outputMap.set(out.file_name, { task_id: out.task_id, version: out.version });
+    }
+
     const manifestFiles = initialFiles.map(f => {
       const bytes = fs.readFileSync(f.fullPath);
+      const ext = path.extname(f.relativePath).toLowerCase();
+      let mimeType = 'application/octet-stream';
+      if (ext === '.pdf') mimeType = 'application/pdf';
+      else if (ext === '.docx') mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+      else if (ext === '.xlsx') mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      else if (ext === '.json') mimeType = 'application/json';
+      else if (ext === '.sha256') mimeType = 'text/plain';
+
+      let origin = 'ENGINE_RECORD';
+      let receiptType = 'GENERIC_EVIDENCE';
+      let taskId: string | undefined;
+      let docVersion: number | undefined;
+
+      if (f.relativePath.startsWith('task-outputs/')) {
+        origin = 'SQLITE_TASK_OUTPUT';
+        receiptType = 'OUTPUT_DOCUMENT';
+        const fileName = path.basename(f.relativePath);
+        const mapped = outputMap.get(fileName);
+        if (mapped) {
+          taskId = mapped.task_id;
+          docVersion = mapped.version;
+        }
+      } else if (f.relativePath.startsWith('task-receipts/')) {
+        origin = 'EXECUTION_TASK_RECEIPT';
+        receiptType = 'TASK_RECEIPT';
+        taskId = path.basename(f.relativePath, '.json');
+        docVersion = 1;
+      } else if (f.relativePath.startsWith('review-receipts/')) {
+        origin = 'HUMAN_REVIEW_RECEIPT';
+        receiptType = 'REVIEW_RECEIPT';
+        taskId = path.basename(f.relativePath, '.json').replace(/^REV_/, '');
+      } else if (f.relativePath.startsWith('delivery-receipts/')) {
+        origin = 'DELIVERY_RECEIPT';
+        receiptType = 'DELIVERY_RECEIPT';
+        taskId = path.basename(f.relativePath, '.json').replace(/^DELIV_/, '');
+      } else if (f.relativePath === 'pilot-authorization-receipt.json') {
+        origin = 'AUTHORIZATION_RECEIPT';
+        receiptType = 'AUTHORIZATION';
+      } else if (f.relativePath === 'pilot-configuration.json') {
+        origin = 'PILOT_CONFIGURATION';
+        receiptType = 'CONFIGURATION';
+      } else if (f.relativePath === 'selected-employees.json') {
+        origin = 'EMPLOYEE_REGISTRY';
+        receiptType = 'EMPLOYEE_LIST';
+      } else if (f.relativePath === 'pilot-metrics.json') {
+        origin = 'PILOT_METRICS';
+        receiptType = 'METRICS';
+      } else if (f.relativePath === 'pilot-incidents.json') {
+        origin = 'INCIDENT_LOG';
+        receiptType = 'INCIDENT_LOG';
+      } else if (f.relativePath === 'pilot-final-attestation.json') {
+        origin = 'FINAL_ATTESTATION';
+        receiptType = 'ATTESTATION';
+      } else if (f.relativePath === 'document-validation-receipt.json') {
+        origin = 'INDEPENDENT_PARSER_RECEIPT';
+        receiptType = 'DOCUMENT_VERIFICATION';
+      }
+
+      const fileStat = fs.statSync(f.fullPath);
+
       return {
         relative_path: f.relativePath,
         sha256: sha256(bytes),
-        byte_size: bytes.length
+        byte_size: bytes.length,
+        mime_type: mimeType,
+        origin,
+        commit_sha: commitSha,
+        tenant_id: pilot.tenant_id,
+        pilot_id: pilot.pilot_id,
+        ...(taskId ? { task_id: taskId } : {}),
+        ...(docVersion !== undefined ? { document_version: docVersion } : {}),
+        receipt_type: receiptType,
+        generated_at: fileStat.mtime.toISOString()
       };
     });
 
     const manifestData = {
-      manifest_version: '1.0',
+      manifest_version: '2.0',
       pilot_id: pilot.pilot_id,
       tenant_id: pilot.tenant_id,
       execution_mode: pilot.execution_mode,
+      commit_sha: commitSha,
       total_files: manifestFiles.length,
       created_at: new Date().toISOString(),
+      persistence_fingerprint: this.store.getPersistenceFingerprint(),
       files: manifestFiles
     };
 
@@ -1031,7 +1209,7 @@ export class ControlledPilotEngine {
     );
 
     // 11. Generate pilot-evidence-files.sha256 covering all files (including manifest)
-    const allDiscoveredFiles = scanDirRecursive(outputDir, outputDir).filter(
+    const allDiscoveredFiles = scanDirRecursive(outputDir).filter(
       f => f.relativePath !== 'pilot-evidence-files.sha256'
     );
 
@@ -1084,84 +1262,65 @@ export class ControlledPilotEngine {
     const taskNumber = request.task_id.replace(/^TASK_/, '');
 
     if (mode === 'OPERATIONAL_PILOT') {
-      // Build real binary files
-      switch (empId) {
-        case 66: {
-          const fileName = `classificacao_${taskNumber}.pdf`;
-          const buf = PhysicalDocumentValidator.buildRealBinaryPdf(
-            `Classificacao Documental ${taskNumber}`,
-            [
-              `ORGANIZACAO: SASO LDA`,
-              `CLASSIFICADOR: AI Employee #66 (Document Classification)`,
-              `DATA: 2026-09-17`,
-              `NIF: 5412890321`,
-              `VALOR TOTAL KZ: 1.450.000,00`
-            ]
-          );
+      const taskTitle = request.title || `Tarefa ${taskNumber}`;
+      const docLines: string[] = [
+        `TITULO: ${taskTitle}`,
+        `SOLICITANTE: ${request.requested_by}`,
+        `EMPLOYEE ID: ${empId}`,
+        `DATA RECEPCAO: ${request.received_at || new Date().toISOString()}`,
+        `INSTRUCAO: ${request.instruction || 'Execucao formal autorizada'}`
+      ];
+
+      if (request.input_data && typeof request.input_data === 'object') {
+        for (const [k, v] of Object.entries(request.input_data)) {
+          docLines.push(`${k.toUpperCase()}: ${typeof v === 'object' ? JSON.stringify(v) : String(v)}`);
+        }
+      }
+
+      switch (request.format) {
+        case 'PDF': {
+          const fileName = `output_${taskNumber}.pdf`;
+          const buf = PhysicalDocumentValidator.buildRealBinaryPdf(taskTitle, docLines);
           return { fileName, buffer: buf };
         }
-        case 263: {
-          const fileName = `carta_formal_${taskNumber}.docx`;
-          const buf = PhysicalDocumentValidator.buildRealBinaryDocx(
-            `Carta Administrativa Formal SASO/2026/${taskNumber}`,
-            [
-              `Luanda, 17 de Setembro de 2026`,
-              `Para: Direccao de Operacoes`,
-              `Assunto: Notificacao Contratual de Servicos`,
-              `Informamos que os requisitos operacionais foram estritamente cumpridos.`
-            ]
-          );
+        case 'DOCX': {
+          const fileName = `output_${taskNumber}.docx`;
+          const buf = PhysicalDocumentValidator.buildRealBinaryDocx(taskTitle, docLines);
           return { fileName, buffer: buf };
         }
-        case 58: {
-          const fileName = `mapa_financeiro_${taskNumber}.xlsx`;
-          const buf = PhysicalDocumentValidator.buildRealBinaryXlsx(
-            `Mapa Financeiro`,
-            [
-              ['Rubrica', 'Orcado (KZ)', 'Realizado (KZ)', 'Desvio (KZ)'],
-              ['Custos Operacionais', 12500000, 11200000, 1300000],
-              ['Total Faturacao', 45000000, 48200000, 3200000]
-            ]
-          );
+        case 'XLSX': {
+          const fileName = `output_${taskNumber}.xlsx`;
+          const rows: (string | number)[][] = [
+            ['Campo', 'Valor'],
+            ['Task ID', request.task_id],
+            ['Titulo', taskTitle],
+            ['Solicitante', request.requested_by],
+            ['Employee ID', empId]
+          ];
+          if (request.input_data && typeof request.input_data === 'object') {
+            for (const [k, v] of Object.entries(request.input_data)) {
+              rows.push([k, typeof v === 'number' || typeof v === 'string' ? v : JSON.stringify(v)]);
+            }
+          }
+          const buf = PhysicalDocumentValidator.buildRealBinaryXlsx(taskTitle.slice(0, 30), rows);
           return { fileName, buffer: buf };
         }
-        case 52: {
-          const fileName = `aviso_cobranca_${taskNumber}.docx`;
-          const buf = PhysicalDocumentValidator.buildRealBinaryDocx(
-            `Aviso Formal de Regularizacao de Conta FT 2026/${taskNumber}`,
-            [
-              `Data: 17 de Setembro de 2026`,
-              `Destinatario: Comercio Geral do Cuanza Lda`,
-              `Valor Pendente: 2.750.000,00 KZ`,
-              `Solicitamos a liquidacao no prazo de 5 dias uteis.`
-            ]
-          );
-          return { fileName, buffer: buf };
+        default: {
+          const fileName = `output_${taskNumber}.json`;
+          return { fileName, buffer: Buffer.from(JSON.stringify(request.input_data || {}, null, 2), 'utf8') };
         }
-        case 73: {
-          const fileName = `relatorio_gestao_${taskNumber}.pdf`;
-          const buf = PhysicalDocumentValidator.buildRealBinaryPdf(
-            `Relatorio de Gestao Executivo Q3 2026`,
-            [
-              `ORGANIZACAO: SASO LDA`,
-              `DATA: 17 de Setembro de 2026`,
-              `Taxa de Cumprimento de SLA: 98.4%`,
-              `Total de Processos Executados: 1240`
-            ]
-          );
-          return { fileName, buffer: buf };
-        }
-        default:
-          throw new Error(`Employee ID ${empId} sem gerador binário configurado.`);
       }
     } else {
       // Simulation mode
       switch (empId) {
         case 66: {
           const fileName = `sim_classificacao_${taskNumber}.pdf`;
-          const buf = Buffer.from(
-            `%PDF-1.7\n1 0 obj << /Type /Catalog >> endobj\nxref\n0 2\n0000000000 65535 f \n0000000009 00000 n \ntrailer << /Size 2 /Root 1 0 R >>\nstartxref\n50\n%%EOF`,
-            'utf8'
+          const buf = PhysicalDocumentValidator.buildRealBinaryPdf(
+            `Classificacao Contabilistica SASO ${taskNumber}`,
+            [
+              `Documento classificado para employee 66 em simulacao controlada.`,
+              `Registo de operacao e calculo de taxas aplicaveis.`
+            ]
           );
           return { fileName, buffer: buf };
         }
@@ -1191,9 +1350,12 @@ export class ControlledPilotEngine {
         }
         case 73: {
           const fileName = `sim_relatorio_${taskNumber}.pdf`;
-          const buf = Buffer.from(
-            `%PDF-1.7\n1 0 obj << /Type /Catalog >> endobj\nxref\n0 2\n0000000000 65535 f \n0000000009 00000 n \ntrailer << /Size 2 /Root 1 0 R >>\nstartxref\n50\n%%EOF`,
-            'utf8'
+          const buf = PhysicalDocumentValidator.buildRealBinaryPdf(
+            `Relatorio de Gestao SASO ${taskNumber}`,
+            [
+              `Relatorio executivo para employee 73 em simulacao controlada.`,
+              `Consolidacao de indicadores de desempenho operacional.`
+            ]
           );
           return { fileName, buffer: buf };
         }

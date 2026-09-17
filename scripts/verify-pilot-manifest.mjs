@@ -2,6 +2,14 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { createHash } from 'node:crypto';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const Ajv = require('ajv');
+const addFormats = require('ajv-formats');
+
+const ajv = new Ajv({ allErrors: true, strict: false });
+addFormats(ajv);
 
 function sha256(content) {
   return createHash('sha256').update(content).digest('hex');
@@ -34,15 +42,50 @@ const lines = manifestContent.trim().split('\n').filter(l => l.trim().length > 0
 
 console.log(`Total de ficheiros indexados no manifesto: ${lines.length}\n`);
 
+const visitedDirs = new Set();
+const normalizedTargetDir = path.resolve(targetDir);
+let realTargetDir = normalizedTargetDir;
+try {
+  realTargetDir = fs.realpathSync(normalizedTargetDir);
+} catch {}
+
 function scanDirRecursive(dir, baseDir) {
+  let realDir = dir;
+  try {
+    realDir = fs.realpathSync(dir);
+  } catch {
+    throw new Error(`Path inválido ou inacessível: ${dir}`);
+  }
+  if (!realDir.startsWith(realTargetDir)) {
+    throw new Error(`Path traversal detectado na varredura: ${dir}`);
+  }
+  if (visitedDirs.has(realDir)) {
+    throw new Error(`Ciclo de directórios detectado: ${dir}`);
+  }
+  visitedDirs.add(realDir);
+
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   const results = [];
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
+
+    // Rejeitar symlinks categoricamente
+    const lstat = fs.lstatSync(fullPath);
+    if (lstat.isSymbolicLink()) {
+      throw new Error(`Symlink ou ligação simbólica detectada e rejeitada: ${fullPath}`);
+    }
+
     if (entry.isDirectory()) {
       results.push(...scanDirRecursive(fullPath, baseDir));
     } else if (entry.isFile()) {
+      const realFile = fs.realpathSync(fullPath);
+      if (!realFile.startsWith(realTargetDir)) {
+        throw new Error(`Ficheiro com referência externa rejeitado: ${fullPath}`);
+      }
       const rel = path.relative(baseDir, fullPath).replace(/\\/g, '/');
+      if (rel.startsWith('..') || path.isAbsolute(rel)) {
+        throw new Error(`Path traversal detectado: ${rel}`);
+      }
       results.push({ relativePath: rel, fullPath });
     }
   }
@@ -103,6 +146,48 @@ for (const df of diskFiles) {
 }
 if (!hasError) {
   console.log(`[OK] Verificação bidirecional confirmada: todos os ${diskFiles.length - 1} ficheiros do directório estão registados no manifesto.`);
+}
+
+// Validação formal do Manifesto JSON via Ajv Schema
+const manifestJsonFile = path.join(targetDir, 'pilot-evidence-manifest.json');
+if (fs.existsSync(manifestJsonFile)) {
+  console.log('\n--- Validação Formal do Manifesto JSON (Ajv Schema) ---');
+  try {
+    const manifestJson = JSON.parse(fs.readFileSync(manifestJsonFile, 'utf8'));
+    let schemaPath = path.resolve(process.cwd(), 'schemas', 'pilot', 'pilotEvidenceManifest.schema.json');
+    if (!fs.existsSync(schemaPath)) {
+      schemaPath = path.resolve(process.cwd(), '..', '..', 'schemas', 'pilot', 'pilotEvidenceManifest.schema.json');
+    }
+    if (fs.existsSync(schemaPath)) {
+      const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
+      const validate = ajv.compile(schema);
+      const valid = validate(manifestJson);
+      if (!valid) {
+        console.error('[FALHA] Schema do manifesto pilot-evidence-manifest.json inválido:');
+        console.error(validate.errors);
+        hasError = true;
+      } else {
+        console.log('[OK] Schema do manifesto pilot-evidence-manifest.json validado com sucesso via Ajv.');
+      }
+    }
+    // Verificar que todos os arquivos do manifesto usam o mesmo commit_sha de 40 chars
+    const commitSha = manifestJson.commit_sha;
+    if (!commitSha || !/^[0-9a-f]{40}$/i.test(commitSha)) {
+      console.error(`[FALHA] Commit SHA ausente ou inválido no manifesto: '${commitSha}'.`);
+      hasError = true;
+    } else {
+      const divergent = (manifestJson.files || []).filter(f => f.commit_sha !== commitSha);
+      if (divergent.length > 0) {
+        console.error(`[FALHA] ${divergent.length} ficheiros no manifesto com commit_sha divergente de '${commitSha}'.`);
+        hasError = true;
+      } else {
+        console.log(`[OK] Todos os ${manifestJson.files?.length || 0} ficheiros do manifesto utilizam o mesmo commit_sha: ${commitSha}`);
+      }
+    }
+  } catch (err) {
+    console.error(`[FALHA] Erro ao validar pilot-evidence-manifest.json: ${err.message}`);
+    hasError = true;
+  }
 }
 
 // Validação semântica da Atestação Final

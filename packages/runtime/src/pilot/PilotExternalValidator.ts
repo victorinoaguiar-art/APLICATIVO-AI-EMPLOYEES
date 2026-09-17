@@ -1,5 +1,5 @@
 import * as fs from 'node:fs';
-import { createHash, createHmac } from 'node:crypto';
+import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 import {
   PilotProgram,
   PilotTaskRequest,
@@ -197,7 +197,12 @@ export class PilotExternalValidator {
       throw new Error('Chave secreta de assinatura ausente ou inválida. Validação rejeitada.');
     }
     const expected = this.generateReviewerSignature(params, secretKey);
-    return params.signature === expected;
+    const sigBuf = Buffer.from(params.signature, 'utf8');
+    const expBuf = Buffer.from(expected, 'utf8');
+    if (sigBuf.length !== expBuf.length) {
+      return false;
+    }
+    return timingSafeEqual(sigBuf, expBuf);
   }
 
   public static validateReviewerToken(
@@ -209,17 +214,39 @@ export class PilotExternalValidator {
     if (!token) {
       return { isValid: false, error: 'Token de revisor ausente.' };
     }
-    const ts = tokenService || new TokenService();
-    const result = ts.verifyToken(token);
+    if (!tokenService) {
+      return { isValid: false, error: 'Serviço de autenticação TokenService não fornecido ou indisponível.' };
+    }
+    const result = tokenService.verifyToken(token);
     if (!result.valid || !result.payload) {
       return { isValid: false, error: `Token inválido: ${result.error} (${result.code})` };
     }
-    if (result.payload.tenant_id !== expectedTenantId) {
-      return { isValid: false, error: `Isolamento multi-tenant violado: token pertence ao tenant ${result.payload.tenant_id}, esperado ${expectedTenantId}.` };
+    const payload = result.payload;
+
+    // 1. Tenant match
+    if (payload.tenant_id !== expectedTenantId) {
+      return { isValid: false, error: `Isolamento multi-tenant violado: token pertence ao tenant ${payload.tenant_id}, esperado ${expectedTenantId}.` };
     }
-    if (!result.payload.roles.includes('HUMAN_REVIEWER') && !result.payload.roles.includes('ADMIN') && result.payload.user_id !== expectedReviewerId && result.payload.sub !== expectedReviewerId) {
-      return { isValid: false, error: `Permissões insuficientes no token para o revisor ${expectedReviewerId}.` };
+
+    // 2. Exact user identity match (reject impersonation)
+    const tokenUserId = payload.user_id || payload.sub;
+    if (tokenUserId !== expectedReviewerId) {
+      return { isValid: false, error: `Impersonação detectada e rejeitada: token pertence a '${tokenUserId}', mas a revisão foi declarada como '${expectedReviewerId}'.` };
     }
-    return { isValid: true, payload: result.payload };
+
+    // 3. Authorized role
+    const roles: string[] = Array.isArray(payload.roles) ? payload.roles : [];
+    const hasAuthorizedRole = roles.includes('HUMAN_REVIEWER') || roles.includes('ADMIN');
+    if (!hasAuthorizedRole) {
+      return { isValid: false, error: `Função não autorizada no token para o revisor '${expectedReviewerId}'. Requer 'HUMAN_REVIEWER' ou 'ADMIN'.` };
+    }
+
+    // 4. Explicit permission
+    const perms: string[] = Array.isArray(payload.permissions) ? payload.permissions : [];
+    if (!perms.includes('PILOT_REVIEW')) {
+      return { isValid: false, error: `Permissão explícita 'PILOT_REVIEW' ausente no token do revisor '${expectedReviewerId}'.` };
+    }
+
+    return { isValid: true, payload };
   }
 }
