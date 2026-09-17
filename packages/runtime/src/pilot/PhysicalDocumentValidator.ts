@@ -1,9 +1,10 @@
 import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { createHash } from 'node:crypto';
 import * as zlib from 'node:zlib';
 import { PDFDocument } from 'pdf-lib';
 import JSZip from 'jszip';
-import { OperationalPilotMode } from '@ai-employee/shared';
+import { OperationalPilotMode, PilotDocumentValidationReceipt } from '@ai-employee/shared';
 
 // Standard CRC32 table
 const CRC_TABLE = new Uint32Array(256);
@@ -269,12 +270,12 @@ export class PhysicalDocumentValidator {
     }
   }
 
-  public static async validateIndependentXlsx(buf: Buffer): Promise<{ isValid: boolean; files?: string[]; error?: string; cellCount?: number }> {
+  public static async validateIndependentXlsx(buf: Buffer): Promise<{ isValid: boolean; files?: string[]; error?: string; cellCount?: number; rowCount?: number }> {
     try {
       const zip = await JSZip.loadAsync(buf);
       const fileNames = Object.keys(zip.files);
       if (!fileNames.includes('[Content_Types].xml') || (!fileNames.includes('xl/workbook.xml') && !fileNames.includes('xl/worksheets/sheet1.xml'))) {
-        return { isValid: false, error: 'XLSX inválido no parser jszip: ficheiros OpenXML obrigatórios ausentes.' };
+        return { isValid: false, error: 'XLSX inválido no parser OpenXML: ficheiros de manifesto obrigatórios ausentes.' };
       }
 
       // Validar CRC e integridade descompactando todos os ficheiros
@@ -303,11 +304,230 @@ export class PhysicalDocumentValidator {
       }
 
       this.checkPlaceholders(sheetXml);
-      const cellMatches = sheetXml.match(/<c\s/g) || [];
-      return { isValid: true, files: fileNames, cellCount: cellMatches.length };
+
+      // Interpretação estrutural de linhas e células
+      const rowMatches = sheetXml.match(/<row\b[^>]*>/g) || [];
+      if (rowMatches.length === 0) {
+        return { isValid: false, error: 'XLSX inválido: nenhuma linha <row> encontrada na folha de cálculo.' };
+      }
+
+      // Extrai e valida todas as células <c r="..." t="...">
+      const cellRegex = /<c\b([^>]*)>(.*?)<\/c>|<c\b([^>]*)\/>/gs;
+      let cellCount = 0;
+      let match;
+      while ((match = cellRegex.exec(sheetXml)) !== null) {
+        cellCount++;
+        const attrs = match[1] || match[3] || '';
+        const body = match[2] || '';
+
+        // Valida se a célula possui coordenada (ex: r="A1")
+        if (!/r="[A-Z]+[0-9]+"/.test(attrs)) {
+          return { isValid: false, error: `XLSX inválido: célula sem coordenada r válida encontrada.` };
+        }
+
+        // Se tiver tipo especificado, valida o tipo
+        if (/t="n"/.test(attrs)) {
+          const valMatch = /<v>(.*?)<\/v>/.exec(body);
+          if (valMatch && isNaN(Number(valMatch[1].trim()))) {
+            return { isValid: false, error: `XLSX inválido: célula numérica com valor não-numérico '${valMatch[1]}'.` };
+          }
+        }
+      }
+
+      if (cellCount === 0) {
+        return { isValid: false, error: 'XLSX inválido: nenhuma célula de dados encontrada.' };
+      }
+
+      return { isValid: true, files: fileNames, cellCount, rowCount: rowMatches.length };
     } catch (err: any) {
-      return { isValid: false, error: `Falha no leitor independente jszip para XLSX: ${err.message}` };
+      return { isValid: false, error: `Falha no leitor estrutural para XLSX: ${err.message}` };
     }
+  }
+
+  public static validateIndependentXlsxSync(buf: Buffer): { isValid: boolean; files?: string[]; error?: string; cellCount?: number; rowCount?: number } {
+    try {
+      const entries = SimpleZip.readEntries(buf);
+      const fileNames = Array.from(entries.keys());
+      if (!fileNames.includes('[Content_Types].xml') || (!fileNames.includes('xl/workbook.xml') && !fileNames.includes('xl/worksheets/sheet1.xml'))) {
+        return { isValid: false, error: 'XLSX inválido no parser OpenXML: ficheiros de manifesto obrigatórios ausentes.' };
+      }
+
+      const wbBuf = entries.get('xl/workbook.xml');
+      if (!wbBuf) {
+        return { isValid: false, error: 'XLSX inválido: xl/workbook.xml ausente.' };
+      }
+      const wbXml = wbBuf.toString('utf8');
+      if (!wbXml.includes('<sheets') || !wbXml.includes('<sheet')) {
+        return { isValid: false, error: 'XLSX inválido: nenhuma worksheet declarada no workbook.' };
+      }
+
+      const sheetBuf = entries.get('xl/worksheets/sheet1.xml') || wbBuf;
+      const sheetXml = sheetBuf.toString('utf8');
+
+      const rowMatches = sheetXml.match(/<row\b[^>]*>/g) || [];
+      if (rowMatches.length === 0) {
+        return { isValid: false, error: 'XLSX inválido: nenhuma linha <row> encontrada na folha de cálculo.' };
+      }
+
+      const cellRegex = /<c\b([^>]*)>(.*?)<\/c>|<c\b([^>]*)\/>/gs;
+      let cellCount = 0;
+      let match;
+      while ((match = cellRegex.exec(sheetXml)) !== null) {
+        cellCount++;
+        const attrs = match[1] || match[3] || '';
+        const body = match[2] || '';
+
+        if (!/r="[A-Z]+[0-9]+"/.test(attrs)) {
+          return { isValid: false, error: `XLSX inválido: célula sem coordenada r válida encontrada.` };
+        }
+
+        if (/t="n"/.test(attrs)) {
+          const valMatch = /<v>(.*?)<\/v>/.exec(body);
+          if (valMatch && isNaN(Number(valMatch[1].trim()))) {
+            return { isValid: false, error: `XLSX inválido: célula numérica com valor não-numérico '${valMatch[1]}'.` };
+          }
+        }
+      }
+
+      if (cellCount === 0) {
+        return { isValid: false, error: 'XLSX inválido: nenhuma célula de dados encontrada.' };
+      }
+
+      return { isValid: true, files: fileNames, cellCount, rowCount: rowMatches.length };
+    } catch (err: any) {
+      return { isValid: false, error: `Falha no leitor estrutural para XLSX: ${err.message}` };
+    }
+  }
+
+  public static detectMimeType(buf: Buffer): string {
+    if (buf.length >= 4 && buf.subarray(0, 4).toString('utf8') === '%PDF') {
+      return 'application/pdf';
+    }
+    if (buf.length >= 4 && buf[0] === 0x50 && buf[1] === 0x4B && buf[2] === 0x03 && buf[3] === 0x04) {
+      const headStr = buf.subarray(0, Math.min(buf.length, 4096)).toString('utf8');
+      if (headStr.includes('word/') || headStr.includes('wordprocessingml')) {
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+      }
+      if (headStr.includes('xl/') || headStr.includes('spreadsheetml')) {
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      }
+      return 'application/zip';
+    }
+    const textStart = buf.subarray(0, 50).toString('utf8').trim();
+    if (textStart.startsWith('{') || textStart.startsWith('[')) {
+      return 'application/json';
+    }
+    return 'application/octet-stream';
+  }
+
+  public static validateMimeCoherence(
+    bufOrMime: Buffer | string,
+    expectedFormatOrExt: string,
+    fileName?: string
+  ): string {
+    const detectedMime = typeof bufOrMime === 'string' ? bufOrMime : this.detectMimeType(bufOrMime);
+    const ext = fileName ? path.extname(fileName).toLowerCase() : (expectedFormatOrExt.startsWith('.') ? expectedFormatOrExt.toLowerCase() : '');
+    const format = expectedFormatOrExt.toUpperCase().replace('.', '');
+
+    if (format === 'PDF') {
+      if (ext && ext !== '.pdf') {
+        throw new Error(`Incoerência de formato: esperado PDF, mas extensão é '${ext}'.`);
+      }
+      if (detectedMime !== 'application/pdf') {
+        throw new Error(`Incoerência de MIME bytes: extensão .pdf mas magic bytes indicam '${detectedMime}'.`);
+      }
+    } else if (format === 'DOCX') {
+      if (ext && ext !== '.docx') {
+        throw new Error(`Incoerência de formato: esperado DOCX, mas extensão é '${ext}'.`);
+      }
+      if (detectedMime !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' && detectedMime !== 'application/zip') {
+        throw new Error(`Incoerência de MIME bytes: extensão .docx mas magic bytes indicam '${detectedMime}'.`);
+      }
+    } else if (format === 'XLSX') {
+      if (ext && ext !== '.xlsx') {
+        throw new Error(`Incoerência de formato: esperado XLSX, mas extensão é '${ext}'.`);
+      }
+      if (detectedMime !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' && detectedMime !== 'application/zip') {
+        throw new Error(`Incoerência de MIME bytes: extensão .xlsx mas magic bytes indicam '${detectedMime}'.`);
+      }
+    }
+
+    return detectedMime;
+  }
+
+  public static createDocumentValidationReceipt(
+    buf: Buffer,
+    format: 'PDF' | 'DOCX' | 'XLSX' | 'JSON',
+    taskId: string,
+    version: number,
+    mode: OperationalPilotMode = 'OPERATIONAL_PILOT'
+  ): PilotDocumentValidationReceipt {
+    const sha = createHash('sha256').update(buf).digest('hex');
+    const validatedAt = new Date().toISOString();
+    const receiptId = `VAL_${taskId}_v${version}_${createHash('sha256').update(sha + validatedAt).digest('hex').slice(0, 12)}`;
+
+    let parserName = 'PhysicalDocumentValidator';
+    let parserVersion = '2.0.0';
+    let result: 'PASS' | 'FAIL' = 'PASS';
+    let pageOrCellCount: number | undefined;
+    let error: string | null = null;
+
+    try {
+      if (format === 'PDF') {
+        parserName = 'native-pdf-structural-parser';
+        parserVersion = '1.7.0';
+        const val = this.validate(buf, 'PDF', mode);
+        if (!val.isValid) {
+          result = 'FAIL';
+          error = val.error || 'Falha na validação de PDF.';
+        } else {
+          const text = buf.toString('utf8');
+          const countMatch = /\/Count\s+(\d+)/.exec(text);
+          pageOrCellCount = countMatch ? parseInt(countMatch[1], 10) : 1;
+        }
+      } else if (format === 'DOCX') {
+        parserName = 'openxml-wordprocessingml-parser';
+        parserVersion = '3.10.2';
+        const val = this.validate(buf, 'DOCX', mode);
+        if (!val.isValid) {
+          result = 'FAIL';
+          error = val.error || 'Falha na validação de DOCX.';
+        } else {
+          const entries = SimpleZip.readEntries(buf);
+          pageOrCellCount = entries.size;
+        }
+      } else if (format === 'XLSX') {
+        parserName = 'openxml-spreadsheetml-parser';
+        parserVersion = '3.10.2';
+        const val = this.validateIndependentXlsxSync(buf);
+        if (!val.isValid) {
+          result = 'FAIL';
+          error = val.error || 'Falha na validação de XLSX.';
+        } else {
+          pageOrCellCount = val.cellCount;
+        }
+      }
+    } catch (err: any) {
+      result = 'FAIL';
+      error = err.message || String(err);
+    }
+
+    return {
+      receipt_id: receiptId,
+      validation_id: receiptId,
+      task_id: taskId,
+      document_version: version,
+      format,
+      parser_name: parserName,
+      parser_version: parserVersion,
+      file_bytes_sha256: sha,
+      result,
+      is_valid: result === 'PASS',
+      page_or_cell_count: pageOrCellCount,
+      error,
+      error_details: error,
+      validated_at: validatedAt
+    };
   }
 
   public static async validateWithIndependentReaders(

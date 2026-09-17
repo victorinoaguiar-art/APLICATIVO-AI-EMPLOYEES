@@ -110,8 +110,13 @@ jobs:
       - name: Multi-Tenant Authentication & Authorization Verification
         run: npm run verify:auth
 
-      - name: Controlled Pilot Simulation & Durability Verification
-        run: node scripts/run-controlled-pilot.mjs --mode=simulation
+      - name: Controlled Pilot Simulation (Process 1: Execution)
+        run: npm run pilot:simulation:execute
+        env:
+          PILOT_DB_PATH: .artifacts/pilot/pilot-ci-simulation.db
+
+      - name: Controlled Pilot Simulation (Process 2: Post-Restart Recovery & Verification)
+        run: npm run pilot:simulation:recover-and-verify
         env:
           PILOT_DB_PATH: .artifacts/pilot/pilot-ci-simulation.db
 

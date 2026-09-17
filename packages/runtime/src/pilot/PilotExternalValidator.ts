@@ -98,7 +98,13 @@ export class PilotExternalValidator {
       }
 
       if (!config.reviewer_configs || !Array.isArray(config.reviewer_configs) || config.reviewer_configs.length === 0) {
-        errors.push('Modo OPERATIONAL_PILOT exige reviewer_configs com chaves/segredos criptográficos de assinatura.');
+        errors.push('Modo OPERATIONAL_PILOT exige reviewer_configs com referências criptográficas (secret_ref ou key_id).');
+      } else {
+        for (const rev of config.reviewer_configs) {
+          if (!rev.secret_ref && !rev.key_id && !rev.secret_or_key) {
+            errors.push(`Revisor '${rev.reviewer_id}' sem secret_ref ou key_id configurado.`);
+          }
+        }
       }
     }
 
@@ -131,22 +137,16 @@ export class PilotExternalValidator {
 
     for (const key of Object.keys(task)) {
       if (!allowedKeys.has(key)) {
-        errors.push(`Propriedade não autorizada na tarefa: '${key}'.`);
+        errors.push(`Campo não permitido no pedido de tarefa: '${key}'.`);
       }
     }
 
-    if (!task.task_id) errors.push('task_id ausente.');
-    if (!task.pilot_id) errors.push('pilot_id ausente.');
-    if (!task.tenant_id) errors.push('tenant_id ausente.');
-    if (!task.employee_id) errors.push('employee_id ausente.');
-    if (!task.requested_by) errors.push('requested_by ausente.');
-    if (!task.idempotency_key) errors.push('idempotency_key ausente.');
-    if (!task.input_data || Object.keys(task.input_data).length === 0) {
-      errors.push('Dados de entrada vazios ou ausentes (input_data).');
+    if (task.pilot_id !== pilot.pilot_id) {
+      errors.push(`pilot_id da tarefa (${task.pilot_id}) diverge do piloto ativo (${pilot.pilot_id}).`);
     }
 
     if (task.tenant_id !== pilot.tenant_id) {
-      errors.push(`Isolamento multi-tenant violado: tenant '${task.tenant_id}' difere do piloto '${pilot.tenant_id}'.`);
+      errors.push(`tenant_id da tarefa (${task.tenant_id}) diverge do tenant do piloto (${pilot.tenant_id}).`);
     }
 
     if (!pilot.selected_employee_ids.includes(task.employee_id)) {
@@ -165,6 +165,96 @@ export class PilotExternalValidator {
     return { isValid: errors.length === 0, errors };
   }
 
+  public static generateCanonicalChallengeSignature(
+    challengeOrParams: {
+      challenge_id?: string;
+      challengeId?: string;
+      nonce: string;
+      tenant_id?: string;
+      tenantId?: string;
+      pilot_id?: string;
+      pilotId?: string;
+      task_id?: string;
+      taskId?: string;
+      document_version?: number;
+      documentVersion?: number;
+      document_sha256?: string;
+      documentSha256?: string;
+      reviewer_id?: string | null;
+      reviewerId?: string;
+      allowed_decision?: string | null;
+      decision?: string;
+      issued_at?: string;
+      issuedAt?: string;
+      expires_at?: string;
+      expiresAt?: string;
+    },
+    reviewerOrKey: string,
+    decision?: string,
+    secretKey?: string
+  ): string {
+    let key: string;
+    let reviewer: string;
+    let dec: string;
+
+    if (secretKey !== undefined) {
+      reviewer = reviewerOrKey;
+      dec = decision!;
+      key = secretKey;
+    } else {
+      reviewer = (challengeOrParams.reviewerId || challengeOrParams.reviewer_id || '') as string;
+      dec = (challengeOrParams.decision || challengeOrParams.allowed_decision || '') as string;
+      key = reviewerOrKey;
+    }
+
+    if (!key || typeof key !== 'string' || key.trim().length === 0) {
+      throw new Error('Chave secreta de assinatura ausente ou inválida. Operação rejeitada.');
+    }
+
+    const payload = [
+      challengeOrParams.challengeId || challengeOrParams.challenge_id,
+      challengeOrParams.nonce,
+      challengeOrParams.tenantId || challengeOrParams.tenant_id,
+      challengeOrParams.pilotId || challengeOrParams.pilot_id,
+      challengeOrParams.taskId || challengeOrParams.task_id,
+      String(challengeOrParams.documentVersion ?? challengeOrParams.document_version),
+      challengeOrParams.documentSha256 || challengeOrParams.document_sha256,
+      reviewer,
+      dec,
+      challengeOrParams.issuedAt || challengeOrParams.issued_at,
+      challengeOrParams.expiresAt || challengeOrParams.expires_at
+    ].join(':');
+
+    return createHmac('sha256', key).update(payload).digest('hex');
+  }
+
+  public static validateCanonicalChallengeSignature(
+    challengeOrParams: any,
+    reviewerOrKey: string,
+    decisionOrSignature?: string,
+    signatureOrKey?: string,
+    secretKeyArg?: string
+  ): boolean {
+    let expected: string;
+    let sig: string;
+
+    if (secretKeyArg !== undefined) {
+      expected = this.generateCanonicalChallengeSignature(challengeOrParams, reviewerOrKey, decisionOrSignature, secretKeyArg);
+      sig = signatureOrKey!;
+    } else {
+      expected = this.generateCanonicalChallengeSignature(challengeOrParams, reviewerOrKey);
+      sig = challengeOrParams.signature;
+    }
+
+    if (!sig) return false;
+    const sigBuf = Buffer.from(sig, 'utf8');
+    const expBuf = Buffer.from(expected, 'utf8');
+    if (sigBuf.length !== expBuf.length) {
+      return false;
+    }
+    return timingSafeEqual(sigBuf, expBuf);
+  }
+
   public static generateReviewerSignature(
     params: {
       taskId: string;
@@ -172,11 +262,36 @@ export class PilotExternalValidator {
       decision: string;
       targetDocumentHash: string;
       reviewedAt: string;
+      challengeId?: string;
+      nonce?: string;
+      tenantId?: string;
+      pilotId?: string;
+      documentVersion?: number;
+      issuedAt?: string;
+      expiresAt?: string;
     },
     secretKey: string
   ): string {
     if (!secretKey || typeof secretKey !== 'string' || secretKey.trim().length === 0) {
       throw new Error('Chave secreta de assinatura ausente ou inválida. Operação rejeitada.');
+    }
+    if (params.challengeId && params.nonce && params.tenantId && params.pilotId) {
+      return this.generateCanonicalChallengeSignature(
+        {
+          challengeId: params.challengeId,
+          nonce: params.nonce,
+          tenantId: params.tenantId,
+          pilotId: params.pilotId,
+          taskId: params.taskId,
+          documentVersion: params.documentVersion || 1,
+          documentSha256: params.targetDocumentHash,
+          reviewerId: params.reviewerId,
+          decision: params.decision,
+          issuedAt: params.issuedAt || params.reviewedAt,
+          expiresAt: params.expiresAt || params.reviewedAt
+        },
+        secretKey
+      );
     }
     const payload = `${params.taskId}:${params.reviewerId}:${params.decision}:${params.targetDocumentHash}:${params.reviewedAt}`;
     return createHmac('sha256', secretKey).update(payload).digest('hex');
@@ -190,6 +305,13 @@ export class PilotExternalValidator {
       targetDocumentHash: string;
       reviewedAt: string;
       signature: string;
+      challengeId?: string;
+      nonce?: string;
+      tenantId?: string;
+      pilotId?: string;
+      documentVersion?: number;
+      issuedAt?: string;
+      expiresAt?: string;
     },
     secretKey: string
   ): boolean {

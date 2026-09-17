@@ -4,12 +4,16 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
 import { createHash } from 'node:crypto';
-import { execSync } from 'node:child_process';
+import { pathToFileURL } from 'node:url';
+import { execSync, spawnSync } from 'node:child_process';
 import {
   ControlledPilotEngine,
   TransactionalPilotStore,
   PhysicalDocumentValidator,
-  PilotExternalValidator
+  PilotExternalValidator,
+  EnvironmentSecretProvider,
+  StaticSecretProvider,
+  scanAndRejectSensitiveFields
 } from '../index.js';
 import {
   PilotProgram,
@@ -18,11 +22,28 @@ import {
 } from '@ai-employee/shared';
 import { TokenService } from '@ai-employee/shared/server';
 
+declare const require: any;
+const Ajv = require('ajv');
+const addFormats = require('ajv-formats');
+const ajv = new Ajv({ allErrors: true, strict: false });
+addFormats(ajv);
+
 function sha256(content: string | Buffer): string {
   return createHash('sha256').update(content).digest('hex');
 }
 
-test('Pilot Operational Reality — 20 Mandatory Verification Tests', async (t) => {
+function getRepoRoot(): string {
+  let cur = process.cwd();
+  while (cur && (!fs.existsSync(path.join(cur, 'package.json')) || !fs.existsSync(path.join(cur, 'schemas')))) {
+    const parent = path.dirname(cur);
+    if (parent === cur) break;
+    cur = parent;
+  }
+  return cur;
+}
+const repoRoot = getRepoRoot();
+
+test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Ponto 4)', async (t) => {
   const tmpDir = path.join(os.tmpdir(), `aetf_pilot_reality_test_${Date.now()}`);
   fs.mkdirSync(tmpDir, { recursive: true });
 
@@ -34,7 +55,10 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests', async (t) 
   fs.writeFileSync(authDocPath, authDocContent);
   const authDocSha = sha256(authDocContent);
 
-  const reviewerSecret = 'SASO_OPERATIONAL_PILOT_SECRET_2026_KEY_MIN32';
+  const reviewerSecretMaria = 'SASO_OPERATIONAL_PILOT_SECRET_2026_KEY_MIN32_MARIA';
+  const reviewerSecretJoao = 'SASO_OPERATIONAL_PILOT_SECRET_2026_KEY_MIN32_JOAO';
+  process.env.PILOT_SECRET_REV_MARIA = reviewerSecretMaria;
+  process.env.PILOT_SECRET_REV_JOAO = reviewerSecretJoao;
 
   const operationalPilotSpec = {
     pilot_id: 'PILOT_OPERATIONAL_SASO_REAL',
@@ -58,13 +82,13 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests', async (t) 
         reviewer_id: 'rev_maria_santos',
         display_name: 'Dra. Maria Santos',
         role: 'SUPERVISOR_OPERACIONAL',
-        secret_or_key: reviewerSecret
+        secret_ref: 'PILOT_SECRET_REV_MARIA'
       },
       {
         reviewer_id: 'rev_joao_manuel',
         display_name: 'Eng. João Manuel',
         role: 'REVISOR_TECNICO',
-        secret_or_key: reviewerSecret
+        secret_ref: 'PILOT_SECRET_REV_JOAO'
       }
     ],
     task_limit: 50,
@@ -80,246 +104,960 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests', async (t) 
     reviewer_configs: undefined
   };
 
-  const persistentDbPath = path.join(tmpDir, 'test_pilot_durability.db');
-  const persistentStore = new TransactionalPilotStore(persistentDbPath);
-  const engine = ControlledPilotEngine.getInstance(persistentStore);
-
-  // Test 1: Bloqueio de fixtures/mocks quando o modo for OPERATIONAL_PILOT
-  await t.test('1. Bloqueio de fixtures/mocks quando o modo for OPERATIONAL_PILOT', () => {
-    engine.reset();
-    engine.createPilot(operationalPilotSpec);
-    engine.authorizePilot(
+  // -------------------------------------------------------------
+  // Test 1: Execução operacional termina em PENDING_HUMAN_REVIEW sem evento humano
+  // -------------------------------------------------------------
+  await t.test('1. execução operacional termina em PENDING_HUMAN_REVIEW sem evento humano', () => {
+    const store = new TransactionalPilotStore(path.join(tmpDir, 'test1_op.db'), 'OPERATIONAL_PILOT');
+    const tokenSvc = new TokenService('dummy_secret_at_least_32_chars_2026', path.join(tmpDir, 'token1.db'));
+    const eng = new ControlledPilotEngine(store, tokenSvc);
+    eng.createPilot(operationalPilotSpec);
+    eng.authorizePilot(
       operationalPilotSpec.pilot_id,
       operationalPilotSpec.authorization_reference,
       operationalPilotSpec.authorized_by,
       operationalPilotSpec.authorized_at
     );
-    engine.activatePilot(operationalPilotSpec.pilot_id);
+    eng.activatePilot(operationalPilotSpec.pilot_id);
 
-    assert.throws(() => {
-      engine.executeTask({
-        task_id: 'TASK_OP_FIXTURE_FAIL',
-        pilot_id: operationalPilotSpec.pilot_id,
-        tenant_id: operationalPilotSpec.tenant_id,
-        employee_id: 66,
-        requested_by: 'user_operator',
-        received_at: new Date().toISOString(),
-        title: 'Classificar factura mock',
-        instruction: 'Processar',
-        input_data: { document_title: 'Teste', is_mock: true },
-        idempotency_key: 'IDEMP_FAIL_1',
-        format: 'PDF',
-        execution_mode: 'OPERATIONAL_PILOT'
-      });
-    }, /Fixtures ou mocks detectados/);
-  });
-
-  // Test 2: Autorização operacional exige documento físico existente e hash conferido
-  await t.test('2. Autorização operacional exige documento físico existente e hash conferido', () => {
-    const invalidConfig = {
-      ...operationalPilotSpec,
-      pilot_id: 'PILOT_OP_NO_DOC',
-      authorization_document_path: path.join(tmpDir, 'arquivo_inexistente.pdf'),
-      authorization_document_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
-    };
-
-    const val = PilotExternalValidator.validatePilotConfig(invalidConfig, 'OPERATIONAL_PILOT');
-    assert.strictEqual(val.isValid, false);
-    assert.ok(val.errors.some(e => e.includes('não encontrado no disco')));
-
-    const wrongHashConfig = {
-      ...operationalPilotSpec,
-      pilot_id: 'PILOT_OP_WRONG_HASH',
-      authorization_document_path: authDocPath,
-      authorization_document_sha256: 'deadbeef12345678deadbeef12345678deadbeef12345678deadbeef12345678'
-    };
-    const val2 = PilotExternalValidator.validatePilotConfig(wrongHashConfig, 'OPERATIONAL_PILOT');
-    assert.strictEqual(val2.isValid, false);
-    assert.ok(val2.errors.some(e => e.includes('Hash divergente')));
-  });
-
-  // Test 3: Piloto em modo SIMULATION não pode emitir atestação OPERATIONAL_PILOT_VALIDATED
-  await t.test('3. Piloto em modo SIMULATION não pode emitir atestação OPERATIONAL_PILOT_VALIDATED', () => {
-    engine.reset();
-    engine.createPilot(simulationPilotSpec);
-    engine.authorizePilot(
-      simulationPilotSpec.pilot_id,
-      simulationPilotSpec.authorization_reference,
-      simulationPilotSpec.authorized_by,
-      simulationPilotSpec.authorized_at
-    );
-    engine.activatePilot(simulationPilotSpec.pilot_id);
-
-    const outDir = path.join(tmpDir, 'sim_attestation_check');
-    engine.exportPilotEvidence(simulationPilotSpec.pilot_id, outDir);
-
-    const attestation = JSON.parse(
-      fs.readFileSync(path.join(outDir, 'pilot-final-attestation.json'), 'utf8')
-    );
-
-    assert.strictEqual(attestation.execution_mode, 'SIMULATION');
-    assert.notStrictEqual(attestation.classification_status, 'OPERATIONAL_PILOT_VALIDATED');
-    assert.notStrictEqual(attestation.classification, 'OPERATIONAL_PILOT_VALIDATED');
-    assert.strictEqual(attestation.operational_pilot_completed, false);
-    assert.strictEqual(attestation.classification_status, 'CONTROLLED_PILOT_SIMULATOR_IMPLEMENTED');
-  });
-
-  // Test 4: Persistência de tarefas em SQLite sobrevive ao reinício do processo
-  await t.test('4. Persistência de tarefas em SQLite sobrevive ao reinício do processo', () => {
-    const durableDb = path.join(tmpDir, 'durable_restart_test.db');
-    const store1 = new TransactionalPilotStore(durableDb);
-    const eng1 = new ControlledPilotEngine(store1);
-    eng1.createPilot(simulationPilotSpec);
-    eng1.authorizePilot(simulationPilotSpec.pilot_id, simulationPilotSpec.authorization_reference, 'dir', new Date().toISOString());
-    eng1.activatePilot(simulationPilotSpec.pilot_id);
-
-    const task = eng1.executeTask({
-      task_id: 'TASK_DURABLE_01',
-      pilot_id: simulationPilotSpec.pilot_id,
-      tenant_id: simulationPilotSpec.tenant_id,
+    const task = eng.executeTask({
+      task_id: 'TASK_OP_TEST_01',
+      pilot_id: operationalPilotSpec.pilot_id,
+      tenant_id: operationalPilotSpec.tenant_id,
       employee_id: 66,
-      requested_by: 'requester_1',
+      requested_by: 'operador_humano_real',
       received_at: new Date().toISOString(),
-      title: 'Tarefa Durabilidade',
-      instruction: 'Classificar factura',
-      input_data: { doc: 'FT 001' },
-      idempotency_key: 'IDEMP_DURABLE_01',
-      format: 'PDF'
+      title: 'Classificar factura real',
+      instruction: 'Classificar',
+      input_data: { factura: 'FT 2026/01' },
+      idempotency_key: 'IDEMP_OP_01',
+      format: 'PDF',
+      execution_mode: 'OPERATIONAL_PILOT'
     });
 
-    // Fechar conexão SQLite simulando finalização do processo
-    store1.close();
+    const storedTask = store.getTask(task.task_id);
+    assert.ok(storedTask);
+    assert.strictEqual(storedTask.human_review_status, 'PENDING_REVIEW');
+    assert.strictEqual(storedTask.delivery_status, 'PENDING');
+    assert.strictEqual(storedTask.reviewed_at, null);
+    assert.strictEqual(storedTask.reviewed_by, null);
 
-    // Reabrir nova conexão ao mesmo ficheiro físico
-    const store2 = new TransactionalPilotStore(durableDb);
-    const recoveredPilot = store2.getPilot(simulationPilotSpec.pilot_id);
-    assert.ok(recoveredPilot);
-    assert.strictEqual(recoveredPilot.pilot_id, simulationPilotSpec.pilot_id);
-
-    const recoveredTask = store2.getTask(task.task_id);
-    assert.ok(recoveredTask);
-    assert.strictEqual(recoveredTask.task_id, 'TASK_DURABLE_01');
-    assert.strictEqual(recoveredTask.final_status, 'SUCCESS');
-
-    const recoveredOutput = store2.getActiveOutputBytes(task.task_id);
-    assert.ok(recoveredOutput);
-    assert.ok(Buffer.isBuffer(recoveredOutput.bytes));
-    assert.ok(recoveredOutput.bytes.length > 0);
-    assert.strictEqual(recoveredOutput.output.file_name, task.output_files[0]);
-    store2.close();
+    const pendingChallenge = store.getPendingChallengeForTask(task.task_id);
+    assert.ok(pendingChallenge);
+    assert.strictEqual(pendingChallenge.status, 'PENDING');
+    assert.strictEqual(pendingChallenge.task_id, task.task_id);
+    store.close();
   });
 
-  // Test 5: Persistência do output armazena e recupera os bytes reais do arquivo (BLOB) com getOutputBytes
-  await t.test('5. Persistência do output armazena e recupera os bytes reais do arquivo (BLOB)', () => {
-    const store = new TransactionalPilotStore();
-    store.savePilot(simulationPilotSpec as any);
-    const testBytes = Buffer.from('BINARY_PDF_DATA_TEST_BYTES_AETF500', 'utf8');
-    const expectedHash = sha256(testBytes);
+  // -------------------------------------------------------------
+  // Test 2: O script operacional não emite tokens de revisor
+  // -------------------------------------------------------------
+  await t.test('2. o script operacional não emite tokens de revisor', () => {
+    const scriptPath = path.resolve(repoRoot, 'scripts', 'run-controlled-pilot.mjs');
+    const testConfigPath = path.join(tmpDir, 'op_config_test2.json');
+    fs.writeFileSync(testConfigPath, JSON.stringify(operationalPilotSpec, null, 2), 'utf8');
 
-    const dummyTask: any = {
-      task_id: 'TASK_BLOB_TEST',
-      pilot_id: simulationPilotSpec.pilot_id,
-      tenant_id: simulationPilotSpec.tenant_id,
-      employee_id: 66,
-      requested_by: 'user_test',
-      received_at: new Date().toISOString(),
-      input_snapshot_sha256: 'abc',
-      execution_started_at: new Date().toISOString(),
-      execution_completed_at: new Date().toISOString(),
-      output_files: ['test.pdf'],
-      output_hashes: [expectedHash],
-      human_review_status: 'PENDING_REVIEW',
-      delivery_status: 'PENDING',
-      final_status: 'SUCCESS',
-      receipt_sha256: 'def'
+    const testTasksPath = path.join(tmpDir, 'op_tasks_test2.json');
+    const testTasksData = {
+      pilot_id: operationalPilotSpec.pilot_id,
+      tenant_id: operationalPilotSpec.tenant_id,
+      tasks: [
+        {
+          task_id: 'TASK_CLI_OP_01',
+          pilot_id: operationalPilotSpec.pilot_id,
+          tenant_id: operationalPilotSpec.tenant_id,
+          employee_id: 66,
+          title: 'Classificar Factura SASO',
+          instruction: 'Classificar documento de despesa',
+          input_data: { numero_factura: 'FT 2026/901', valor_kz: 350000 },
+          requested_by: 'operador_real_cli',
+          received_at: new Date().toISOString(),
+          idempotency_key: 'IDEMP_CLI_OP_01',
+          format: 'PDF'
+        }
+      ]
     };
-    store.saveTask(dummyTask);
+    fs.writeFileSync(testTasksPath, JSON.stringify(testTasksData, null, 2), 'utf8');
 
+    const runDb = path.join(tmpDir, 'test2_cli.db');
+    const result = spawnSync(
+      'node',
+      [
+        scriptPath,
+        '--mode=operational',
+        `--config=${testConfigPath}`,
+        `--auth-doc=${authDocPath}`,
+        `--tasks-file=${testTasksPath}`,
+        '--phase=execute'
+      ],
+      {
+        cwd: repoRoot,
+        env: {
+          ...process.env,
+          PILOT_DB_PATH: runDb
+        },
+        encoding: 'utf8'
+      }
+    );
+
+    const output = (result.stdout || '') + (result.stderr || '');
+    assert.ok(output.includes('INTERRUPÇÃO OBRIGATÓRIA: PILOTO EM MODO OPERACIONAL'), 'Script deve parar obrigatoriamente antes da revisão humana');
+    assert.ok(output.includes('STATUS DA TAREFA: PENDING_HUMAN_REVIEW'), 'Tarefa deve ficar em PENDING_HUMAN_REVIEW');
+    assert.ok(!output.includes('TokenService.signToken'), 'Script não deve emitir tokens de revisor sintéticos');
+    assert.ok(!output.includes('REV_SIM_'), 'Nenhum review automático deve ser executado');
+  });
+
+  // -------------------------------------------------------------
+  // Test 3: Desafio expirado falha
+  // -------------------------------------------------------------
+  await t.test('3. desafio expirado falha', () => {
+    const store = new TransactionalPilotStore(path.join(tmpDir, 'test3.db'), 'OPERATIONAL_PILOT');
+    const eng = new ControlledPilotEngine(store);
+    eng.createPilot(operationalPilotSpec);
+    eng.authorizePilot(
+      operationalPilotSpec.pilot_id,
+      operationalPilotSpec.authorization_reference,
+      operationalPilotSpec.authorized_by,
+      operationalPilotSpec.authorized_at
+    );
+    eng.activatePilot(operationalPilotSpec.pilot_id);
+
+    const task = eng.executeTask({
+      task_id: 'TASK_EXP_01',
+      pilot_id: operationalPilotSpec.pilot_id,
+      tenant_id: operationalPilotSpec.tenant_id,
+      employee_id: 66,
+      requested_by: 'operador_humano_real',
+      received_at: new Date().toISOString(),
+      title: 'Tarefa Expiração',
+      instruction: 'Classificar',
+      input_data: { doc: 'D1' },
+      idempotency_key: 'IDEMP_EXP_01',
+      format: 'PDF',
+      execution_mode: 'OPERATIONAL_PILOT'
+    });
+
+    const challenge = store.getPendingChallengeForTask(task.task_id)!;
+    assert.ok(challenge);
+
+    // Forçar data de expiração no passado no SQLite
+    store.saveReviewChallenge({
+      ...challenge,
+      expires_at: new Date(Date.now() - 3600000).toISOString()
+    });
+
+    assert.throws(() => {
+      eng.reviewTask({
+        review_id: 'REV_EXP_01',
+        task_id: task.task_id,
+        reviewer: 'rev_maria_santos',
+        decision: 'APPROVED',
+        comments: 'Tentativa em desafio expirado'
+      });
+    }, /Desafio de revisão expirou/);
+
+    const tAfter = store.getTask(task.task_id);
+    assert.strictEqual(tAfter?.human_review_status, 'PENDING_REVIEW');
+    store.close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 4: Desafio reutilizado falha
+  // -------------------------------------------------------------
+  await t.test('4. desafio reutilizado falha', () => {
+    const store = new TransactionalPilotStore(path.join(tmpDir, 'test4.db'), 'OPERATIONAL_PILOT');
+    const eng = new ControlledPilotEngine(store);
+    eng.createPilot(operationalPilotSpec);
+    eng.authorizePilot(
+      operationalPilotSpec.pilot_id,
+      operationalPilotSpec.authorization_reference,
+      operationalPilotSpec.authorized_by,
+      operationalPilotSpec.authorized_at
+    );
+    eng.activatePilot(operationalPilotSpec.pilot_id);
+
+    const task = eng.executeTask({
+      task_id: 'TASK_REPLAY_01',
+      pilot_id: operationalPilotSpec.pilot_id,
+      tenant_id: operationalPilotSpec.tenant_id,
+      employee_id: 66,
+      requested_by: 'operador_humano_real',
+      received_at: new Date().toISOString(),
+      title: 'Tarefa Replay',
+      instruction: 'Classificar',
+      input_data: { doc: 'D1' },
+      idempotency_key: 'IDEMP_REPLAY_01',
+      format: 'PDF',
+      execution_mode: 'OPERATIONAL_PILOT'
+    });
+
+    const challenge = store.getPendingChallengeForTask(task.task_id)!;
+    const sig = PilotExternalValidator.generateCanonicalChallengeSignature(challenge, 'rev_maria_santos', 'APPROVED', reviewerSecretMaria);
+
+    // 1. Primeira revisão: consome o desafio com sucesso
+    const rev1 = eng.reviewTask({
+      review_id: 'REV_REPLAY_01',
+      task_id: task.task_id,
+      reviewer: 'rev_maria_santos',
+      decision: 'APPROVED',
+      comments: 'Aprovação válida',
+      signature: sig
+    });
+    assert.strictEqual(rev1.decision, 'APPROVED');
+
+    // 2. Segunda revisão: tentativa de reutilizar o desafio já consumido
+    assert.throws(() => {
+      eng.reviewTask({
+        review_id: 'REV_REPLAY_02',
+        task_id: task.task_id,
+        challenge_id: challenge.challenge_id,
+        reviewer: 'rev_maria_santos',
+        decision: 'APPROVED',
+        comments: 'Tentativa de replay',
+        signature: sig
+      });
+    }, /Desafio de revisão pendente não encontrado ou já consumido/);
+
+    store.close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 5: Alteração do documento depois do desafio falha
+  // -------------------------------------------------------------
+  await t.test('5. alteração do documento depois do desafio falha', () => {
+    const store = new TransactionalPilotStore(path.join(tmpDir, 'test5.db'), 'OPERATIONAL_PILOT');
+    const eng = new ControlledPilotEngine(store);
+    eng.createPilot(operationalPilotSpec);
+    eng.authorizePilot(
+      operationalPilotSpec.pilot_id,
+      operationalPilotSpec.authorization_reference,
+      operationalPilotSpec.authorized_by,
+      operationalPilotSpec.authorized_at
+    );
+    eng.activatePilot(operationalPilotSpec.pilot_id);
+
+    const task = eng.executeTask({
+      task_id: 'TASK_TAMPER_01',
+      pilot_id: operationalPilotSpec.pilot_id,
+      tenant_id: operationalPilotSpec.tenant_id,
+      employee_id: 66,
+      requested_by: 'operador_humano_real',
+      received_at: new Date().toISOString(),
+      title: 'Tarefa Adulteração',
+      instruction: 'Classificar',
+      input_data: { doc: 'D1' },
+      idempotency_key: 'IDEMP_TAMPER_01',
+      format: 'PDF',
+      execution_mode: 'OPERATIONAL_PILOT'
+    });
+
+    const challenge = store.getPendingChallengeForTask(task.task_id)!;
+    const sig = PilotExternalValidator.generateCanonicalChallengeSignature(challenge, 'rev_maria_santos', 'APPROVED', reviewerSecretMaria);
+
+    // Adulterar arquivo ativo no store
+    const activeOut = store.getActiveOutput(task.task_id)!;
+    const tamperedBytes = Buffer.from('TAMPERED_BYTES_AFTER_CHALLENGE');
     store.saveOutput({
-      output_id: 'OUT_BLOB_01',
-      task_id: 'TASK_BLOB_TEST',
+      output_id: activeOut.output_id,
+      task_id: task.task_id,
       version: 1,
-      file_name: 'test.pdf',
-      file_path: 'test.pdf',
-      file_bytes: testBytes,
-      file_bytes_sha256: expectedHash,
+      file_name: activeOut.file_name,
+      file_path: activeOut.file_path,
+      file_bytes: tamperedBytes,
+      file_bytes_sha256: sha256(tamperedBytes),
       is_active: true
     });
 
-    const retrievedBytes = store.getOutputBytes('OUT_BLOB_01');
-    assert.ok(retrievedBytes);
-    assert.ok(Buffer.isBuffer(retrievedBytes));
-    assert.strictEqual(retrievedBytes.toString('utf8'), 'BINARY_PDF_DATA_TEST_BYTES_AETF500');
+    assert.throws(() => {
+      eng.reviewTask({
+        review_id: 'REV_TAMPER_01',
+        task_id: task.task_id,
+        reviewer: 'rev_maria_santos',
+        decision: 'APPROVED',
+        comments: 'Revisão pós adulteração',
+        signature: sig
+      });
+    }, /Hash do documento diverge do desafio emitido/);
 
-    const activeOut = store.getActiveOutputBytes('TASK_BLOB_TEST');
-    assert.ok(activeOut);
-    assert.strictEqual(activeOut.bytes.toString('utf8'), 'BINARY_PDF_DATA_TEST_BYTES_AETF500');
-    assert.strictEqual(activeOut.output.file_bytes_sha256, expectedHash);
     store.close();
   });
 
-  // Test 6: Releitura atómica no saveTaskWithOutputAndVerify aborta a transação em caso de divergência
-  await t.test('6. Releitura atómica no saveTaskWithOutputAndVerify aborta a transação em caso de divergência', () => {
-    const store = new TransactionalPilotStore();
-    store.savePilot(simulationPilotSpec as any);
+  // -------------------------------------------------------------
+  // Test 6: Timestamp divergente falha
+  // -------------------------------------------------------------
+  await t.test('6. timestamp divergente falha', () => {
+    const store = new TransactionalPilotStore(path.join(tmpDir, 'test6.db'), 'OPERATIONAL_PILOT');
+    const eng = new ControlledPilotEngine(store);
+    eng.createPilot(operationalPilotSpec);
+    eng.authorizePilot(
+      operationalPilotSpec.pilot_id,
+      operationalPilotSpec.authorization_reference,
+      operationalPilotSpec.authorized_by,
+      operationalPilotSpec.authorized_at
+    );
+    eng.activatePilot(operationalPilotSpec.pilot_id);
 
-    const badTask: any = {
-      task_id: 'TASK_ATOMIC_FAIL',
+    const task = eng.executeTask({
+      task_id: 'TASK_TS_01',
+      pilot_id: operationalPilotSpec.pilot_id,
+      tenant_id: operationalPilotSpec.tenant_id,
+      employee_id: 66,
+      requested_by: 'operador_humano_real',
+      received_at: new Date().toISOString(),
+      title: 'Tarefa Timestamp Divergente',
+      instruction: 'Classificar',
+      input_data: { doc: 'D1' },
+      idempotency_key: 'IDEMP_TS_01',
+      format: 'PDF',
+      execution_mode: 'OPERATIONAL_PILOT'
+    });
+
+    const challenge = store.getPendingChallengeForTask(task.task_id)!;
+
+    // Assinatura gerada com timestamp diferente do issued_at do desafio
+    const divergentTimestamp = new Date(Date.now() + 120000).toISOString();
+    const badSig = PilotExternalValidator.generateReviewerSignature(
+      {
+        taskId: challenge.task_id,
+        reviewerId: 'rev_maria_santos',
+        decision: 'APPROVED',
+        targetDocumentHash: challenge.document_sha256,
+        reviewedAt: divergentTimestamp,
+        tenantId: challenge.tenant_id,
+        challengeId: challenge.challenge_id
+      },
+      reviewerSecretMaria
+    );
+
+    // Validação direta da assinatura contra o challenge deve falhar
+    const isValidSig = PilotExternalValidator.validateCanonicalChallengeSignature(
+      challenge,
+      'rev_maria_santos',
+      'APPROVED',
+      badSig,
+      reviewerSecretMaria
+    );
+    assert.strictEqual(isValidSig, false);
+
+    // Validação via engine reviewTask deve ser rejeitada
+    assert.throws(() => {
+      eng.reviewTask({
+        review_id: 'REV_TS_01',
+        task_id: task.task_id,
+        reviewer: 'rev_maria_santos',
+        decision: 'APPROVED',
+        comments: 'Assinatura com timestamp divergente',
+        signature: badSig
+      });
+    }, /Assinatura criptográfica canónica do desafio inválida ou adulterada/);
+
+    store.close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 7: Token do revisor A não pode assinar como revisor B
+  // -------------------------------------------------------------
+  await t.test('7. token do revisor A não pode assinar como revisor B', () => {
+    const tokenDbPath = path.join(tmpDir, 'test7_token.db');
+    const tokenService = new TokenService('token-test-secret-at-least-32-chars-long-2026', tokenDbPath);
+
+    // Token legítimo gerado para Revisor A (rev_maria_santos)
+    const tokenA = tokenService.signToken({
+      sub: 'rev_maria_santos',
+      user_id: 'rev_maria_santos',
+      tenant_id: operationalPilotSpec.tenant_id,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW']
+    });
+
+    // Tentativa de apresentar token do Revisor A para Revisor B (rev_joao_manuel)
+    const result = PilotExternalValidator.validateReviewerToken(
+      tokenA,
+      operationalPilotSpec.tenant_id,
+      'rev_joao_manuel',
+      tokenService
+    );
+
+    assert.strictEqual(result.isValid, false);
+    assert.ok(result.error?.includes('Impersonação detectada') || result.error?.includes('diverge'));
+  });
+
+  // -------------------------------------------------------------
+  // Test 8: Revisão válida consome o desafio atomicamente
+  // -------------------------------------------------------------
+  await t.test('8. revisão válida consome o desafio atomicamente', () => {
+    const store = new TransactionalPilotStore(path.join(tmpDir, 'test8.db'), 'OPERATIONAL_PILOT');
+    const eng = new ControlledPilotEngine(store);
+    eng.createPilot(operationalPilotSpec);
+    eng.authorizePilot(
+      operationalPilotSpec.pilot_id,
+      operationalPilotSpec.authorization_reference,
+      operationalPilotSpec.authorized_by,
+      operationalPilotSpec.authorized_at
+    );
+    eng.activatePilot(operationalPilotSpec.pilot_id);
+
+    const task = eng.executeTask({
+      task_id: 'TASK_ATOMIC_01',
+      pilot_id: operationalPilotSpec.pilot_id,
+      tenant_id: operationalPilotSpec.tenant_id,
+      employee_id: 66,
+      requested_by: 'operador_humano_real',
+      received_at: new Date().toISOString(),
+      title: 'Tarefa Consumo Atómico',
+      instruction: 'Classificar',
+      input_data: { doc: 'D1' },
+      idempotency_key: 'IDEMP_ATOMIC_01',
+      format: 'PDF',
+      execution_mode: 'OPERATIONAL_PILOT'
+    });
+
+    const challenge = store.getPendingChallengeForTask(task.task_id)!;
+    assert.strictEqual(challenge.status, 'PENDING');
+
+    const sig = PilotExternalValidator.generateCanonicalChallengeSignature(challenge, 'rev_maria_santos', 'APPROVED', reviewerSecretMaria);
+    const reviewReceipt = eng.reviewTask({
+      review_id: 'REV_ATOMIC_01',
+      task_id: task.task_id,
+      reviewer: 'rev_maria_santos',
+      decision: 'APPROVED',
+      comments: 'Aprovado na íntegra',
+      signature: sig
+    });
+
+    assert.strictEqual(reviewReceipt.decision, 'APPROVED');
+
+    // Verificar estado persistido do desafio no SQLite
+    const updatedChallenge = store.getReviewChallenge(challenge.challenge_id)!;
+    assert.strictEqual(updatedChallenge.status, 'CONSUMED');
+    assert.ok(updatedChallenge.consumed_at);
+
+    // Consumo atómico repetido na base deve lançar erro
+    assert.throws(() => {
+      store.consumeReviewChallengeAtomic(challenge.challenge_id, reviewReceipt, task);
+    }, /já foi consumido/);
+
+    store.close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 9: Indisponibilidade do serviço de identidade falha fechadamente
+  // -------------------------------------------------------------
+  await t.test('9. indisponibilidade do serviço de identidade falha fechadamente', () => {
+    const closedDbPath = path.join(tmpDir, 'test9_token.db');
+    const brokenTokenSvc = new TokenService('token-test-secret-at-least-32-chars-long-2026', closedDbPath);
+    (brokenTokenSvc as any).db.close();
+
+    const valResult = PilotExternalValidator.validateReviewerToken(
+      'some.token.jwt',
+      operationalPilotSpec.tenant_id,
+      'rev_maria_santos',
+      brokenTokenSvc
+    );
+
+    assert.strictEqual(valResult.isValid, false);
+    assert.ok(valResult.error);
+  });
+
+  // -------------------------------------------------------------
+  // Test 10: Indisponibilidade do secret provider falha fechadamente
+  // -------------------------------------------------------------
+  await t.test('10. indisponibilidade do secret provider falha fechadamente', () => {
+    const missingSecretProvider = new EnvironmentSecretProvider();
+    assert.throws(() => {
+      missingSecretProvider.resolveSecret('SECRET_REF_NAO_EXISTENTE_9999', 'tenant_01');
+    }, /Segredo não resolvido/);
+
+    const store = new TransactionalPilotStore(path.join(tmpDir, 'test10.db'), 'OPERATIONAL_PILOT');
+    const brokenEngine = new ControlledPilotEngine(store, undefined, missingSecretProvider);
+
+    const badSpec = {
+      ...operationalPilotSpec,
+      pilot_id: 'PILOT_BROKEN_SECRET',
+      reviewer_configs: [
+        {
+          reviewer_id: 'rev_maria_santos',
+          display_name: 'Dra. Maria',
+          role: 'SUPERVISOR',
+          secret_ref: 'ENV_VAR_QUE_NAO_EXISTE_NO_SISTEMA_XYZ'
+        }
+      ]
+    };
+
+    brokenEngine.createPilot(badSpec as any);
+    brokenEngine.authorizePilot(badSpec.pilot_id, badSpec.authorization_reference, badSpec.authorized_by, badSpec.authorized_at);
+    brokenEngine.activatePilot(badSpec.pilot_id);
+
+    const task = brokenEngine.executeTask({
+      task_id: 'TASK_SECRET_FAIL',
+      pilot_id: badSpec.pilot_id,
+      tenant_id: badSpec.tenant_id,
+      employee_id: 66,
+      requested_by: 'operador_real',
+      received_at: new Date().toISOString(),
+      title: 'Teste Secret Falha',
+      instruction: 'Classificar',
+      input_data: { d: 1 },
+      idempotency_key: 'IDEMP_SEC_FAIL',
+      format: 'PDF',
+      execution_mode: 'OPERATIONAL_PILOT'
+    });
+
+    const challenge = store.getPendingChallengeForTask(task.task_id)!;
+
+    assert.throws(() => {
+      brokenEngine.reviewTask({
+        review_id: 'REV_SEC_FAIL',
+        task_id: task.task_id,
+        reviewer: 'rev_maria_santos',
+        decision: 'APPROVED',
+        comments: 'Sem segredo acessível',
+        signature: 'deadbeef'
+      });
+    }, /Segredo não resolvido/);
+
+    store.close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 11: JSON com secret_or_key ou outro segredo é rejeitado
+  // -------------------------------------------------------------
+  await t.test('11. JSON com secret_or_key ou outro segredo é rejeitado', () => {
+    assert.throws(() => {
+      scanAndRejectSensitiveFields({
+        pilot_id: 'P1',
+        reviewer_configs: [{ reviewer_id: 'r1', secret_or_key: 'plain_secret' }]
+      });
+    }, /Campo sensível proibido detectado/);
+
+    const schemaPath = path.resolve(repoRoot, 'schemas', 'pilot', 'pilotOperationalConfig.schema.json');
+    const configSchema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
+    const validateConfig = ajv.compile(configSchema);
+
+    const invalidSpec = {
+      ...operationalPilotSpec,
+      reviewer_configs: [
+        {
+          reviewer_id: 'rev_maria_santos',
+          display_name: 'Dra. Maria Santos',
+          role: 'SUPERVISOR',
+          secret_or_key: 'HARDCODED_SECRET_PROIBIDO'
+        }
+      ]
+    };
+
+    const isValid = validateConfig(invalidSpec);
+    assert.strictEqual(isValid, false, 'Schema formal deve proibir expressamente secret_or_key');
+    assert.ok(
+      validateConfig.errors.some((e: any) => e.message?.includes('additional properties') || e.params?.additionalProperty === 'secret_or_key')
+    );
+  });
+
+  // -------------------------------------------------------------
+  // Test 12: Campo operacional obrigatório sem valor não recebe fallback
+  // -------------------------------------------------------------
+  await t.test('12. campo operacional obrigatório sem valor não recebe fallback', () => {
+    const store = new TransactionalPilotStore(path.join(tmpDir, 'test12.db'), 'OPERATIONAL_PILOT');
+    const eng = new ControlledPilotEngine(store);
+    eng.createPilot(operationalPilotSpec);
+    eng.authorizePilot(
+      operationalPilotSpec.pilot_id,
+      operationalPilotSpec.authorization_reference,
+      operationalPilotSpec.authorized_by,
+      operationalPilotSpec.authorized_at
+    );
+    eng.activatePilot(operationalPilotSpec.pilot_id);
+
+    // 1. requested_by ausente em executeTask operacional lança erro (sem fallback para operador_saso_01)
+    assert.throws(() => {
+      eng.executeTask({
+        task_id: 'TASK_NO_REQ_BY',
+        pilot_id: operationalPilotSpec.pilot_id,
+        tenant_id: operationalPilotSpec.tenant_id,
+        employee_id: 66,
+        requested_by: undefined as any,
+        received_at: new Date().toISOString(),
+        title: 'Sem Solicitante',
+        instruction: 'Processar',
+        input_data: { a: 1 },
+        idempotency_key: 'IDEMP_NO_REQ',
+        format: 'PDF',
+        execution_mode: 'OPERATIONAL_PILOT'
+      });
+    }, /Solicitante obrigatório e fallback 'operador_saso_01' proibido em modo operacional/);
+
+    // 2. recipient ausente em deliverTask operacional lança erro (sem fallback para archive@saso.ao)
+    const taskValid = eng.executeTask({
+      task_id: 'TASK_VALID_FOR_DELIV',
+      pilot_id: operationalPilotSpec.pilot_id,
+      tenant_id: operationalPilotSpec.tenant_id,
+      employee_id: 66,
+      requested_by: 'operador_real',
+      received_at: new Date().toISOString(),
+      title: 'Tarefa para Entrega',
+      instruction: 'Processar',
+      input_data: { a: 1 },
+      idempotency_key: 'IDEMP_DELIV_TEST',
+      format: 'PDF',
+      execution_mode: 'OPERATIONAL_PILOT'
+    });
+
+    const challenge = store.getPendingChallengeForTask(taskValid.task_id)!;
+    const sig = PilotExternalValidator.generateCanonicalChallengeSignature(challenge, 'rev_maria_santos', 'APPROVED', reviewerSecretMaria);
+    eng.reviewTask({
+      review_id: 'REV_VALID_DELIV',
+      task_id: taskValid.task_id,
+      reviewer: 'rev_maria_santos',
+      decision: 'APPROVED',
+      comments: 'Aprovado',
+      signature: sig
+    });
+
+    assert.throws(() => {
+      eng.deliverTask(taskValid.task_id, undefined as any);
+    }, /Destinatário de entrega obrigatório e fallback 'archive@saso.ao' proibido em modo operacional/);
+
+    store.close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 13: Documento inválido não chega à fase de revisão
+  // -------------------------------------------------------------
+  await t.test('13. documento inválido não chega à fase de revisão', () => {
+    const store = new TransactionalPilotStore(path.join(tmpDir, 'test13.db'), 'OPERATIONAL_PILOT');
+    const eng = new ControlledPilotEngine(store);
+    eng.createPilot(operationalPilotSpec);
+    eng.authorizePilot(
+      operationalPilotSpec.pilot_id,
+      operationalPilotSpec.authorization_reference,
+      operationalPilotSpec.authorized_by,
+      operationalPilotSpec.authorized_at
+    );
+    eng.activatePilot(operationalPilotSpec.pilot_id);
+
+    // Entrada com placeholder proibido yyyy
+    assert.throws(() => {
+      eng.executeTask({
+        task_id: 'TASK_CORRUPT_INPUT',
+        pilot_id: operationalPilotSpec.pilot_id,
+        tenant_id: operationalPilotSpec.tenant_id,
+        employee_id: 66,
+        requested_by: 'operador_real',
+        received_at: new Date().toISOString(),
+        title: 'Documento Inválido Com Placeholder',
+        instruction: 'Emitido em yyyy para o cliente [NOME]',
+        input_data: { text: 'yyyy placeholder' },
+        idempotency_key: 'IDEMP_CORRUPT_INPUT',
+        format: 'PDF',
+        execution_mode: 'OPERATIONAL_PILOT'
+      });
+    }, /Documento contém placeholder residual/);
+
+    // Nenhuma challenge de revisão deve existir para esta tarefa
+    const challenge = store.getPendingChallengeForTask('TASK_CORRUPT_INPUT');
+    assert.strictEqual(challenge, null);
+
+    store.close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 14: Revisão não pode ocorrer sem recibo documental PASS
+  // -------------------------------------------------------------
+  await t.test('14. revisão não pode ocorrer sem recibo documental PASS', () => {
+    const store = new TransactionalPilotStore(path.join(tmpDir, 'test14.db'), 'OPERATIONAL_PILOT');
+    const eng = new ControlledPilotEngine(store);
+    eng.createPilot(operationalPilotSpec);
+    eng.authorizePilot(
+      operationalPilotSpec.pilot_id,
+      operationalPilotSpec.authorization_reference,
+      operationalPilotSpec.authorized_by,
+      operationalPilotSpec.authorized_at
+    );
+    eng.activatePilot(operationalPilotSpec.pilot_id);
+
+    const task = eng.executeTask({
+      task_id: 'TASK_NO_PASS_01',
+      pilot_id: operationalPilotSpec.pilot_id,
+      tenant_id: operationalPilotSpec.tenant_id,
+      employee_id: 66,
+      requested_by: 'operador_real',
+      received_at: new Date().toISOString(),
+      title: 'Tarefa Validação Falhada',
+      instruction: 'Classificar',
+      input_data: { d: 1 },
+      idempotency_key: 'IDEMP_NO_PASS',
+      format: 'PDF',
+      execution_mode: 'OPERATIONAL_PILOT'
+    });
+
+    const challenge = store.getPendingChallengeForTask(task.task_id)!;
+    const sig = PilotExternalValidator.generateCanonicalChallengeSignature(challenge, 'rev_maria_santos', 'APPROVED', reviewerSecretMaria);
+
+    // Deletar o recibo documental no SQLite para simular falta de PASS
+    store.transaction(() => {
+      const db = (store as any).db;
+      db.prepare('DELETE FROM task_document_validations WHERE task_id = ?').run(task.task_id);
+    });
+
+    assert.throws(() => {
+      eng.reviewTask({
+        review_id: 'REV_NO_PASS_01',
+        task_id: task.task_id,
+        reviewer: 'rev_maria_santos',
+        decision: 'APPROVED',
+        comments: 'Tentativa sem validação documental PASS',
+        signature: sig
+      });
+    }, /Revisão rejeitada: documento ativo não possui validação física independente aprovada \(PASS\)/);
+
+    store.close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 15: Entrega ou arquivamento não pode ocorrer sem validação e revisão
+  // -------------------------------------------------------------
+  await t.test('15. entrega ou arquivamento não pode ocorrer sem validação e revisão', () => {
+    const store = new TransactionalPilotStore(path.join(tmpDir, 'test15.db'), 'OPERATIONAL_PILOT');
+    const eng = new ControlledPilotEngine(store);
+    eng.createPilot(operationalPilotSpec);
+    eng.authorizePilot(
+      operationalPilotSpec.pilot_id,
+      operationalPilotSpec.authorization_reference,
+      operationalPilotSpec.authorized_by,
+      operationalPilotSpec.authorized_at
+    );
+    eng.activatePilot(operationalPilotSpec.pilot_id);
+
+    const task = eng.executeTask({
+      task_id: 'TASK_DELIV_UNAPPROVED',
+      pilot_id: operationalPilotSpec.pilot_id,
+      tenant_id: operationalPilotSpec.tenant_id,
+      employee_id: 66,
+      requested_by: 'operador_real',
+      received_at: new Date().toISOString(),
+      title: 'Tarefa Não Aprovada',
+      instruction: 'Classificar',
+      input_data: { d: 1 },
+      idempotency_key: 'IDEMP_DELIV_UNAPP',
+      format: 'PDF',
+      execution_mode: 'OPERATIONAL_PILOT'
+    });
+
+    assert.throws(() => {
+      eng.deliverTask(task.task_id, 'arquivo@saso.ao', 'EMAIL');
+    }, /não tem aprovação humana|não foi aprovada na revisão humana/);
+
+    store.close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 16: Processo 2 recupera dados criados pelo processo 1
+  // -------------------------------------------------------------
+  await t.test('16. processo 2 recupera dados criados pelo processo 1', () => {
+    const durableDb = path.join(tmpDir, 'durable_dual_process.db');
+    const storeModuleUrl = pathToFileURL(path.resolve(repoRoot, 'packages/runtime/dist/pilot/TransactionalPilotStore.js')).href;
+    const engineModuleUrl = pathToFileURL(path.resolve(repoRoot, 'packages/runtime/dist/pilot/ControlledPilotEngine.js')).href;
+
+    const scriptP1 = `
+      import { TransactionalPilotStore } from '${storeModuleUrl}';
+      import { ControlledPilotEngine } from '${engineModuleUrl}';
+      const store = new TransactionalPilotStore('${durableDb.replace(/\\/g, '/')}', 'SIMULATION');
+      const eng = new ControlledPilotEngine(store);
+      eng.createPilot(${JSON.stringify(simulationPilotSpec)});
+      eng.authorizePilot('${simulationPilotSpec.pilot_id}', '${simulationPilotSpec.authorization_reference}', 'dir', new Date().toISOString());
+      eng.activatePilot('${simulationPilotSpec.pilot_id}');
+      eng.executeTask({
+        task_id: 'TASK_P1_P2_TEST',
+        pilot_id: '${simulationPilotSpec.pilot_id}',
+        tenant_id: '${simulationPilotSpec.tenant_id}',
+        employee_id: 66,
+        requested_by: 'user_p1',
+        received_at: new Date().toISOString(),
+        title: 'Tarefa Processo 1',
+        instruction: 'Processar',
+        input_data: { test: 'dual_process' },
+        idempotency_key: 'IDEMP_P1_P2',
+        format: 'PDF'
+      });
+      store.close();
+      process.exit(0);
+    `;
+
+    const resP1 = spawnSync('node', ['--input-type=module', '-e', scriptP1], { cwd: repoRoot, encoding: 'utf8' });
+    assert.strictEqual(resP1.status, 0, `Processo 1 falhou: ${resP1.stderr}`);
+
+    const scriptP2 = `
+      import assert from 'node:assert';
+      import { TransactionalPilotStore } from '${storeModuleUrl}';
+      const store = new TransactionalPilotStore('${durableDb.replace(/\\/g, '/')}', 'SIMULATION');
+      const pilot = store.getPilot('${simulationPilotSpec.pilot_id}');
+      assert.ok(pilot, 'Piloto deve existir no Processo 2');
+      const task = store.getTask('TASK_P1_P2_TEST');
+      assert.ok(task, 'Tarefa deve existir no Processo 2');
+      assert.strictEqual(task.final_status, 'SUCCESS');
+      const out = store.getActiveOutputBytes('TASK_P1_P2_TEST');
+      assert.ok(out && out.bytes.length > 0, 'Bytes de saída devem ser recuperados no Processo 2');
+      store.close();
+      process.exit(0);
+    `;
+
+    const resP2 = spawnSync('node', ['--input-type=module', '-e', scriptP2], { cwd: repoRoot, encoding: 'utf8' });
+    assert.strictEqual(resP2.status, 0, `Processo 2 falhou: ${resP2.stderr}`);
+  });
+
+  // -------------------------------------------------------------
+  // Test 17: XLSX é aberto por leitor de workbook e células
+  // -------------------------------------------------------------
+  await t.test('17. XLSX é aberto por leitor de workbook e células', () => {
+    const xlsxBuf = PhysicalDocumentValidator.buildRealBinaryXlsx(
+      'Analise_Orcamental_SASO',
+      [
+        ['Rubrica', 'Orçado (KZ)', 'Realizado (KZ)', 'Desvio (KZ)'],
+        ['Custos com Pessoal', 45000000, 43200000, 1800000],
+        ['Custos Operacionais', 28000000, 27150000, 850000]
+      ]
+    );
+
+    const val = PhysicalDocumentValidator.validateIndependentXlsxSync(xlsxBuf);
+    assert.strictEqual(val.isValid, true);
+    assert.ok(val.files && val.files.includes('xl/workbook.xml'));
+    assert.ok(val.rowCount && val.rowCount >= 3, `Esperado pelo menos 3 linhas, obtido ${val.rowCount}`);
+    assert.ok(val.cellCount && val.cellCount >= 12, `Esperado pelo menos 12 células, obtido ${val.cellCount}`);
+  });
+
+  // -------------------------------------------------------------
+  // Test 18: Metadados do manifesto correspondem ao SQLite e aos recibos
+  // -------------------------------------------------------------
+  await t.test('18. metadados do manifesto correspondem ao SQLite e aos recibos', () => {
+    const store = new TransactionalPilotStore(path.join(tmpDir, 'test18.db'), 'SIMULATION');
+    const eng = new ControlledPilotEngine(store);
+    eng.createPilot(simulationPilotSpec);
+    eng.authorizePilot(
+      simulationPilotSpec.pilot_id,
+      simulationPilotSpec.authorization_reference,
+      'dir',
+      new Date().toISOString()
+    );
+    eng.activatePilot(simulationPilotSpec.pilot_id);
+
+    const task = eng.executeTask({
+      task_id: 'TASK_META_01',
       pilot_id: simulationPilotSpec.pilot_id,
       tenant_id: simulationPilotSpec.tenant_id,
       employee_id: 66,
-      requested_by: 'user_test',
+      requested_by: 'op_meta',
       received_at: new Date().toISOString(),
-      input_snapshot_sha256: 'abc',
-      execution_started_at: new Date().toISOString(),
-      execution_completed_at: new Date().toISOString(),
-      output_files: ['fail.pdf'],
-      output_hashes: ['fake_hash'],
-      human_review_status: 'PENDING_REVIEW',
-      delivery_status: 'PENDING',
-      final_status: 'SUCCESS',
-      receipt_sha256: 'def'
-    };
+      title: 'Tarefa Metadados',
+      instruction: 'Classificar factura',
+      input_data: { doc: 'FT 001' },
+      idempotency_key: 'IDEMP_META_01',
+      format: 'PDF'
+    });
 
-    const realBytes = Buffer.from('REAL_BYTES_CONTENT');
-    assert.throws(() => {
-      store.saveTaskWithOutputAndVerify(badTask, {
-        output_id: 'OUT_ATOMIC_FAIL',
-        task_id: 'TASK_ATOMIC_FAIL',
-        version: 1,
-        file_name: 'fail.pdf',
-        file_path: 'fail.pdf',
-        file_bytes: realBytes,
-        file_bytes_sha256: 'divergent_wrong_hash_123'
-      });
-    }, /saveOutput: SHA-256 divergente/);
+    eng.reviewTask({
+      review_id: 'REV_META_01',
+      task_id: task.task_id,
+      reviewer: 'rev_maria_santos',
+      decision: 'APPROVED',
+      comments: 'Aprovado para verificação de metadados'
+    });
 
-    assert.strictEqual(store.getTask('TASK_ATOMIC_FAIL'), null);
-    assert.strictEqual(store.getActiveOutput('TASK_ATOMIC_FAIL'), null);
-    assert.strictEqual(store.getOutputBytes('OUT_ATOMIC_FAIL'), null);
+    eng.deliverTask(task.task_id, 'arquivo@saso.ao', 'EMAIL');
+
+    const manifestOutDir = path.join(tmpDir, 'manifest_meta_bundle');
+    eng.exportPilotEvidence(simulationPilotSpec.pilot_id, manifestOutDir);
+
+    const manifestPath = path.join(manifestOutDir, 'pilot-evidence-manifest.json');
+    assert.ok(fs.existsSync(manifestPath));
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+
+    assert.strictEqual(manifest.pilot_id, simulationPilotSpec.pilot_id);
+    assert.strictEqual(manifest.tenant_id, simulationPilotSpec.tenant_id);
+    assert.strictEqual(manifest.execution_mode, 'SIMULATION');
+    assert.ok(manifest.commit_sha && manifest.commit_sha.length === 40);
+
+    const taskOutputFile = manifest.files.find((f: any) => f.relative_path.startsWith('task-outputs/'));
+    assert.ok(taskOutputFile);
+    assert.strictEqual(taskOutputFile.task_id, task.task_id);
+    assert.strictEqual(taskOutputFile.document_version, 1);
+    assert.strictEqual(taskOutputFile.mime_type, 'application/pdf');
+    assert.strictEqual(taskOutputFile.origin, 'SQLITE_TASK_OUTPUT');
+
+    const docValFile = manifest.files.find((f: any) => f.relative_path.startsWith('document-validation-receipts/'));
+    assert.ok(docValFile);
+    assert.strictEqual(docValFile.origin, 'INDEPENDENT_PARSER_RECEIPT');
+    assert.strictEqual(docValFile.receipt_type, 'DOCUMENT_VALIDATION_RECEIPT');
+
     store.close();
   });
 
-  // Test 7: Proibição de :memory: em TransactionalPilotStore quando em modo OPERATIONAL_PILOT
-  await t.test('7. Proibição de :memory: em TransactionalPilotStore quando em modo OPERATIONAL_PILOT', () => {
+  // -------------------------------------------------------------
+  // Test 19: MIME divergente da extensão ou dos bytes falha
+  // -------------------------------------------------------------
+  await t.test('19. MIME divergente da extensão ou dos bytes falha', () => {
+    // 1. Incoerência de bytes vs extensão
+    assert.throws(() => {
+      PhysicalDocumentValidator.validateMimeCoherence('application/pdf', '.xlsx', 'relatorio.xlsx');
+    }, /Incoerência de MIME bytes/);
+
+    assert.throws(() => {
+      PhysicalDocumentValidator.validateMimeCoherence('application/zip', '.pdf', 'documento.pdf');
+    }, /Incoerência de MIME bytes/);
+
+    // 2. Detecção de magic bytes
+    const pdfBytes = Buffer.from('%PDF-1.4\nExemplo de cabeçalho PDF');
+    assert.strictEqual(PhysicalDocumentValidator.detectMimeType(pdfBytes), 'application/pdf');
+
+    const zipBytes = Buffer.from([0x50, 0x4b, 0x03, 0x04, 0x00, 0x00]);
+    assert.strictEqual(PhysicalDocumentValidator.detectMimeType(zipBytes), 'application/zip');
+  });
+
+  // -------------------------------------------------------------
+  // Test 20: Ausência de SHA físico falha sem fallback
+  // -------------------------------------------------------------
+  await t.test('20. ausência de SHA físico falha sem fallback', () => {
+    const store = new TransactionalPilotStore(path.join(tmpDir, 'test20.db'), 'SIMULATION');
+    const eng = new ControlledPilotEngine(store);
+    eng.createPilot(simulationPilotSpec);
+    eng.authorizePilot(
+      simulationPilotSpec.pilot_id,
+      simulationPilotSpec.authorization_reference,
+      'dir',
+      new Date().toISOString()
+    );
+    eng.activatePilot(simulationPilotSpec.pilot_id);
+
+    const prevGitSha = process.env.GIT_COMMIT_SHA;
+    const prevGithubSha = process.env.GITHUB_SHA;
+    const outDir = path.join(tmpDir, 'sha_fail_bundle');
+
+    try {
+      // Injetar valor inválido (40 chars mas não-hexadecimal)
+      process.env.GIT_COMMIT_SHA = 'z'.repeat(40);
+      delete process.env.GITHUB_SHA;
+
+      assert.throws(() => {
+        eng.exportPilotEvidence(simulationPilotSpec.pilot_id, outDir);
+      }, /Commit SHA inválido: esperado 40 caracteres hexadecimais/);
+    } finally {
+      process.env.GIT_COMMIT_SHA = prevGitSha;
+      process.env.GITHUB_SHA = prevGithubSha;
+    }
+
+    store.close();
+  });
+
+  // -------------------------------------------------------------
+  // Testes Complementares de Infraestrutura
+  // -------------------------------------------------------------
+  await t.test('21. Proibição de :memory: em TransactionalPilotStore quando em modo OPERATIONAL_PILOT', () => {
     assert.throws(() => {
       new TransactionalPilotStore(':memory:', 'OPERATIONAL_PILOT');
     }, /Operational pilot requires a persistent SQLite database path, :memory: is forbidden/);
-
-    const prevEnv = process.env.PILOT_MODE;
-    try {
-      process.env.PILOT_MODE = 'OPERATIONAL_PILOT';
-      assert.throws(() => {
-        new TransactionalPilotStore();
-      }, /Operational pilot requires a persistent SQLite database path, :memory: is forbidden/);
-    } finally {
-      process.env.PILOT_MODE = prevEnv;
-    }
   });
 
-  // Test 8: Idempotência garante recibo idêntico sem novo efeito
-  await t.test('8. Idempotência garante recibo idêntico sem novo efeito', () => {
-    const store = new TransactionalPilotStore();
+  await t.test('22. Idempotência garante recibo idêntico sem novo efeito', () => {
+    const store = new TransactionalPilotStore(path.join(tmpDir, 'test22.db'), 'SIMULATION');
     const eng = new ControlledPilotEngine(store);
     eng.createPilot(simulationPilotSpec);
     eng.authorizePilot(simulationPilotSpec.pilot_id, simulationPilotSpec.authorization_reference, 'dir', new Date().toISOString());
@@ -350,543 +1088,12 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests', async (t) 
     store.close();
   });
 
-  // Test 9: Duas tarefas concorrentes com mesma idempotency_key mantêm unicidade estrita
-  await t.test('9. Duas tarefas concorrentes com mesma idempotency_key mantêm unicidade estrita', () => {
-    const store = new TransactionalPilotStore();
-    store.savePilot(simulationPilotSpec as any);
-
-    const t1: any = {
-      task_id: 'TASK_CONCURRENT_01',
-      pilot_id: simulationPilotSpec.pilot_id,
-      tenant_id: simulationPilotSpec.tenant_id,
-      employee_id: 66,
-      idempotency_key: 'SHARED_CONCURRENT_KEY_2026',
-      requested_by: 'op_1',
-      received_at: new Date().toISOString(),
-      input_snapshot_sha256: 'hash1',
-      execution_started_at: new Date().toISOString(),
-      execution_completed_at: new Date().toISOString(),
-      output_files: ['t1.pdf'],
-      output_hashes: ['h1'],
-      human_review_status: 'PENDING_REVIEW',
-      delivery_status: 'PENDING',
-      final_status: 'SUCCESS'
-    };
-
-    const t2: any = {
-      ...t1,
-      task_id: 'TASK_CONCURRENT_02'
-    };
-
-    store.saveTask(t1);
-
-    assert.throws(() => {
-      store.saveTask(t2);
-    }, /UNIQUE constraint failed/);
-
-    const tasks = store.listTasks(simulationPilotSpec.pilot_id);
-    assert.strictEqual(tasks.length, 1);
-    assert.strictEqual(tasks[0].task_id, 'TASK_CONCURRENT_01');
-    store.close();
-  });
-
-  // Test 10: Execução com tenant divergente falha e regista incidente
-  await t.test('10. Execução com tenant divergente falha e regista incidente', () => {
-    const store = new TransactionalPilotStore();
-    const eng = new ControlledPilotEngine(store);
-    eng.createPilot(simulationPilotSpec);
-    eng.authorizePilot(simulationPilotSpec.pilot_id, simulationPilotSpec.authorization_reference, 'dir', new Date().toISOString());
-    eng.activatePilot(simulationPilotSpec.pilot_id);
-
-    assert.throws(() => {
-      eng.executeTask({
-        task_id: 'TASK_TENANT_LEAK',
-        pilot_id: simulationPilotSpec.pilot_id,
-        tenant_id: 'tenant_malicious_other',
-        employee_id: 66,
-        requested_by: 'user_x',
-        received_at: new Date().toISOString(),
-        title: 'Tentativa Cross-tenant',
-        instruction: 'Invasão',
-        input_data: { x: 1 },
-        idempotency_key: 'IDEMP_LEAK_1',
-        format: 'PDF'
-      });
-    }, /Isolamento multi-tenant violado/);
-
-    const incidents = store.listIncidents(simulationPilotSpec.pilot_id);
-    assert.strictEqual(incidents.length, 1);
-    assert.strictEqual(incidents[0].type, 'CROSS_TENANT_ACCESS');
-    store.close();
-  });
-
-  // Test 11: Execução com employee não selecionado falha
-  await t.test('11. Execução com employee não selecionado falha', () => {
-    const store = new TransactionalPilotStore();
-    const eng = new ControlledPilotEngine(store);
-    eng.createPilot(simulationPilotSpec);
-    eng.authorizePilot(simulationPilotSpec.pilot_id, simulationPilotSpec.authorization_reference, 'dir', new Date().toISOString());
-    eng.activatePilot(simulationPilotSpec.pilot_id);
-
-    assert.throws(() => {
-      eng.executeTask({
-        task_id: 'TASK_UNAUTHORIZED_EMP',
-        pilot_id: simulationPilotSpec.pilot_id,
-        tenant_id: simulationPilotSpec.tenant_id,
-        employee_id: 999,
-        requested_by: 'user_x',
-        received_at: new Date().toISOString(),
-        title: 'Employee Proibido',
-        instruction: 'Executar',
-        input_data: { x: 1 },
-        idempotency_key: 'IDEMP_UNAUTH_EMP',
-        format: 'PDF'
-      });
-    }, /Employee ID 999 não autorizado/);
-    store.close();
-  });
-
-  // Test 12: Execução de ação proibida bloqueia tarefa e regista incidente
-  await t.test('12. Execução de ação proibida bloqueia tarefa e regista incidente', () => {
-    const store = new TransactionalPilotStore();
-    const eng = new ControlledPilotEngine(store);
-    eng.createPilot(simulationPilotSpec);
-    eng.authorizePilot(simulationPilotSpec.pilot_id, simulationPilotSpec.authorization_reference, 'dir', new Date().toISOString());
-    eng.activatePilot(simulationPilotSpec.pilot_id);
-
-    assert.throws(() => {
-      eng.executeTask({
-        task_id: 'TASK_FORBIDDEN_ACTION',
-        pilot_id: simulationPilotSpec.pilot_id,
-        tenant_id: simulationPilotSpec.tenant_id,
-        employee_id: 66,
-        requested_by: 'user_x',
-        received_at: new Date().toISOString(),
-        title: 'Transferência Directa Proibida',
-        instruction: 'Fazer wire transfer',
-        input_data: { action: 'DIRECT_WIRE_TRANSFER' },
-        idempotency_key: 'IDEMP_FORBIDDEN_ACTION',
-        format: 'PDF',
-        action_type: 'DIRECT_WIRE_TRANSFER'
-      });
-    }, /Acção proibida|Ação proibida/i);
-
-    const incidents = store.listIncidents(simulationPilotSpec.pilot_id);
-    assert.strictEqual(incidents.length, 1);
-    assert.strictEqual(incidents[0].type, 'UNAUTHORIZED_ACTION');
-    store.close();
-  });
-
-  // Test 13: Documento DOCX gerado é binário válido verificado por leitor independente (jszip)
-  await t.test('13. Documento DOCX gerado é binário válido verificado por leitor independente (jszip)', async () => {
-    const docxBuf = PhysicalDocumentValidator.buildRealBinaryDocx(
-      'Notificação Contratual SASO',
-      [
-        'Ref: SASO/DIR-LOG/2026/041',
-        'Para: Transportes Rápidos de Viana Lda',
-        'Assunto: Prorrogação contratual formal até 31/12/2026',
-        'Confirmamos a concordância formal da Direção Executiva.'
-      ]
-    );
-
-    const indVal = await PhysicalDocumentValidator.validateIndependentDocx(docxBuf);
-    assert.strictEqual(indVal.isValid, true);
-    assert.ok(indVal.files);
-    assert.ok(indVal.files.includes('[Content_Types].xml'));
-    assert.ok(indVal.files.includes('word/document.xml'));
-
-    const fullVal = await PhysicalDocumentValidator.validateWithIndependentReaders(docxBuf, 'DOCX', 'OPERATIONAL_PILOT');
-    assert.strictEqual(fullVal.isValid, true);
-    assert.strictEqual(fullVal.sha256, sha256(docxBuf));
-
-    const corruptDocx = Buffer.concat([docxBuf.subarray(0, 100), Buffer.alloc(50)]);
-    const corruptVal = await PhysicalDocumentValidator.validateIndependentDocx(corruptDocx);
-    assert.strictEqual(corruptVal.isValid, false);
-  });
-
-  // Test 14: Documento PDF gerado é binário válido verificado por leitor independente (pdf-lib)
-  await t.test('14. Documento PDF gerado é binário válido verificado por leitor independente (pdf-lib)', async () => {
-    const pdfBuf = PhysicalDocumentValidator.buildRealBinaryPdf(
-      'Classificação Contabilística - Factura SASO',
-      [
-        'BT /F1 12 Tf 50 750 Td (SASO - CLASSIFICACAO DE DOCUMENTOS CONTABILISTICOS) Tj ET',
-        'BT /F1 10 Tf 50 720 Td (Factura FT 2026/891 - Papelaria Central Lda) Tj ET',
-        'BT /F1 10 Tf 50 700 Td (Base Tributavel: 450.000,00 KZ | IVA 14%: 63.000,00 KZ) Tj ET'
-      ]
-    );
-
-    const indVal = await PhysicalDocumentValidator.validateIndependentPdf(pdfBuf);
-    assert.strictEqual(indVal.isValid, true);
-    assert.strictEqual(indVal.pageCount, 1);
-
-    const fullVal = await PhysicalDocumentValidator.validateWithIndependentReaders(pdfBuf, 'PDF', 'OPERATIONAL_PILOT');
-    assert.strictEqual(fullVal.isValid, true);
-    assert.strictEqual(fullVal.sha256, sha256(pdfBuf));
-
-    const corruptPdf = Buffer.from('%PDF-1.7\nCorrupted content without catalog or pages\n%%EOF');
-    const corruptVal = await PhysicalDocumentValidator.validateIndependentPdf(corruptPdf);
-    assert.strictEqual(corruptVal.isValid, false);
-  });
-
-  // Test 15: Documento XLSX gerado é binário válido verificado por leitor independente (jszip)
-  await t.test('15. Documento XLSX gerado é binário válido verificado por leitor independente (jszip)', async () => {
-    const xlsxBuf = PhysicalDocumentValidator.buildRealBinaryXlsx(
-      'Analise_Orcamental_SASO',
-      [
-        ['Rubrica', 'Orçado (KZ)', 'Realizado (KZ)', 'Desvio (KZ)'],
-        ['Custos com Pessoal', 45000000, 43200000, 1800000],
-        ['Custos Operacionais', 28000000, 27150000, 850000]
-      ]
-    );
-
-    const indVal = await PhysicalDocumentValidator.validateIndependentXlsx(xlsxBuf);
-    assert.strictEqual(indVal.isValid, true);
-    assert.ok(indVal.files);
-    assert.ok(indVal.files.includes('[Content_Types].xml'));
-    assert.ok(indVal.files.includes('xl/workbook.xml'));
-
-    const fullVal = await PhysicalDocumentValidator.validateWithIndependentReaders(xlsxBuf, 'XLSX', 'OPERATIONAL_PILOT');
-    assert.strictEqual(fullVal.isValid, true);
-    assert.strictEqual(fullVal.sha256, sha256(xlsxBuf));
-  });
-
-  // Test 16: Marcadores residuais textuais ([PDF DOCUMENT]) falham em OPERATIONAL_PILOT
-  await t.test('16. Marcadores residuais textuais ([PDF DOCUMENT]) falham em OPERATIONAL_PILOT', () => {
-    const fakeDoc = Buffer.from('[PDF DOCUMENT]\nConteúdo simulado em texto cru');
-    const validation = PhysicalDocumentValidator.validate(fakeDoc, 'PDF', 'OPERATIONAL_PILOT');
-    assert.strictEqual(validation.isValid, false);
-    assert.ok(validation.error?.includes('Marcadores textuais simulados [PDF/DOCX/XLSX DOCUMENT] são proibidos'));
-  });
-
-  // Test 17: Documento com yyyy ou placeholders residuais falha validação
-  await t.test('17. Documento com yyyy ou placeholders residuais falha validação', () => {
-    const textWithPlaceholder = 'Documento emitido em yyyy para o cliente [NOME].';
-    assert.throws(() => {
-      PhysicalDocumentValidator.checkPlaceholders(textWithPlaceholder);
-    }, /Documento contém placeholder residual/);
-  });
-
-  // Test 18: Autenticação multi-tenant de revisor via TokenService com rejeição de tokens expirados, revogados ou de outro tenant
-  await t.test('18. Autenticação multi-tenant de revisor via TokenService', () => {
-    const tokenDbPath = path.join(tmpDir, 'test_token_service.db');
-    const tokenService = new TokenService('token-test-secret-at-least-32-chars-long-2026', tokenDbPath);
-
-    // 1. Token válido e aprovado
-    const jti1 = 'jti_rev_valid_2026_01';
-    const validToken = tokenService.signToken({
-      sub: 'rev_maria_santos',
-      user_id: 'rev_maria_santos',
-      tenant_id: operationalPilotSpec.tenant_id,
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW'],
-      jti: jti1
-    });
-
-    const val1 = PilotExternalValidator.validateReviewerToken(
-      validToken,
-      operationalPilotSpec.tenant_id,
-      'rev_maria_santos',
-      tokenService
-    );
-    assert.strictEqual(val1.isValid, true);
-    assert.strictEqual(val1.payload.user_id, 'rev_maria_santos');
-
-    // 2. Token de outro tenant (cross-tenant attack)
-    const crossTenantToken = tokenService.signToken({
-      sub: 'rev_maria_santos',
-      user_id: 'rev_maria_santos',
-      tenant_id: 'tenant_competitor_corp_99',
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW']
-    });
-
-    const val2 = PilotExternalValidator.validateReviewerToken(
-      crossTenantToken,
-      operationalPilotSpec.tenant_id,
-      'rev_maria_santos',
-      tokenService
-    );
-    assert.strictEqual(val2.isValid, false);
-    assert.ok(val2.error?.includes('Isolamento multi-tenant violado'));
-
-    // 3. Token revogado por jti
-    tokenService.revokeToken(jti1, 'Sessão encerrada pelo utilizador');
-
-    const val3 = PilotExternalValidator.validateReviewerToken(
-      validToken,
-      operationalPilotSpec.tenant_id,
-      'rev_maria_santos',
-      tokenService
-    );
-    assert.strictEqual(val3.isValid, false);
-    assert.ok(val3.error?.includes('TOKEN_REVOKED'));
-  });
-
-  // Test 19: Revisão humana com HMAC-SHA256 válida é aceite; segredo ausente ou assinatura adulterada é rejeitada
-  await t.test('19. Revisão humana com HMAC-SHA256 e recusa de segredos ausentes', () => {
-    const store = new TransactionalPilotStore();
-    const eng = new ControlledPilotEngine(store);
-    eng.createPilot(operationalPilotSpec);
-    eng.authorizePilot(operationalPilotSpec.pilot_id, operationalPilotSpec.authorization_reference, 'dir', new Date().toISOString());
-    eng.activatePilot(operationalPilotSpec.pilot_id);
-
-    const task = eng.executeTask({
-      task_id: 'TASK_SIG_CHECK_01',
-      pilot_id: operationalPilotSpec.pilot_id,
-      tenant_id: operationalPilotSpec.tenant_id,
-      employee_id: 66,
-      requested_by: 'requester_1',
-      received_at: new Date().toISOString(),
-      title: 'Factura para revisão',
-      instruction: 'Classificar',
-      input_data: { doc: 'FT 001' },
-      idempotency_key: 'IDEMP_SIG_01',
-      format: 'PDF',
-      execution_mode: 'OPERATIONAL_PILOT'
-    });
-
-    const activeOut = store.getActiveOutput(task.task_id);
-    const reviewedAt = new Date().toISOString();
-
-    // 1. Assinatura válida com a chave configurada do revisor
-    const validSig = PilotExternalValidator.generateReviewerSignature(
-      {
-        taskId: task.task_id,
-        reviewerId: 'rev_maria_santos',
-        decision: 'APPROVED',
-        targetDocumentHash: activeOut.file_bytes_sha256,
-        reviewedAt
-      },
-      reviewerSecret
-    );
-
-    // 2. Assinatura adulterada deve ser rejeitada
-    assert.throws(() => {
-      eng.reviewTask({
-        review_id: 'REV_SIG_FAIL',
-        task_id: task.task_id,
-        reviewer: 'rev_maria_santos',
-        decision: 'APPROVED',
-        comments: 'Tentativa com assinatura forjada',
-        signature: 'deadbeef_tampered_signature_12345678'
-      });
-    }, /Assinatura criptográfica de revisão inválida/);
-
-    // 3. Em OPERATIONAL_PILOT, falta de assinatura e segredo lança erro
-    assert.throws(() => {
-      eng.reviewTask({
-        review_id: 'REV_NO_SIG_FAIL',
-        task_id: task.task_id,
-        reviewer: 'rev_maria_santos',
-        decision: 'APPROVED',
-        comments: 'Sem assinatura'
-      });
-    }, /Assinatura de revisão obrigatória ausente em modo OPERATIONAL_PILOT/);
-
-    store.close();
-  });
-
-  // Test 20: Manifesto de evidências lista todos os arquivos recursivamente, sem path traversal, e verificação bidirecional detecta órfãos
-  await t.test('20. Manifesto de evidências lista todos os arquivos recursivamente com verificação bidirecional', () => {
-    const store = new TransactionalPilotStore();
-    const eng = new ControlledPilotEngine(store);
-    eng.createPilot(simulationPilotSpec);
-    eng.authorizePilot(simulationPilotSpec.pilot_id, simulationPilotSpec.authorization_reference, 'dir', new Date().toISOString());
-    eng.activatePilot(simulationPilotSpec.pilot_id);
-
-    const task = eng.executeTask({
-      task_id: 'TASK_MANIFEST_01',
-      pilot_id: simulationPilotSpec.pilot_id,
-      tenant_id: simulationPilotSpec.tenant_id,
-      employee_id: 66,
-      requested_by: 'op_1',
-      received_at: new Date().toISOString(),
-      title: 'Tarefa para Manifesto',
-      instruction: 'Classificar factura',
-      input_data: { doc: 'FT 001' },
-      idempotency_key: 'IDEMP_MANIFEST_01',
-      format: 'PDF'
-    });
-
-    eng.reviewTask({
-      review_id: 'REV_MANIFEST_01',
-      task_id: task.task_id,
-      reviewer: 'rev_maria_santos',
-      decision: 'APPROVED',
-      comments: 'Aprovado para manifesto'
-    });
-
-    eng.deliverTask(task.task_id, 'arquivo@saso.ao', 'EMAIL');
-
-    const manifestOutDir = path.join(tmpDir, 'manifest_test_bundle');
-    const exportResult = eng.exportPilotEvidence(simulationPilotSpec.pilot_id, manifestOutDir);
-
-    assert.ok(fs.existsSync(path.join(manifestOutDir, 'pilot-evidence-manifest.json')));
-    assert.ok(fs.existsSync(path.join(manifestOutDir, 'pilot-evidence-files.sha256')));
-    assert.ok(fs.existsSync(path.join(manifestOutDir, 'task-outputs', task.output_files[0])));
-
-    // Validar com o script verify-pilot-manifest.mjs
-    let verifyScript = path.resolve(process.cwd(), 'scripts', 'verify-pilot-manifest.mjs');
-    if (!fs.existsSync(verifyScript)) {
-      verifyScript = path.resolve(process.cwd(), '..', '..', 'scripts', 'verify-pilot-manifest.mjs');
-    }
-    assert.doesNotThrow(() => {
-      execSync(`node "${verifyScript}" --dir="${manifestOutDir}" --allow-partial-gates`, { stdio: 'pipe' });
-    });
-
-    // Injetar arquivo órfão no disco não listado no manifesto
-    const orphanFile = path.join(manifestOutDir, 'task-outputs', 'orphan_untracked_document.pdf');
-    fs.writeFileSync(orphanFile, 'UNTRACKED CONTENT');
-
-    // O verificador bidirecional DEVE falhar com exit code 1
-    assert.throws(() => {
-      execSync(`node "${verifyScript}" --dir="${manifestOutDir}" --allow-partial-gates`, { stdio: 'pipe' });
-    });
-
-    // Limpar arquivo órfão
-    fs.unlinkSync(orphanFile);
-
-    // Injetar linha maliciosa de path traversal no manifesto
-    const shaFile = path.join(manifestOutDir, 'pilot-evidence-files.sha256');
-    fs.appendFileSync(shaFile, `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ../../etc/passwd\n`);
-
-    // O verificador DEVE rejeitar e falhar por path traversal
-    assert.throws(() => {
-      execSync(`node "${verifyScript}" --dir="${manifestOutDir}" --allow-partial-gates`, { stdio: 'pipe' });
-    });
-
-    store.close();
-  });
-
-  // Test 21: getDbPath() preserva caminho configurado e nunca converte para :memory:
-  await t.test('21. getDbPath() preserva caminho configurado e nunca converte para :memory:', () => {
-    const testCustomDb = path.join(tmpDir, 'custom_preserve_path.db');
-    const store = new TransactionalPilotStore(testCustomDb);
-    assert.strictEqual(store.getDbPath(), testCustomDb);
-    assert.notStrictEqual(store.getDbPath(), ':memory:');
-
-    // Executa transações e operações de escrita
-    store.transaction(() => {
-      store.savePilot(simulationPilotSpec as any);
-    });
-    assert.strictEqual(store.getDbPath(), testCustomDb);
-
-    const fp = store.getPersistenceFingerprint();
-    assert.ok(fp.startsWith('sqlite://custom_preserve_path.db:'));
-    assert.notStrictEqual(fp, 'sqlite://memory');
-    store.close();
-  });
-
-  // Test 22: Tentativa de personificação de revisor A usado por revisor B é rejeitada
-  await t.test('22. Tentativa de personificação com token do revisor A usado por revisor B é rejeitada', () => {
-    const tokenDbPath = path.join(tmpDir, 'impersonation_test_token.db');
-    const tokenService = new TokenService('token-test-secret-at-least-32-chars-long-2026', tokenDbPath);
-
-    // Gera token legítimo para revisor A
-    const tokenA = tokenService.signToken({
-      sub: 'rev_maria_santos',
-      user_id: 'rev_maria_santos',
-      tenant_id: operationalPilotSpec.tenant_id,
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW']
-    });
-
-    // Revisor B (rev_joao_manuel) tenta usar o token de rev_maria_santos
-    const result = PilotExternalValidator.validateReviewerToken(
-      tokenA,
-      operationalPilotSpec.tenant_id,
-      'rev_joao_manuel', // Esperado revisor B
-      tokenService
-    );
-
-    assert.strictEqual(result.isValid, false);
-    assert.ok(result.error?.includes('Impersonação detectada') || result.error?.includes('diverge'));
-  });
-
-  // Test 23: Reabertura durável de base SQLite em nova conexão e conferência estrita de cardinalidades
-  await t.test('23. Reabertura durável de base SQLite em nova conexão e conferência de cardinalidades', () => {
-    const durableDbPath = path.join(tmpDir, 'durable_cardinality_check.db');
-    
-    // Conexão 1: Gravar dados via TransactionalPilotStore
-    const conn1 = new TransactionalPilotStore(durableDbPath);
-    conn1.savePilot({
-      ...simulationPilotSpec,
-      status: 'ACTIVE'
-    } as any);
-
-    const testTask = {
-      task_id: 'TASK_DURABLE_CARDINALITY_01',
-      pilot_id: simulationPilotSpec.pilot_id,
-      tenant_id: simulationPilotSpec.tenant_id,
-      employee_id: 66,
-      requested_by: 'op_durable',
-      received_at: new Date().toISOString(),
-      input_snapshot_sha256: sha256('input_test'),
-      execution_started_at: new Date().toISOString(),
-      execution_completed_at: new Date().toISOString(),
-      output_files: ['doc_durabilidade.pdf'],
-      output_hashes: [sha256('pdf_content_bytes')],
-      human_review_status: 'PENDING_REVIEW' as const,
-      reviewed_by: null,
-      reviewed_at: null,
-      corrections_required: 0,
-      delivery_status: 'PENDING' as const,
-      final_status: 'SUCCESS' as const,
-      error_code: null,
-      receipt_sha256: sha256('receipt_1'),
-      version: 1,
-      idempotency_key: 'IDEMP_DURABLE_01',
-      execution_mode: 'SIMULATION' as const,
-      is_simulation: true,
-      classification_level: 'CONFIDENTIAL' as const
-    };
-
-    conn1.saveTaskWithOutputAndVerify(testTask, {
-      output_id: 'OUT_TASK_DURABLE_01_v1',
-      task_id: testTask.task_id,
-      version: 1,
-      file_name: 'doc_durabilidade.pdf',
-      file_path: 'doc_durabilidade.pdf',
-      file_bytes: Buffer.from('pdf_content_bytes'),
-      file_bytes_sha256: sha256('pdf_content_bytes'),
-      is_active: true
-    });
-
-    // Fecha Conexão 1
-    conn1.close();
-
-    // Conexão 2: Nova conexão independente reabrindo o mesmo ficheiro SQLite
-    const conn2 = new TransactionalPilotStore(durableDbPath);
-    const reloadedPilot = conn2.getPilot(simulationPilotSpec.pilot_id);
-    assert.ok(reloadedPilot);
-    assert.strictEqual(reloadedPilot.pilot_id, simulationPilotSpec.pilot_id);
-
-    const reloadedTask = conn2.getTask(testTask.task_id);
-    assert.ok(reloadedTask);
-    assert.strictEqual(reloadedTask.task_id, testTask.task_id);
-
-    const reloadedOutput = conn2.getActiveOutput(testTask.task_id);
-    assert.ok(reloadedOutput);
-    assert.strictEqual(reloadedOutput.file_bytes_sha256, sha256('pdf_content_bytes'));
-
-    const reloadedBytes = conn2.getActiveOutputBytes(testTask.task_id);
-    assert.ok(reloadedBytes);
-    assert.strictEqual(reloadedBytes.bytes.toString(), 'pdf_content_bytes');
-
-    conn2.close();
-  });
-
-  // Test 24: Rejeição estrita de symlinks no manifesto e arquivos órfãos
-  await t.test('24. Rejeição estrita de symlinks no manifesto e arquivos órfãos', () => {
+  await t.test('23. Rejeição estrita de symlinks no manifesto e arquivos órfãos', () => {
     const symlinkTestDir = path.join(tmpDir, 'symlink_bundle_test');
     fs.mkdirSync(symlinkTestDir, { recursive: true });
 
-    let verifyScript = path.resolve(process.cwd(), 'scripts', 'verify-pilot-manifest.mjs');
-    if (!fs.existsSync(verifyScript)) {
-      verifyScript = path.resolve(process.cwd(), '..', '..', 'scripts', 'verify-pilot-manifest.mjs');
-    }
+    const verifyScript = path.resolve(repoRoot, 'scripts', 'verify-pilot-manifest.mjs');
 
-    // Criar symlink se o sistema operacional permitir
     const targetFile = path.join(tmpDir, 'target_file.txt');
     fs.writeFileSync(targetFile, 'Target file content');
     const linkPath = path.join(symlinkTestDir, 'symlink_file.txt');
@@ -896,14 +1103,12 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests', async (t) 
       fs.symlinkSync(targetFile, linkPath);
       symlinkCreated = true;
     } catch {
-      // No Windows sem privilégios de administrador ou Developer Mode, symlinks podem falhar
       symlinkCreated = false;
     }
 
     if (symlinkCreated) {
-      // O validador deve falhar imediatamente ao encontrar a ligação simbólica
       assert.throws(() => {
-        execSync(`node "${verifyScript}" --dir="${symlinkTestDir}" --allow-partial-gates`, { stdio: 'pipe' });
+        execSync(`node "${verifyScript}" --dir="${symlinkTestDir}" --allow-partial-gates`, { cwd: repoRoot, stdio: 'pipe' });
       });
       fs.unlinkSync(linkPath);
     }
@@ -912,7 +1117,5 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests', async (t) 
   // Limpeza de diretório temporário
   try {
     fs.rmSync(tmpDir, { recursive: true, force: true });
-  } catch {
-    // Ignorar falha na limpeza do tmpdir
-  }
+  } catch {}
 });

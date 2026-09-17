@@ -9,7 +9,9 @@ import {
   PilotHumanReviewReceipt,
   PilotDeliveryReceipt,
   PilotIncident,
-  OperationalPilotMode
+  OperationalPilotMode,
+  PilotReviewChallenge,
+  PilotDocumentValidationReceipt
 } from '@ai-employee/shared';
 
 export class TransactionalPilotStore {
@@ -67,6 +69,8 @@ export class TransactionalPilotStore {
     reviewCount: number;
     deliveryCount: number;
     incidentCount: number;
+    challengeCount?: number;
+    validationCount?: number;
   } {
     const getCount = (table: string): number => {
       const row = this.db.prepare(`SELECT count(*) as cnt FROM ${table}`).get() as any;
@@ -78,12 +82,16 @@ export class TransactionalPilotStore {
       outputCount: getCount('task_outputs'),
       reviewCount: getCount('human_reviews'),
       deliveryCount: getCount('pilot_deliveries'),
-      incidentCount: getCount('pilot_incidents')
+      incidentCount: getCount('pilot_incidents'),
+      challengeCount: getCount('pilot_review_challenges'),
+      validationCount: getCount('task_document_validations')
     };
   }
 
   public clearTablesForTests(): void {
     this.db.exec(`
+      DELETE FROM task_document_validations;
+      DELETE FROM pilot_review_challenges;
       DELETE FROM pilot_deliveries;
       DELETE FROM human_reviews;
       DELETE FROM task_outputs;
@@ -139,6 +147,39 @@ export class TransactionalPilotStore {
         file_bytes_sha256 TEXT NOT NULL,
         is_active INTEGER NOT NULL DEFAULT 1,
         created_at TEXT NOT NULL,
+        FOREIGN KEY (task_id) REFERENCES pilot_tasks(task_id) ON DELETE CASCADE
+      );
+
+      CREATE TABLE IF NOT EXISTS pilot_review_challenges (
+        challenge_id TEXT PRIMARY KEY,
+        tenant_id TEXT NOT NULL,
+        pilot_id TEXT NOT NULL,
+        task_id TEXT NOT NULL,
+        document_version INTEGER NOT NULL,
+        document_sha256 TEXT NOT NULL,
+        allowed_decision TEXT,
+        reviewer_id TEXT,
+        nonce TEXT NOT NULL UNIQUE,
+        issued_at TEXT NOT NULL,
+        expires_at TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT 'PENDING',
+        consumed_at TEXT,
+        consumption_receipt_sha256 TEXT,
+        FOREIGN KEY (task_id) REFERENCES pilot_tasks(task_id) ON DELETE CASCADE
+      );
+
+      CREATE TABLE IF NOT EXISTS task_document_validations (
+        receipt_id TEXT PRIMARY KEY,
+        task_id TEXT NOT NULL,
+        document_version INTEGER NOT NULL,
+        format TEXT NOT NULL,
+        parser_name TEXT NOT NULL,
+        parser_version TEXT NOT NULL,
+        file_bytes_sha256 TEXT NOT NULL,
+        result TEXT NOT NULL,
+        page_or_cell_count INTEGER,
+        error TEXT,
+        validated_at TEXT NOT NULL,
         FOREIGN KEY (task_id) REFERENCES pilot_tasks(task_id) ON DELETE CASCADE
       );
 
@@ -386,6 +427,14 @@ export class TransactionalPilotStore {
       INSERT INTO task_outputs (
         output_id, task_id, version, file_name, file_path, file_bytes, file_bytes_sha256, is_active, created_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(output_id) DO UPDATE SET
+        task_id=excluded.task_id,
+        version=excluded.version,
+        file_name=excluded.file_name,
+        file_path=excluded.file_path,
+        file_bytes=excluded.file_bytes,
+        file_bytes_sha256=excluded.file_bytes_sha256,
+        is_active=excluded.is_active
     `);
     stmt.run(
       output.output_id,
@@ -539,6 +588,211 @@ export class TransactionalPilotStore {
     `);
     const rows = stmt.all(pilot_id) as any[];
     return rows.map(r => JSON.parse(r.receipt_json));
+  }
+
+  // -------------------------------------------------------------
+  // Review Challenges (Fase A / Fase B)
+  // -------------------------------------------------------------
+  public saveReviewChallenge(challenge: PilotReviewChallenge): void {
+    const stmt = this.db.prepare(`
+      INSERT INTO pilot_review_challenges (
+        challenge_id, tenant_id, pilot_id, task_id, document_version,
+        document_sha256, allowed_decision, reviewer_id, nonce, issued_at,
+        expires_at, status, consumed_at, consumption_receipt_sha256
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(challenge_id) DO UPDATE SET
+        tenant_id=excluded.tenant_id,
+        pilot_id=excluded.pilot_id,
+        task_id=excluded.task_id,
+        document_version=excluded.document_version,
+        document_sha256=excluded.document_sha256,
+        allowed_decision=excluded.allowed_decision,
+        reviewer_id=excluded.reviewer_id,
+        nonce=excluded.nonce,
+        issued_at=excluded.issued_at,
+        expires_at=excluded.expires_at,
+        status=excluded.status,
+        consumed_at=excluded.consumed_at,
+        consumption_receipt_sha256=excluded.consumption_receipt_sha256
+    `);
+    stmt.run(
+      challenge.challenge_id,
+      challenge.tenant_id,
+      challenge.pilot_id,
+      challenge.task_id,
+      challenge.document_version,
+      challenge.document_sha256,
+      challenge.allowed_decision,
+      challenge.reviewer_id,
+      challenge.nonce,
+      challenge.issued_at,
+      challenge.expires_at,
+      challenge.status || 'PENDING',
+      challenge.consumed_at || null,
+      challenge.consumption_receipt_sha256 || null
+    );
+  }
+
+  public getReviewChallenge(challenge_id: string): PilotReviewChallenge | null {
+    const stmt = this.db.prepare(`
+      SELECT * FROM pilot_review_challenges WHERE challenge_id = ?
+    `);
+    const row = stmt.get(challenge_id) as any;
+    if (!row) return null;
+    return {
+      challenge_id: row.challenge_id,
+      tenant_id: row.tenant_id,
+      pilot_id: row.pilot_id,
+      task_id: row.task_id,
+      document_version: row.document_version,
+      document_sha256: row.document_sha256,
+      allowed_decision: row.allowed_decision,
+      reviewer_id: row.reviewer_id,
+      nonce: row.nonce,
+      issued_at: row.issued_at,
+      expires_at: row.expires_at,
+      status: row.status,
+      consumed_at: row.consumed_at,
+      consumption_receipt_sha256: row.consumption_receipt_sha256
+    };
+  }
+
+  public getPendingChallengeForTask(task_id: string): PilotReviewChallenge | null {
+    const stmt = this.db.prepare(`
+      SELECT * FROM pilot_review_challenges WHERE task_id = ? AND status = 'PENDING' ORDER BY issued_at DESC LIMIT 1
+    `);
+    const row = stmt.get(task_id) as any;
+    if (!row) return null;
+    return {
+      challenge_id: row.challenge_id,
+      tenant_id: row.tenant_id,
+      pilot_id: row.pilot_id,
+      task_id: row.task_id,
+      document_version: row.document_version,
+      document_sha256: row.document_sha256,
+      allowed_decision: row.allowed_decision,
+      reviewer_id: row.reviewer_id,
+      nonce: row.nonce,
+      issued_at: row.issued_at,
+      expires_at: row.expires_at,
+      status: row.status,
+      consumed_at: row.consumed_at,
+      consumption_receipt_sha256: row.consumption_receipt_sha256
+    };
+  }
+
+  public consumeReviewChallengeAtomic(
+    challenge_id: string,
+    reviewReceipt: PilotHumanReviewReceipt,
+    task: PilotTaskReceipt
+  ): void {
+    this.transaction(() => {
+      const challenge = this.getReviewChallenge(challenge_id);
+      if (!challenge) {
+        throw new Error(`Desafio de revisão '${challenge_id}' não encontrado.`);
+      }
+      if (challenge.status !== 'PENDING') {
+        throw new Error(`Desafio de revisão '${challenge_id}' já foi consumido ou invalidado (status: ${challenge.status}).`);
+      }
+      const now = new Date().toISOString();
+      if (now > challenge.expires_at) {
+        this.db.prepare(`UPDATE pilot_review_challenges SET status = 'EXPIRED' WHERE challenge_id = ?`).run(challenge_id);
+        throw new Error(`Desafio de revisão '${challenge_id}' expirou em ${challenge.expires_at}.`);
+      }
+
+      this.db.prepare(`
+        UPDATE pilot_review_challenges
+        SET status = 'CONSUMED', consumed_at = ?, consumption_receipt_sha256 = ?
+        WHERE challenge_id = ?
+      `).run(now, reviewReceipt.review_signature_sha256, challenge_id);
+
+      this.saveReview(reviewReceipt);
+      this.updateTask(task);
+    });
+  }
+
+  // -------------------------------------------------------------
+  // Document Validations (Pré-revisão e Auditoria)
+  // -------------------------------------------------------------
+  public saveDocumentValidationReceipt(receipt: PilotDocumentValidationReceipt): void {
+    const stmt = this.db.prepare(`
+      INSERT OR REPLACE INTO task_document_validations (
+        receipt_id, task_id, document_version, format, parser_name,
+        parser_version, file_bytes_sha256, result, page_or_cell_count,
+        error, validated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+    stmt.run(
+      receipt.receipt_id,
+      receipt.task_id,
+      receipt.document_version,
+      receipt.format,
+      receipt.parser_name,
+      receipt.parser_version,
+      receipt.file_bytes_sha256,
+      receipt.result,
+      receipt.page_or_cell_count || null,
+      receipt.error || null,
+      receipt.validated_at
+    );
+  }
+
+  public getDocumentValidationReceipt(task_id: string, version: number): PilotDocumentValidationReceipt | null {
+    const stmt = this.db.prepare(`
+      SELECT * FROM task_document_validations WHERE task_id = ? AND document_version = ?
+    `);
+    const row = stmt.get(task_id, version) as any;
+    if (!row) return null;
+    return {
+      receipt_id: row.receipt_id,
+      task_id: row.task_id,
+      document_version: row.document_version,
+      format: row.format,
+      parser_name: row.parser_name,
+      parser_version: row.parser_version,
+      file_bytes_sha256: row.file_bytes_sha256,
+      result: row.result,
+      page_or_cell_count: row.page_or_cell_count,
+      error: row.error,
+      validated_at: row.validated_at
+    };
+  }
+
+  public getAllDocumentValidationReceipts(task_id?: string): PilotDocumentValidationReceipt[] {
+    if (task_id) {
+      const stmt = this.db.prepare(`
+        SELECT * FROM task_document_validations WHERE task_id = ? ORDER BY document_version ASC
+      `);
+      return (stmt.all(task_id) as any[]).map(r => ({
+        receipt_id: r.receipt_id,
+        task_id: r.task_id,
+        document_version: r.document_version,
+        format: r.format,
+        parser_name: r.parser_name,
+        parser_version: r.parser_version,
+        file_bytes_sha256: r.file_bytes_sha256,
+        result: r.result,
+        page_or_cell_count: r.page_or_cell_count,
+        error: r.error,
+        validated_at: r.validated_at
+      }));
+    }
+    const stmt = this.db.prepare(`
+      SELECT * FROM task_document_validations ORDER BY validated_at ASC
+    `);
+    return (stmt.all() as any[]).map(r => ({
+      receipt_id: r.receipt_id,
+      task_id: r.task_id,
+      document_version: r.document_version,
+      format: r.format,
+      parser_name: r.parser_name,
+      parser_version: r.parser_version,
+      file_bytes_sha256: r.file_bytes_sha256,
+      result: r.result,
+      page_or_cell_count: r.page_or_cell_count,
+      error: r.error,
+      validated_at: r.validated_at
+    }));
   }
 
   // -------------------------------------------------------------

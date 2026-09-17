@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { CANONICAL_500_ROLES } from '@ai-employee/rolepack';
@@ -17,11 +17,15 @@ import {
   DeliveryStatus,
   FinalTaskStatus,
   OperationalPilotMode,
-  PilotFinalAttestation
+  PilotFinalAttestation,
+  PilotReviewChallenge,
+  PilotDocumentValidationReceipt,
+  SecretProvider
 } from '@ai-employee/shared';
 import { TransactionalPilotStore } from './TransactionalPilotStore.js';
 import { PhysicalDocumentValidator } from './PhysicalDocumentValidator.js';
 import { PilotExternalValidator } from './PilotExternalValidator.js';
+import { EnvironmentSecretProvider, scanAndRejectSensitiveFields } from './PilotSecretProvider.js';
 import { TokenService } from '@ai-employee/shared/server';
 
 function sha256(content: string | Buffer): string {
@@ -43,18 +47,36 @@ export class ControlledPilotEngine {
   private static instance: ControlledPilotEngine;
   private store: TransactionalPilotStore;
   private tokenService?: TokenService;
+  private secretProvider: SecretProvider;
   private taskCache = new Map<string, PilotTaskReceipt>();
 
-  public constructor(store?: TransactionalPilotStore, tokenService?: TokenService) {
+  public constructor(
+    store?: TransactionalPilotStore,
+    tokenService?: TokenService,
+    secretProvider?: SecretProvider
+  ) {
     this.store = store || new TransactionalPilotStore();
     this.tokenService = tokenService;
+    this.secretProvider = secretProvider || new EnvironmentSecretProvider();
   }
 
-  public static getInstance(store?: TransactionalPilotStore, tokenService?: TokenService): ControlledPilotEngine {
-    if (!ControlledPilotEngine.instance || store || tokenService) {
-      ControlledPilotEngine.instance = new ControlledPilotEngine(store, tokenService);
+  public static getInstance(
+    store?: TransactionalPilotStore,
+    tokenService?: TokenService,
+    secretProvider?: SecretProvider
+  ): ControlledPilotEngine {
+    if (!ControlledPilotEngine.instance || store || tokenService || secretProvider) {
+      ControlledPilotEngine.instance = new ControlledPilotEngine(store, tokenService, secretProvider);
     }
     return ControlledPilotEngine.instance;
+  }
+
+  public setSecretProvider(sp: SecretProvider): void {
+    this.secretProvider = sp;
+  }
+
+  public getSecretProvider(): SecretProvider {
+    return this.secretProvider;
   }
 
   public setTokenService(ts: TokenService): void {
@@ -126,12 +148,33 @@ export class ControlledPilotEngine {
     allowed_connectors: string[];
     prohibited_actions: string[];
     human_reviewers: string[];
-    reviewer_configs?: Array<{ reviewer_id: string; display_name: string; role: string; secret_or_key: string }>;
+    reviewer_configs?: Array<{
+      reviewer_id: string;
+      display_name: string;
+      role: string;
+      secret_ref?: string;
+      key_id?: string;
+      secret_or_key?: string;
+    }>;
     task_limit: number;
     execution_mode?: OperationalPilotMode;
   }): PilotProgram {
     const execution_mode = spec.execution_mode || 'SIMULATION';
     const completeSpec = { ...spec, execution_mode };
+
+    // Strict scan against sensitive plaintext secrets in operational configurations
+    if (execution_mode === 'OPERATIONAL_PILOT') {
+      scanAndRejectSensitiveFields(spec);
+      if (spec.reviewer_configs) {
+        for (const cfg of spec.reviewer_configs) {
+          if ((cfg as any).secret_or_key) {
+            throw new Error(
+              `Campo sensível proibido detectado: 'secret_or_key' no revisor '${cfg.reviewer_id}'. Use 'secret_ref' ou 'key_id'.`
+            );
+          }
+        }
+      }
+    }
 
     // 1. Validate external config schema
     const validation = PilotExternalValidator.validatePilotConfig(completeSpec, execution_mode);
@@ -255,6 +298,13 @@ export class ControlledPilotEngine {
       throw new Error(`Acesso negado: Isolamento multi-tenant violado. Tenant '${request.tenant_id}' difere do piloto '${pilot.tenant_id}'.`);
     }
 
+    // Strict validation against default requester fallback in operational mode
+    if (pilot.execution_mode === 'OPERATIONAL_PILOT') {
+      if (!request.requested_by || request.requested_by === 'operador_saso_01') {
+        throw new Error("Solicitante obrigatório e fallback 'operador_saso_01' proibido em modo operacional.");
+      }
+    }
+
     // 2. Prohibited Action Gate
     if (request.action_type && pilot.prohibited_actions?.includes(request.action_type)) {
       this.recordIncident({
@@ -301,6 +351,9 @@ export class ControlledPilotEngine {
     }
 
     // 8. Input Snapshot & Tampering Validation
+    if (!request.input_data || (typeof request.input_data === 'object' && Object.keys(request.input_data).length === 0)) {
+      throw new Error('Dados de entrada vazios ou ausentes.');
+    }
     const inputSnapshot = canonicalJson(request.input_data);
     const inputSnapshotSha = sha256(inputSnapshot);
 
@@ -362,16 +415,107 @@ export class ControlledPilotEngine {
       is_active: true
     });
 
+    // 11. Validação física e estrutural independente prévia no pipeline
+    const activeOutRecord = this.store.getActiveOutputBytes(request.task_id);
+    if (!activeOutRecord || !activeOutRecord.bytes) {
+      throw new Error(`Falha crítica: Bytes de saída não encontrados na persistência para tarefa '${request.task_id}'.`);
+    }
+    const savedBytes = activeOutRecord.bytes;
+
+    PhysicalDocumentValidator.validateMimeCoherence(savedBytes, request.format, generated.fileName);
+
+    const docReceipt = PhysicalDocumentValidator.createDocumentValidationReceipt(
+      savedBytes,
+      request.format,
+      request.task_id,
+      1,
+      pilot.execution_mode
+    );
+    this.store.saveDocumentValidationReceipt(docReceipt);
+
+    if (!docReceipt.is_valid && docReceipt.result !== 'PASS') {
+      this.recordIncident({
+        incident_id: `INC_DOCVAL_${Date.now()}`,
+        pilot_id: pilot.pilot_id,
+        timestamp: new Date().toISOString(),
+        type: 'OTHER',
+        severity: 'HIGH',
+        details: `Falha na validação independente do documento para tarefa '${request.task_id}': ${docReceipt.error || docReceipt.error_details}`,
+        resolved: false
+      });
+      receipt.final_status = 'FAILED';
+      receipt.error_code = 'DOCUMENT_VALIDATION_FAILED';
+      receipt.human_review_status = 'BLOCKED';
+      this.store.updateTask(receipt);
+      throw new Error(`Falha na validação física independente do documento: ${docReceipt.error || docReceipt.error_details}`);
+    }
+
+    // 12. Emissão do Desafio de Revisão Humana (Fase A)
+    this.issueReviewChallenge(request.task_id);
+
     this.taskCache.set(receipt.task_id, receipt);
     return receipt;
   }
 
   // -------------------------------------------------------------
-  // 3. Human Review & Signed Correction Pipeline
+  // 3. Human Review Challenge Issuance (Phase A)
+  // -------------------------------------------------------------
+  public issueReviewChallenge(
+    taskId: string,
+    allowedDecision?: HumanReviewStatus,
+    reviewerId?: string
+  ): PilotReviewChallenge {
+    const task = this.store.getTask(taskId);
+    if (!task) {
+      throw new Error(`Tarefa '${taskId}' não encontrada.`);
+    }
+    const pilot = this.getPilot(task.pilot_id);
+
+    const activeOutput = this.store.getActiveOutput(taskId);
+    if (!activeOutput) {
+      throw new Error(`Output activo não encontrado para tarefa '${taskId}'.`);
+    }
+
+    // Validação independente prévia obrigatória
+    const docReceipt = this.store.getDocumentValidationReceipt(taskId, activeOutput.version);
+    if (!docReceipt || (!docReceipt.is_valid && docReceipt.result !== 'PASS')) {
+      throw new Error(
+        `Desafio de revisão bloqueado: Documento da tarefa '${taskId}' não possui validação independente aprovada.`
+      );
+    }
+
+    const challengeId = `CHAL_${Date.now()}_${randomUUID().replace(/-/g, '').slice(0, 8)}`;
+    const nonce = randomBytes(16).toString('hex');
+    const issuedAt = new Date().toISOString();
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString(); // 15 minutos
+
+    const challenge: PilotReviewChallenge = {
+      challenge_id: challengeId,
+      nonce,
+      tenant_id: pilot.tenant_id,
+      pilot_id: pilot.pilot_id,
+      task_id: taskId,
+      document_version: activeOutput.version,
+      document_sha256: activeOutput.file_bytes_sha256,
+      reviewer_id: reviewerId || null,
+      allowed_decision: allowedDecision || null,
+      issued_at: issuedAt,
+      expires_at: expiresAt,
+      consumed_at: null,
+      status: 'PENDING'
+    };
+
+    this.store.saveReviewChallenge(challenge);
+    return challenge;
+  }
+
+  // -------------------------------------------------------------
+  // 4. Human Review & Signed Challenge Consumption (Phase B)
   // -------------------------------------------------------------
   public reviewTask(params: {
     review_id: string;
     task_id: string;
+    challenge_id?: string;
     reviewer: string;
     decision: HumanReviewStatus;
     comments: string;
@@ -400,16 +544,51 @@ export class ControlledPilotEngine {
       throw new Error(`Utilizador '${params.reviewer}' não está credenciado como revisor humano no piloto.`);
     }
 
+    // 3. Obter Desafio de Revisão Fase A (via challenge_id ou pendente na tarefa)
+    let challenge: PilotReviewChallenge | null = null;
+    if (params.challenge_id) {
+      challenge = this.store.getReviewChallenge(params.challenge_id);
+    } else {
+      challenge = this.store.getPendingChallengeForTask(params.task_id);
+    }
+
+    if (!challenge || challenge.status !== 'PENDING') {
+      throw new Error(`Desafio de revisão pendente não encontrado ou já consumido para a tarefa '${params.task_id}'.`);
+    }
+
+    if (new Date() > new Date(challenge.expires_at)) {
+      throw new Error(`Desafio de revisão expirou em ${challenge.expires_at}.`);
+    }
+
+    if (challenge.reviewer_id && challenge.reviewer_id !== params.reviewer) {
+      throw new Error(`Desafio de revisão restrito ao revisor '${challenge.reviewer_id}'.`);
+    }
+
+    if (challenge.allowed_decision && challenge.allowed_decision !== params.decision) {
+      throw new Error(`Decisão de revisão não autorizada pelo desafio: '${params.decision}'.`);
+    }
+
     const activeOutput = this.store.getActiveOutput(params.task_id);
     if (!activeOutput) {
       throw new Error(`Ficheiros de saída activos da tarefa '${params.task_id}' não encontrados.`);
     }
 
-    const reviewedAt = new Date().toISOString();
+    if (challenge.document_sha256 !== activeOutput.file_bytes_sha256) {
+      throw new Error('Hash do documento diverge do desafio emitido.');
+    }
+
+    // 3b. Validação física independente prévia com status PASS obrigatória
+    const docReceipt = this.store.getDocumentValidationReceipt(params.task_id, activeOutput.version);
+    if (!docReceipt || (!docReceipt.is_valid && docReceipt.result !== 'PASS')) {
+      throw new Error('Revisão rejeitada: documento ativo não possui validação física independente aprovada (PASS).');
+    }
+
+    // O timestamp canónico unificado é estritamente challenge.issued_at
+    const reviewedAt = challenge.issued_at;
     const prevHash = activeOutput.file_bytes_sha256;
     let newHash = prevHash;
 
-    // 3. Verify reviewer authentication & cryptographic review signature
+    // 4. Verify reviewer authentication & cryptographic review signature
     const authToken = params.auth_token || params.reviewer_token;
     let sessionRef = params.session_reference;
 
@@ -431,66 +610,82 @@ export class ControlledPilotEngine {
     }
 
     const reviewerConfig = pilot.reviewer_configs?.find(r => r.reviewer_id === params.reviewer);
-    let secretKey = reviewerConfig?.secret_or_key;
+    let secretKey: string | undefined;
 
     if (pilot.execution_mode === 'OPERATIONAL_PILOT') {
+      if (!reviewerConfig) {
+        throw new Error(`Configuração do revisor '${params.reviewer}' ausente em modo operacional.`);
+      }
+      const secretRef = reviewerConfig.secret_ref || reviewerConfig.key_id;
+      if (!secretRef) {
+        throw new Error(`Referência de segredo (secret_ref/key_id) ausente para revisor '${params.reviewer}'.`);
+      }
+      secretKey = this.secretProvider.resolveSecret(secretRef, pilot.tenant_id);
       if (!secretKey) {
-        throw new Error(`Chave secreta de revisão ausente para o revisor '${params.reviewer}' em modo OPERATIONAL_PILOT.`);
+        throw new Error(`Segredo não resolvido pelo SecretProvider para '${secretRef}'.`);
       }
     } else {
       // Modo SIMULATION
+      const secretRef = reviewerConfig?.secret_ref || reviewerConfig?.key_id;
+      if (secretRef) {
+        try {
+          secretKey = this.secretProvider.resolveSecret(secretRef, pilot.tenant_id);
+        } catch {}
+      }
       if (!secretKey) {
-        secretKey = 'SIMULATION_PILOT_DEV_REVIEW_KEY';
+        secretKey = reviewerConfig?.secret_or_key || 'SIMULATION_PILOT_DEV_REVIEW_KEY';
       }
     }
 
     let signature = params.signature;
     if (!signature) {
       if (pilot.execution_mode === 'OPERATIONAL_PILOT') {
-        throw new Error('Assinatura de revisão obrigatória ausente em modo OPERATIONAL_PILOT.');
+        throw new Error('Assinatura canónica do desafio obrigatória em modo OPERATIONAL_PILOT.');
       }
-      signature = PilotExternalValidator.generateReviewerSignature(
-        {
-          taskId: params.task_id,
-          reviewerId: params.reviewer,
-          decision: params.decision,
-          targetDocumentHash: prevHash,
-          reviewedAt
-        },
+      signature = PilotExternalValidator.generateCanonicalChallengeSignature(
+        challenge,
+        params.reviewer,
+        params.decision,
         secretKey!
       );
     } else {
-      const isValidSig = PilotExternalValidator.validateReviewerSignature(
-        {
-          taskId: params.task_id,
-          reviewerId: params.reviewer,
-          decision: params.decision,
-          targetDocumentHash: prevHash,
-          reviewedAt,
-          signature
-        },
+      const isValidSig = PilotExternalValidator.validateCanonicalChallengeSignature(
+        challenge,
+        params.reviewer,
+        params.decision,
+        signature,
         secretKey!
       );
       if (!isValidSig) {
-        throw new Error('Assinatura criptográfica de revisão inválida ou adulterada.');
+        throw new Error('Assinatura criptográfica canónica do desafio inválida ou adulterada.');
       }
     }
 
-    // 4. Handle corrections
+    // 5. Handle corrections
     if (params.decision === 'APPROVED_WITH_CORRECTIONS') {
       if (!params.corrected_content) {
         throw new Error('Correcção exigida requer novo conteúdo rectificado.');
       }
-
-      const correctedBuf = Buffer.isBuffer(params.corrected_content)
-        ? params.corrected_content
-        : Buffer.from(params.corrected_content, 'utf8');
 
       const format: any = activeOutput.file_name.endsWith('.pdf')
         ? 'PDF'
         : activeOutput.file_name.endsWith('.xlsx')
         ? 'XLSX'
         : 'DOCX';
+
+      let correctedBuf: Buffer;
+      if (Buffer.isBuffer(params.corrected_content)) {
+        correctedBuf = params.corrected_content;
+      } else {
+        const textContent = String(params.corrected_content);
+        if (format === 'DOCX') {
+          correctedBuf = PhysicalDocumentValidator.buildRealBinaryDocx('Documento Rectificado', textContent.split('\n'));
+        } else if (format === 'PDF') {
+          correctedBuf = PhysicalDocumentValidator.buildRealBinaryPdf('Documento Rectificado', textContent.split('\n'));
+        } else {
+          correctedBuf = Buffer.from(textContent, 'utf8');
+        }
+      }
 
       const validation = PhysicalDocumentValidator.validate(correctedBuf, format, pilot.execution_mode);
       if (!validation.isValid) {
@@ -499,6 +694,19 @@ export class ControlledPilotEngine {
 
       newHash = validation.sha256;
       const v2FileName = activeOutput.file_name.replace(/\.([a-z0-9]+)$/, '_v2.$1');
+
+      // Validar documento corrigido de forma independente
+      const v2Receipt = PhysicalDocumentValidator.createDocumentValidationReceipt(
+        correctedBuf,
+        format,
+        params.task_id,
+        2,
+        pilot.execution_mode
+      );
+      this.store.saveDocumentValidationReceipt(v2Receipt);
+      if (!v2Receipt.is_valid && v2Receipt.result !== 'PASS') {
+        throw new Error(`Conteúdo rectificado rejeitado na validação independente: ${v2Receipt.error || v2Receipt.error_details}`);
+      }
 
       task.output_files = [v2FileName];
       task.output_hashes = [newHash];
@@ -548,11 +756,8 @@ export class ControlledPilotEngine {
     }
     reviewReceipt.receipt_sha256 = sha256(canonicalJson(reviewReceipt));
 
-    this.store.transaction(() => {
-      this.store.saveReview(reviewReceipt);
-      this.store.updateTask(task);
-    });
-
+    // Consumo atómico do desafio e persistência da revisão
+    this.store.consumeReviewChallengeAtomic(challenge.challenge_id, reviewReceipt, task);
     this.taskCache.set(task.task_id, task);
     return reviewReceipt;
   }
@@ -583,6 +788,21 @@ export class ControlledPilotEngine {
     const task = this.taskCache.get(params.taskId) || this.store.getTask(params.taskId);
     if (!task) {
       throw new Error(`Tarefa '${params.taskId}' não encontrada.`);
+    }
+
+    const pilot = this.getPilot(task.pilot_id);
+
+    // Strict validation against default delivery recipient in operational mode
+    if (pilot.execution_mode === 'OPERATIONAL_PILOT') {
+      if (!params.deliveredTo || params.deliveredTo === 'archive@saso.ao') {
+        throw new Error("Destinatário de entrega obrigatório e fallback 'archive@saso.ao' proibido em modo operacional.");
+      }
+    }
+
+    // Require independent document validation pass prior to delivery
+    const docReceipt = this.store.getDocumentValidationReceipt(params.taskId, task.version || 1);
+    if (!docReceipt || (!docReceipt.is_valid && docReceipt.result !== 'PASS')) {
+      throw new Error(`Entrega bloqueada: Documento da tarefa '${params.taskId}' não possui validação física independente aprovada.`);
     }
 
     if (task.human_review_status !== 'APPROVED' && task.human_review_status !== 'APPROVED_WITH_CORRECTIONS') {
@@ -982,6 +1202,19 @@ export class ControlledPilotEngine {
       fs.writeFileSync(path.join(outputDir, 'delivery-receipts', `${deliv.delivery_id}.json`), JSON.stringify(deliv, null, 2), 'utf8');
     }
 
+    // 6b. Independent Document Validation Receipts (Pre-Review Phase)
+    fs.mkdirSync(path.join(outputDir, 'document-validation-receipts'), { recursive: true });
+    const pilotTaskIds = new Set(pilotTasks.map(t => t.task_id));
+    const allDocValidations = this.store.getAllDocumentValidationReceipts().filter(v => pilotTaskIds.has(v.task_id));
+    for (const val of allDocValidations) {
+      const valId = val.receipt_id || val.validation_id || '';
+      fs.writeFileSync(
+        path.join(outputDir, 'document-validation-receipts', `${valId}.json`),
+        JSON.stringify(val, null, 2),
+        'utf8'
+      );
+    }
+
     // 7. Metrics
     fs.writeFileSync(path.join(outputDir, 'pilot-metrics.json'), JSON.stringify(metrics, null, 2), 'utf8');
 
@@ -1086,18 +1319,18 @@ export class ControlledPilotEngine {
       return walk(normalizedBaseDir).sort((a, b) => a.relativePath.localeCompare(b.relativePath));
     };
 
-    // Obter commit_sha de 40 caracteres com garantia determinística
+    // Obter commit_sha de 40 caracteres com garantia determinística do ambiente Git real (sem fallback fixo)
     let commitSha: string = (process.env.GITHUB_SHA || process.env.GIT_COMMIT_SHA || '').trim();
     if (!commitSha || commitSha.length !== 40) {
       try {
         const { execSync } = require('node:child_process');
         commitSha = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
       } catch {
-        commitSha = '6cdeb0b0d1714cf8895cd9590701ad43df6a6a33';
+        commitSha = '';
       }
     }
     if (!/^[0-9a-f]{40}$/i.test(commitSha)) {
-      throw new Error(`Commit SHA inválido: esperado 40 caracteres hexadecimais, obtido '${commitSha}'.`);
+      throw new Error(`Commit SHA inválido: esperado 40 caracteres hexadecimais do repositório Git, obtido '${commitSha}'.`);
     }
 
     // 10. Generate enriched pilot-evidence-manifest.json
@@ -1135,6 +1368,18 @@ export class ControlledPilotEngine {
         if (mapped) {
           taskId = mapped.task_id;
           docVersion = mapped.version;
+        }
+        // Determinar MIME type inspecionando magic bytes reais e validar coerência
+        const detectedMime = PhysicalDocumentValidator.detectMimeType(bytes);
+        PhysicalDocumentValidator.validateMimeCoherence(detectedMime, ext, f.relativePath);
+        mimeType = detectedMime;
+      } else if (f.relativePath.startsWith('document-validation-receipts/')) {
+        origin = 'INDEPENDENT_PARSER_RECEIPT';
+        receiptType = 'DOCUMENT_VALIDATION_RECEIPT';
+        const valId = path.basename(f.relativePath, '.json');
+        const valObj = allDocValidations.find(v => (v.receipt_id || v.validation_id) === valId);
+        if (valObj) {
+          taskId = valObj.task_id;
         }
       } else if (f.relativePath.startsWith('task-receipts/')) {
         origin = 'EXECUTION_TASK_RECEIPT';

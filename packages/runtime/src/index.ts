@@ -98,6 +98,7 @@ export * from './pilot/ControlledPilotEngine.js';
 export * from './pilot/TransactionalPilotStore.js';
 export * from './pilot/PhysicalDocumentValidator.js';
 export * from './pilot/PilotExternalValidator.js';
+export * from './pilot/PilotSecretProvider.js';
 
 
 

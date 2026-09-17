@@ -34,7 +34,47 @@ export interface PilotReviewerConfig {
   reviewer_id: string;
   display_name: string;
   role: string;
-  secret_or_key: string;
+  secret_ref?: string;
+  key_id?: string;
+  secret_or_key?: string;
+}
+
+export interface PilotReviewChallenge {
+  challenge_id: string;
+  tenant_id: string;
+  pilot_id: string;
+  task_id: string;
+  document_version: number;
+  document_sha256: string;
+  allowed_decision?: HumanReviewStatus | null;
+  reviewer_id?: string | null;
+  nonce: string;
+  issued_at: string;
+  expires_at: string;
+  status: 'PENDING' | 'CONSUMED' | 'EXPIRED';
+  consumed_at?: string | null;
+  consumption_receipt_sha256?: string | null;
+}
+
+export interface PilotDocumentValidationReceipt {
+  receipt_id: string;
+  validation_id?: string;
+  task_id: string;
+  document_version: number;
+  format: 'PDF' | 'DOCX' | 'XLSX' | 'JSON';
+  parser_name: string;
+  parser_version: string;
+  file_bytes_sha256: string;
+  result: 'PASS' | 'FAIL';
+  is_valid?: boolean;
+  page_or_cell_count?: number;
+  error?: string | null;
+  error_details?: string | null;
+  validated_at: string;
+}
+
+export interface SecretProvider {
+  resolveSecret(secretRef: string, tenantId: string): string;
 }
 
 export interface PilotProgram {
