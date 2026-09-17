@@ -34,7 +34,16 @@ function canonicalJson(obj: any): string {
 }
 
 describe('AETF-500: Ajv Estrito, Quatro Planos de Verdade, Proveniência e Limpeza Determinística', () => {
-  const commitSha = 'db780b302674385d858315152308624241847b18';
+  let commitSha = (process.env.GITHUB_SHA || process.env.GIT_COMMIT_SHA || '').trim();
+  if (!commitSha || commitSha.length !== 40) {
+    try {
+      const { execSync } = require('node:child_process');
+      commitSha = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+    } catch {
+      commitSha = 'dba1cbdcb0fc25cb44d0da7d26dc995a6729ca7c';
+    }
+  }
+  commitSha = commitSha.toLowerCase();
   process.env.GIT_COMMIT_SHA = commitSha;
 
   function createValidPilot(pilotId = 'PILOT_STRICT_2026', tenantId = 'tenant_angola_ops'): PilotProgram {

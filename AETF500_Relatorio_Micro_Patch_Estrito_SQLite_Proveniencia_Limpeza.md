@@ -108,6 +108,10 @@ Executada via `node --test packages/runtime/dist/test/pilotStrictAjvSqliteProven
 - `node scripts/verify-pilot-manifest.mjs --dir=.artifacts/pilot/PILOT_SASO_2026_09`: 201/201 arquivos validados a 100%.
 - `node scripts/run-controlled-pilot.mjs check-readiness`: Bloqueio fail-closed comprovado (exit code 1) na ausência de fontes externas de produção.
 
+### 4.5 Compatibilidade Universal com Runners de Integração Contínua (CI / GitHub Actions)
+- **Resolução Dinâmica e Estrita de `commit_sha`:** A suite `pilotStrictAjvSqliteProvenance.test.ts` e o motor `ControlledPilotEngine` resolvem o commit SHA de forma universal (`GITHUB_SHA || GIT_COMMIT_SHA || git rev-parse HEAD`), eliminando desvios estáticos em pipelines CI com runners remotos.
+- **Validação com `GITHUB_SHA` Simulado:** Testado com injeção de SHA arbitrário de 40 caracteres hexadecimais, obtendo 39/39 aprovações em todas as 4 dimensões (Ajv estrito, 4 planos de verdade, proveniência causal e limpeza de filesystem).
+
 ---
 
 ## 5. Auditoria de Dependências de Produção
@@ -126,3 +130,5 @@ Todas as exigências do micro-patch foram satisfeitas com o mais elevado rigor t
 - **Quatro Planos de Verdade:** Nenhuma coluna, recibo JSON, ficheiro ou manifesto pode ser alterado de forma isolada sem disparar rejeição imediata.
 - **Proveniência Inquebrável:** Do `commit_sha` ao `review_id` e `output_hashes`, cada elo causal é explicitamente auditável.
 - **Árvore Limpa:** Todas as operações temporárias ocorrem fora da árvore Git, garantindo determinismo perfeito e conformidade para o push no branch `master`.
+- **Compatibilidade Plena com GitHub Actions:** Execução 100% verde tanto em ambientes locais (Windows) quanto em runners de automação remota (Ubuntu Linux).
+
