@@ -1,7 +1,8 @@
-import { describe, it } from 'node:test';
+import { describe, it, after } from 'node:test';
 import assert from 'node:assert';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import * as os from 'node:os';
 import * as crypto from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
@@ -17,7 +18,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
   const coherenceModulePath = path.resolve(root, 'scripts/verify-evidence-coherence.mjs');
   const bundleModulePath = path.resolve(root, 'scripts/verify-evidence-bundle.mjs');
   const pathValidatorModulePath = path.resolve(root, 'scripts/lib/evidencePathValidator.mjs');
-  const tempDir = path.resolve(root, 'generated/tmp_test_evidence_coherence');
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'evidence-coherence-'));
 
   const {
     verifyEvidenceCoherence,
@@ -350,6 +351,10 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
     });
     fs.writeFileSync(path.join(dir, 'evidence-files.sha256'), hashLines.join('\n') + '\n', 'utf8');
   };
+
+  after(() => {
+    cleanup();
+  });
 
   const cleanup = () => {
     const defaultFinalEvidenceDir = path.resolve(root, '.artifacts/final-evidence');
@@ -1286,7 +1291,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
 
     // 17. existe uma ligação local file:/// no relatório final
     it('17. Rejeita com LOCAL_FILE_LINK_DETECTED quando existe ligação file:/// no relatório', () => {
-      const dummyReportPath = path.resolve(root, 'generated/report_with_local_link.md');
+      const dummyReportPath = path.resolve(root, '.artifacts/report_with_local_link.md');
       try {
         setupMockEvidenceBundle(tempDir);
         fs.mkdirSync(path.dirname(dummyReportPath), { recursive: true });
@@ -1310,7 +1315,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
   });
 
   describe('Patch Final de Ligação dos Gates e Preservação da Evidência Remota: 18 Testes Obrigatórios', () => {
-    const validReportRelPath = 'generated/test_valid_report_18.md';
+    const validReportRelPath = '.artifacts/test_valid_report_18.md';
     const validReportAbsPath = path.resolve(root, validReportRelPath);
 
     const ensureValidReport = () => {
@@ -1491,7 +1496,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
 
     // 10. relatório com file:/// falha através da CLI real
     it('10. Relatório com file:/// falha através da CLI real', () => {
-      const dummyWithLinkRel = 'generated/test_report_with_local_link.md';
+      const dummyWithLinkRel = '.artifacts/test_report_with_local_link.md';
       const dummyWithLinkAbs = path.resolve(root, dummyWithLinkRel);
       try {
         setupMockEvidenceBundle(tempDir);
@@ -1689,7 +1694,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
   // Suite 32 — Testes Negativos de Proveniência Remota e Fecho Forense Definitivo
   // =========================================================================
   describe('Suite 32 — Proveniência Verificável, IDs Separados e Janela Temporal Remota', () => {
-    const validReportRelPath = 'generated/test_valid_report_32.md';
+    const validReportRelPath = '.artifacts/test_valid_report_32.md';
     const validReportAbsPath = path.resolve(root, validReportRelPath);
 
     const ensureValidReport = () => {
@@ -1992,7 +1997,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
   });
 
   describe('Suite 33: Fecho Final de Proveniência, Início Real Remoto e Atestação SHA (12 Cenários Negativos & Integração CLI)', () => {
-    const validReportRelPath = 'generated/test_valid_report_33.md';
+    const validReportRelPath = '.artifacts/test_valid_report_33.md';
     const validReportAbsPath = path.resolve(root, validReportRelPath);
 
     const ensureValidReport = () => {
@@ -2454,7 +2459,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
     // 15. Geração determinística da atestação final via generate-final-attestation.mjs
     it('15. Geração determinística da atestação final via generate-final-attestation.mjs', () => {
       const attestationScriptPath = path.resolve(root, 'scripts/generate-final-attestation.mjs');
-      const attestationOutDir = path.resolve(root, 'generated/tmp_test_attestation');
+      const attestationOutDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmp-test-attestation-'));
       try {
         setupMockEvidenceBundle(tempDir);
         const res = spawnSync(process.execPath, [
@@ -2496,7 +2501,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
   });
 
   describe('Suite 34: Fail-Closed Final Attestation & Strict Remote API Provenance (16 Cenários Obrigatórios)', () => {
-    const validReportRelPath = 'generated/test_valid_report_34.md';
+    const validReportRelPath = '.artifacts/test_valid_report_34.md';
     const validReportAbsPath = path.resolve(root, validReportRelPath);
 
     const ensureValidReport = () => {
@@ -2680,7 +2685,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
 
     // 6. remote_conclusion está ausente
     it('6. remote_conclusion está ausente na atestação falha com ATTESTATION_SCHEMA_INVALID', () => {
-      const attDir = path.resolve(root, 'generated/tmp_test_attestation_6');
+      const attDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmp-test-attestation-6-'));
       try {
         setupMockEvidenceBundle(tempDir);
         const att = generateFinalAttestation({
@@ -2720,8 +2725,8 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
 
     // 7. remote_conclusion ainda é null, in_progress, queued, failure ou cancelled
     it('7. remote_conclusion com estado não-success falha schema e integridade', () => {
-      const attDir = path.resolve(root, 'generated/tmp_test_attestation_7');
-      const finalDir = path.resolve(root, 'generated/tmp_final_evidence_7');
+      const attDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmp-test-attestation-7-'));
+      const finalDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmp-final-evidence-7-'));
       try {
         setupMockEvidenceBundle(tempDir);
         setupMockFinalEvidence(finalDir);
@@ -2755,8 +2760,8 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
 
     // 8. primary_conclusion não é success
     it('8. primary_conclusion não é success falha com erro', () => {
-      const attDir = path.resolve(root, 'generated/tmp_test_attestation_8');
-      const finalDir = path.resolve(root, 'generated/tmp_final_evidence_8');
+      const attDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmp-test-attestation-8-'));
+      const finalDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmp-final-evidence-8-'));
       try {
         setupMockEvidenceBundle(tempDir);
         setupMockFinalEvidence(finalDir);
@@ -2788,7 +2793,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
 
     // 9. status: PASS aparece sem todos os gates aprovados
     it('9. status: PASS em atestação com conclusão divergente é rejeitado pelo verificador', () => {
-      const attDir = path.resolve(root, 'generated/tmp_test_attestation_9');
+      const attDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmp-test-attestation-9-'));
       try {
         setupMockEvidenceBundle(tempDir);
         generateFinalAttestation({
@@ -2826,7 +2831,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
 
     // 10. SHA, actor ou IDs da atestação divergem das respostas físicas
     it('10. SHA, actor ou IDs da atestação divergem das respostas físicas falha com código específico', () => {
-      const attDir = path.resolve(root, 'generated/tmp_test_attestation_10');
+      const attDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmp-test-attestation-10-'));
       try {
         setupMockEvidenceBundle(tempDir);
         generateFinalAttestation({
@@ -2885,7 +2890,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
 
     // 11. artefacto está ausente, expirado ou ligado a outro SHA
     it('11. artefacto com nome associado a outro SHA ou ID inválido falha com ATTESTATION_ARTIFACT_INVALID', () => {
-      const attDir = path.resolve(root, 'generated/tmp_test_attestation_11');
+      const attDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmp-test-attestation-11-'));
       try {
         setupMockEvidenceBundle(tempDir);
         generateFinalAttestation({
@@ -2922,7 +2927,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
 
     // 12. hash do índice diverge dos bytes físicos
     it('12. hash do índice diverge dos bytes físicos falha com ATTESTATION_EVIDENCE_MISMATCH', () => {
-      const attDir = path.resolve(root, 'generated/tmp_test_attestation_12');
+      const attDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmp-test-attestation-12-'));
       try {
         setupMockEvidenceBundle(tempDir);
         generateFinalAttestation({
@@ -2960,7 +2965,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
 
     // 13. atestação contém propriedade não permitida pelo schema (additionalProperties: false)
     it('13. atestação contém propriedade adicional falha Ajv com ATTESTATION_SCHEMA_INVALID', () => {
-      const attDir = path.resolve(root, 'generated/tmp_test_attestation_13');
+      const attDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmp-test-attestation-13-'));
       try {
         setupMockEvidenceBundle(tempDir);
         generateFinalAttestation({
@@ -3043,7 +3048,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
 
     // 17. Verificação completa de atestação (end-to-end positivo programático e CLI)
     it('17. Verificação completa de atestação (end-to-end positivo programático e CLI)', () => {
-      const attDir = path.resolve(root, 'generated/tmp_test_attestation_17');
+      const attDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmp-test-attestation-17-'));
       try {
         setupMockEvidenceBundle(tempDir);
         const generated = generateFinalAttestation({
@@ -3103,7 +3108,7 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
 
 
   describe('Suite 35: Fecho Forense das Conclusões por Respostas Físicas da API (18 Cenários Negativos & CLI)', () => {
-    const validReportRelPath = 'generated/test_valid_report_35.md';
+    const validReportRelPath = '.artifacts/test_valid_report_35.md';
     const validReportAbsPath = path.resolve(root, validReportRelPath);
 
     const ensureValidReport = () => {
@@ -3119,8 +3124,8 @@ describe('AETF-500 Evidence Coherence & Negative Security Gate (Auditoria Comple
 
     const attestationScriptPath = path.resolve(root, 'scripts/verify-final-attestation.mjs');
     const generatorScriptPath = path.resolve(root, 'scripts/generate-final-attestation.mjs');
-    const testFinalDir = path.resolve(root, 'generated/tmp_final_evidence_35');
-    const testAttDir = path.resolve(root, 'generated/tmp_test_attestation_35');
+    const testFinalDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmp-final-evidence-35-'));
+    const testAttDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tmp-test-attestation-35-'));
 
     const cleanupAll = () => {
       if (fs.existsSync(testFinalDir)) fs.rmSync(testFinalDir, { recursive: true, force: true });

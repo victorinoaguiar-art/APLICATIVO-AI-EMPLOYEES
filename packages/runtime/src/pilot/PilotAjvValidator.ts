@@ -29,7 +29,13 @@ export class PilotAjvValidator {
       try {
         const AjvClass = require('ajv');
         const addFormats = require('ajv-formats');
-        this.ajv = new AjvClass({ allErrors: true, strict: false });
+        this.ajv = new AjvClass({
+          allErrors: true,
+          strict: true,
+          coerceTypes: false,
+          removeAdditional: false,
+          useDefaults: false
+        });
         addFormats(this.ajv);
       } catch (err: any) {
         throw new Error(`Ajv indisponível: ${err.message}`);
@@ -150,5 +156,9 @@ export class PilotAjvValidator {
     if (!valid) {
       throw new Error(this.formatErrors(this.manifestValidator, filePath, 'pilot-evidence-manifest.schema.json'));
     }
+  }
+
+  public getAjv(): any {
+    return this.ajv;
   }
 }

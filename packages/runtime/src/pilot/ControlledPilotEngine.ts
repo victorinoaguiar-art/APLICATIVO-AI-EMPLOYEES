@@ -96,6 +96,22 @@ export class ControlledPilotEngine {
     return this.store.getDbPath();
   }
 
+  public getCommitSha(): string {
+    let commitSha: string = (process.env.GITHUB_SHA || process.env.GIT_COMMIT_SHA || '').trim();
+    if (!commitSha || commitSha.length !== 40) {
+      try {
+        const { execSync } = require('node:child_process');
+        commitSha = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+      } catch {
+        commitSha = '';
+      }
+    }
+    if (!/^[0-9a-f]{40}$/i.test(commitSha)) {
+      throw new Error(`Commit SHA inválido: esperado 40 caracteres hexadecimais do repositório Git, obtido '${commitSha}'.`);
+    }
+    return commitSha.toLowerCase();
+  }
+
   public clearStateForTests(): void {
     this.taskCache.clear();
     this.store.clearTablesForTests();
@@ -391,6 +407,7 @@ export class ControlledPilotEngine {
       task_id: request.task_id,
       pilot_id: request.pilot_id,
       tenant_id: request.tenant_id,
+      commit_sha: this.getCommitSha(),
       employee_id: request.employee_id,
       requested_by: request.requested_by,
       received_at: request.received_at,
@@ -844,6 +861,11 @@ export class ControlledPilotEngine {
       );
     }
 
+    const currentSha = this.getCommitSha();
+    if (task.commit_sha && task.commit_sha !== currentSha) {
+      throw new Error(`Divergência de commit_sha entre tarefa (${task.commit_sha}) e revisão (${currentSha}).`);
+    }
+
     task.human_review_status = params.decision;
     task.reviewed_by = params.reviewer;
     task.reviewed_at = reviewAcceptedAt;
@@ -854,6 +876,10 @@ export class ControlledPilotEngine {
       review_id: params.review_id,
       task_id: params.task_id,
       pilot_id: task.pilot_id,
+      tenant_id: pilot.tenant_id,
+      commit_sha: currentSha,
+      document_version: task.version,
+      challenge_id: challenge.challenge_id,
       reviewer: params.reviewer,
       reviewed_at: reviewAcceptedAt,
       decision: params.decision,
@@ -935,6 +961,32 @@ export class ControlledPilotEngine {
       throw new Error('Entrega bloqueada: Saída sem hash físico não pode ser entregue.');
     }
 
+    // Ponto 3: Localizar revisão aprovada que autorizou a entrega
+    const taskReviews = this.store.listReviewsForTask(params.taskId);
+    const approvedReview = taskReviews.slice().reverse().find(r => 
+      (r.decision === 'APPROVED' || r.decision === 'APPROVED_WITH_CORRECTIONS') &&
+      (r.document_version === task.version || (!r.document_version && task.version === 1))
+    );
+    if (!approvedReview) {
+      throw new Error(`Entrega bloqueada: Nenhuma revisão aprovada encontrada para a versão ${task.version} da tarefa '${params.taskId}'.`);
+    }
+    if (approvedReview.tenant_id && approvedReview.tenant_id !== task.tenant_id) {
+      throw new Error(`Entrega bloqueada: Tenant da revisão '${approvedReview.review_id}' (${approvedReview.tenant_id}) diverge da tarefa (${task.tenant_id}).`);
+    }
+    if (approvedReview.pilot_id && approvedReview.pilot_id !== task.pilot_id) {
+      throw new Error(`Entrega bloqueada: Piloto da revisão '${approvedReview.review_id}' (${approvedReview.pilot_id}) diverge da tarefa (${task.pilot_id}).`);
+    }
+    const currentSha = this.getCommitSha();
+    if (approvedReview.commit_sha && approvedReview.commit_sha !== currentSha) {
+      throw new Error(`Divergência de commit_sha entre revisão (${approvedReview.commit_sha}) e entrega (${currentSha}).`);
+    }
+    if (task.commit_sha && task.commit_sha !== currentSha) {
+      throw new Error(`Divergência de commit_sha entre tarefa (${task.commit_sha}) e entrega (${currentSha}).`);
+    }
+    if (approvedReview.new_output_hash && !task.output_hashes.includes(approvedReview.new_output_hash)) {
+      throw new Error(`Entrega bloqueada: Hash do output aprovado na revisão '${approvedReview.review_id}' (${approvedReview.new_output_hash}) não está presente nos hashes da tarefa.`);
+    }
+
     const deliveredAt = new Date().toISOString();
     const hasExternalResponse = Boolean(params.externalProviderResponse && params.externalProviderResponse.external_id);
 
@@ -957,6 +1009,9 @@ export class ControlledPilotEngine {
       task_id: params.taskId,
       pilot_id: task.pilot_id,
       tenant_id: task.tenant_id,
+      commit_sha: currentSha,
+      document_version: task.version,
+      review_id: approvedReview.review_id,
       delivered_to: params.deliveredTo,
       channel: params.channel,
       delivered_at: deliveredAt,
@@ -1376,7 +1431,7 @@ export class ControlledPilotEngine {
       operationalState = 'PRE-PRODUCTION / L2 HARDENED (SIMULATION HARNESS)';
     } else if (pilot.execution_mode === 'OPERATIONAL_PILOT') {
       classificationStatus = 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY';
-      operationalState = 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY — AUTHENTICATED HUMAN REVIEW GATE READY — FAIL-CLOSED PERSISTENCE, AJV RECEIPTS AND RELATIONAL MANIFEST VERIFIED — REAL PILOT NOT YET EXECUTED';
+      operationalState = 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY — STRICT AJV VERIFIED — INDEPENDENT SQLITE, RECEIPT, FILE AND MANIFEST CONSISTENCY VERIFIED — CLEAN DETERMINISTIC VERIFICATION CONFIRMED — REAL PILOT NOT YET EXECUTED';
     }
 
     const attestation: PilotFinalAttestation = {
@@ -1527,18 +1582,7 @@ export class ControlledPilotEngine {
       return walk(normalizedBaseDir).sort((a, b) => a.relativePath.localeCompare(b.relativePath));
     };
 
-    let commitSha: string = (process.env.GITHUB_SHA || process.env.GIT_COMMIT_SHA || '').trim();
-    if (!commitSha || commitSha.length !== 40) {
-      try {
-        const { execSync } = require('node:child_process');
-        commitSha = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
-      } catch {
-        commitSha = '';
-      }
-    }
-    if (!/^[0-9a-f]{40}$/i.test(commitSha)) {
-      throw new Error(`Commit SHA inválido: esperado 40 caracteres hexadecimais do repositório Git, obtido '${commitSha}'.`);
-    }
+    const commitSha = this.getCommitSha();
 
     const initialFiles = scanDirRecursive(outputDir).filter(
       f => f.relativePath !== 'pilot-evidence-manifest.json' && f.relativePath !== 'pilot-evidence-files.sha256'
@@ -1620,17 +1664,32 @@ export class ControlledPilotEngine {
         docVersion = mapped.version;
         documentId = mapped.output_id;
 
-        const dbOutputBytes = this.store.getOutputBytes(mapped.output_id);
-        if (!dbOutputBytes) {
-          throw new Error(`Output '${mapped.output_id}' presente no filesystem não possui bytes no SQLite.`);
+        const outForensic = this.store.getOutputForensicRecord(mapped.output_id);
+        if (!outForensic) {
+          throw new Error(`Output '${mapped.output_id}' presente no filesystem não possui registo forense no SQLite.`);
+        }
+        if (!outForensic.blob) {
+          throw new Error(`Output '${mapped.output_id}' presente no filesystem não possui BLOB no SQLite.`);
         }
         const diskHash = sha256(bytes);
-        const dbHash = sha256(dbOutputBytes);
-        if (diskHash !== dbHash) {
-          throw new Error(`Hash divergente entre filesystem e SQLite para '${fileName}': disk=${diskHash}, db=${dbHash}.`);
+        const dbBlobHash = outForensic.blobSha256;
+        if (diskHash !== dbBlobHash) {
+          throw new Error(`Divergência entre ficheiro em disco e BLOB SQLite para output '${fileName}': disco=${diskHash}, blob=${dbBlobHash}.`);
         }
-        if (mapped.file_bytes_sha256 !== diskHash) {
-          throw new Error(`Hash do registo SQLite diverge do ficheiro em disco para '${fileName}': registrado=${mapped.file_bytes_sha256}, disco=${diskHash}.`);
+        if (outForensic.rawColumns.file_bytes_sha256 !== diskHash) {
+          throw new Error(`Divergência entre coluna file_bytes_sha256 SQLite e ficheiro em disco para output '${fileName}': coluna=${outForensic.rawColumns.file_bytes_sha256}, disco=${diskHash}.`);
+        }
+        if (outForensic.rawColumns.file_bytes_sha256 !== dbBlobHash) {
+          throw new Error(`Divergência entre coluna file_bytes_sha256 SQLite e BLOB SQLite para output '${fileName}': coluna=${outForensic.rawColumns.file_bytes_sha256}, blob=${dbBlobHash}.`);
+        }
+        if (outForensic.rawColumns.file_name !== fileName) {
+          throw new Error(`Divergência de file_name para output '${mapped.output_id}': coluna=${outForensic.rawColumns.file_name}, disco=${fileName}.`);
+        }
+        if (outForensic.rawColumns.task_id !== mapped.task_id) {
+          throw new Error(`Divergência de task_id para output '${mapped.output_id}': coluna=${outForensic.rawColumns.task_id}, esperado=${mapped.task_id}.`);
+        }
+        if (outForensic.rawColumns.version !== mapped.version) {
+          throw new Error(`Divergência de version para output '${mapped.output_id}': coluna=${outForensic.rawColumns.version}, esperado=${mapped.version}.`);
         }
 
         const detectedMime = PhysicalDocumentValidator.detectMimeType(bytes);
@@ -1661,46 +1720,94 @@ export class ControlledPilotEngine {
         docVersion = parsed.document_version;
         validationType = parsed.validation_type;
 
-        // Ponto 4: Registo SQLite obrigatório
-        const dbReceipt = this.store.getDocumentValidationReceipt(taskId!, docVersion!, validationType as any);
-        if (!dbReceipt) {
+        // Ponto 2: Consulta forense read-only (Plano 1 e Plano 2)
+        const docForensic = this.store.getDocumentValidationForensicRecord(taskId!, docVersion!, validationType as any);
+        if (!docForensic) {
           throw new Error(`Recibo de validação '${f.relativePath}' (task: ${taskId}, v: ${docVersion}) não possui registo correspondente no SQLite.`);
         }
 
-        // Ponto 3: Validação Ajv estrita
+        // Ponto 1: Validação Ajv estrita (Plano 3)
         ajv.validateDocumentValidationReceipt(parsed, f.relativePath);
 
-        // Ponto 4: Comparação Criptográfica
+        // Confrontação Criptográfica
         const recomputedSha = sha256(canonicalJson({ ...parsed, receipt_sha256: '' }));
         if (recomputedSha !== parsed.receipt_sha256) {
           throw new Error(`Recibo de validação documental '${f.relativePath}' com receipt_sha256 corrompido ou adulterado: declarado='${parsed.receipt_sha256}', recalculado='${recomputedSha}'.`);
         }
 
+        const raw = docForensic.rawColumns;
+        const recJson = docForensic.parsedReceipt;
+
+        // Quatro Planos: Plano 1 (Colunas SQLite) ↔ Plano 2 (receipt_json SQLite)
+        if (raw.receipt_id !== recJson.receipt_id && raw.receipt_id !== recJson.validation_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para validação documental '${raw.receipt_id}' no campo 'receipt_id': rawColumns='${raw.receipt_id}', receipt_json='${recJson.receipt_id || recJson.validation_id}'.`);
+        }
+        if (raw.task_id !== recJson.task_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para validação documental '${raw.receipt_id}' no campo 'task_id': rawColumns='${raw.task_id}', receipt_json='${recJson.task_id}'.`);
+        }
+        if (raw.document_version !== recJson.document_version) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para validação documental '${raw.receipt_id}' no campo 'document_version': rawColumns='${raw.document_version}', receipt_json='${recJson.document_version}'.`);
+        }
+        if (raw.validation_type !== recJson.validation_type) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para validação documental '${raw.receipt_id}' no campo 'validation_type': rawColumns='${raw.validation_type}', receipt_json='${recJson.validation_type}'.`);
+        }
+        if (raw.tenant_id !== recJson.tenant_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para validação documental '${raw.receipt_id}' no campo 'tenant_id': rawColumns='${raw.tenant_id}', receipt_json='${recJson.tenant_id}'.`);
+        }
+        if (raw.pilot_id !== recJson.pilot_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para validação documental '${raw.receipt_id}' no campo 'pilot_id': rawColumns='${raw.pilot_id}', receipt_json='${recJson.pilot_id}'.`);
+        }
+        if (raw.result !== recJson.result) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para validação documental '${raw.receipt_id}' no campo 'result': rawColumns='${raw.result}', receipt_json='${recJson.result}'.`);
+        }
+        const rawIsValid = raw.is_valid !== undefined ? Boolean(raw.is_valid) : raw.result === 'PASS';
+        if (rawIsValid !== Boolean(recJson.is_valid)) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para validação documental '${raw.receipt_id}' no campo 'is_valid': rawColumns='${rawIsValid}', receipt_json='${recJson.is_valid}'.`);
+        }
+        if (raw.file_bytes_sha256 !== recJson.file_bytes_sha256) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para validação documental '${raw.receipt_id}' no campo 'file_bytes_sha256': rawColumns='${raw.file_bytes_sha256}', receipt_json='${recJson.file_bytes_sha256}'.`);
+        }
+        if (raw.commit_sha !== recJson.commit_sha) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para validação documental '${raw.receipt_id}' no campo 'commit_sha': rawColumns='${raw.commit_sha}', receipt_json='${recJson.commit_sha}'.`);
+        }
+        if (raw.receipt_sha256 !== recJson.receipt_sha256) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para validação documental '${raw.receipt_id}' no campo 'receipt_sha256': rawColumns='${raw.receipt_sha256}', receipt_json='${recJson.receipt_sha256}'.`);
+        }
+
+        // Quatro Planos: Plano 1 (Colunas SQLite) ↔ Plano 3 (Ficheiro Físico parsed)
         const recId = parsed.receipt_id || parsed.validation_id;
-        const dbRecId = dbReceipt.receipt_id || dbReceipt.validation_id;
-        if (recId !== dbRecId) {
-          throw new Error(`Divergência de receipt_id em '${f.relativePath}': recibo='${recId}', sqlite='${dbRecId}'.`);
+        if (raw.receipt_id !== recId) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'receipt_id': rawColumns='${raw.receipt_id}', ficheiro='${recId}'.`);
         }
-        if (parsed.tenant_id !== dbReceipt.tenant_id) {
-          throw new Error(`Divergência de tenant_id em '${f.relativePath}': recibo='${parsed.tenant_id}', sqlite='${dbReceipt.tenant_id}'.`);
+        if (raw.task_id !== parsed.task_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'task_id': rawColumns='${raw.task_id}', ficheiro='${parsed.task_id}'.`);
         }
-        if (parsed.pilot_id !== dbReceipt.pilot_id) {
-          throw new Error(`Divergência de pilot_id em '${f.relativePath}': recibo='${parsed.pilot_id}', sqlite='${dbReceipt.pilot_id}'.`);
+        if (raw.document_version !== parsed.document_version) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'document_version': rawColumns='${raw.document_version}', ficheiro='${parsed.document_version}'.`);
         }
-        if (parsed.result !== dbReceipt.result) {
-          throw new Error(`Divergência de result em '${f.relativePath}': recibo='${parsed.result}', sqlite='${dbReceipt.result}'.`);
+        if (raw.validation_type !== parsed.validation_type) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'validation_type': rawColumns='${raw.validation_type}', ficheiro='${parsed.validation_type}'.`);
         }
-        if (Boolean(parsed.is_valid) !== Boolean(dbReceipt.is_valid)) {
-          throw new Error(`Divergência de is_valid em '${f.relativePath}': recibo='${parsed.is_valid}', sqlite='${dbReceipt.is_valid}'.`);
+        if (raw.tenant_id !== parsed.tenant_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'tenant_id': rawColumns='${raw.tenant_id}', ficheiro='${parsed.tenant_id}'.`);
         }
-        if (parsed.file_bytes_sha256 !== dbReceipt.file_bytes_sha256) {
-          throw new Error(`Divergência de file_bytes_sha256 em '${f.relativePath}': recibo='${parsed.file_bytes_sha256}', sqlite='${dbReceipt.file_bytes_sha256}'.`);
+        if (raw.pilot_id !== parsed.pilot_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'pilot_id': rawColumns='${raw.pilot_id}', ficheiro='${parsed.pilot_id}'.`);
         }
-        if (parsed.commit_sha !== dbReceipt.commit_sha) {
-          throw new Error(`Divergência de commit_sha em '${f.relativePath}': recibo='${parsed.commit_sha}', sqlite='${dbReceipt.commit_sha}'.`);
+        if (raw.result !== parsed.result) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'result': rawColumns='${raw.result}', ficheiro='${parsed.result}'.`);
         }
-        if (parsed.receipt_sha256 !== dbReceipt.receipt_sha256) {
-          throw new Error(`Divergência de receipt_sha256 em '${f.relativePath}': recibo='${parsed.receipt_sha256}', sqlite='${dbReceipt.receipt_sha256}'.`);
+        if (rawIsValid !== Boolean(parsed.is_valid)) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'is_valid': rawColumns='${rawIsValid}', ficheiro='${parsed.is_valid}'.`);
+        }
+        if (raw.file_bytes_sha256 !== parsed.file_bytes_sha256) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'file_bytes_sha256': rawColumns='${raw.file_bytes_sha256}', ficheiro='${parsed.file_bytes_sha256}'.`);
+        }
+        if (raw.commit_sha !== parsed.commit_sha) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'commit_sha': rawColumns='${raw.commit_sha}', ficheiro='${parsed.commit_sha}'.`);
+        }
+        if (raw.receipt_sha256 !== parsed.receipt_sha256) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'receipt_sha256': rawColumns='${raw.receipt_sha256}', ficheiro='${parsed.receipt_sha256}'.`);
         }
       } else if (f.relativePath.startsWith('task-receipts/')) {
         origin = 'EXECUTION_TASK_RECEIPT';
@@ -1718,56 +1825,104 @@ export class ControlledPilotEngine {
         taskId = parsed.task_id;
         docVersion = parsed.version;
 
-        // Ponto 4: Registo SQLite obrigatório
-        const dbTask = this.store.getTask(taskId!);
-        if (!dbTask) {
+        // Ponto 2: Consulta forense read-only (Plano 1 e Plano 2)
+        const taskForensic = this.store.getTaskForensicRecord(taskId!);
+        if (!taskForensic) {
           throw new Error(`Recibo de tarefa '${f.relativePath}' (task: ${taskId}) não possui registo correspondente no SQLite.`);
         }
-        if (dbTask.version !== docVersion) {
-          throw new Error(`Versão divergente para tarefa '${taskId}': SQLite possui versão ${dbTask.version}, recibo possui ${docVersion}.`);
-        }
 
-        // Ponto 3: Validação Ajv estrita
+        // Ponto 1: Validação Ajv estrita (Plano 3)
         ajv.validateTaskReceipt(parsed, f.relativePath);
 
-        // Ponto 4: Comparação Criptográfica
+        // Confrontação Criptográfica
         const recomputedSha = sha256(canonicalJson({ ...parsed, receipt_sha256: '' }));
         if (recomputedSha !== parsed.receipt_sha256) {
           throw new Error(`Recibo de tarefa '${f.relativePath}' com receipt_sha256 corrompido ou adulterado: declarado='${parsed.receipt_sha256}', recalculado='${recomputedSha}'.`);
         }
 
-        if (dbTask.tenant_id !== parsed.tenant_id) {
-          throw new Error(`Divergência de tenant_id em '${f.relativePath}': recibo='${parsed.tenant_id}', sqlite='${dbTask.tenant_id}'.`);
+        const raw = taskForensic.rawColumns;
+        const recJson = taskForensic.parsedReceipt;
+
+        // Quatro Planos: Plano 1 (Colunas SQLite) ↔ Plano 2 (receipt_json SQLite)
+        if (raw.task_id !== recJson.task_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para tarefa '${raw.task_id}' no campo 'task_id': rawColumns='${raw.task_id}', receipt_json='${recJson.task_id}'.`);
         }
-        if (dbTask.pilot_id !== parsed.pilot_id) {
-          throw new Error(`Divergência de pilot_id em '${f.relativePath}': recibo='${parsed.pilot_id}', sqlite='${dbTask.pilot_id}'.`);
+        if (raw.pilot_id !== recJson.pilot_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para tarefa '${raw.task_id}' no campo 'pilot_id': rawColumns='${raw.pilot_id}', receipt_json='${recJson.pilot_id}'.`);
         }
-        if (dbTask.employee_id !== parsed.employee_id) {
-          throw new Error(`Divergência de employee_id em '${f.relativePath}': recibo='${parsed.employee_id}', sqlite='${dbTask.employee_id}'.`);
+        if (raw.tenant_id !== recJson.tenant_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para tarefa '${raw.task_id}' no campo 'tenant_id': rawColumns='${raw.tenant_id}', receipt_json='${recJson.tenant_id}'.`);
         }
-        if (dbTask.final_status !== parsed.final_status) {
-          throw new Error(`Divergência de final_status em '${f.relativePath}': recibo='${parsed.final_status}', sqlite='${dbTask.final_status}'.`);
+        if (raw.employee_id !== recJson.employee_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para tarefa '${raw.task_id}' no campo 'employee_id': rawColumns='${raw.employee_id}', receipt_json='${recJson.employee_id}'.`);
         }
-        if (dbTask.human_review_status !== parsed.human_review_status) {
-          throw new Error(`Divergência de human_review_status em '${f.relativePath}': recibo='${parsed.human_review_status}', sqlite='${dbTask.human_review_status}'.`);
+        if (raw.idempotency_key !== recJson.idempotency_key) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para tarefa '${raw.task_id}' no campo 'idempotency_key': rawColumns='${raw.idempotency_key}', receipt_json='${recJson.idempotency_key}'.`);
         }
-        if (dbTask.delivery_status !== parsed.delivery_status) {
-          throw new Error(`Divergência de delivery_status em '${f.relativePath}': recibo='${parsed.delivery_status}', sqlite='${dbTask.delivery_status}'.`);
+        if (raw.requested_by !== recJson.requested_by) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para tarefa '${raw.task_id}' no campo 'requested_by': rawColumns='${raw.requested_by}', receipt_json='${recJson.requested_by}'.`);
         }
-        if (dbTask.input_snapshot_sha256 !== parsed.input_snapshot_sha256) {
-          throw new Error(`Divergência de input_snapshot_sha256 em '${f.relativePath}': recibo='${parsed.input_snapshot_sha256}', sqlite='${dbTask.input_snapshot_sha256}'.`);
+        if (raw.human_review_status !== recJson.human_review_status) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para tarefa '${raw.task_id}' no campo 'human_review_status': rawColumns='${raw.human_review_status}', receipt_json='${recJson.human_review_status}'.`);
         }
-        if (dbTask.idempotency_key !== parsed.idempotency_key) {
-          throw new Error(`Divergência de idempotency_key em '${f.relativePath}': recibo='${parsed.idempotency_key}', sqlite='${dbTask.idempotency_key}'.`);
+        if (raw.delivery_status !== recJson.delivery_status) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para tarefa '${raw.task_id}' no campo 'delivery_status': rawColumns='${raw.delivery_status}', receipt_json='${recJson.delivery_status}'.`);
         }
-        if (dbTask.execution_mode !== parsed.execution_mode) {
-          throw new Error(`Divergência de execution_mode em '${f.relativePath}': recibo='${parsed.execution_mode}', sqlite='${dbTask.execution_mode}'.`);
+        if (raw.final_status !== recJson.final_status) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para tarefa '${raw.task_id}' no campo 'final_status': rawColumns='${raw.final_status}', receipt_json='${recJson.final_status}'.`);
         }
-        if (dbTask.receipt_sha256 !== parsed.receipt_sha256) {
-          throw new Error(`Divergência de receipt_sha256 em '${f.relativePath}': recibo='${parsed.receipt_sha256}', sqlite='${dbTask.receipt_sha256}'.`);
+        if (raw.version !== recJson.version) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para tarefa '${raw.task_id}' no campo 'version': rawColumns='${raw.version}', receipt_json='${recJson.version}'.`);
         }
-        if (JSON.stringify(dbTask.output_hashes) !== JSON.stringify(parsed.output_hashes)) {
-          throw new Error(`Divergência de output_hashes em '${f.relativePath}': recibo='${JSON.stringify(parsed.output_hashes)}', sqlite='${JSON.stringify(dbTask.output_hashes)}'.`);
+        if (raw.input_snapshot_sha256 !== recJson.input_snapshot_sha256) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para tarefa '${raw.task_id}' no campo 'input_snapshot_sha256': rawColumns='${raw.input_snapshot_sha256}', receipt_json='${recJson.input_snapshot_sha256}'.`);
+        }
+        if (raw.commit_sha && recJson.commit_sha && raw.commit_sha !== recJson.commit_sha) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para tarefa '${raw.task_id}' no campo 'commit_sha': rawColumns='${raw.commit_sha}', receipt_json='${recJson.commit_sha}'.`);
+        }
+        if (raw.receipt_sha256 && recJson.receipt_sha256 && raw.receipt_sha256 !== recJson.receipt_sha256) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para tarefa '${raw.task_id}' no campo 'receipt_sha256': rawColumns='${raw.receipt_sha256}', receipt_json='${recJson.receipt_sha256}'.`);
+        }
+
+        // Quatro Planos: Plano 1 (Colunas SQLite) ↔ Plano 3 (Ficheiro Físico parsed)
+        if (raw.task_id !== parsed.task_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'task_id': rawColumns='${raw.task_id}', ficheiro='${parsed.task_id}'.`);
+        }
+        if (raw.pilot_id !== parsed.pilot_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'pilot_id': rawColumns='${raw.pilot_id}', ficheiro='${parsed.pilot_id}'.`);
+        }
+        if (raw.tenant_id !== parsed.tenant_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'tenant_id': rawColumns='${raw.tenant_id}', ficheiro='${parsed.tenant_id}'.`);
+        }
+        if (raw.employee_id !== parsed.employee_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'employee_id': rawColumns='${raw.employee_id}', ficheiro='${parsed.employee_id}'.`);
+        }
+        if (raw.idempotency_key !== parsed.idempotency_key) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'idempotency_key': rawColumns='${raw.idempotency_key}', ficheiro='${parsed.idempotency_key}'.`);
+        }
+        if (raw.requested_by !== parsed.requested_by) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'requested_by': rawColumns='${raw.requested_by}', ficheiro='${parsed.requested_by}'.`);
+        }
+        if (raw.human_review_status !== parsed.human_review_status) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'human_review_status': rawColumns='${raw.human_review_status}', ficheiro='${parsed.human_review_status}'.`);
+        }
+        if (raw.delivery_status !== parsed.delivery_status) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'delivery_status': rawColumns='${raw.delivery_status}', ficheiro='${parsed.delivery_status}'.`);
+        }
+        if (raw.final_status !== parsed.final_status) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'final_status': rawColumns='${raw.final_status}', ficheiro='${parsed.final_status}'.`);
+        }
+        if (raw.version !== parsed.version) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'version': rawColumns='${raw.version}', ficheiro='${parsed.version}'.`);
+        }
+        if (raw.input_snapshot_sha256 !== parsed.input_snapshot_sha256) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'input_snapshot_sha256': rawColumns='${raw.input_snapshot_sha256}', ficheiro='${parsed.input_snapshot_sha256}'.`);
+        }
+        if (raw.commit_sha && parsed.commit_sha && raw.commit_sha !== parsed.commit_sha) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'commit_sha': rawColumns='${raw.commit_sha}', ficheiro='${parsed.commit_sha}'.`);
+        }
+        if (raw.receipt_sha256 && parsed.receipt_sha256 && raw.receipt_sha256 !== parsed.receipt_sha256) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'receipt_sha256': rawColumns='${raw.receipt_sha256}', ficheiro='${parsed.receipt_sha256}'.`);
         }
       } else if (f.relativePath.startsWith('review-receipts/')) {
         origin = 'HUMAN_REVIEW_RECEIPT';
@@ -1785,51 +1940,118 @@ export class ControlledPilotEngine {
         taskId = parsed.task_id;
         reviewId = parsed.review_id;
 
-        // Ponto 4: Registo SQLite obrigatório
-        const dbReviews = this.store.listReviewsForTask(taskId!);
-        const dbReview = dbReviews.find(r => r.review_id === reviewId);
-        if (!dbReview) {
+        // Ponto 2: Consulta forense read-only (Plano 1 e Plano 2)
+        const revForensic = this.store.getReviewForensicRecord(reviewId!);
+        if (!revForensic) {
           throw new Error(`Recibo de revisão '${f.relativePath}' não possui registo correspondente no SQLite.`);
         }
 
-        // Ponto 3: Validação Ajv estrita
+        // Ponto 1: Validação Ajv estrita (Plano 3)
         ajv.validateHumanReviewReceipt(parsed, f.relativePath);
 
-        // Ponto 4: Comparação Criptográfica
+        // Confrontação Criptográfica
         const recomputedSha = sha256(canonicalJson({ ...parsed, receipt_sha256: '' }));
         if (recomputedSha !== parsed.receipt_sha256) {
           throw new Error(`Recibo de revisão '${f.relativePath}' com receipt_sha256 corrompido ou adulterado: declarado='${parsed.receipt_sha256}', recalculado='${recomputedSha}'.`);
         }
 
-        if (dbReview.task_id !== parsed.task_id) {
-          throw new Error(`Divergência de task_id em '${f.relativePath}': recibo='${parsed.task_id}', sqlite='${dbReview.task_id}'.`);
+        const raw = revForensic.rawColumns;
+        const recJson = revForensic.parsedReceipt;
+
+        // Quatro Planos: Plano 1 (Colunas SQLite) ↔ Plano 2 (receipt_json SQLite)
+        if (raw.review_id !== recJson.review_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'review_id': rawColumns='${raw.review_id}', receipt_json='${recJson.review_id}'.`);
         }
-        if (dbReview.pilot_id !== parsed.pilot_id) {
-          throw new Error(`Divergência de pilot_id em '${f.relativePath}': recibo='${parsed.pilot_id}', sqlite='${dbReview.pilot_id}'.`);
+        if (raw.task_id !== recJson.task_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'task_id': rawColumns='${raw.task_id}', receipt_json='${recJson.task_id}'.`);
         }
-        if (dbReview.reviewer !== parsed.reviewer) {
-          throw new Error(`Divergência de reviewer em '${f.relativePath}': recibo='${parsed.reviewer}', sqlite='${dbReview.reviewer}'.`);
+        if (raw.pilot_id !== recJson.pilot_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'pilot_id': rawColumns='${raw.pilot_id}', receipt_json='${recJson.pilot_id}'.`);
         }
-        if (dbReview.decision !== parsed.decision) {
-          throw new Error(`Divergência de decision em '${f.relativePath}': recibo='${parsed.decision}', sqlite='${dbReview.decision}'.`);
+        if (raw.tenant_id && recJson.tenant_id && raw.tenant_id !== recJson.tenant_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'tenant_id': rawColumns='${raw.tenant_id}', receipt_json='${recJson.tenant_id}'.`);
         }
-        if (dbReview.comments !== parsed.comments) {
-          throw new Error(`Divergência de comments em '${f.relativePath}': recibo='${parsed.comments}', sqlite='${dbReview.comments}'.`);
+        if (raw.document_version !== undefined && recJson.document_version !== undefined && raw.document_version !== recJson.document_version) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'document_version': rawColumns='${raw.document_version}', receipt_json='${recJson.document_version}'.`);
         }
-        if (dbReview.auth_method !== parsed.auth_method) {
-          throw new Error(`Divergência de auth_method em '${f.relativePath}': recibo='${parsed.auth_method}', sqlite='${dbReview.auth_method}'.`);
+        if (raw.challenge_id && recJson.challenge_id && raw.challenge_id !== recJson.challenge_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'challenge_id': rawColumns='${raw.challenge_id}', receipt_json='${recJson.challenge_id}'.`);
         }
-        if (dbReview.review_signature_sha256 !== parsed.review_signature_sha256) {
-          throw new Error(`Divergência de review_signature_sha256 em '${f.relativePath}': recibo='${parsed.review_signature_sha256}', sqlite='${dbReview.review_signature_sha256}'.`);
+        const rawReviewer = raw.reviewer || raw.reviewer_id;
+        if (rawReviewer !== recJson.reviewer) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'reviewer': rawColumns='${rawReviewer}', receipt_json='${recJson.reviewer}'.`);
         }
-        if (dbReview.receipt_sha256 !== parsed.receipt_sha256) {
-          throw new Error(`Divergência de receipt_sha256 em '${f.relativePath}': recibo='${parsed.receipt_sha256}', sqlite='${dbReview.receipt_sha256}'.`);
+        if (raw.decision !== recJson.decision) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'decision': rawColumns='${raw.decision}', receipt_json='${recJson.decision}'.`);
         }
-        if (dbReview.previous_output_hash !== parsed.previous_output_hash) {
-          throw new Error(`Divergência de previous_output_hash em '${f.relativePath}': recibo='${parsed.previous_output_hash}', sqlite='${dbReview.previous_output_hash}'.`);
+        if (raw.comments !== recJson.comments) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'comments': rawColumns='${raw.comments}', receipt_json='${recJson.comments}'.`);
         }
-        if (dbReview.new_output_hash !== parsed.new_output_hash) {
-          throw new Error(`Divergência de new_output_hash em '${f.relativePath}': recibo='${parsed.new_output_hash}', sqlite='${dbReview.new_output_hash}'.`);
+        if (raw.auth_method !== recJson.auth_method) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'auth_method': rawColumns='${raw.auth_method}', receipt_json='${recJson.auth_method}'.`);
+        }
+        if (raw.review_signature_sha256 !== recJson.review_signature_sha256) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'review_signature_sha256': rawColumns='${raw.review_signature_sha256}', receipt_json='${recJson.review_signature_sha256}'.`);
+        }
+        if (raw.previous_output_hash !== recJson.previous_output_hash) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'previous_output_hash': rawColumns='${raw.previous_output_hash}', receipt_json='${recJson.previous_output_hash}'.`);
+        }
+        if (raw.new_output_hash !== recJson.new_output_hash) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'new_output_hash': rawColumns='${raw.new_output_hash}', receipt_json='${recJson.new_output_hash}'.`);
+        }
+        if (raw.commit_sha && recJson.commit_sha && raw.commit_sha !== recJson.commit_sha) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'commit_sha': rawColumns='${raw.commit_sha}', receipt_json='${recJson.commit_sha}'.`);
+        }
+        if (raw.receipt_sha256 && recJson.receipt_sha256 && raw.receipt_sha256 !== recJson.receipt_sha256) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para revisão '${raw.review_id}' no campo 'receipt_sha256': rawColumns='${raw.receipt_sha256}', receipt_json='${recJson.receipt_sha256}'.`);
+        }
+
+        // Quatro Planos: Plano 1 (Colunas SQLite) ↔ Plano 3 (Ficheiro Físico parsed)
+        if (raw.review_id !== parsed.review_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'review_id': rawColumns='${raw.review_id}', ficheiro='${parsed.review_id}'.`);
+        }
+        if (raw.task_id !== parsed.task_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'task_id': rawColumns='${raw.task_id}', ficheiro='${parsed.task_id}'.`);
+        }
+        if (raw.pilot_id !== parsed.pilot_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'pilot_id': rawColumns='${raw.pilot_id}', ficheiro='${parsed.pilot_id}'.`);
+        }
+        if (raw.tenant_id && parsed.tenant_id && raw.tenant_id !== parsed.tenant_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'tenant_id': rawColumns='${raw.tenant_id}', ficheiro='${parsed.tenant_id}'.`);
+        }
+        if (raw.document_version !== undefined && parsed.document_version !== undefined && raw.document_version !== parsed.document_version) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'document_version': rawColumns='${raw.document_version}', ficheiro='${parsed.document_version}'.`);
+        }
+        if (raw.challenge_id && parsed.challenge_id && raw.challenge_id !== parsed.challenge_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'challenge_id': rawColumns='${raw.challenge_id}', ficheiro='${parsed.challenge_id}'.`);
+        }
+        const rawReviewerDisk = raw.reviewer || raw.reviewer_id;
+        if (rawReviewerDisk !== parsed.reviewer) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'reviewer': rawColumns='${rawReviewerDisk}', ficheiro='${parsed.reviewer}'.`);
+        }
+        if (raw.decision !== parsed.decision) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'decision': rawColumns='${raw.decision}', ficheiro='${parsed.decision}'.`);
+        }
+        if (raw.comments !== parsed.comments) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'comments': rawColumns='${raw.comments}', ficheiro='${parsed.comments}'.`);
+        }
+        if (raw.auth_method !== parsed.auth_method) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'auth_method': rawColumns='${raw.auth_method}', ficheiro='${parsed.auth_method}'.`);
+        }
+        if (raw.review_signature_sha256 !== parsed.review_signature_sha256) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'review_signature_sha256': rawColumns='${raw.review_signature_sha256}', ficheiro='${parsed.review_signature_sha256}'.`);
+        }
+        if (raw.previous_output_hash !== parsed.previous_output_hash) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'previous_output_hash': rawColumns='${raw.previous_output_hash}', ficheiro='${parsed.previous_output_hash}'.`);
+        }
+        if (raw.new_output_hash !== parsed.new_output_hash) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'new_output_hash': rawColumns='${raw.new_output_hash}', ficheiro='${parsed.new_output_hash}'.`);
+        }
+        if (raw.commit_sha && parsed.commit_sha && raw.commit_sha !== parsed.commit_sha) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'commit_sha': rawColumns='${raw.commit_sha}', ficheiro='${parsed.commit_sha}'.`);
+        }
+        if (raw.receipt_sha256 && parsed.receipt_sha256 && raw.receipt_sha256 !== parsed.receipt_sha256) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'receipt_sha256': rawColumns='${raw.receipt_sha256}', ficheiro='${parsed.receipt_sha256}'.`);
         }
       } else if (f.relativePath.startsWith('delivery-receipts/')) {
         origin = 'DELIVERY_RECEIPT';
@@ -1847,43 +2069,98 @@ export class ControlledPilotEngine {
         taskId = parsed.task_id;
         deliveryId = parsed.delivery_id;
 
-        // Ponto 4: Confrontação Relacional Campo a Campo com SQLite
-        const dbDelivery = this.store.getDeliveryForTask(taskId!);
-        if (!dbDelivery || dbDelivery.delivery_id !== deliveryId) {
+        // Ponto 2: Consulta forense read-only (Plano 1 e Plano 2)
+        const delivForensic = this.store.getDeliveryForensicRecord(deliveryId!);
+        if (!delivForensic) {
           throw new Error(`Recibo de entrega '${f.relativePath}' não possui registo correspondente no SQLite.`);
         }
 
-        // Ponto 3: Validação Ajv estrita
+        // Ponto 1: Validação Ajv estrita (Plano 3)
         ajv.validateDeliveryReceipt(parsed, f.relativePath);
 
-        // Ponto 4: Comparação Criptográfica
+        // Confrontação Criptográfica
         const recomputedSha = sha256(canonicalJson({ ...parsed, receipt_sha256: '' }));
         if (recomputedSha !== parsed.receipt_sha256) {
           throw new Error(`Recibo de entrega '${f.relativePath}' com receipt_sha256 corrompido ou adulterado: declarado='${parsed.receipt_sha256}', recalculado='${recomputedSha}'.`);
         }
-        if (dbDelivery.tenant_id !== parsed.tenant_id) {
-          throw new Error(`Divergência de tenant_id em '${f.relativePath}': recibo='${parsed.tenant_id}', sqlite='${dbDelivery.tenant_id}'.`);
+
+        const raw = delivForensic.rawColumns;
+        const recJson = delivForensic.parsedReceipt;
+
+        // Quatro Planos: Plano 1 (Colunas SQLite) ↔ Plano 2 (receipt_json SQLite)
+        if (raw.delivery_id !== recJson.delivery_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para entrega '${raw.delivery_id}' no campo 'delivery_id': rawColumns='${raw.delivery_id}', receipt_json='${recJson.delivery_id}'.`);
         }
-        if (dbDelivery.pilot_id !== parsed.pilot_id) {
-          throw new Error(`Divergência de pilot_id em '${f.relativePath}': recibo='${parsed.pilot_id}', sqlite='${dbDelivery.pilot_id}'.`);
+        if (raw.task_id !== recJson.task_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para entrega '${raw.delivery_id}' no campo 'task_id': rawColumns='${raw.task_id}', receipt_json='${recJson.task_id}'.`);
         }
-        if (dbDelivery.delivered_to !== parsed.delivered_to) {
-          throw new Error(`Divergência de delivered_to em '${f.relativePath}': recibo='${parsed.delivered_to}', sqlite='${dbDelivery.delivered_to}'.`);
+        if (raw.pilot_id !== recJson.pilot_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para entrega '${raw.delivery_id}' no campo 'pilot_id': rawColumns='${raw.pilot_id}', receipt_json='${recJson.pilot_id}'.`);
         }
-        if (dbDelivery.channel !== parsed.channel) {
-          throw new Error(`Divergência de channel em '${f.relativePath}': recibo='${parsed.channel}', sqlite='${dbDelivery.channel}'.`);
+        if (raw.tenant_id !== recJson.tenant_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para entrega '${raw.delivery_id}' no campo 'tenant_id': rawColumns='${raw.tenant_id}', receipt_json='${recJson.tenant_id}'.`);
         }
-        if (dbDelivery.status !== parsed.status) {
-          throw new Error(`Divergência de status em '${f.relativePath}': recibo='${parsed.status}', sqlite='${dbDelivery.status}'.`);
+        if (raw.document_version !== undefined && recJson.document_version !== undefined && raw.document_version !== recJson.document_version) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para entrega '${raw.delivery_id}' no campo 'document_version': rawColumns='${raw.document_version}', receipt_json='${recJson.document_version}'.`);
         }
-        if (Boolean(dbDelivery.is_external_confirmed) !== Boolean(parsed.is_external_confirmed)) {
-          throw new Error(`Divergência de is_external_confirmed em '${f.relativePath}': recibo='${parsed.is_external_confirmed}', sqlite='${dbDelivery.is_external_confirmed}'.`);
+        if (raw.review_id && recJson.review_id && raw.review_id !== recJson.review_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para entrega '${raw.delivery_id}' no campo 'review_id': rawColumns='${raw.review_id}', receipt_json='${recJson.review_id}'.`);
         }
-        if (dbDelivery.receipt_sha256 !== parsed.receipt_sha256) {
-          throw new Error(`Divergência de receipt_sha256 em '${f.relativePath}': recibo='${parsed.receipt_sha256}', sqlite='${dbDelivery.receipt_sha256}'.`);
+        if (raw.delivered_to !== recJson.delivered_to) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para entrega '${raw.delivery_id}' no campo 'delivered_to': rawColumns='${raw.delivered_to}', receipt_json='${recJson.delivered_to}'.`);
         }
-        if (JSON.stringify(dbDelivery.output_hashes) !== JSON.stringify(parsed.output_hashes)) {
-          throw new Error(`Divergência de output_hashes em '${f.relativePath}': recibo='${JSON.stringify(parsed.output_hashes)}', sqlite='${JSON.stringify(dbDelivery.output_hashes)}'.`);
+        if (raw.channel !== recJson.channel) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para entrega '${raw.delivery_id}' no campo 'channel': rawColumns='${raw.channel}', receipt_json='${recJson.channel}'.`);
+        }
+        if (raw.status !== recJson.status) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para entrega '${raw.delivery_id}' no campo 'status': rawColumns='${raw.status}', receipt_json='${recJson.status}'.`);
+        }
+        if (Boolean(raw.is_external_confirmed) !== Boolean(recJson.is_external_confirmed)) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para entrega '${raw.delivery_id}' no campo 'is_external_confirmed': rawColumns='${raw.is_external_confirmed}', receipt_json='${recJson.is_external_confirmed}'.`);
+        }
+        if (raw.commit_sha && recJson.commit_sha && raw.commit_sha !== recJson.commit_sha) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para entrega '${raw.delivery_id}' no campo 'commit_sha': rawColumns='${raw.commit_sha}', receipt_json='${recJson.commit_sha}'.`);
+        }
+        if (raw.receipt_sha256 && recJson.receipt_sha256 && raw.receipt_sha256 !== recJson.receipt_sha256) {
+          throw new Error(`Divergência entre SQLite rawColumns e receipt_json para entrega '${raw.delivery_id}' no campo 'receipt_sha256': rawColumns='${raw.receipt_sha256}', receipt_json='${recJson.receipt_sha256}'.`);
+        }
+
+        // Quatro Planos: Plano 1 (Colunas SQLite) ↔ Plano 3 (Ficheiro Físico parsed)
+        if (raw.delivery_id !== parsed.delivery_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'delivery_id': rawColumns='${raw.delivery_id}', ficheiro='${parsed.delivery_id}'.`);
+        }
+        if (raw.task_id !== parsed.task_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'task_id': rawColumns='${raw.task_id}', ficheiro='${parsed.task_id}'.`);
+        }
+        if (raw.pilot_id !== parsed.pilot_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'pilot_id': rawColumns='${raw.pilot_id}', ficheiro='${parsed.pilot_id}'.`);
+        }
+        if (raw.tenant_id !== parsed.tenant_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'tenant_id': rawColumns='${raw.tenant_id}', ficheiro='${parsed.tenant_id}'.`);
+        }
+        if (raw.document_version !== undefined && parsed.document_version !== undefined && raw.document_version !== parsed.document_version) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'document_version': rawColumns='${raw.document_version}', ficheiro='${parsed.document_version}'.`);
+        }
+        if (raw.review_id && parsed.review_id && raw.review_id !== parsed.review_id) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'review_id': rawColumns='${raw.review_id}', ficheiro='${parsed.review_id}'.`);
+        }
+        if (raw.delivered_to !== parsed.delivered_to) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'delivered_to': rawColumns='${raw.delivered_to}', ficheiro='${parsed.delivered_to}'.`);
+        }
+        if (raw.channel !== parsed.channel) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'channel': rawColumns='${raw.channel}', ficheiro='${parsed.channel}'.`);
+        }
+        if (raw.status !== parsed.status) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'status': rawColumns='${raw.status}', ficheiro='${parsed.status}'.`);
+        }
+        if (Boolean(raw.is_external_confirmed) !== Boolean(parsed.is_external_confirmed)) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'is_external_confirmed': rawColumns='${raw.is_external_confirmed}', ficheiro='${parsed.is_external_confirmed}'.`);
+        }
+        if (raw.commit_sha && parsed.commit_sha && raw.commit_sha !== parsed.commit_sha) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'commit_sha': rawColumns='${raw.commit_sha}', ficheiro='${parsed.commit_sha}'.`);
+        }
+        if (raw.receipt_sha256 && parsed.receipt_sha256 && raw.receipt_sha256 !== parsed.receipt_sha256) {
+          throw new Error(`Divergência entre SQLite rawColumns e ficheiro de recibo '${f.relativePath}' no campo 'receipt_sha256': rawColumns='${raw.receipt_sha256}', ficheiro='${parsed.receipt_sha256}'.`);
         }
       } else if (f.relativePath === 'pilot-authorization-receipt.json') {
         origin = 'AUTHORIZATION_RECEIPT';

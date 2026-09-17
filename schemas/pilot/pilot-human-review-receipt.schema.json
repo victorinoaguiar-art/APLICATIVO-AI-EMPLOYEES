@@ -8,10 +8,16 @@
     "review_id",
     "task_id",
     "pilot_id",
+    "tenant_id",
+    "commit_sha",
+    "document_version",
+    "challenge_id",
     "reviewer",
     "reviewed_at",
     "decision",
     "comments",
+    "previous_output_hash",
+    "new_output_hash",
     "auth_method",
     "review_signature_sha256",
     "receipt_sha256",
@@ -31,6 +37,22 @@
       "pattern": "^[a-zA-Z0-9_-]{1,128}$"
     },
     "pilot_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "tenant_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "document_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "challenge_id": {
       "type": "string",
       "pattern": "^[a-zA-Z0-9_-]{1,128}$"
     },

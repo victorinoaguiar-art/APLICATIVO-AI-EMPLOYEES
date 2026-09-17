@@ -1,7 +1,8 @@
 import * as path from 'node:path';
+import * as os from 'node:os';
 
 /**
- * Validates that customDir resolves strictly within rootDir workspace.
+ * Validates that customDir resolves strictly within rootDir workspace (or system temp).
  * Rejects:
  * - Empty string or flag values when argument provided
  * - Root directory itself
@@ -32,8 +33,13 @@ export function validateEvidenceDir(customDir, rootDir) {
     throw err;
   }
 
+  const systemTmp = path.resolve(os.tmpdir());
+  const isInsideTmp = process.platform === 'win32'
+    ? targetDir.toLowerCase().startsWith(systemTmp.toLowerCase())
+    : targetDir.startsWith(systemTmp);
+
   const rel = path.relative(resolvedRoot, targetDir);
-  if (!rel || rel.startsWith('..') || path.isAbsolute(rel)) {
+  if (!isInsideTmp && (!rel || rel.startsWith('..') || path.isAbsolute(rel))) {
     const err = new Error(`Evidence output directory must be within workspace: ${targetDir}`);
     err.code = 'EVIDENCE_PATH_INVALID';
     throw err;

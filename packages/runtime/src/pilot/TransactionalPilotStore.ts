@@ -12,7 +12,12 @@ import {
   OperationalPilotMode,
   PilotReviewChallenge,
   PilotDocumentValidationReceipt,
-  PilotDocumentValidationType
+  PilotDocumentValidationType,
+  PilotTaskForensicRecord,
+  PilotOutputForensicRecord,
+  PilotDocValidationForensicRecord,
+  PilotReviewForensicRecord,
+  PilotDeliveryForensicRecord
 } from '@ai-employee/shared';
 
 function canonicalJson(obj: any): string {
@@ -55,6 +60,10 @@ export class TransactionalPilotStore {
 
     this.db = new DatabaseSync(this.dbPath);
     this.runMigrations();
+  }
+
+  public getRawDb(): any {
+    return this.db;
   }
 
   public getDbPath(): string {
@@ -142,6 +151,8 @@ export class TransactionalPilotStore {
         final_status TEXT NOT NULL,
         version INTEGER NOT NULL DEFAULT 1,
         input_snapshot_sha256 TEXT NOT NULL,
+        commit_sha TEXT,
+        receipt_sha256 TEXT,
         receipt_json TEXT NOT NULL,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
@@ -193,6 +204,7 @@ export class TransactionalPilotStore {
         parser_version TEXT NOT NULL,
         file_bytes_sha256 TEXT NOT NULL,
         result TEXT NOT NULL,
+        is_valid INTEGER NOT NULL DEFAULT 1,
         page_or_cell_count INTEGER,
         error TEXT,
         error_details TEXT,
@@ -200,6 +212,7 @@ export class TransactionalPilotStore {
         execution_completed_at TEXT,
         commit_sha TEXT,
         receipt_sha256 TEXT,
+        receipt_json TEXT,
         validated_at TEXT NOT NULL,
         FOREIGN KEY (task_id) REFERENCES pilot_tasks(task_id) ON DELETE CASCADE
       );
@@ -219,9 +232,20 @@ export class TransactionalPilotStore {
         review_id TEXT PRIMARY KEY,
         task_id TEXT NOT NULL,
         pilot_id TEXT NOT NULL,
+        tenant_id TEXT,
         reviewer_id TEXT NOT NULL,
+        reviewer TEXT,
         decision TEXT NOT NULL,
+        comments TEXT,
+        auth_method TEXT,
         signature TEXT NOT NULL,
+        review_signature_sha256 TEXT,
+        document_version INTEGER,
+        challenge_id TEXT,
+        previous_output_hash TEXT,
+        new_output_hash TEXT,
+        commit_sha TEXT,
+        receipt_sha256 TEXT,
         receipt_json TEXT NOT NULL,
         created_at TEXT NOT NULL,
         FOREIGN KEY (task_id) REFERENCES pilot_tasks(task_id) ON DELETE CASCADE
@@ -232,9 +256,15 @@ export class TransactionalPilotStore {
         task_id TEXT NOT NULL,
         pilot_id TEXT NOT NULL,
         tenant_id TEXT NOT NULL,
+        delivered_to TEXT NOT NULL,
         channel TEXT NOT NULL,
         status TEXT NOT NULL,
+        is_external_confirmed INTEGER NOT NULL DEFAULT 0,
+        document_version INTEGER,
+        review_id TEXT,
         external_receipt_id TEXT,
+        commit_sha TEXT,
+        receipt_sha256 TEXT,
         receipt_json TEXT NOT NULL,
         created_at TEXT NOT NULL,
         FOREIGN KEY (task_id) REFERENCES pilot_tasks(task_id) ON DELETE CASCADE
@@ -290,12 +320,90 @@ export class TransactionalPilotStore {
       if (!colNames.has('commit_sha')) {
         this.db.exec(`ALTER TABLE task_document_validations ADD COLUMN commit_sha TEXT`);
       }
+      if (!colNames.has('is_valid')) {
+        this.db.exec(`ALTER TABLE task_document_validations ADD COLUMN is_valid INTEGER NOT NULL DEFAULT 1`);
+      }
       if (!colNames.has('receipt_sha256')) {
         this.db.exec(`ALTER TABLE task_document_validations ADD COLUMN receipt_sha256 TEXT`);
+      }
+      if (!colNames.has('receipt_json')) {
+        this.db.exec(`ALTER TABLE task_document_validations ADD COLUMN receipt_json TEXT`);
       }
     } catch {
       // Ignored if table fresh
     }
+
+    try {
+      const taskCols = this.db.prepare(`PRAGMA table_info(pilot_tasks)`).all() as any[];
+      const taskColNames = new Set(taskCols.map(c => c.name));
+      if (!taskColNames.has('commit_sha')) {
+        this.db.exec(`ALTER TABLE pilot_tasks ADD COLUMN commit_sha TEXT`);
+      }
+      if (!taskColNames.has('receipt_sha256')) {
+        this.db.exec(`ALTER TABLE pilot_tasks ADD COLUMN receipt_sha256 TEXT`);
+      }
+    } catch {}
+
+    try {
+      const revCols = this.db.prepare(`PRAGMA table_info(human_reviews)`).all() as any[];
+      const revColNames = new Set(revCols.map(c => c.name));
+      if (!revColNames.has('tenant_id')) {
+        this.db.exec(`ALTER TABLE human_reviews ADD COLUMN tenant_id TEXT`);
+      }
+      if (!revColNames.has('commit_sha')) {
+        this.db.exec(`ALTER TABLE human_reviews ADD COLUMN commit_sha TEXT`);
+      }
+      if (!revColNames.has('document_version')) {
+        this.db.exec(`ALTER TABLE human_reviews ADD COLUMN document_version INTEGER`);
+      }
+      if (!revColNames.has('challenge_id')) {
+        this.db.exec(`ALTER TABLE human_reviews ADD COLUMN challenge_id TEXT`);
+      }
+      if (!revColNames.has('previous_output_hash')) {
+        this.db.exec(`ALTER TABLE human_reviews ADD COLUMN previous_output_hash TEXT`);
+      }
+      if (!revColNames.has('new_output_hash')) {
+        this.db.exec(`ALTER TABLE human_reviews ADD COLUMN new_output_hash TEXT`);
+      }
+      if (!revColNames.has('comments')) {
+        this.db.exec(`ALTER TABLE human_reviews ADD COLUMN comments TEXT`);
+      }
+      if (!revColNames.has('auth_method')) {
+        this.db.exec(`ALTER TABLE human_reviews ADD COLUMN auth_method TEXT`);
+      }
+      if (!revColNames.has('review_signature_sha256')) {
+        this.db.exec(`ALTER TABLE human_reviews ADD COLUMN review_signature_sha256 TEXT`);
+      }
+      if (!revColNames.has('reviewer')) {
+        this.db.exec(`ALTER TABLE human_reviews ADD COLUMN reviewer TEXT`);
+      }
+      if (!revColNames.has('receipt_sha256')) {
+        this.db.exec(`ALTER TABLE human_reviews ADD COLUMN receipt_sha256 TEXT`);
+      }
+    } catch {}
+
+    try {
+      const delCols = this.db.prepare(`PRAGMA table_info(pilot_deliveries)`).all() as any[];
+      const delColNames = new Set(delCols.map(c => c.name));
+      if (!delColNames.has('delivered_to')) {
+        this.db.exec(`ALTER TABLE pilot_deliveries ADD COLUMN delivered_to TEXT DEFAULT ''`);
+      }
+      if (!delColNames.has('is_external_confirmed')) {
+        this.db.exec(`ALTER TABLE pilot_deliveries ADD COLUMN is_external_confirmed INTEGER NOT NULL DEFAULT 0`);
+      }
+      if (!delColNames.has('commit_sha')) {
+        this.db.exec(`ALTER TABLE pilot_deliveries ADD COLUMN commit_sha TEXT`);
+      }
+      if (!delColNames.has('document_version')) {
+        this.db.exec(`ALTER TABLE pilot_deliveries ADD COLUMN document_version INTEGER`);
+      }
+      if (!delColNames.has('review_id')) {
+        this.db.exec(`ALTER TABLE pilot_deliveries ADD COLUMN review_id TEXT`);
+      }
+      if (!delColNames.has('receipt_sha256')) {
+        this.db.exec(`ALTER TABLE pilot_deliveries ADD COLUMN receipt_sha256 TEXT`);
+      }
+    } catch {}
   }
 
   public transaction<T>(fn: () => T): T {
@@ -431,8 +539,9 @@ export class TransactionalPilotStore {
       INSERT INTO pilot_tasks (
         task_id, pilot_id, tenant_id, employee_id, idempotency_key,
         requested_by, human_review_status, delivery_status, final_status,
-        version, input_snapshot_sha256, receipt_json, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        version, input_snapshot_sha256, commit_sha, receipt_sha256,
+        receipt_json, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     stmt.run(
       task.task_id,
@@ -446,6 +555,8 @@ export class TransactionalPilotStore {
       task.final_status,
       task.version,
       task.input_snapshot_sha256,
+      task.commit_sha || null,
+      task.receipt_sha256 || null,
       JSON.stringify(task),
       task.received_at,
       executionCompletedAt
@@ -508,6 +619,8 @@ export class TransactionalPilotStore {
         delivery_status = ?,
         final_status = ?,
         version = ?,
+        commit_sha = ?,
+        receipt_sha256 = ?,
         receipt_json = ?,
         updated_at = ?
       WHERE task_id = ? AND pilot_id = ?
@@ -517,6 +630,8 @@ export class TransactionalPilotStore {
       task.delivery_status,
       task.final_status,
       task.version,
+      task.commit_sha || null,
+      task.receipt_sha256 || null,
       JSON.stringify(task),
       new Date().toISOString(),
       task.task_id,
@@ -794,16 +909,30 @@ export class TransactionalPilotStore {
 
     const stmt = this.db.prepare(`
       INSERT INTO human_reviews (
-        review_id, task_id, pilot_id, reviewer_id, decision, signature, receipt_json, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        review_id, task_id, pilot_id, tenant_id, reviewer_id, reviewer, decision,
+        comments, auth_method, signature, review_signature_sha256,
+        document_version, challenge_id, previous_output_hash, new_output_hash,
+        commit_sha, receipt_sha256, receipt_json, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     stmt.run(
       review.review_id,
       review.task_id,
       review.pilot_id,
+      review.tenant_id || null,
+      review.reviewer,
       review.reviewer,
       review.decision,
+      review.comments || '',
+      review.auth_method || 'HMAC_SIGNATURE',
       review.review_signature_sha256,
+      review.review_signature_sha256,
+      review.document_version || null,
+      review.challenge_id || null,
+      review.previous_output_hash || null,
+      review.new_output_hash || null,
+      review.commit_sha || null,
+      review.receipt_sha256 || null,
       JSON.stringify(review),
       review.reviewed_at
     );
@@ -1094,10 +1223,10 @@ export class TransactionalPilotStore {
       INSERT OR REPLACE INTO task_document_validations (
         receipt_id, task_id, document_version, validation_type, tenant_id,
         pilot_id, file_path, format, parser_name, parser_version,
-        file_bytes_sha256, result, page_or_cell_count, error, error_details,
+        file_bytes_sha256, result, is_valid, page_or_cell_count, error, error_details,
         execution_started_at, execution_completed_at, commit_sha, receipt_sha256,
-        validated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        receipt_json, validated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     stmt.run(
       receipt.receipt_id,
@@ -1112,6 +1241,7 @@ export class TransactionalPilotStore {
       receipt.parser_version,
       receipt.file_bytes_sha256,
       receipt.result,
+      receipt.is_valid !== undefined ? (receipt.is_valid ? 1 : 0) : (receipt.result === 'PASS' ? 1 : 0),
       receipt.page_or_cell_count || null,
       receipt.error || null,
       receipt.error_details || receipt.error || null,
@@ -1119,6 +1249,7 @@ export class TransactionalPilotStore {
       receipt.execution_completed_at || null,
       receipt.commit_sha || null,
       receipt.receipt_sha256 || null,
+      canonicalJson(receipt),
       receipt.validated_at
     );
   }
@@ -1308,18 +1439,25 @@ export class TransactionalPilotStore {
 
     const stmt = this.db.prepare(`
       INSERT INTO pilot_deliveries (
-        delivery_id, task_id, pilot_id, tenant_id, channel, status,
-        external_receipt_id, receipt_json, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        delivery_id, task_id, pilot_id, tenant_id, delivered_to, channel, status,
+        is_external_confirmed, document_version, review_id, external_receipt_id,
+        commit_sha, receipt_sha256, receipt_json, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     stmt.run(
       delivery.delivery_id,
       delivery.task_id,
       delivery.pilot_id,
       delivery.tenant_id,
+      delivery.delivered_to,
       delivery.channel,
       delivery.status,
+      delivery.is_external_confirmed ? 1 : 0,
+      delivery.document_version || null,
+      delivery.review_id || null,
       delivery.external_provider_response?.external_id || null,
+      delivery.commit_sha || null,
+      delivery.receipt_sha256 || null,
       JSON.stringify(delivery),
       delivery.delivered_at
     );
@@ -1398,6 +1536,138 @@ export class TransactionalPilotStore {
       details: r.details,
       resolved: Boolean(r.resolved)
     }));
+  }
+
+  // -------------------------------------------------------------
+  // Forensic Read-Only Queries (Four Planes of Truth)
+  // -------------------------------------------------------------
+  public getTaskForensicRecord(taskId: string): PilotTaskForensicRecord | null {
+    const stmt = this.db.prepare(`SELECT * FROM pilot_tasks WHERE task_id = ?`);
+    const row = stmt.get(taskId) as any;
+    if (!row) return null;
+    const { receipt_json, ...rawColumns } = row;
+    return {
+      rawColumns,
+      rawReceiptJson: receipt_json,
+      parsedReceipt: JSON.parse(receipt_json)
+    };
+  }
+
+  public getOutputForensicRecord(outputIdOrTaskId: string, version?: number): PilotOutputForensicRecord | null {
+    let stmt = this.db.prepare(`SELECT * FROM task_outputs WHERE output_id = ?`);
+    let row = stmt.get(outputIdOrTaskId) as any;
+    if (!row) {
+      if (version !== undefined) {
+        stmt = this.db.prepare(`SELECT * FROM task_outputs WHERE task_id = ? AND version = ? ORDER BY created_at DESC LIMIT 1`);
+        row = stmt.get(outputIdOrTaskId, version) as any;
+      } else {
+        stmt = this.db.prepare(`SELECT * FROM task_outputs WHERE task_id = ? ORDER BY created_at DESC LIMIT 1`);
+        row = stmt.get(outputIdOrTaskId) as any;
+      }
+    }
+    if (!row) return null;
+    const { file_bytes, ...rawColumns } = row;
+    const blobHash = createHash('sha256').update(file_bytes).digest('hex');
+    return {
+      rawColumns,
+      blob: file_bytes,
+      blobSha256: blobHash,
+      storedHash: row.file_bytes_sha256
+    };
+  }
+
+  public getDocumentValidationForensicRecord(
+    taskId: string,
+    version: number,
+    validationType?: string
+  ): PilotDocValidationForensicRecord | null {
+    let stmt: any;
+    let row: any;
+    if (validationType) {
+      stmt = this.db.prepare(`
+        SELECT * FROM task_document_validations
+        WHERE task_id = ? AND document_version = ? AND validation_type = ?
+      `);
+      row = stmt.get(taskId, version, validationType) as any;
+    } else {
+      stmt = this.db.prepare(`
+        SELECT * FROM task_document_validations
+        WHERE task_id = ? AND document_version = ?
+        ORDER BY validated_at DESC LIMIT 1
+      `);
+      row = stmt.get(taskId, version) as any;
+    }
+    if (!row) return null;
+    let parsed: any;
+    if (row.receipt_json) {
+      try {
+        parsed = JSON.parse(row.receipt_json);
+      } catch {}
+    }
+    if (!parsed) {
+      parsed = {
+        receipt_id: row.receipt_id,
+        validation_id: row.receipt_id,
+        validation_type: row.validation_type,
+        task_id: row.task_id,
+        document_version: row.document_version,
+        tenant_id: row.tenant_id,
+        pilot_id: row.pilot_id,
+        file_path: row.file_path,
+        format: row.format,
+        parser_name: row.parser_name,
+        parser_version: row.parser_version,
+        file_bytes_sha256: row.file_bytes_sha256,
+        result: row.result,
+        is_valid: Boolean(row.is_valid !== undefined ? row.is_valid : row.result === 'PASS'),
+        page_or_cell_count: row.page_or_cell_count,
+        error: row.error,
+        error_details: row.error_details,
+        execution_started_at: row.execution_started_at,
+        execution_completed_at: row.execution_completed_at,
+        commit_sha: row.commit_sha,
+        receipt_sha256: row.receipt_sha256,
+        validated_at: row.validated_at
+      };
+    }
+    return {
+      rawColumns: {
+        ...row,
+        is_valid: row.is_valid !== undefined ? (row.is_valid === 1 || row.is_valid === true) : row.result === 'PASS'
+      },
+      rawReceiptJson: row.receipt_json || canonicalJson(parsed),
+      parsedReceipt: parsed
+    };
+  }
+
+  public getReviewForensicRecord(reviewId: string): PilotReviewForensicRecord | null {
+    const stmt = this.db.prepare(`SELECT * FROM human_reviews WHERE review_id = ?`);
+    const row = stmt.get(reviewId) as any;
+    if (!row) return null;
+    const { receipt_json, ...rawColumns } = row;
+    const parsed = JSON.parse(receipt_json);
+    return {
+      rawColumns: {
+        ...rawColumns,
+        comments: rawColumns.comments !== undefined ? rawColumns.comments : parsed.comments,
+        auth_method: rawColumns.auth_method !== undefined ? rawColumns.auth_method : parsed.auth_method,
+        review_signature_sha256: rawColumns.review_signature_sha256 || rawColumns.signature || parsed.review_signature_sha256
+      },
+      rawReceiptJson: receipt_json,
+      parsedReceipt: parsed
+    };
+  }
+
+  public getDeliveryForensicRecord(deliveryId: string): PilotDeliveryForensicRecord | null {
+    const stmt = this.db.prepare(`SELECT * FROM pilot_deliveries WHERE delivery_id = ?`);
+    const row = stmt.get(deliveryId) as any;
+    if (!row) return null;
+    const { receipt_json, ...rawColumns } = row;
+    return {
+      rawColumns,
+      rawReceiptJson: receipt_json,
+      parsedReceipt: JSON.parse(receipt_json)
+    };
   }
 
   public close(): void {

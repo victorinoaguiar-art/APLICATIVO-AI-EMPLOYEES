@@ -1,7 +1,8 @@
-import { describe, it } from 'node:test';
+import { describe, it, after } from 'node:test';
 import assert from 'node:assert';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import * as os from 'node:os';
 import { pathToFileURL } from 'node:url';
 
 describe('AETF-500 Pure Cardinality Calculators & Dynamic Physical Truth (Cross-Platform & Strict Schemas)', async () => {
@@ -13,7 +14,7 @@ describe('AETF-500 Pure Cardinality Calculators & Dynamic Physical Truth (Cross-
   };
   const root = getRoot();
   const calcModulePath = path.resolve(root, 'scripts/lib/cardinalityCalculators.mjs');
-  const tempDir = path.resolve(root, 'generated/tmp_test_cardinality_reconciled');
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cardinality-reconciled-'));
 
   // Dynamic import of the pure ESM calculator module
   const {
@@ -39,6 +40,10 @@ describe('AETF-500 Pure Cardinality Calculators & Dynamic Physical Truth (Cross-
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
   };
+
+  after(() => {
+    cleanupTempDir();
+  });
 
   // 1. Schema presente e válido
   it('1. Schema presente e válido valida estrutura com sucesso', () => {

@@ -25,9 +25,14 @@
     "execution_mode",
     "is_simulation",
     "classification_level",
+    "commit_sha",
     "receipt_sha256"
   ],
   "properties": {
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
     "task_id": {
       "type": "string",
       "pattern": "^[a-zA-Z0-9_-]{1,128}$"

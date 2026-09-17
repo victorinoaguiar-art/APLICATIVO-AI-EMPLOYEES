@@ -154,6 +154,7 @@ export interface PilotTaskReceipt {
   error_code: string | null;
   version?: number;
   idempotency_key?: string;
+  commit_sha?: string;
   receipt_sha256?: string;
   execution_mode: OperationalPilotMode;
   is_simulation: boolean;
@@ -164,6 +165,10 @@ export interface PilotHumanReviewReceipt {
   review_id: string;
   task_id: string;
   pilot_id: string;
+  tenant_id?: string;
+  commit_sha?: string;
+  document_version?: number;
+  challenge_id?: string;
   reviewer: string;
   reviewed_at: string;
   decision: HumanReviewStatus;
@@ -189,6 +194,9 @@ export interface PilotDeliveryReceipt {
   task_id: string;
   pilot_id: string;
   tenant_id: string;
+  commit_sha?: string;
+  document_version?: number;
+  review_id?: string;
   delivered_to: string;
   channel: string;
   delivered_at: string;
@@ -197,6 +205,37 @@ export interface PilotDeliveryReceipt {
   is_external_confirmed: boolean;
   external_provider_response?: Record<string, any>;
   receipt_sha256: string;
+}
+
+export interface PilotTaskForensicRecord {
+  rawColumns: Record<string, any>;
+  rawReceiptJson: string;
+  parsedReceipt: PilotTaskReceipt;
+}
+
+export interface PilotOutputForensicRecord {
+  rawColumns: Record<string, any>;
+  blob: Buffer;
+  blobSha256: string;
+  storedHash: string;
+}
+
+export interface PilotDocValidationForensicRecord {
+  rawColumns: Record<string, any>;
+  rawReceiptJson?: string;
+  parsedReceipt: PilotDocumentValidationReceipt;
+}
+
+export interface PilotReviewForensicRecord {
+  rawColumns: Record<string, any>;
+  rawReceiptJson: string;
+  parsedReceipt: PilotHumanReviewReceipt;
+}
+
+export interface PilotDeliveryForensicRecord {
+  rawColumns: Record<string, any>;
+  rawReceiptJson: string;
+  parsedReceipt: PilotDeliveryReceipt;
 }
 
 export interface PilotMetrics {

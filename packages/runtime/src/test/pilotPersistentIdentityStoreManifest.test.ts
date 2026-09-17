@@ -542,7 +542,7 @@ test('Persistent Identity, Store Fail-Closed & Relational Manifest — 32 Strict
 
       assert.throws(
         () => engine.verifyEvidenceDirectory(pilotId, outDir),
-        (err: any) => err.message.includes('Versão divergente para tarefa')
+        (err: any) => /Versão divergente para tarefa|Divergência.*version|adulterado/i.test(err.message)
       );
     });
 
@@ -615,7 +615,7 @@ test('Persistent Identity, Store Fail-Closed & Relational Manifest — 32 Strict
 
       assert.throws(
         () => engine.verifyEvidenceDirectory(pilotId, outDir),
-        (err: any) => err.message.includes('Hash divergente entre filesystem e SQLite')
+        (err: any) => /Hash divergente entre filesystem e SQLite|Divergência entre ficheiro em disco e BLOB SQLite|Divergência entre coluna file_bytes_sha256 SQLite e ficheiro em disco/i.test(err.message)
       );
     });
 

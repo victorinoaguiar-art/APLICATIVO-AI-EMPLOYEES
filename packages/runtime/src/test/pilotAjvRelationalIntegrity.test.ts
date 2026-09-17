@@ -68,6 +68,7 @@ test('Micro-Patch Final — Ajv, Integridade Relacional e Três Planos de Verdad
       execution_mode: 'SIMULATION',
       is_simulation: true,
       classification_level: 'CONFIDENTIAL',
+      commit_sha: 'a'.repeat(40),
       receipt_sha256: ''
     };
     task.receipt_sha256 = sha256(canonicalJson(task));
@@ -528,13 +529,16 @@ test('Micro-Patch Final — Ajv, Integridade Relacional e Três Planos de Verdad
       assert.ok(outFiles.length > 0);
       const targetPath = path.join(outDir, outFiles[0]);
       const original = fs.readFileSync(targetPath);
-      const corrupted = Buffer.concat([original, Buffer.from('TAMPER')]);
-      fs.writeFileSync(targetPath, corrupted);
-      assert.throws(
-        () => engine.verifyEvidenceDirectory(pilotId, evidenceDir),
-        /Hash divergente entre filesystem e SQLite/
-      );
-      fs.writeFileSync(targetPath, original);
+      try {
+        const corrupted = Buffer.concat([original, Buffer.from('TAMPER')]);
+        fs.writeFileSync(targetPath, corrupted);
+        assert.throws(
+          () => engine.verifyEvidenceDirectory(pilotId, evidenceDir),
+          /Hash divergente entre filesystem e SQLite|Divergência entre ficheiro em disco e BLOB SQLite|Divergência entre coluna file_bytes_sha256 SQLite e ficheiro em disco/
+        );
+      } finally {
+        fs.writeFileSync(targetPath, original);
+      }
     });
 
     await t4.test('4.7 Revisão ligada a tarefa inexistente no SQLite falha', () => {

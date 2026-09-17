@@ -9,6 +9,9 @@
     "task_id",
     "pilot_id",
     "tenant_id",
+    "commit_sha",
+    "document_version",
+    "review_id",
     "delivered_to",
     "channel",
     "delivered_at",
@@ -31,6 +34,18 @@
       "pattern": "^[a-zA-Z0-9_-]{1,128}$"
     },
     "tenant_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "document_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "review_id": {
       "type": "string",
       "pattern": "^[a-zA-Z0-9_-]{1,128}$"
     },
