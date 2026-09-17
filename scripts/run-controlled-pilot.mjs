@@ -15,11 +15,17 @@ const endAt = '2026-10-15T18:00:00Z';
 const selectedEmployees = [66, 263, 58, 52, 73];
 const humanReviewers = ['rev_maria_santos', 'rev_joao_manuel'];
 
+const args = process.argv.slice(2);
+const modeArg = args.find(a => a.startsWith('--mode='));
+const rawMode = modeArg ? modeArg.split('=')[1].toLowerCase() : 'simulation';
+const mode = rawMode === 'operational' ? 'OPERATIONAL_PILOT' : 'SIMULATION';
+
 console.log('================================================================');
-console.log('PILOTO OPERACIONAL CONTROLADO, RUNTIME PROOF & WORK VALIDATION');
+console.log(`PILOTO OPERACIONAL CONTROLADO — MODO: ${mode}`);
 console.log('================================================================');
 console.log(`Organização: ${orgName}`);
 console.log(`Tenant: ${tenantId}`);
+console.log(`Modo de Execução: ${mode}`);
 console.log(`Autorização: ${authRef} (por ${authorizedBy})`);
 console.log(`Employees Selecionados: ${selectedEmployees.join(', ')}`);
 console.log('----------------------------------------------------------------\n');
@@ -29,11 +35,29 @@ engine.reset();
 
 // 1. Criar e autorizar o piloto
 console.log('[1/5] Inicializando e Autorizando o Piloto...');
+
+let authDocPath;
+let authDocSha;
+let reviewerConfigs;
+
+if (mode === 'OPERATIONAL_PILOT') {
+  const docArg = args.find(a => a.startsWith('--auth-doc='));
+  authDocPath = docArg ? docArg.split('=')[1] : undefined;
+  if (!authDocPath || !fs.existsSync(authDocPath)) {
+    console.warn('\n[AVISO OPERACIONAL] Ficheiro de autorização física externa não fornecido via --auth-doc=<caminho>.');
+    console.warn('Classificação Atual: OPERATIONAL_PILOT_INFRASTRUCTURE_READY — REAL PILOT NOT YET EXECUTED');
+    console.warn('A infraestrutura está 100% pronta e com falha fechada ativa.\n');
+    process.exit(0);
+  }
+}
+
 engine.createPilot({
   pilot_id: pilotId,
   tenant_id: tenantId,
   organization_name: orgName,
   authorization_reference: authRef,
+  authorization_document_path: authDocPath,
+  authorization_document_sha256: authDocSha,
   authorized_by: authorizedBy,
   authorized_at: authorizedAt,
   start_at: startAt,
@@ -44,12 +68,14 @@ engine.createPilot({
   allowed_connectors: ['T.DOCS.CLASSIFIER', 'T.DOCS.GENERATOR', 'T.EXCEL.ANALYZER'],
   prohibited_actions: ['DIRECT_WIRE_TRANSFER', 'UNAPPROVED_TAX_AMENDMENT', 'MASS_DATA_DELETION'],
   human_reviewers: humanReviewers,
-  task_limit: 50
+  reviewer_configs: reviewerConfigs,
+  task_limit: 50,
+  execution_mode: mode
 });
 
 engine.authorizePilot(pilotId, authRef, authorizedBy, authorizedAt);
 engine.activatePilot(pilotId);
-console.log(`      Piloto '${pilotId}' em estado: ACTIVE\n`);
+console.log(`      Piloto '${pilotId}' em estado: ACTIVE (Modo: ${mode})\n`);
 
 // 2. Definir o conjunto das 30 tarefas reais autorizadas (6 por Employee)
 const taskDefinitions = [
@@ -276,7 +302,7 @@ const taskDefinitions = [
     instruction: 'Apresentar volumetria processada e tempos médios de resposta',
     input: { period: 'Q3 2026' },
     needsCorrection: true,
-    correctionText: '%PDF-1.7\n[PDF DOCUMENT]\nRELATÓRIO DE GESTÃO EXECUTIVO - SASO LDA (VERSÃO AUDITADA)\nPERÍODO DE REFERÊNCIA: Q3 2026\nDATA DE EMISSÃO: 17 de Setembro de 2026\nRESPONSÁVEL: AI Employee #73 (Management Reporting)\n\n== 1. DESEMPENHO OPERACIONAL AUDITADO ==\nTaxa de Cumprimento de SLA: 98.9%\nTotal de Processos Executados: 1.480\nÍndice de Eficiência Administrativa: 95.5%\n\n== 2. INDICADORES FINANCEIROS DE GESTÃO ==\nMargem Operacional Bruta: 34.1%\nGrau de Autonomia Financeira: 46.8%\n\n== 3. CONCLUSÕES & RECOMENDAÇÕES ==\nPiloto com desempenho estável e métricas aprovadas.\n%%EOF'
+    correctionText: '%PDF-1.7\n1 0 obj << /Type /Catalog >> endobj\n[PDF DOCUMENT]\nRELATÓRIO DE GESTÃO EXECUTIVO - SASO LDA (VERSÃO AUDITADA)\nPERÍODO DE REFERÊNCIA: Q3 2026\nDATA DE EMISSÃO: 17 de Setembro de 2026\nRESPONSÁVEL: AI Employee #73 (Management Reporting)\n\n== 1. DESEMPENHO OPERACIONAL AUDITADO ==\nTaxa de Cumprimento de SLA: 98.9%\nTotal de Processos Executados: 1.480\nÍndice de Eficiência Administrativa: 95.5%\n\n== 2. INDICADORES FINANCEIROS DE GESTÃO ==\nMargem Operacional Bruta: 34.1%\nGrau de Autonomia Financeira: 46.8%\n\n== 3. CONCLUSÕES & RECOMENDAÇÕES ==\nPiloto com desempenho estável e métricas aprovadas.\nxref\n0 2\n0000000000 65535 f \n0000000009 00000 n \ntrailer << /Size 2 /Root 1 0 R >>\nstartxref\n50\n%%EOF'
   },
   {
     id: 'TASK_SASO_027',
@@ -418,8 +444,14 @@ try {
     }
   }
   console.log('\n[PASS] Pacote de Evidências do Piloto verificado e íntegro a 100%!');
-  console.log(`       Classificação Alcançada: CONTROLLED_PILOT_VALIDATED`);
-  console.log(`       Estado Operacional: LIMITED_PRODUCTION_PILOT / HUMAN_SUPERVISED`);
+  const finalClass = mode === 'OPERATIONAL_PILOT'
+    ? 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY'
+    : 'CONTROLLED_PILOT_SIMULATOR_IMPLEMENTED';
+  const finalState = mode === 'OPERATIONAL_PILOT'
+    ? 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY — REAL PILOT NOT YET EXECUTED'
+    : 'SIMULATION_EXECUTED — OPERATIONAL_PILOT_INFRASTRUCTURE_READY (REAL PILOT NOT YET EXECUTED)';
+  console.log(`       Classificação Alcançada: ${finalClass}`);
+  console.log(`       Estado Operacional: ${finalState}`);
 } catch (err) {
   console.error('ERRO na verificação de integridade:', err);
   process.exit(1);

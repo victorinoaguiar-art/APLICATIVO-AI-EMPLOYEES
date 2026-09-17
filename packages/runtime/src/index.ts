@@ -95,6 +95,9 @@ export * from './competency/AIOmnichannelEngine.js';
 export * from './competency/KnowledgeCenterEngine.js';
 export * from './competency/KnowledgeNecessityEngine.js';
 export * from './pilot/ControlledPilotEngine.js';
+export * from './pilot/TransactionalPilotStore.js';
+export * from './pilot/PhysicalDocumentValidator.js';
+export * from './pilot/PilotExternalValidator.js';
 
 
 

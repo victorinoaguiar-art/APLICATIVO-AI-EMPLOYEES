@@ -1,3 +1,5 @@
+export type OperationalPilotMode = 'SIMULATION' | 'OPERATIONAL_PILOT';
+
 export type ControlledPilotStatus =
   | 'DRAFT'
   | 'AUTHORIZED'
@@ -16,6 +18,8 @@ export type HumanReviewStatus =
 
 export type DeliveryStatus =
   | 'PENDING'
+  | 'ARCHIVED'
+  | 'READY_FOR_MANUAL_DELIVERY'
   | 'DELIVERED'
   | 'BLOCKED'
   | 'FAILED';
@@ -26,11 +30,20 @@ export type FinalTaskStatus =
   | 'FAILED'
   | 'BLOCKED';
 
+export interface PilotReviewerConfig {
+  reviewer_id: string;
+  display_name: string;
+  role: string;
+  secret_or_key: string;
+}
+
 export interface PilotProgram {
   pilot_id: string;
   tenant_id: string;
   organization_name: string;
   authorization_reference: string;
+  authorization_document_path?: string;
+  authorization_document_sha256?: string;
   authorized_by: string;
   authorized_at: string;
   start_at: string;
@@ -41,7 +54,9 @@ export interface PilotProgram {
   allowed_connectors: string[];
   prohibited_actions: string[];
   human_reviewers: string[];
+  reviewer_configs?: PilotReviewerConfig[];
   task_limit: number;
+  execution_mode: OperationalPilotMode;
   status: ControlledPilotStatus;
   created_at: string;
   updated_at: string;
@@ -61,6 +76,8 @@ export interface PilotTaskRequest {
   format: 'DOCX' | 'PDF' | 'XLSX' | 'JSON';
   risk_level?: 'R1' | 'R2' | 'R3' | 'R4' | 'R5';
   action_type?: string;
+  execution_mode?: OperationalPilotMode;
+  data_classification?: 'PUBLIC' | 'INTERNAL' | 'CONFIDENTIAL' | 'RESTRICTED';
 }
 
 export interface PilotTaskReceipt {
@@ -85,6 +102,9 @@ export interface PilotTaskReceipt {
   version?: number;
   idempotency_key?: string;
   receipt_sha256?: string;
+  execution_mode: OperationalPilotMode;
+  is_simulation: boolean;
+  classification_level: string;
 }
 
 export interface PilotHumanReviewReceipt {
@@ -98,6 +118,8 @@ export interface PilotHumanReviewReceipt {
   corrections_requested?: string[];
   previous_output_hash?: string;
   new_output_hash?: string;
+  auth_method: 'SESSION_TOKEN' | 'HMAC_SIGNATURE' | 'API_KEY';
+  review_signature_sha256: string;
   receipt_sha256: string;
 }
 
@@ -110,16 +132,21 @@ export interface PilotDeliveryReceipt {
   channel: string;
   delivered_at: string;
   output_hashes: string[];
+  status: DeliveryStatus;
+  is_external_confirmed: boolean;
+  external_provider_response?: Record<string, any>;
   receipt_sha256: string;
 }
 
 export interface PilotMetrics {
+  execution_mode: OperationalPilotMode;
   total_tasks_received: number;
   total_tasks_completed: number;
   total_tasks_approved_first_review: number;
   total_tasks_corrected: number;
   total_tasks_rejected: number;
   total_tasks_failed: number;
+  total_tasks_archived: number;
   completion_rate: number;
   first_pass_acceptance_rate: number;
   human_correction_rate: number;
@@ -139,10 +166,14 @@ export interface PilotGateCheck {
   actual_value: string | number;
   passed: boolean;
   notes: string;
+  source: string;
+  calculation: string;
+  evidence_sha256: string;
 }
 
 export interface PilotGateResults {
   all_passed: boolean;
+  execution_mode: OperationalPilotMode;
   gates: PilotGateCheck[];
   evaluated_at: string;
 }
@@ -158,9 +189,31 @@ export interface PilotIncident {
     | 'DUPLICATE_EXECUTION'
     | 'TAMPER_DETECTED'
     | 'DOCUMENT_CORRUPT'
+    | 'DB_FAILURE'
     | 'OTHER';
   severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   details: string;
   resolved: boolean;
   resolution_notes?: string;
+}
+
+export interface PilotFinalAttestation {
+  pilot_id: string;
+  tenant_id: string;
+  organization_name: string;
+  execution_mode: OperationalPilotMode;
+  infrastructure_implemented: boolean;
+  simulation_executed: boolean;
+  operational_pilot_started: boolean;
+  operational_pilot_completed: boolean;
+  classification_status:
+    | 'CONTROLLED_PILOT_SIMULATOR_IMPLEMENTED'
+    | 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY'
+    | 'CONTROLLED_OPERATIONAL_PILOT_VALIDATED'
+    | 'NOT_PROVEN';
+  classification?: string;
+  operational_state: string;
+  metrics: PilotMetrics;
+  gates_result: 'PASS' | 'FAIL' | 'NOT_PROVEN';
+  generated_at: string;
 }
