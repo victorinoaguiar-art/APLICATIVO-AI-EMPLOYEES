@@ -1546,10 +1546,32 @@ export class TransactionalPilotStore {
     const row = stmt.get(taskId) as any;
     if (!row) return null;
     const { receipt_json, ...rawColumns } = row;
+
+    if (!receipt_json || typeof receipt_json !== 'string' || receipt_json.trim() === '') {
+      throw new Error(`getTaskForensicRecord: 'receipt_json' ausente ou vazio no SQLite para a tarefa '${taskId}'.`);
+    }
+    let parsedReceipt: any;
+    try {
+      parsedReceipt = JSON.parse(receipt_json);
+    } catch (err: any) {
+      throw new Error(`getTaskForensicRecord: 'receipt_json' corrompido no SQLite para a tarefa '${taskId}': ${err.message}`);
+    }
+
+    const requiredCols = [
+      'task_id', 'pilot_id', 'tenant_id', 'employee_id', 'version',
+      'input_snapshot_sha256', 'human_review_status', 'delivery_status',
+      'final_status', 'commit_sha', 'receipt_sha256'
+    ];
+    for (const col of requiredCols) {
+      if (rawColumns[col] === undefined || rawColumns[col] === null || rawColumns[col] === '') {
+        throw new Error(`getTaskForensicRecord: coluna relacional obrigatória '${col}' ausente ou nula no SQLite para a tarefa '${taskId}'.`);
+      }
+    }
+
     return {
       rawColumns,
       rawReceiptJson: receipt_json,
-      parsedReceipt: JSON.parse(receipt_json)
+      parsedReceipt
     };
   }
 
@@ -1567,10 +1589,30 @@ export class TransactionalPilotStore {
     }
     if (!row) return null;
     const { file_bytes, ...rawColumns } = row;
-    const blobHash = createHash('sha256').update(file_bytes).digest('hex');
+
+    const isBlob = Buffer.isBuffer(file_bytes) || (file_bytes instanceof Uint8Array);
+    if (file_bytes === undefined || file_bytes === null || !isBlob) {
+      throw new Error(`getOutputForensicRecord: BLOB 'file_bytes' ausente ou inválido no SQLite para output '${outputIdOrTaskId}'.`);
+    }
+    const buf = Buffer.isBuffer(file_bytes) ? file_bytes : Buffer.from(file_bytes);
+    if (buf.length === 0) {
+      throw new Error(`getOutputForensicRecord: BLOB 'file_bytes' ausente ou inválido (vazio) no SQLite para output '${outputIdOrTaskId}'.`);
+    }
+    if (!row.file_bytes_sha256 || typeof row.file_bytes_sha256 !== 'string' || row.file_bytes_sha256.length !== 64) {
+      throw new Error(`getOutputForensicRecord: coluna 'file_bytes_sha256' ausente ou inválida no SQLite para output '${outputIdOrTaskId}'.`);
+    }
+
+    const requiredCols = ['output_id', 'task_id', 'version', 'file_name', 'file_path', 'file_bytes_sha256', 'created_at'];
+    for (const col of requiredCols) {
+      if (rawColumns[col] === undefined || rawColumns[col] === null || rawColumns[col] === '') {
+        throw new Error(`getOutputForensicRecord: coluna relacional obrigatória '${col}' ausente ou nula no SQLite para output '${outputIdOrTaskId}'.`);
+      }
+    }
+
+    const blobHash = createHash('sha256').update(buf).digest('hex');
     return {
       rawColumns,
-      blob: file_bytes,
+      blob: buf,
       blobSha256: blobHash,
       storedHash: row.file_bytes_sha256
     };
@@ -1598,44 +1640,36 @@ export class TransactionalPilotStore {
       row = stmt.get(taskId, version) as any;
     }
     if (!row) return null;
+
+    const { receipt_json, ...rawColumns } = row;
+    if (!receipt_json || typeof receipt_json !== 'string' || receipt_json.trim() === '') {
+      throw new Error(`getDocumentValidationForensicRecord: 'receipt_json' ausente ou vazio no SQLite para validação da tarefa '${taskId}' versão '${version}'.`);
+    }
     let parsed: any;
-    if (row.receipt_json) {
-      try {
-        parsed = JSON.parse(row.receipt_json);
-      } catch {}
+    try {
+      parsed = JSON.parse(receipt_json);
+    } catch (err: any) {
+      throw new Error(`getDocumentValidationForensicRecord: 'receipt_json' corrompido no SQLite para validação da tarefa '${taskId}': ${err.message}`);
     }
-    if (!parsed) {
-      parsed = {
-        receipt_id: row.receipt_id,
-        validation_id: row.receipt_id,
-        validation_type: row.validation_type,
-        task_id: row.task_id,
-        document_version: row.document_version,
-        tenant_id: row.tenant_id,
-        pilot_id: row.pilot_id,
-        file_path: row.file_path,
-        format: row.format,
-        parser_name: row.parser_name,
-        parser_version: row.parser_version,
-        file_bytes_sha256: row.file_bytes_sha256,
-        result: row.result,
-        is_valid: Boolean(row.is_valid !== undefined ? row.is_valid : row.result === 'PASS'),
-        page_or_cell_count: row.page_or_cell_count,
-        error: row.error,
-        error_details: row.error_details,
-        execution_started_at: row.execution_started_at,
-        execution_completed_at: row.execution_completed_at,
-        commit_sha: row.commit_sha,
-        receipt_sha256: row.receipt_sha256,
-        validated_at: row.validated_at
-      };
+
+    const requiredCols = [
+      'receipt_id', 'task_id', 'document_version', 'validation_type',
+      'tenant_id', 'pilot_id', 'file_path', 'format', 'parser_name',
+      'parser_version', 'file_bytes_sha256', 'result', 'is_valid',
+      'commit_sha', 'receipt_sha256', 'validated_at'
+    ];
+    for (const col of requiredCols) {
+      if (rawColumns[col] === undefined || rawColumns[col] === null || rawColumns[col] === '') {
+        throw new Error(`getDocumentValidationForensicRecord: coluna relacional obrigatória '${col}' ausente ou nula no SQLite para validação da tarefa '${taskId}'.`);
+      }
     }
+
     return {
       rawColumns: {
-        ...row,
-        is_valid: row.is_valid !== undefined ? (row.is_valid === 1 || row.is_valid === true) : row.result === 'PASS'
+        ...rawColumns,
+        is_valid: rawColumns.is_valid === 1 || rawColumns.is_valid === true
       },
-      rawReceiptJson: row.receipt_json || canonicalJson(parsed),
+      rawReceiptJson: receipt_json,
       parsedReceipt: parsed
     };
   }
@@ -1645,14 +1679,30 @@ export class TransactionalPilotStore {
     const row = stmt.get(reviewId) as any;
     if (!row) return null;
     const { receipt_json, ...rawColumns } = row;
-    const parsed = JSON.parse(receipt_json);
+
+    if (!receipt_json || typeof receipt_json !== 'string' || receipt_json.trim() === '') {
+      throw new Error(`getReviewForensicRecord: 'receipt_json' ausente ou vazio no SQLite para revisão '${reviewId}'.`);
+    }
+    let parsed: any;
+    try {
+      parsed = JSON.parse(receipt_json);
+    } catch (err: any) {
+      throw new Error(`getReviewForensicRecord: 'receipt_json' corrompido no SQLite para revisão '${reviewId}': ${err.message}`);
+    }
+
+    const requiredCols = [
+      'review_id', 'task_id', 'pilot_id', 'tenant_id', 'document_version',
+      'challenge_id', 'reviewer', 'decision', 'created_at',
+      'previous_output_hash', 'new_output_hash', 'commit_sha', 'receipt_sha256'
+    ];
+    for (const col of requiredCols) {
+      if (rawColumns[col] === undefined || rawColumns[col] === null || rawColumns[col] === '') {
+        throw new Error(`getReviewForensicRecord: coluna relacional obrigatória '${col}' ausente ou nula no SQLite para revisão '${reviewId}'.`);
+      }
+    }
+
     return {
-      rawColumns: {
-        ...rawColumns,
-        comments: rawColumns.comments !== undefined ? rawColumns.comments : parsed.comments,
-        auth_method: rawColumns.auth_method !== undefined ? rawColumns.auth_method : parsed.auth_method,
-        review_signature_sha256: rawColumns.review_signature_sha256 || rawColumns.signature || parsed.review_signature_sha256
-      },
+      rawColumns,
       rawReceiptJson: receipt_json,
       parsedReceipt: parsed
     };
@@ -1663,10 +1713,35 @@ export class TransactionalPilotStore {
     const row = stmt.get(deliveryId) as any;
     if (!row) return null;
     const { receipt_json, ...rawColumns } = row;
+
+    if (!receipt_json || typeof receipt_json !== 'string' || receipt_json.trim() === '') {
+      throw new Error(`getDeliveryForensicRecord: 'receipt_json' ausente ou vazio no SQLite para entrega '${deliveryId}'.`);
+    }
+    let parsed: any;
+    try {
+      parsed = JSON.parse(receipt_json);
+    } catch (err: any) {
+      throw new Error(`getDeliveryForensicRecord: 'receipt_json' corrompido no SQLite para entrega '${deliveryId}': ${err.message}`);
+    }
+
+    const requiredCols = [
+      'delivery_id', 'task_id', 'pilot_id', 'tenant_id', 'document_version',
+      'review_id', 'created_at', 'delivered_to', 'channel', 'status',
+      'is_external_confirmed', 'commit_sha', 'receipt_sha256'
+    ];
+    for (const col of requiredCols) {
+      if (rawColumns[col] === undefined || rawColumns[col] === null || rawColumns[col] === '') {
+        throw new Error(`getDeliveryForensicRecord: coluna relacional obrigatória '${col}' ausente ou nula no SQLite para entrega '${deliveryId}'.`);
+      }
+    }
+
     return {
-      rawColumns,
+      rawColumns: {
+        ...rawColumns,
+        is_external_confirmed: rawColumns.is_external_confirmed === 1 || rawColumns.is_external_confirmed === true
+      },
       rawReceiptJson: receipt_json,
-      parsedReceipt: JSON.parse(receipt_json)
+      parsedReceipt: parsed
     };
   }
 

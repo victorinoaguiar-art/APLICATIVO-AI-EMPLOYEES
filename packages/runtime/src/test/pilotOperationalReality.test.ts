@@ -1102,10 +1102,12 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
 
       assert.throws(() => {
         eng.exportPilotEvidence(simulationPilotSpec.pilot_id, outDir);
-      }, /Commit SHA inválido: esperado 40 caracteres hexadecimais/);
+      }, /GIT_COMMIT_SHA definido mas inválido|Commit SHA inválido: esperado 40 caracteres hexadecimais/i);
     } finally {
-      process.env.GIT_COMMIT_SHA = prevGitSha;
-      process.env.GITHUB_SHA = prevGithubSha;
+      if (prevGitSha !== undefined) process.env.GIT_COMMIT_SHA = prevGitSha;
+      else delete process.env.GIT_COMMIT_SHA;
+      if (prevGithubSha !== undefined) process.env.GITHUB_SHA = prevGithubSha;
+      else delete process.env.GITHUB_SHA;
     }
 
     store.close();
@@ -1120,7 +1122,7 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
     }, /Operational pilot requires a persistent SQLite database path, :memory: is forbidden/);
   });
 
-  await t.test('22. Idempotência garante recibo idêntico sem novo efeito', () => {
+  await t.test('22. Idempotência garante recibo idêntico sem novo efeito', async () => {
     const store = new TransactionalPilotStore(path.join(tmpDir, 'test22.db'), 'SIMULATION');
     const eng = new ControlledPilotEngine(store);
     eng.createPilot(simulationPilotSpec);
@@ -1141,8 +1143,8 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
       format: 'PDF' as const
     };
 
-    const firstReceipt = eng.executeTask(taskReq);
-    const secondReceipt = eng.executeTask(taskReq);
+    const firstReceipt = await eng.executeTask(taskReq);
+    const secondReceipt = await eng.executeTask(taskReq);
 
     assert.strictEqual(firstReceipt.task_id, secondReceipt.task_id);
     assert.strictEqual(firstReceipt.receipt_sha256, secondReceipt.receipt_sha256);

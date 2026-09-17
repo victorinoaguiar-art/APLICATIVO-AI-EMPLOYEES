@@ -222,7 +222,7 @@ export interface PilotOutputForensicRecord {
 
 export interface PilotDocValidationForensicRecord {
   rawColumns: Record<string, any>;
-  rawReceiptJson?: string;
+  rawReceiptJson: string;
   parsedReceipt: PilotDocumentValidationReceipt;
 }
 

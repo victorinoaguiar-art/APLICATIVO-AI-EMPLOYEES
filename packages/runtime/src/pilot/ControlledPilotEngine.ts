@@ -44,6 +44,44 @@ function canonicalJson(obj: any): string {
   return '{' + keys.map(k => JSON.stringify(k) + ':' + canonicalJson(obj[k])).join(',') + '}';
 }
 
+export function resolveStrictCommitSha(customExecSync?: (cmd: string, opts?: any) => string): string {
+  const isValidSha = (sha: string): boolean => /^[0-9a-f]{40}$/i.test(sha);
+
+  // 1. GITHUB_SHA, quando executado no GitHub Actions
+  if (process.env.GITHUB_SHA !== undefined) {
+    const sha = process.env.GITHUB_SHA.trim();
+    if (!isValidSha(sha)) {
+      throw new Error(`GITHUB_SHA definido mas inválido: esperado 40 caracteres hexadecimais, obtido '${sha}'.`);
+    }
+    return sha.toLowerCase();
+  }
+
+  // 2. GIT_COMMIT_SHA, quando explicitamente injectado
+  if (process.env.GIT_COMMIT_SHA !== undefined) {
+    const sha = process.env.GIT_COMMIT_SHA.trim();
+    if (!isValidSha(sha)) {
+      throw new Error(`GIT_COMMIT_SHA definido mas inválido: esperado 40 caracteres hexadecimais, obtido '${sha}'.`);
+    }
+    return sha.toLowerCase();
+  }
+
+  // 3. git rev-parse HEAD, quando existir um checkout Git válido
+  try {
+    const exec = customExecSync || ((cmd: string, opts?: any) => {
+      const { execSync } = require('node:child_process');
+      return execSync(cmd, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'], ...opts });
+    });
+    const output = exec('git rev-parse HEAD');
+    const sha = (output || '').trim();
+    if (!isValidSha(sha)) {
+      throw new Error(`git rev-parse HEAD retornou SHA inválido: esperado 40 caracteres hexadecimais, obtido '${sha}'.`);
+    }
+    return sha.toLowerCase();
+  } catch (err: any) {
+    throw new Error(`Falha ao resolver commit SHA do repositório Git: ${err?.message || err}`);
+  }
+}
+
 export class ControlledPilotEngine {
   private static instance: ControlledPilotEngine;
   private store: TransactionalPilotStore;
@@ -97,19 +135,7 @@ export class ControlledPilotEngine {
   }
 
   public getCommitSha(): string {
-    let commitSha: string = (process.env.GITHUB_SHA || process.env.GIT_COMMIT_SHA || '').trim();
-    if (!commitSha || commitSha.length !== 40) {
-      try {
-        const { execSync } = require('node:child_process');
-        commitSha = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
-      } catch {
-        commitSha = '';
-      }
-    }
-    if (!/^[0-9a-f]{40}$/i.test(commitSha)) {
-      throw new Error(`Commit SHA inválido: esperado 40 caracteres hexadecimais do repositório Git, obtido '${commitSha}'.`);
-    }
-    return commitSha.toLowerCase();
+    return resolveStrictCommitSha();
   }
 
   public clearStateForTests(): void {
@@ -2270,8 +2296,29 @@ export class ControlledPilotEngine {
       if (parsedManifest.pilot_id !== pilot.pilot_id) {
         throw new Error(`Manifesto 'pilot-evidence-manifest.json' possui pilot_id divergente: esperado='${pilot.pilot_id}', obtido='${parsedManifest.pilot_id}'.`);
       }
-      if (parsedManifest.tenant_id !== pilot.tenant_id) {
-        throw new Error(`Manifesto 'pilot-evidence-manifest.json' possui tenant_id divergente: esperado='${pilot.tenant_id}', obtido='${parsedManifest.tenant_id}'.`);
+      if (parsedManifest.total_files !== (parsedManifest.files ? parsedManifest.files.length : 0)) {
+        throw new Error(`Manifesto 'pilot-evidence-manifest.json' possui total_files divergente da contagem de ficheiros: total_files=${parsedManifest.total_files}, files=${parsedManifest.files ? parsedManifest.files.length : 0}.`);
+      }
+
+      // Verificação Bidirecional Estrita do Manifesto:
+      // 1) Todo ficheiro físico em disco deve estar explicitamente listado no manifesto
+      const manifestFilePaths = new Set<string>((parsedManifest.files || []).map((f: any) => f.relative_path));
+      for (const f of initialFiles) {
+        if (!manifestFilePaths.has(f.relativePath)) {
+          throw new Error(`Ficheiro físico '${f.relativePath}' presente no directório mas ausente no manifesto de evidências.`);
+        }
+      }
+
+      // 2) Todo ficheiro listado no manifesto deve existir em disco e coincidir o SHA-256
+      for (const mf of (parsedManifest.files || [])) {
+        const fullP = path.join(outputDir, mf.relative_path);
+        if (!fs.existsSync(fullP)) {
+          throw new Error(`Ficheiro '${mf.relative_path}' presente no manifesto mas ausente no directório.`);
+        }
+        const diskSha = sha256(fs.readFileSync(fullP));
+        if (diskSha !== mf.sha256) {
+          throw new Error(`Divergência de hash para ficheiro do manifesto '${mf.relative_path}': manifesto=${mf.sha256}, disco=${diskSha}.`);
+        }
       }
     }
 

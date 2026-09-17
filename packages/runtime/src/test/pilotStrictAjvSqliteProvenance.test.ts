@@ -7,7 +7,8 @@ import { createHash } from 'node:crypto';
 import {
   ControlledPilotEngine,
   TransactionalPilotStore,
-  PilotAjvValidator
+  PilotAjvValidator,
+  resolveStrictCommitSha
 } from '../index.js';
 import {
   PilotProgram,
@@ -34,16 +35,7 @@ function canonicalJson(obj: any): string {
 }
 
 describe('AETF-500: Ajv Estrito, Quatro Planos de Verdade, Proveniência e Limpeza Determinística', () => {
-  let commitSha = (process.env.GITHUB_SHA || process.env.GIT_COMMIT_SHA || '').trim();
-  if (!commitSha || commitSha.length !== 40) {
-    try {
-      const { execSync } = require('node:child_process');
-      commitSha = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
-    } catch {
-      commitSha = 'dba1cbdcb0fc25cb44d0da7d26dc995a6729ca7c';
-    }
-  }
-  commitSha = commitSha.toLowerCase();
+  const commitSha = resolveStrictCommitSha();
   process.env.GIT_COMMIT_SHA = commitSha;
 
   function createValidPilot(pilotId = 'PILOT_STRICT_2026', tenantId = 'tenant_angola_ops'): PilotProgram {
@@ -222,6 +214,97 @@ describe('AETF-500: Ajv Estrito, Quatro Planos de Verdade, Proveniência e Limpe
       ]
     };
   }
+
+  // =========================================================================
+  // BLOCO 0: 6 Testes de Resolução Estrita de SHA sem Fallback (Ponto 1)
+  // =========================================================================
+  describe('Bloco 0: Resolução Estrita de SHA sem Fallback', () => {
+    it('0.1: GITHUB_SHA inválido falha imediatamente com erro explícito sem fallback silencioso', () => {
+      const origGithubSha = process.env.GITHUB_SHA;
+      try {
+        process.env.GITHUB_SHA = 'invalid_sha_less_than_40';
+        assert.throws(() => {
+          resolveStrictCommitSha();
+        }, /GITHUB_SHA definido mas inválido/i);
+      } finally {
+        if (origGithubSha !== undefined) process.env.GITHUB_SHA = origGithubSha;
+        else delete process.env.GITHUB_SHA;
+      }
+    });
+
+    it('0.2: GIT_COMMIT_SHA inválido falha imediatamente com erro explícito sem fallback silencioso', () => {
+      const origGithubSha = process.env.GITHUB_SHA;
+      const origGitSha = process.env.GIT_COMMIT_SHA;
+      try {
+        delete process.env.GITHUB_SHA;
+        process.env.GIT_COMMIT_SHA = 'not_a_valid_sha';
+        assert.throws(() => {
+          resolveStrictCommitSha();
+        }, /GIT_COMMIT_SHA definido mas inválido/i);
+      } finally {
+        if (origGithubSha !== undefined) process.env.GITHUB_SHA = origGithubSha;
+        else delete process.env.GITHUB_SHA;
+        if (origGitSha !== undefined) process.env.GIT_COMMIT_SHA = origGitSha;
+        else delete process.env.GIT_COMMIT_SHA;
+      }
+    });
+
+    it('0.3: SHA com caracteres não hexadecimais falha na validação estrita', () => {
+      const origGithubSha = process.env.GITHUB_SHA;
+      try {
+        process.env.GITHUB_SHA = 'z'.repeat(40);
+        assert.throws(() => {
+          resolveStrictCommitSha();
+        }, /GITHUB_SHA definido mas inválido/i);
+      } finally {
+        if (origGithubSha !== undefined) process.env.GITHUB_SHA = origGithubSha;
+        else delete process.env.GITHUB_SHA;
+      }
+    });
+
+    it('0.4: SHA com comprimento diferente de 40 falha na validação estrita', () => {
+      const origGithubSha = process.env.GITHUB_SHA;
+      try {
+        process.env.GITHUB_SHA = 'a'.repeat(39);
+        assert.throws(() => {
+          resolveStrictCommitSha();
+        }, /GITHUB_SHA definido mas inválido/i);
+      } finally {
+        if (origGithubSha !== undefined) process.env.GITHUB_SHA = origGithubSha;
+        else delete process.env.GITHUB_SHA;
+      }
+    });
+
+    it('0.5: SHA ausente sem variáveis e sem checkout Git válido falha com erro fail-closed', () => {
+      const origGithubSha = process.env.GITHUB_SHA;
+      const origGitSha = process.env.GIT_COMMIT_SHA;
+      try {
+        delete process.env.GITHUB_SHA;
+        delete process.env.GIT_COMMIT_SHA;
+        assert.throws(() => {
+          resolveStrictCommitSha(() => {
+            throw new Error('fatal: not a git repository');
+          });
+        }, /Falha ao resolver commit SHA do repositório Git/i);
+      } finally {
+        if (origGithubSha !== undefined) process.env.GITHUB_SHA = origGithubSha;
+        if (origGitSha !== undefined) process.env.GIT_COMMIT_SHA = origGitSha;
+      }
+    });
+
+    it('0.6: GITHUB_SHA válido de 40 hexadecimais é resolvido com sucesso em minúsculas', () => {
+      const origGithubSha = process.env.GITHUB_SHA;
+      const sample = 'AbCdEf0123456789aBcDeF0123456789AbCdEf01';
+      try {
+        process.env.GITHUB_SHA = sample;
+        const res = resolveStrictCommitSha();
+        assert.strictEqual(res, sample.toLowerCase());
+      } finally {
+        if (origGithubSha !== undefined) process.env.GITHUB_SHA = origGithubSha;
+        else delete process.env.GITHUB_SHA;
+      }
+    });
+  });
 
   // =========================================================================
   // BLOCO 1: 10 Testes de Ajv Estrito Real
@@ -584,6 +667,73 @@ describe('AETF-500: Ajv Estrito, Quatro Planos de Verdade, Proveniência e Limpe
       const verified = engine.verifyEvidenceDirectory(testPilotId, evidenceDir);
       assert.ok(verified, 'Cadeia coerente deve passar na verificação');
       assert.strictEqual(verified.commitSha, commitSha);
+    });
+
+    it('2.13: anular coluna obrigatória commit_sha no SQLite falha no leitor forense com erro explícito', () => {
+      const rawDb = store.getRawDb();
+      try {
+        rawDb.prepare('UPDATE pilot_tasks SET commit_sha = NULL WHERE task_id = ?').run(taskId);
+        assert.throws(() => {
+          store.getTaskForensicRecord(taskId);
+        }, /coluna relacional obrigatória 'commit_sha' ausente ou nula/i);
+      } finally {
+        rawDb.prepare('UPDATE pilot_tasks SET commit_sha = ? WHERE task_id = ?').run(commitSha, taskId);
+      }
+    });
+
+    it('2.14: anular ou esvaziar receipt_json no SQLite falha no leitor forense com erro explícito', () => {
+      const rawDb = store.getRawDb();
+      const origForensic = store.getTaskForensicRecord(taskId)!;
+      try {
+        rawDb.prepare("UPDATE pilot_tasks SET receipt_json = '' WHERE task_id = ?").run(taskId);
+        assert.throws(() => {
+          store.getTaskForensicRecord(taskId);
+        }, /'receipt_json' ausente ou vazio/i);
+      } finally {
+        rawDb.prepare('UPDATE pilot_tasks SET receipt_json = ? WHERE task_id = ?').run(origForensic.rawReceiptJson, taskId);
+      }
+    });
+
+    it('2.15: apagar ficheiro físico de recibo isoladamente falha na verificação bidirecional', () => {
+      const filePath = path.join(evidenceDir, 'task-receipts', taskId + '.json');
+      const originalBytes = fs.readFileSync(filePath);
+      try {
+        fs.unlinkSync(filePath);
+        assert.throws(() => {
+          engine.verifyEvidenceDirectory(testPilotId, evidenceDir);
+        }, /Verificação bidirecional falhou.*sem ficheiro/i);
+      } finally {
+        fs.writeFileSync(filePath, originalBytes);
+      }
+    });
+
+    it('2.16: remover entrada do manifesto isoladamente falha na verificação de evidência', () => {
+      const manifestPath = path.join(evidenceDir, 'pilot-evidence-manifest.json');
+      const originalBytes = fs.readFileSync(manifestPath);
+      try {
+        const manifest = JSON.parse(originalBytes.toString('utf8'));
+        manifest.files = manifest.files.filter((f: any) => !f.relative_path.includes(taskId));
+        manifest.total_files = manifest.files.length;
+        fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+        assert.throws(() => {
+          engine.verifyEvidenceDirectory(testPilotId, evidenceDir);
+        }, /Ficheiro .* presente no directório mas ausente no manifesto|Verificação bidirecional/i);
+      } finally {
+        fs.writeFileSync(manifestPath, originalBytes);
+      }
+    });
+
+    it('2.17: corromper BLOB file_bytes no SQLite falha no leitor forense com erro explícito', () => {
+      const rawDb = store.getRawDb();
+      const origOut = store.getOutputForensicRecord(taskId)!;
+      try {
+        rawDb.prepare("UPDATE task_outputs SET file_bytes = X'' WHERE task_id = ?").run(taskId);
+        assert.throws(() => {
+          store.getOutputForensicRecord(taskId);
+        }, /BLOB 'file_bytes' ausente ou inválido/i);
+      } finally {
+        rawDb.prepare('UPDATE task_outputs SET file_bytes = ? WHERE task_id = ?').run(origOut.blob, taskId);
+      }
     });
   });
 
