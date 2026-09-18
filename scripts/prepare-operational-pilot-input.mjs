@@ -5,6 +5,11 @@ import * as os from 'node:os';
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { auditAndExtractTar, auditAndExtractZip } from './lib/secureTarExtractor.mjs';
+import {
+  assertStrictSha,
+  assertStrictId,
+  fetchAndPreserveGhApi
+} from './lib/rawGhApi.mjs';
 
 function sha256(buf) {
   return createHash('sha256').update(buf).digest('hex');
@@ -51,14 +56,12 @@ console.log(`Directório de Destino:  ${outDir}`);
 console.log(`Tenant ID Requerido:    ${expectedTenantId || '(não especificado)'}`);
 console.log(`Task ID Requerida:      ${expectedTaskId || '(não especificado)'}`);
 
-// Validação regex estrita de identificadores externos (Prevenção de Shell Injection)
-if (intakeRunId && !/^\d+$/.test(intakeRunId)) {
-  console.error(`\n[FAIL-CLOSED] intake_run_id inválido: '${intakeRunId}' (deve ser estritamente numérico).`);
-  process.exit(1);
+// Validação estrita de identificadores externos
+if (intakeRunId) {
+  assertStrictId(intakeRunId, 'intake_run_id');
 }
-if (inputArtifactId && !/^\d+$/.test(inputArtifactId)) {
-  console.error(`\n[FAIL-CLOSED] input_artifact_id inválido: '${inputArtifactId}' (deve ser estritamente numérico).`);
-  process.exit(1);
+if (inputArtifactId) {
+  assertStrictId(inputArtifactId, 'input_artifact_id');
 }
 if (inputPackageSha256 && !/^[a-f0-9]{64}$/.test(inputPackageSha256)) {
   console.error(`\n[FAIL-CLOSED] input_package_sha256 inválido: '${inputPackageSha256}' (deve ter exactamente 64 hexadecimais minúsculos).`);
@@ -116,19 +119,25 @@ else if (!effectivePackageDir) {
     const stagingDir = path.resolve(process.cwd(), '.artifacts', 'intake_staging');
     fs.mkdirSync(stagingDir, { recursive: true });
 
-    function callGhApi(endpoint) {
-      const stdout = execFileSync('gh', ['api', endpoint], { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
-      return JSON.parse(stdout);
-    }
-
     let artifactMeta;
     let runMeta;
     try {
       // 1. Consultar e reconciliar metadados do artefacto
-      artifactMeta = callGhApi(`repos/${EXPECTED_REPO}/actions/artifacts/${inputArtifactId}`);
+      const artifactResult = fetchAndPreserveGhApi(
+        `repos/${EXPECTED_REPO}/actions/artifacts/${inputArtifactId}`,
+        outDir,
+        'intake-artifact-api-response'
+      );
+      artifactMeta = artifactResult.parsed;
 
-      if (artifactMeta.expired) {
-        throw new Error(`Artefacto de intake '${inputArtifactId}' está expirado (expired: true).`);
+      if (artifactMeta.expired !== false) {
+        throw new Error(`Artefacto de intake '${inputArtifactId}' está expirado ou possui campo 'expired' não estritamente falso (expired: ${artifactMeta.expired}).`);
+      }
+      if (typeof artifactMeta.size_in_bytes !== 'number' || !Number.isSafeInteger(artifactMeta.size_in_bytes) || artifactMeta.size_in_bytes <= 0) {
+        throw new Error(`Artefacto de intake '${inputArtifactId}' possui tamanho inválido (${artifactMeta.size_in_bytes} bytes).`);
+      }
+      if (typeof artifactMeta.id !== 'number' || !Number.isSafeInteger(artifactMeta.id) || String(artifactMeta.id) !== inputArtifactId) {
+        throw new Error(`ID do artefacto de intake divergente: esperado '${inputArtifactId}', obtido '${artifactMeta.id}'.`);
       }
       if (inputArtifactName && artifactMeta.name !== inputArtifactName) {
         throw new Error(`Nome de artefacto divergente: esperado '${inputArtifactName}', obtido '${artifactMeta.name}'.`);
@@ -136,30 +145,44 @@ else if (!effectivePackageDir) {
       if (!artifactMeta.workflow_run) {
         throw new Error(`Artefacto de intake '${inputArtifactId}' não possui workflow_run associado.`);
       }
-      if (artifactMeta.workflow_run.id !== Number(intakeRunId)) {
+      if (typeof artifactMeta.workflow_run.id !== 'number' || !Number.isSafeInteger(artifactMeta.workflow_run.id) || String(artifactMeta.workflow_run.id) !== intakeRunId) {
         throw new Error(`Run ID divergente: esperado '${intakeRunId}', obtido '${artifactMeta.workflow_run.id}'.`);
       }
-      if (!artifactMeta.workflow_run.repository_id || Number(artifactMeta.workflow_run.repository_id) !== CANONICAL_REPO_ID) {
+      if (artifactMeta.workflow_run.repository_id !== CANONICAL_REPO_ID) {
         throw new Error(`Repository ID divergente no artefacto: esperado '${CANONICAL_REPO_ID}', obtido '${artifactMeta.workflow_run?.repository_id}'.`);
       }
-      if (!artifactMeta.workflow_run.head_repository_id || Number(artifactMeta.workflow_run.head_repository_id) !== CANONICAL_REPO_ID) {
+      if (artifactMeta.workflow_run.head_repository_id !== CANONICAL_REPO_ID) {
         throw new Error(`head_repository_id divergente no artefacto: esperado '${CANONICAL_REPO_ID}', obtido '${artifactMeta.workflow_run?.head_repository_id}'.`);
+      }
+      if (artifactMeta.workflow_run.head_branch !== 'master') {
+        throw new Error(`Branch de origem do artefacto inválida: esperado 'master', obtido '${artifactMeta.workflow_run?.head_branch}'.`);
       }
 
       // 2. Consultar e reconciliar metadados do workflow run
-      runMeta = callGhApi(`repos/${EXPECTED_REPO}/actions/runs/${intakeRunId}`);
+      const runResult = fetchAndPreserveGhApi(
+        `repos/${EXPECTED_REPO}/actions/runs/${intakeRunId}`,
+        outDir,
+        'intake-run-api-response'
+      );
+      runMeta = runResult.parsed;
 
-      if (!runMeta.repository || Number(runMeta.repository.id) !== CANONICAL_REPO_ID) {
+      if (typeof runMeta.id !== 'number' || !Number.isSafeInteger(runMeta.id) || String(runMeta.id) !== intakeRunId) {
+        throw new Error(`Run ID divergente na resposta do intake: esperado '${intakeRunId}', obtido '${runMeta.id}'.`);
+      }
+      if (!runMeta.repository || runMeta.repository.id !== CANONICAL_REPO_ID) {
         throw new Error(`Repository ID divergente no run: esperado '${CANONICAL_REPO_ID}', obtido '${runMeta.repository?.id}'.`);
       }
-      if (!runMeta.head_repository || Number(runMeta.head_repository.id) !== CANONICAL_REPO_ID) {
+      if (!runMeta.head_repository || runMeta.head_repository.id !== CANONICAL_REPO_ID) {
         throw new Error(`head_repository.id divergente: esperado '${CANONICAL_REPO_ID}', obtido '${runMeta.head_repository?.id}'.`);
       }
-      if (Number(runMeta.repository.id) !== Number(runMeta.head_repository.id)) {
+      if (runMeta.repository.id !== runMeta.head_repository.id) {
         throw new Error(`repository.id (${runMeta.repository.id}) e head_repository.id (${runMeta.head_repository.id}) não são idênticos.`);
       }
-      if (!runMeta.path || !runMeta.path.endsWith('operational-pilot-intake.yml')) {
+      if (runMeta.path !== '.github/workflows/operational-pilot-intake.yml') {
         throw new Error(`Workflow de origem inválido: esperado '.github/workflows/operational-pilot-intake.yml', obtido '${runMeta.path}'.`);
+      }
+      if (typeof runMeta.workflow_id !== 'number' || !Number.isSafeInteger(runMeta.workflow_id) || runMeta.workflow_id <= 0) {
+        throw new Error(`workflow_id inválido no intake: '${runMeta.workflow_id}'.`);
       }
       if (runMeta.head_branch !== 'master') {
         throw new Error(`Branch de origem do intake inválida: esperado 'master', obtido '${runMeta.head_branch}'.`);
@@ -170,11 +193,23 @@ else if (!effectivePackageDir) {
       if (runMeta.conclusion !== 'success') {
         throw new Error(`Run de intake não teve conclusão de sucesso: conclusion actual é '${runMeta.conclusion}'.`);
       }
+      if (typeof runMeta.run_attempt !== 'number' || !Number.isSafeInteger(runMeta.run_attempt) || runMeta.run_attempt < 1) {
+        throw new Error(`run_attempt inválido no run do intake: '${runMeta.run_attempt}'.`);
+      }
 
       const currentCommitSha = process.env.GIT_COMMIT_SHA || process.env.GITHUB_SHA;
-      if (currentCommitSha && runMeta.head_sha !== currentCommitSha) {
-        throw new Error(`head_sha divergente no intake: esperado '${currentCommitSha}', obtido '${runMeta.head_sha}'.`);
+      if (currentCommitSha) {
+        assertStrictSha(currentCommitSha, 'currentCommitSha');
+        if (runMeta.head_sha !== currentCommitSha) {
+          throw new Error(`head_sha divergente no intake: esperado '${currentCommitSha}', obtido '${runMeta.head_sha}'.`);
+        }
+        if (artifactMeta.workflow_run.head_sha !== currentCommitSha) {
+          throw new Error(`head_sha do artefacto divergente no intake: esperado '${currentCommitSha}', obtido '${artifactMeta.workflow_run.head_sha}'.`);
+        }
       }
+
+      console.log(`[PASS] Resposta física bruta do run do intake preservada com SHA:       ${runResult.rawSha}`);
+      console.log(`[PASS] Resposta física bruta do artefacto do intake preservada com SHA: ${artifactResult.rawSha}`);
 
       // 3. Descarregar o arquivo ZIP do artefacto via chamada segura
       const zipBytes = execFileSync('gh', ['api', `repos/${EXPECTED_REPO}/actions/artifacts/${inputArtifactId}/zip`], {
@@ -185,7 +220,13 @@ else if (!effectivePackageDir) {
       auditAndExtractZip(zipBytes, stagingDir, {
         allowedFiles: [
           'original-package.tar.gz',
-          'package.tar.gz'
+          'original-package.sha256',
+          'package.tar.gz',
+          'operational-pilot-input.json',
+          'authorization-document.pdf',
+          'package-provenance.json',
+          'input-package.sha256',
+          'runtime-context.json'
         ]
       });
 
@@ -216,22 +257,6 @@ else if (!effectivePackageDir) {
           'package-provenance.json'
         ]
       });
-
-      // 6. Preservar evidência física das respostas da API
-      fs.mkdirSync(outDir, { recursive: true });
-      fs.writeFileSync(path.join(outDir, 'intake-run-api-response.json'), JSON.stringify({
-        api_url: `https://api.github.com/repos/${EXPECTED_REPO}/actions/runs/${intakeRunId}`,
-        retrieved_at: new Date().toISOString(),
-        status: 200,
-        response: runMeta
-      }, null, 2), 'utf8');
-
-      fs.writeFileSync(path.join(outDir, 'intake-artifact-api-response.json'), JSON.stringify({
-        api_url: `https://api.github.com/repos/${EXPECTED_REPO}/actions/artifacts/${inputArtifactId}`,
-        retrieved_at: new Date().toISOString(),
-        status: 200,
-        response: artifactMeta
-      }, null, 2), 'utf8');
 
       effectivePackageDir = extractedDir;
       console.log(`[PASS] Pacote externo autenticado e auditado com sucesso em: ${stagingDir}`);

@@ -28,8 +28,8 @@ function getRepoRoot(): string {
 }
 const repoRoot = getRepoRoot();
 
-function runCommand(cmd: string): Buffer {
-  return execSync(cmd, { cwd: repoRoot, stdio: 'pipe' });
+function runCommand(cmd: string, envOverrides: Record<string, string> = {}): Buffer {
+  return execSync(cmd, { cwd: repoRoot, stdio: 'pipe', env: { ...process.env, ...envOverrides } });
 }
 
 function sha256(content: string | Buffer): string {
@@ -1257,7 +1257,7 @@ describe('AETF-500: Micro-Patch Final de Ingestão Externa, Revisão Humana e Pr
       enforce_admins: { enabled: true }
     }, null, 2));
 
-    runCommand(`node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT --environment=protected-pilot --mock-api-response="${mockEnvProtected}" --mock-branch-response="${mockBranchProtected}" --out-dir="${testEnvDir}"`);
+    runCommand(`node scripts/verify-environment-protection.mjs --mode=DEMO --environment=protected-pilot --mock-api-response="${mockEnvProtected}" --mock-branch-response="${mockBranchProtected}" --out-dir="${testEnvDir}"`);
 
     const verifFile = path.join(testEnvDir, 'environment-protection-verification.json');
     assert.ok(fs.existsSync(verifFile));
@@ -1267,5 +1267,164 @@ describe('AETF-500: Micro-Patch Final de Ingestão Externa, Revisão Humana e Pr
     assert.strictEqual(verifData.has_required_reviewers, true);
     assert.strictEqual(verifData.has_branch_policy, true);
     assert.strictEqual(verifData.can_admins_bypass, false);
+  });
+
+  // -------------------------------------------------------------
+  // Test 41: verify-environment-protection.mjs em OPERATIONAL_PILOT proíbe categoricamente qualquer mock
+  // -------------------------------------------------------------
+  it('41. verify-environment-protection proíbe categoricamente mocks em OPERATIONAL_PILOT', () => {
+    const mockEnv = path.join(tmpDir, 'test41_mock_env.json');
+    fs.writeFileSync(mockEnv, '{"ok": true}');
+
+    // a) Via argumento --mock-api-response em ambiente CI / GITHUB_ACTIONS
+    assert.throws(() => {
+      runCommand(`node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT --mock-api-response="${mockEnv}"`, {
+        GITHUB_ACTIONS: 'true'
+      });
+    }, /proibidos.*no modo OPERATIONAL_PILOT/);
+
+    // b) Via variável de ambiente MOCK_ENV_API_RESPONSE
+    assert.throws(() => {
+      runCommand(`node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT`, {
+        MOCK_ENV_API_RESPONSE: mockEnv
+      });
+    }, /proibid[ao]s no modo OPERATIONAL_PILOT/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 42: auditAndExtractZip bloqueia entrada onde descompressão excede maxOutputLength (decompression bomb)
+  // -------------------------------------------------------------
+  it('42. auditAndExtractZip bloqueia entrada onde descompressão excede maxOutputLength', async () => {
+    const { auditAndExtractZip } = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
+    const zlib = await import('node:zlib');
+
+    // Montar ZIP manualmente com uncompSize declarado pequeno (10 bytes), mas dados comprimidos expandem para 10000 bytes
+    const realBigData = Buffer.alloc(10000, 'A');
+    const compData = zlib.deflateRawSync(realBigData);
+    const crc = zlib.crc32(realBigData);
+    const nameBuf = Buffer.from('bomb.txt', 'utf8');
+
+    const localHeader = Buffer.alloc(30);
+    localHeader.writeUInt32LE(0x04034b50, 0);
+    localHeader.writeUInt16LE(20, 4);
+    localHeader.writeUInt16LE(0, 6);
+    localHeader.writeUInt16LE(8, 8); // Deflate
+    localHeader.writeUInt32LE(crc, 14);
+    localHeader.writeUInt32LE(compData.length, 18);
+    localHeader.writeUInt32LE(10, 22); // Mentir: declarar apenas 10 bytes!
+    localHeader.writeUInt16LE(nameBuf.length, 26);
+    localHeader.writeUInt16LE(0, 28);
+
+    const cdHeader = Buffer.alloc(46);
+    cdHeader.writeUInt32LE(0x02014b50, 0);
+    cdHeader.writeUInt16LE(20, 4);
+    cdHeader.writeUInt16LE(20, 6);
+    cdHeader.writeUInt16LE(0, 8);
+    cdHeader.writeUInt16LE(8, 10);
+    cdHeader.writeUInt32LE(crc, 16);
+    cdHeader.writeUInt32LE(compData.length, 20);
+    cdHeader.writeUInt32LE(10, 24); // Mentir: declarar apenas 10 bytes!
+    cdHeader.writeUInt16LE(nameBuf.length, 28);
+    cdHeader.writeUInt32LE(0, 42); // localOffset = 0
+
+    const eocd = Buffer.alloc(22);
+    eocd.writeUInt32LE(0x06054b50, 0);
+    eocd.writeUInt16LE(1, 8);
+    eocd.writeUInt16LE(1, 10);
+    eocd.writeUInt32LE(46 + nameBuf.length, 12);
+    const localChunk = Buffer.concat([localHeader, nameBuf, compData]);
+    eocd.writeUInt32LE(localChunk.length, 16);
+
+    const maliciousZip = Buffer.concat([localChunk, cdHeader, nameBuf, eocd]);
+
+    assert.throws(() => {
+      auditAndExtractZip(maliciousZip, path.join(tmpDir, 'out42'));
+    }, /excede o limite máximo permitido|diverge do anunciado/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 43: auditAndExtractZip bloqueia entrada com CRC32 inválido
+  // -------------------------------------------------------------
+  it('43. auditAndExtractZip bloqueia entrada com CRC32 inválido', async () => {
+    const { auditAndExtractZip, buildZip } = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
+    const validZip = buildZip([{ name: 'test.json', content: Buffer.from('{"hello":"world"}') }]);
+
+    // Corromper o CRC no directório central e local
+    const tampered = Buffer.from(validZip);
+    tampered.writeUInt32LE(0xdeadbeef, 14);
+    const eocdOffset = tampered.lastIndexOf(Buffer.from([0x50, 0x4b, 0x05, 0x06]));
+    const cdOffset = tampered.readUInt32LE(eocdOffset + 16);
+    tampered.writeUInt32LE(0xdeadbeef, cdOffset + 16);
+
+    assert.throws(() => {
+      auditAndExtractZip(tampered, path.join(tmpDir, 'out43'));
+    }, /CRC32 inválido/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 44: auditAndExtractZip bloqueia divergência entre cabeçalho central e cabeçalho local
+  // -------------------------------------------------------------
+  it('44. auditAndExtractZip bloqueia divergência entre cabeçalho central e local', async () => {
+    const { auditAndExtractZip, buildZip } = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
+    const validZip = buildZip([{ name: 'fileA.txt', content: Buffer.from('data') }]);
+
+    // Mudar o nome no directório central para fileB.txt
+    const tampered = Buffer.from(validZip);
+    const eocdOffset = tampered.lastIndexOf(Buffer.from([0x50, 0x4b, 0x05, 0x06]));
+    const cdOffset = tampered.readUInt32LE(eocdOffset + 16);
+    tampered.write('fileB.txt', cdOffset + 46, 'utf8');
+
+    assert.throws(() => {
+      auditAndExtractZip(tampered, path.join(tmpDir, 'out44'));
+    }, /Nome do ficheiro diverge/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 45: auditAndExtractZip bloqueia formato ZIP64 não suportado
+  // -------------------------------------------------------------
+  it('45. auditAndExtractZip bloqueia formato ZIP64 não suportado', async () => {
+    const { auditAndExtractZip } = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
+
+    // ZIP com locator ZIP64 antes do EOCD
+    const fakeZip64Locator = Buffer.alloc(20);
+    fakeZip64Locator.writeUInt32LE(0x07064b50, 0);
+
+    const eocd = Buffer.alloc(22);
+    eocd.writeUInt32LE(0x06054b50, 0);
+
+    const buf = Buffer.concat([Buffer.alloc(100), fakeZip64Locator, eocd]);
+
+    assert.throws(() => {
+      auditAndExtractZip(buf, path.join(tmpDir, 'out45'));
+    }, /ZIP64 não suportado/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 46: auditAndExtractZip bloqueia ZIP truncado
+  // -------------------------------------------------------------
+  it('46. auditAndExtractZip bloqueia ZIP truncado', async () => {
+    const { auditAndExtractZip } = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
+
+    assert.throws(() => {
+      auditAndExtractZip(Buffer.from('PK\x05\x06short'), path.join(tmpDir, 'out46'));
+    }, /truncado|Assinatura de fim do directório central/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 47: reconcile-stage-a-artifact.mjs rejeita stage_a_head_sha não estrito (ex: 64 hex)
+  // -------------------------------------------------------------
+  it('47. reconcile-stage-a-artifact rejeita SHA de 64 caracteres ou malformado', () => {
+    assert.throws(() => {
+      runCommand(`node scripts/reconcile-stage-a-artifact.mjs --stage-a-run-id="123" --stage-a-artifact-id="456" --stage-a-head-sha="${'a'.repeat(64)}"`);
+    }, /stage_a_head_sha inválido.*40 hexadecimais/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 48: reconcile-stage-a-artifact.mjs rejeita IDs não seguros ou alfanuméricos
+  // -------------------------------------------------------------
+  it('48. reconcile-stage-a-artifact rejeita IDs inválidos ou com zeros à esquerda', () => {
+    assert.throws(() => {
+      runCommand(`node scripts/reconcile-stage-a-artifact.mjs --stage-a-run-id="0123" --stage-a-artifact-id="456" --stage-a-head-sha="${'a'.repeat(40)}"`);
+    }, /inválido.*apenas dígitos decimais sem zeros à esquerda/);
   });
 });

@@ -27,6 +27,10 @@ on:
         description: 'SHA-256 do pacote externo (obrigatório em OPERATIONAL_PILOT)'
         required: false
         default: ''
+      intake_head_sha:
+        description: 'Commit SHA verificado do run de intake'
+        required: false
+        default: ''
       tenant_id:
         description: 'Tenant ID Autorizado'
         required: true
@@ -83,7 +87,8 @@ jobs:
 
       - name: Prepare Ingested Input (External Package or Controlled Demo)
         run: |
-          if [ "${{ github.event.inputs.execution_mode }}" = "OPERATIONAL_PILOT" ]; then
+          if [ -n "${{ github.event.inputs.intake_run_id }}" ] && [ -n "${{ github.event.inputs.input_artifact_id }}" ]; then
+            echo "[LIGAÇÃO FÍSICA] A transferir e validar pacote exacto do intake..."
             node scripts/prepare-operational-pilot-input.mjs \
               --intake-run-id="${{ github.event.inputs.intake_run_id }}" \
               --input-artifact-id="${{ github.event.inputs.input_artifact_id }}" \
@@ -92,8 +97,12 @@ jobs:
               --out-dir=.artifacts/pilot \
               --tenant-id="${{ github.event.inputs.tenant_id }}" \
               --task-id="${{ github.event.inputs.task_id }}" \
-              --mode=OPERATIONAL_PILOT
+              --mode="${{ github.event.inputs.execution_mode || 'DEMO' }}"
+          elif [ "${{ github.event.inputs.execution_mode }}" = "OPERATIONAL_PILOT" ]; then
+            echo "[FAIL-CLOSED] No modo OPERATIONAL_PILOT, intake_run_id e input_artifact_id são estritamente obrigatórios."
+            exit 1
           else
+            echo "[DEMO LOCAL] Sem intake fornecido; a gerar entrada sintética para demonstração isolada..."
             node scripts/prepare-demo-pilot-input.mjs \
               --out-dir=.artifacts/pilot \
               --tenant-id="${{ github.event.inputs.tenant_id }}" \
@@ -102,6 +111,7 @@ jobs:
         env:
           GIT_COMMIT_SHA: ${{ github.sha }}
           GITHUB_SHA: ${{ github.sha }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Execute Stage A (Prepare Task and Issue Review Challenge)
         run: |

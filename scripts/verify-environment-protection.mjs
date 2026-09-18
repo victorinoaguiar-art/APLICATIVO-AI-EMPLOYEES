@@ -31,6 +31,17 @@ console.log('================================================================');
 const mockApiResponseArg = getArg('mock-api-response', process.env.MOCK_ENV_API_RESPONSE || '');
 const mockBranchResponseArg = getArg('mock-branch-response', process.env.MOCK_BRANCH_API_RESPONSE || '');
 
+if (mode === 'OPERATIONAL_PILOT') {
+  if (process.env.MOCK_ENV_API_RESPONSE || process.env.MOCK_BRANCH_API_RESPONSE) {
+    console.error('\n[FAIL-CLOSED] Respostas simuladas via variáveis de ambiente (MOCK_ENV_API_RESPONSE, MOCK_BRANCH_API_RESPONSE) são categoricamente proibidos no modo OPERATIONAL_PILOT.');
+    process.exit(1);
+  }
+  if ((process.env.GITHUB_ACTIONS === 'true' || process.env.CI === 'true') && (mockApiResponseArg || mockBranchResponseArg)) {
+    console.error('\n[FAIL-CLOSED] Mocks via argumentos (--mock-api-response, --mock-branch-response) são categoricamente proibidos em ambiente CI/GitHub Actions no modo OPERATIONAL_PILOT.');
+    process.exit(1);
+  }
+}
+
 // 1. Consulta ao Ambiente GitHub (protected-pilot)
 const queryEnvUrl = `https://api.github.com/repos/${repo}/environments/${envName}`;
 let rawApiText = '';
@@ -95,10 +106,12 @@ let apiResponseHash = '';
 if (rawApiText) {
   fs.writeFileSync(apiResponseFilePath, rawApiText, 'utf8');
   apiResponseHash = sha256(Buffer.from(rawApiText, 'utf8'));
+  fs.writeFileSync(`${apiResponseFilePath}.sha256`, `${apiResponseHash}  environment-api-response.json\n`, 'utf8');
 } else {
   const placeholderUnavail = JSON.stringify({ error: 'API_UNAVAILABLE', detail: fetchEnvError }, null, 2);
   fs.writeFileSync(apiResponseFilePath, placeholderUnavail, 'utf8');
   apiResponseHash = sha256(Buffer.from(placeholderUnavail, 'utf8'));
+  fs.writeFileSync(`${apiResponseFilePath}.sha256`, `${apiResponseHash}  environment-api-response.json\n`, 'utf8');
 }
 
 // 4. Preservar resposta física da API de Proteção de Branch
@@ -108,10 +121,12 @@ let branchResponseHash = '';
 if (rawBranchText) {
   fs.writeFileSync(branchResponseFilePath, rawBranchText, 'utf8');
   branchResponseHash = sha256(Buffer.from(rawBranchText, 'utf8'));
+  fs.writeFileSync(`${branchResponseFilePath}.sha256`, `${branchResponseHash}  branch-protection-api-response.json\n`, 'utf8');
 } else {
   const placeholderUnavail = JSON.stringify({ error: 'API_UNAVAILABLE', detail: fetchBranchError }, null, 2);
   fs.writeFileSync(branchResponseFilePath, placeholderUnavail, 'utf8');
   branchResponseHash = sha256(Buffer.from(placeholderUnavail, 'utf8'));
+  fs.writeFileSync(`${branchResponseFilePath}.sha256`, `${branchResponseHash}  branch-protection-api-response.json\n`, 'utf8');
 }
 
 // 5. Analisar e estruturar verificação de ambiente

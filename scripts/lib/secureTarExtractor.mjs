@@ -342,9 +342,25 @@ export function auditAndExtractZip(archiveBufferOrPath, targetDir, options = {})
     throw new Error('Assinatura de fim do directório central (EOCD) não encontrada no arquivo ZIP.');
   }
 
+  // Rejeitar ZIP multi-disco
+  const diskNum = rawZip.readUInt16LE(eocdOffset + 4);
+  const cdStartDisk = rawZip.readUInt16LE(eocdOffset + 6);
+  if (diskNum !== 0 || cdStartDisk !== 0) {
+    throw new Error('Arquivo ZIP multi-disco não é suportado.');
+  }
+
+  // Rejeitar ZIP64 (EOCD locator presente ou limites 16/32 bits excedidos)
+  if (eocdOffset >= 20 && rawZip.readUInt32LE(eocdOffset - 20) === 0x07064b50) {
+    throw new Error('Arquivo ZIP utiliza formato ZIP64 não suportado.');
+  }
+
   const entryCount = rawZip.readUInt16LE(eocdOffset + 10);
   const cdSize = rawZip.readUInt32LE(eocdOffset + 12);
   const cdOffset = rawZip.readUInt32LE(eocdOffset + 16);
+
+  if (entryCount === 0xffff || cdSize === 0xffffffff || cdOffset === 0xffffffff) {
+    throw new Error('Arquivo ZIP utiliza formato ZIP64 não suportado.');
+  }
 
   if (entryCount > maxEntries) {
     throw new Error(`Número de entradas no ZIP (${entryCount}) excede o limite de segurança (${maxEntries}).`);
@@ -367,6 +383,7 @@ export function auditAndExtractZip(archiveBufferOrPath, targetDir, options = {})
       throw new Error(`Assinatura de directório central inválida no índice ${i}.`);
     }
 
+    const flags = rawZip.readUInt16LE(pos + 8);
     const method = rawZip.readUInt16LE(pos + 10);
     const crc = rawZip.readUInt32LE(pos + 16);
     const compSize = rawZip.readUInt32LE(pos + 20);
@@ -376,6 +393,13 @@ export function auditAndExtractZip(archiveBufferOrPath, targetDir, options = {})
     const commentLen = rawZip.readUInt16LE(pos + 32);
     const extAttrs = rawZip.readUInt32LE(pos + 38);
     const localOffset = rawZip.readUInt32LE(pos + 42);
+
+    if (compSize === 0xffffffff || uncompSize === 0xffffffff || localOffset === 0xffffffff) {
+      throw new Error(`Entrada utiliza extensões ZIP64 não suportadas.`);
+    }
+    if ((flags & 0x08) !== 0) {
+      throw new Error(`Data descriptor não suportado no arquivo ZIP.`);
+    }
 
     if (pos + 46 + nameLen > rawZip.length) {
       throw new Error('Nome de ficheiro excede limites do directório central.');
@@ -445,7 +469,7 @@ export function auditAndExtractZip(archiveBufferOrPath, targetDir, options = {})
       throw new Error(`Ficheiro inesperado pelo manifesto no arquivo ZIP: '${normalizedName}'.`);
     }
 
-    // Leitura dos dados a partir do cabeçalho local
+    // Leitura e reconciliação rigorosa contra o cabeçalho local
     if (localOffset + 30 > rawZip.length) {
       throw new Error(`Cabeçalho local de '${name}' fora dos limites do arquivo ZIP.`);
     }
@@ -453,10 +477,39 @@ export function auditAndExtractZip(archiveBufferOrPath, targetDir, options = {})
       throw new Error(`Assinatura de cabeçalho local inválida para '${name}'.`);
     }
 
+    const localFlags = rawZip.readUInt16LE(localOffset + 6);
+    const localMethod = rawZip.readUInt16LE(localOffset + 8);
+    const localCrc = rawZip.readUInt32LE(localOffset + 14);
+    const localCompSize = rawZip.readUInt32LE(localOffset + 18);
+    const localUncompSize = rawZip.readUInt32LE(localOffset + 22);
     const localNameLen = rawZip.readUInt16LE(localOffset + 26);
     const localExtraLen = rawZip.readUInt16LE(localOffset + 28);
-    const dataStart = localOffset + 30 + localNameLen + localExtraLen;
 
+    if ((localFlags & 0x08) !== 0) {
+      throw new Error(`Data descriptor local não suportado no arquivo ZIP para '${name}'.`);
+    }
+    if (localMethod !== method) {
+      throw new Error(`Método de compressão diverge entre cabeçalho central (${method}) e local (${localMethod}) para '${name}'.`);
+    }
+    if (localCrc !== crc) {
+      throw new Error(`CRC32 diverge entre cabeçalho central (${crc}) e local (${localCrc}) para '${name}'.`);
+    }
+    if (localCompSize !== compSize) {
+      throw new Error(`Tamanho comprimido diverge entre cabeçalho central (${compSize}) e local (${localCompSize}) para '${name}'.`);
+    }
+    if (localUncompSize !== uncompSize) {
+      throw new Error(`Tamanho descompactado diverge entre cabeçalho central (${uncompSize}) e local (${localUncompSize}) para '${name}'.`);
+    }
+
+    if (localOffset + 30 + localNameLen > rawZip.length) {
+      throw new Error(`Nome do cabeçalho local de '${name}' fora dos limites do arquivo.`);
+    }
+    const localName = rawZip.toString('utf8', localOffset + 30, localOffset + 30 + localNameLen);
+    if (localName !== name) {
+      throw new Error(`Nome do ficheiro diverge entre cabeçalho central ('${name}') e local ('${localName}').`);
+    }
+
+    const dataStart = localOffset + 30 + localNameLen + localExtraLen;
     if (dataStart + compSize > rawZip.length) {
       throw new Error(`Dados compactados de '${name}' truncados no arquivo ZIP.`);
     }
@@ -465,8 +518,13 @@ export function auditAndExtractZip(archiveBufferOrPath, targetDir, options = {})
     let decompressed;
     if (method === 8) {
       try {
-        decompressed = zlib.inflateRawSync(compData);
+        decompressed = zlib.inflateRawSync(compData, {
+          maxOutputLength: Math.min(maxFileSize, uncompSize)
+        });
       } catch (err) {
+        if (err.code === 'ERR_BUFFER_TOO_LARGE') {
+          throw new Error(`Taxa de expansão ou tamanho descompactado da entrada '${name}' excede o limite máximo permitido (${maxFileSize} bytes).`);
+        }
         throw new Error(`Falha ao descompactar entrada '${name}' no ZIP: ${err.message}`);
       }
     } else {
@@ -477,6 +535,11 @@ export function auditAndExtractZip(archiveBufferOrPath, targetDir, options = {})
       throw new Error(`Tamanho descompactado de '${name}' (${decompressed.length}) diverge do anunciado (${uncompSize}).`);
     }
 
+    const computedCrc = (zlib.crc32(decompressed) >>> 0);
+    if (computedCrc !== (crc >>> 0)) {
+      throw new Error(`CRC32 inválido para '${name}': esperado ${crc >>> 0}, calculado ${computedCrc}.`);
+    }
+
     entriesToExtract.push({
       name: normalizedName,
       size: uncompSize,
@@ -485,34 +548,43 @@ export function auditAndExtractZip(archiveBufferOrPath, targetDir, options = {})
   }
 
   // 3. Extração segura para directório de destino
-  fs.mkdirSync(targetDir, { recursive: true });
   const targetDirResolved = path.resolve(targetDir);
+  fs.mkdirSync(targetDirResolved, { recursive: true });
 
   const extracted = [];
-  for (const entry of entriesToExtract) {
-    const destPath = path.resolve(targetDirResolved, entry.name);
+  const writtenFiles = [];
+  try {
+    for (const entry of entriesToExtract) {
+      const destPath = path.resolve(targetDirResolved, entry.name);
 
-    if (!destPath.startsWith(targetDirResolved + path.sep) && destPath !== targetDirResolved) {
-      throw new Error(`Caminho de extração escapa do directório de destino: '${destPath}'.`);
+      if (!destPath.startsWith(targetDirResolved + path.sep) && destPath !== targetDirResolved) {
+        throw new Error(`Caminho de extração escapa do directório de destino: '${destPath}'.`);
+      }
+
+      fs.mkdirSync(path.dirname(destPath), { recursive: true });
+      fs.writeFileSync(destPath, entry.data);
+      writtenFiles.push(destPath);
+
+      const st = fs.lstatSync(destPath);
+      if (st.isSymbolicLink()) {
+        throw new Error(`Ficheiro extraído '${entry.name}' foi detectado como symlink.`);
+      }
+      if (!st.isFile()) {
+        throw new Error(`Ficheiro extraído '${entry.name}' não é um ficheiro regular.`);
+      }
+
+      extracted.push({
+        name: entry.name,
+        size: entry.size,
+        sha256: sha256(entry.data),
+        path: destPath
+      });
     }
-
-    fs.mkdirSync(path.dirname(destPath), { recursive: true });
-    fs.writeFileSync(destPath, entry.data);
-
-    const st = fs.lstatSync(destPath);
-    if (st.isSymbolicLink()) {
-      throw new Error(`Ficheiro extraído '${entry.name}' foi detectado como symlink.`);
+  } catch (writeErr) {
+    for (const f of writtenFiles) {
+      try { fs.unlinkSync(f); } catch {}
     }
-    if (!st.isFile()) {
-      throw new Error(`Ficheiro extraído '${entry.name}' não é um ficheiro regular.`);
-    }
-
-    extracted.push({
-      name: entry.name,
-      size: entry.size,
-      sha256: sha256(entry.data),
-      path: destPath
-    });
+    throw writeErr;
   }
 
   return extracted;
