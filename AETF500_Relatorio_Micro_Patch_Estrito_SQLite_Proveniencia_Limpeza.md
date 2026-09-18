@@ -1,5 +1,8 @@
 # Relatório de Auditoria Forense: Micro-Patch Final — SHA Estrito, Planos Forenses Independentes e Recibos de CI (AETF-500)
 
+> **STATUS: SUPERSEDED_BY_POST_CLOSURE_ARTIFACT**  
+> Este relatório documenta o micro-patch anterior e não constitui a atestação final do SHA actualmente auditado. A fonte autoritativa de fecho é o artefacto `aetf-mini-patch-closure-<final_audited_sha>`, produzido pelo workflow `Post Closure Verification & Forensic Packaging`.
+
 **Data de Emissão:** 17 de Setembro de 2026  
 **Repositório:** `victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES`  
 **Branch Auditado:** `master`  
