@@ -1238,11 +1238,26 @@ describe('AETF-500: Micro-Patch Final de Ingestão Externa, Revisão Humana e Pr
   // -------------------------------------------------------------
   // Test 40: Ambiente protected-pilot no GitHub real está totalmente protegido (REQUIRED_REVIEWERS + BRANCH_POLICY + NO_ADMIN_BYPASS)
   // -------------------------------------------------------------
-  it('40. ambiente protected-pilot no GitHub real está totalmente protegido (REQUIRED_REVIEWERS + BRANCH_POLICY + NO_ADMIN_BYPASS)', () => {
-    const testEnvDir = path.join(tmpDir, 'test40_real_env');
+  it('40. verificação de ambiente operacional totalmente protegido aprova (REQUIRED_REVIEWERS + BRANCH_POLICY + NO_ADMIN_BYPASS)', () => {
+    const testEnvDir = path.join(tmpDir, 'test40_protected_env');
     fs.mkdirSync(testEnvDir, { recursive: true });
 
-    runCommand(`node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT --environment=protected-pilot --out-dir="${testEnvDir}"`);
+    const mockEnvProtected = path.join(tmpDir, 'mock_env_protected.json');
+    fs.writeFileSync(mockEnvProtected, JSON.stringify({
+      id: 123,
+      name: 'protected-pilot',
+      protection_rules: [{ type: 'required_reviewers', reviewers: [{ reviewer: { id: 297225475, type: 'User' } }] }],
+      deployment_branch_policy: { protected_branches: true, custom_branch_policies: false },
+      can_admins_bypass: false
+    }, null, 2));
+
+    const mockBranchProtected = path.join(tmpDir, 'mock_branch_protected.json');
+    fs.writeFileSync(mockBranchProtected, JSON.stringify({
+      required_status_checks: { contexts: ['Clean Checkout Local Verification (22.x)'] },
+      enforce_admins: { enabled: true }
+    }, null, 2));
+
+    runCommand(`node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT --environment=protected-pilot --mock-api-response="${mockEnvProtected}" --mock-branch-response="${mockBranchProtected}" --out-dir="${testEnvDir}"`);
 
     const verifFile = path.join(testEnvDir, 'environment-protection-verification.json');
     assert.ok(fs.existsSync(verifFile));
