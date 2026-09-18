@@ -3,7 +3,7 @@
  * scripts/fetch-ci-workflow-receipts.mjs
  *
  * Descarrega as respostas JSON brutas da API do GitHub para os 3 workflows de CI
- * e guarda-as como artefactos não versionados em .artifacts/evidence/ci/.
+ * (runs, jobs e artifacts) e guarda-as como artefactos em .artifacts/closure/ ou no directório especificado.
  */
 
 import fs from 'node:fs';
@@ -12,15 +12,15 @@ import { execSync } from 'node:child_process';
 
 const REPO = 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES';
 
-function fetchRunJson(runId) {
-  const cmd = `gh api repos/${REPO}/actions/runs/${runId}`;
+function fetchApi(endpoint) {
+  const cmd = `gh api "repos/${REPO}/${endpoint}"`;
   const out = execSync(cmd, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
   return JSON.parse(out);
 }
 
 function main() {
   const args = process.argv.slice(2);
-  let targetDir = path.join(process.cwd(), '.artifacts', 'evidence', 'ci');
+  let targetDir = path.join(process.cwd(), '.artifacts', 'closure');
   let ciRunId = '';
   let remoteRunId = '';
   let finalRunId = '';
@@ -37,17 +37,14 @@ function main() {
   // Se IDs não fornecidos, tentar descobrir a partir do commit_sha
   if ((!ciRunId || !remoteRunId || !finalRunId) && commitSha) {
     console.log(`Descobrindo runs da API do GitHub para o commit ${commitSha}...`);
-    const listOut = execSync(
-      `gh api repos/${REPO}/actions/runs?head_sha=${commitSha}&per_page=10`,
-      { encoding: 'utf8' }
-    );
-    const runs = JSON.parse(listOut).workflow_runs || [];
+    const runsData = fetchApi(`actions/runs?head_sha=${commitSha}&per_page=30`);
+    const runs = runsData.workflow_runs || [];
     for (const r of runs) {
-      if (r.name?.includes('Production Readiness') && !ciRunId) {
+      if (r.name === 'CI / Production Readiness & Audit Gate' && !ciRunId) {
         ciRunId = String(r.id);
-      } else if (r.name?.includes('Evidence Remote') && !remoteRunId) {
+      } else if (r.name === 'Evidence Remote Verification' && !remoteRunId) {
         remoteRunId = String(r.id);
-      } else if (r.name?.includes('Final Forensic') && !finalRunId) {
+      } else if (r.name === 'Final Forensic Attestation & Audit Verification' && !finalRunId) {
         finalRunId = String(r.id);
       }
     }
@@ -63,21 +60,35 @@ function main() {
 
   console.log(`Descarregando respostas brutas da API do GitHub para '${targetDir}'...`);
 
-  const runsToFetch = [
-    { id: ciRunId, filename: 'workflow-run-ci-readiness.json', label: 'CI Principal' },
-    { id: remoteRunId, filename: 'workflow-run-evidence-remote.json', label: 'Evidence Remote' },
-    { id: finalRunId, filename: 'workflow-run-final-forensic.json', label: 'Final Forensic' }
+  const workflows = [
+    { id: ciRunId, slug: 'ci-readiness', label: 'CI / Production Readiness & Audit Gate' },
+    { id: remoteRunId, slug: 'evidence-remote', label: 'Evidence Remote Verification' },
+    { id: finalRunId, slug: 'final-forensic', label: 'Final Forensic Attestation & Audit Verification' }
   ];
 
-  for (const item of runsToFetch) {
-    console.log(`Descarregando ${item.label} (ID: ${item.id})...`);
-    const data = fetchRunJson(item.id);
-    const dest = path.join(targetDir, item.filename);
-    fs.writeFileSync(dest, JSON.stringify(data, null, 2), 'utf8');
-    console.log(`  -> Salvo em '${dest}' (${fs.statSync(dest).size} bytes)`);
+  for (const wf of workflows) {
+    console.log(`Descarregando dados para ${wf.label} (ID: ${wf.id})...`);
+
+    // 1. Run principal
+    const runData = fetchApi(`actions/runs/${wf.id}`);
+    const runDest = path.join(targetDir, `workflow-run-${wf.slug}.json`);
+    fs.writeFileSync(runDest, JSON.stringify(runData, null, 2), 'utf8');
+    console.log(`  -> Salvo: ${runDest} (${fs.statSync(runDest).size} bytes)`);
+
+    // 2. Jobs
+    const jobsData = fetchApi(`actions/runs/${wf.id}/jobs`);
+    const jobsDest = path.join(targetDir, `workflow-jobs-${wf.slug}.json`);
+    fs.writeFileSync(jobsDest, JSON.stringify(jobsData, null, 2), 'utf8');
+    console.log(`  -> Salvo: ${jobsDest} (${fs.statSync(jobsDest).size} bytes)`);
+
+    // 3. Artifacts
+    const artifactsData = fetchApi(`actions/runs/${wf.id}/artifacts`);
+    const artifactsDest = path.join(targetDir, `workflow-artifacts-${wf.slug}.json`);
+    fs.writeFileSync(artifactsDest, JSON.stringify(artifactsData, null, 2), 'utf8');
+    console.log(`  -> Salvo: ${artifactsDest} (${fs.statSync(artifactsDest).size} bytes)`);
   }
 
-  console.log('[OK] Todos os 3 recibos físicos foram descarregados e preservados.');
+  console.log('[OK] Todos os recibos físicos (runs, jobs, artifacts) foram descarregados e preservados.');
 }
 
 main();

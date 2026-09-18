@@ -2296,6 +2296,9 @@ export class ControlledPilotEngine {
       if (parsedManifest.pilot_id !== pilot.pilot_id) {
         throw new Error(`Manifesto 'pilot-evidence-manifest.json' possui pilot_id divergente: esperado='${pilot.pilot_id}', obtido='${parsedManifest.pilot_id}'.`);
       }
+      if (parsedManifest.tenant_id !== pilot.tenant_id) {
+        throw new Error(`Manifesto 'pilot-evidence-manifest.json' possui tenant_id divergente: esperado='${pilot.tenant_id}', obtido='${parsedManifest.tenant_id}'.`);
+      }
       if (parsedManifest.total_files !== (parsedManifest.files ? parsedManifest.files.length : 0)) {
         throw new Error(`Manifesto 'pilot-evidence-manifest.json' possui total_files divergente da contagem de ficheiros: total_files=${parsedManifest.total_files}, files=${parsedManifest.files ? parsedManifest.files.length : 0}.`);
       }

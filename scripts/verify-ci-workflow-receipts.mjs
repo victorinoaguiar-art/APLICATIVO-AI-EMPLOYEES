@@ -25,6 +25,21 @@ export const REQUIRED_WORKFLOW_FILES = [
 
 export const REQUIRED_REPOSITORY = 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES';
 
+export const EXPECTED_WORKFLOW_SPEC = {
+  'workflow-run-ci-readiness.json': {
+    exactName: 'CI / Production Readiness & Audit Gate',
+    expectedPath: '.github/workflows/ci.yml'
+  },
+  'workflow-run-evidence-remote.json': {
+    exactName: 'Evidence Remote Verification',
+    expectedPath: '.github/workflows/evidence-remote-verification.yml'
+  },
+  'workflow-run-final-forensic.json': {
+    exactName: 'Final Forensic Attestation & Audit Verification',
+    expectedPath: '.github/workflows/final-attestation.yml'
+  }
+};
+
 export function sha256(content) {
   return createHash('sha256').update(content).digest('hex');
 }
@@ -34,14 +49,29 @@ export function validateSingleWorkflowReceipt(receipt, filename, expectedSha) {
     throw new Error(`Recibo '${filename}' inválido: conteúdo não é um objeto JSON.`);
   }
 
+  // Especificação esperada para este ficheiro
+  const spec = EXPECTED_WORKFLOW_SPEC[filename];
+  if (!spec) {
+    throw new Error(`Recibo '${filename}' não é um dos 3 ficheiros de workflow esperados (${REQUIRED_WORKFLOW_FILES.join(', ')}).`);
+  }
+
   // ID
   if (typeof receipt.id !== 'number' || !Number.isInteger(receipt.id) || receipt.id <= 0) {
     throw new Error(`Recibo '${filename}' inválido: 'id' deve ser inteiro positivo, obtido ${JSON.stringify(receipt.id)}.`);
   }
 
-  // Name
+  // Name (deve coincidir exatamente com spec.exactName, rejeitando nomes abreviados ou trocados)
   if (!receipt.name || typeof receipt.name !== 'string' || receipt.name.trim() === '') {
     throw new Error(`Recibo '${filename}' inválido: 'name' obrigatório e não-vazio.`);
+  }
+  if (receipt.name !== spec.exactName) {
+    throw new Error(`Recibo '${filename}' possui 'name' inválido: esperado estritamente '${spec.exactName}', obtido '${receipt.name}'.`);
+  }
+
+  // Workflow path / workflow_id
+  const wfPath = receipt.path;
+  if (!wfPath || typeof wfPath !== 'string' || !wfPath.endsWith(spec.expectedPath)) {
+    throw new Error(`Recibo '${filename}' possui 'path' de workflow ausente ou inválido: esperado '${spec.expectedPath}', obtido ${JSON.stringify(wfPath)}.`);
   }
 
   // Repository
@@ -60,6 +90,11 @@ export function validateSingleWorkflowReceipt(receipt, filename, expectedSha) {
     if (headSha.toLowerCase() !== expectedSha.toLowerCase()) {
       throw new Error(`Recibo '${filename}' possui head_sha '${headSha}' divergente do esperado '${expectedSha}'.`);
     }
+  }
+
+  // Head Branch
+  if (!receipt.head_branch || receipt.head_branch !== 'master') {
+    throw new Error(`Recibo '${filename}' possui head_branch '${receipt.head_branch}', esperado estritamente 'master'.`);
   }
 
   // Status e Conclusion (sem fallback)
@@ -96,7 +131,9 @@ export function validateSingleWorkflowReceipt(receipt, filename, expectedSha) {
   return {
     id: receipt.id,
     name: receipt.name,
+    workflow_path: wfPath,
     head_sha: headSha.toLowerCase(),
+    head_branch: receipt.head_branch,
     run_attempt: receipt.run_attempt,
     status: receipt.status,
     conclusion: receipt.conclusion,
@@ -161,23 +198,41 @@ export function verifyWorkflowReceipts(options) {
     });
   }
 
-  // Validação opcional de coerência com o relatório
+  // Validação de unicidade (proibir cópias do mesmo workflow)
+  const uniqueIds = new Set(results.map(r => r.id));
+  if (uniqueIds.size !== results.length) {
+    throw new Error(`Recibos duplicados detectados: os 3 ficheiros devem corresponder a execuções com IDs distintos, obtidos ${results.map(r => r.id).join(', ')}.`);
+  }
+  const uniqueNames = new Set(results.map(r => r.name));
+  if (uniqueNames.size !== results.length) {
+    throw new Error(`Recibos duplicados detectados: os 3 ficheiros devem corresponder aos 3 workflows distintos.`);
+  }
+
+  // Validação estrita e obrigatória de coerência com o relatório quando reportPath for fornecido
   if (reportPath) {
     if (!fs.existsSync(reportPath)) {
       throw new Error(`Ficheiro de relatório '${reportPath}' não encontrado.`);
     }
     const reportContent = fs.readFileSync(reportPath, 'utf8');
 
-    // Procura final_audited_sha no relatório
-    const shaMatch = reportContent.match(/final_audited_sha[:\s`*]+([0-9a-f]{40})/i) ||
-                     reportContent.match(/Commit SHA Final[:\s`*]+([0-9a-f]{40})/i) ||
-                     reportContent.match(/final_audited_sha`:\s*`([0-9a-f]{40})`/i);
+    // Rejeitar expressamente placeholders proibidos nos campos de SHA
+    const placeholderMatch =
+      reportContent.match(/(?:final_audited_sha|closure_patch_sha|implementation_sha)[^:\r\n]*[:\s`*]+(A ser gerado[^`\n\r]*|PENDING|UNKNOWN|\?+)/i);
+    if (placeholderMatch) {
+      throw new Error(`O relatório '${reportPath}' contém placeholder não resolvido para o SHA: '${placeholderMatch[0]}'.`);
+    }
 
-    if (shaMatch) {
-      const reportSha = shaMatch[1].toLowerCase();
-      if (reportSha !== commonSha) {
-        throw new Error(`Divergência entre o SHA do relatório ('${reportSha}') e o head_sha dos recibos de CI ('${commonSha}').`);
-      }
+    const shaMatch =
+      reportContent.match(/final_audited_sha[^0-9a-f\r\n]{1,30}([0-9a-f]{40})/i) ||
+      reportContent.match(/Commit SHA Final[^0-9a-f\r\n]{1,30}([0-9a-f]{40})/i);
+
+    if (!shaMatch) {
+      throw new Error(`O relatório '${reportPath}' não contém um 'final_audited_sha' válido de 40 caracteres hexadecimais.`);
+    }
+
+    const reportSha = shaMatch[1].toLowerCase();
+    if (reportSha !== commonSha) {
+      throw new Error(`Divergência entre o SHA do relatório ('${reportSha}') e o head_sha dos recibos de CI ('${commonSha}').`);
     }
   }
 
@@ -189,20 +244,31 @@ export function verifyWorkflowReceipts(options) {
   };
 }
 
+import { fileURLToPath } from 'node:url';
+
 // CLI Execution
-if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'))) {
+if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url))) {
   const args = process.argv.slice(2);
   let receiptsDir = '';
   let expectedSha = '';
   let reportPath = '';
 
   for (let i = 0; i < args.length; i++) {
-    if (args[i] === '--dir' || args[i] === '--receipts-dir') {
+    const arg = args[i];
+    if (arg === '--dir' || arg === '--receipts-dir') {
       receiptsDir = args[++i];
-    } else if (args[i] === '--expected-sha') {
+    } else if (arg.startsWith('--dir=')) {
+      receiptsDir = arg.slice('--dir='.length);
+    } else if (arg.startsWith('--receipts-dir=')) {
+      receiptsDir = arg.slice('--receipts-dir='.length);
+    } else if (arg === '--expected-sha') {
       expectedSha = args[++i];
-    } else if (args[i] === '--report') {
+    } else if (arg.startsWith('--expected-sha=')) {
+      expectedSha = arg.slice('--expected-sha='.length);
+    } else if (arg === '--report') {
       reportPath = args[++i];
+    } else if (arg.startsWith('--report=')) {
+      reportPath = arg.slice('--report='.length);
     }
   }
 

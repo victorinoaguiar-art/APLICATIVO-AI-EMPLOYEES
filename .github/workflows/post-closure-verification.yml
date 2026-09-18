@@ -1,0 +1,72 @@
+name: Post Closure Verification & Forensic Packaging
+
+on:
+  workflow_run:
+    workflows:
+      - "Final Forensic Attestation & Audit Verification"
+    types:
+      - completed
+    branches:
+      - master
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  post-closure-gate:
+    name: Post Closure Gate & Forensic Packaging
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout Codebase at Final Audited SHA
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Setup Node.js 22.x
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Fetch Raw Workflow Receipts (Runs, Jobs, Artifacts)
+        run: |
+          node scripts/fetch-ci-workflow-receipts.mjs \
+            --dir .artifacts/closure \
+            --final-run ${{ github.event.workflow_run.id }} \
+            --commit-sha ${{ github.event.workflow_run.head_sha }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_ADMIN_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Generate Resolved Report and Evidence Matrix
+        run: |
+          node scripts/generate-resolved-report.mjs \
+            --dir .artifacts/closure \
+            --template templates/AETF500_Relatorio_Fecho_Template.md \
+            --commit-sha ${{ github.event.workflow_run.head_sha }} \
+            --closure-run-id ${{ github.run_id }} \
+            --closure-run-attempt ${{ github.run_attempt }}
+
+      - name: Execute Strict Read-Only Verification
+        run: |
+          node scripts/verify-ci-workflow-receipts.mjs \
+            --dir .artifacts/closure \
+            --expected-sha ${{ github.event.workflow_run.head_sha }} \
+            --report .artifacts/closure/final-resolved-report.md
+
+      - name: Verify Physical Artifacts Hashes Integrity
+        run: |
+          cd .artifacts/closure
+          sha256sum -c files.sha256
+
+      - name: Upload Mini-Patch Closure Artifact Bundle
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb99ba811e # v4.6.1
+        with:
+          name: aetf-mini-patch-closure-${{ github.event.workflow_run.head_sha }}
+          path: .artifacts/closure
+          retention-days: 90

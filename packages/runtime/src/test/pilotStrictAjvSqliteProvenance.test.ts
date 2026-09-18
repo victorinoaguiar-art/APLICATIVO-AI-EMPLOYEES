@@ -735,6 +735,21 @@ describe('AETF-500: Ajv Estrito, Quatro Planos de Verdade, Proveniência e Limpe
         rawDb.prepare('UPDATE task_outputs SET file_bytes = ? WHERE task_id = ?').run(origOut.blob, taskId);
       }
     });
+
+    it('2.18: adulterar tenant_id no manifesto de evidência falha com divergência semântica de tenant', () => {
+      const manifestPath = path.join(evidenceDir, 'pilot-evidence-manifest.json');
+      const originalBytes = fs.readFileSync(manifestPath);
+      try {
+        const manifest = JSON.parse(originalBytes.toString('utf8'));
+        manifest.tenant_id = 'tenant_tampered_divergent';
+        fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+        assert.throws(() => {
+          engine.verifyEvidenceDirectory(testPilotId, evidenceDir);
+        }, /possui tenant_id divergente: esperado='tenant_angola_ops', obtido='tenant_tampered_divergent'/i);
+      } finally {
+        fs.writeFileSync(manifestPath, originalBytes);
+      }
+    });
   });
 
   // =========================================================================
