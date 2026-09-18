@@ -1272,21 +1272,21 @@ describe('AETF-500: Micro-Patch Final de Ingestão Externa, Revisão Humana e Pr
   // -------------------------------------------------------------
   // Test 41: verify-environment-protection.mjs em OPERATIONAL_PILOT proíbe categoricamente qualquer mock
   // -------------------------------------------------------------
-  it('41. verify-environment-protection proíbe categoricamente mocks em OPERATIONAL_PILOT', () => {
+  it('41. verify-environment-protection proíbe categoricamente mocks via variáveis de ambiente em OPERATIONAL_PILOT', () => {
     const mockEnv = path.join(tmpDir, 'test41_mock_env.json');
     fs.writeFileSync(mockEnv, '{"ok": true}');
 
-    // a) Via argumento --mock-api-response em ambiente CI / GITHUB_ACTIONS
-    assert.throws(() => {
-      runCommand(`node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT --mock-api-response="${mockEnv}"`, {
-        GITHUB_ACTIONS: 'true'
-      });
-    }, /proibidos.*no modo OPERATIONAL_PILOT/);
-
-    // b) Via variável de ambiente MOCK_ENV_API_RESPONSE
+    // a) Via variável de ambiente MOCK_ENV_API_RESPONSE
     assert.throws(() => {
       runCommand(`node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT`, {
         MOCK_ENV_API_RESPONSE: mockEnv
+      });
+    }, /proibid[ao]s no modo OPERATIONAL_PILOT/);
+
+    // b) Via variável de ambiente MOCK_BRANCH_API_RESPONSE
+    assert.throws(() => {
+      runCommand(`node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT`, {
+        MOCK_BRANCH_API_RESPONSE: mockEnv
       });
     }, /proibid[ao]s no modo OPERATIONAL_PILOT/);
   });

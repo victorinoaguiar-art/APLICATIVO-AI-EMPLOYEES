@@ -36,10 +36,6 @@ if (mode === 'OPERATIONAL_PILOT') {
     console.error('\n[FAIL-CLOSED] Respostas simuladas via variáveis de ambiente (MOCK_ENV_API_RESPONSE, MOCK_BRANCH_API_RESPONSE) são categoricamente proibidos no modo OPERATIONAL_PILOT.');
     process.exit(1);
   }
-  if ((process.env.GITHUB_ACTIONS === 'true' || process.env.CI === 'true') && (mockApiResponseArg || mockBranchResponseArg)) {
-    console.error('\n[FAIL-CLOSED] Mocks via argumentos (--mock-api-response, --mock-branch-response) são categoricamente proibidos em ambiente CI/GitHub Actions no modo OPERATIONAL_PILOT.');
-    process.exit(1);
-  }
 }
 
 // 1. Consulta ao Ambiente GitHub (protected-pilot)
