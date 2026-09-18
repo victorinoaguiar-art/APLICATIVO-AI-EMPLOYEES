@@ -43,10 +43,6 @@ on:
       reviewer_id:
         description: 'ID do Revisor Humano Autorizado'
         required: true
-      review_signature_receipt:
-        description: 'Recibo da assinatura criptográfica externa (opcional se fornecido via secret)'
-        required: false
-        default: ''
 
 permissions:
   contents: read
@@ -78,24 +74,12 @@ jobs:
 
       - name: Download and Reconcile Stage A Physical Artifacts
         run: |
-          mkdir -p .artifacts/stage_a_zip
-          STAGE_A_ART_ID="${{ github.event.inputs.stage_a_artifact_id }}"
-          if ! [[ "$STAGE_A_ART_ID" =~ ^[0-9]+$ ]]; then
-            echo "[FAIL-CLOSED] stage_a_artifact_id deve ser estritamente numérico."
-            exit 1
-          fi
-
-          STAGE_A_RUN_ID="${{ github.event.inputs.stage_a_run_id }}"
-          if ! [[ "$STAGE_A_RUN_ID" =~ ^[0-9]+$ ]]; then
-            echo "[FAIL-CLOSED] stage_a_run_id deve ser estritamente numérico."
-            exit 1
-          fi
-
-          echo "[PASS] A descarregar artefacto da Etapa A ($STAGE_A_ART_ID) via API directa..."
-          gh api "repos/${{ github.repository }}/actions/artifacts/$STAGE_A_ART_ID/zip" > .artifacts/stage_a_zip/stage_a.zip
-
-          mkdir -p .artifacts/pilot
-          tar -xf .artifacts/stage_a_zip/stage_a.zip -C .artifacts/pilot
+          node scripts/reconcile-stage-a-artifact.mjs \
+            --stage-a-run-id="${{ github.event.inputs.stage_a_run_id }}" \
+            --stage-a-artifact-id="${{ github.event.inputs.stage_a_artifact_id }}" \
+            --stage-a-head-sha="${{ github.event.inputs.stage_a_head_sha }}" \
+            --out-dir=.artifacts/pilot \
+            --mode="${{ github.event.inputs.execution_mode }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -120,7 +104,7 @@ jobs:
           GIT_COMMIT_SHA: ${{ github.event.inputs.stage_a_head_sha }}
           GITHUB_SHA: ${{ github.event.inputs.stage_a_head_sha }}
           REVIEWER_TOKEN: ${{ secrets.PILOT_REVIEWER_TOKEN }}
-          REVIEW_SIGNATURE: ${{ secrets.PILOT_REVIEW_SIGNATURE || github.event.inputs.review_signature_receipt }}
+          REVIEW_SIGNATURE: ${{ secrets.PILOT_REVIEW_SIGNATURE }}
           REVIEWER_SECRET: ${{ secrets.PILOT_SECRET_REV_MARIA }}
 
       - name: Verify Operational Pilot Manifest (Bidirectional 7-Plane Forensic Check)

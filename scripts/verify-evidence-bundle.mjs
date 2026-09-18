@@ -52,7 +52,9 @@ export function verifyEvidenceBundle(options = {}) {
   const expectedQueryActor = options.expectedQueryActor || cliParsed.expectedQueryActor || process.env.EXPECTED_QUERY_ACTOR;
   const remoteRunId = options.remoteRunId || cliParsed.remoteRunId || process.env.REMOTE_VERIFICATION_RUN_ID;
 
-  const evidenceDir = validateEvidenceDir(rawEvidenceDir, ROOT_DIR);
+  const evidenceDir = validateEvidenceDir(rawEvidenceDir, ROOT_DIR, {
+    allowedTempRoot: options.allowedTempRoot || (options.evidenceDir ? path.resolve(options.evidenceDir) : null)
+  });
 
   // 1. Run full coherence audit
   const coherenceResult = verifyEvidenceCoherence({

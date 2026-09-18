@@ -578,8 +578,17 @@ describe('AETF-500: Micro-Patch Final de Ingestão Externa, Revisão Humana e Pr
   // Test 17: Ambiente sem required reviewers falha
   // -------------------------------------------------------------
   it('17. ambiente sem required reviewers falha', () => {
+    const mockEnvNoReviewers = path.join(tmpDir, 'mock_env_no_reviewers.json');
+    fs.writeFileSync(mockEnvNoReviewers, JSON.stringify({
+      id: 123,
+      name: 'protected-pilot',
+      protection_rules: [],
+      deployment_branch_policy: { protected_branches: true, custom_branch_policies: false },
+      can_admins_bypass: false
+    }, null, 2));
+
     assert.throws(() => {
-      runCommand('node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT --environment=protected-pilot');
+      runCommand(`node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT --environment=protected-pilot --mock-api-response="${mockEnvNoReviewers}"`);
     }, /BLOCKED_REQUIRED_REVIEWERS_NOT_CONFIGURED|BLOCKED_ENVIRONMENT_PROTECTION_NOT_CONFIGURED/);
   });
 
@@ -587,9 +596,17 @@ describe('AETF-500: Micro-Patch Final de Ingestão Externa, Revisão Humana e Pr
   // Test 18: Ambiente sem política de branch falha
   // -------------------------------------------------------------
   it('18. ambiente sem política de branch falha', () => {
-    // O ambiente protected-pilot actual não tem deployment_branch_policy (é null)
+    const mockEnvNoBranchPolicy = path.join(tmpDir, 'mock_env_no_branch_policy.json');
+    fs.writeFileSync(mockEnvNoBranchPolicy, JSON.stringify({
+      id: 123,
+      name: 'protected-pilot',
+      protection_rules: [{ type: 'required_reviewers', reviewers: [{ reviewer: { id: 1, type: 'User' } }] }],
+      deployment_branch_policy: null,
+      can_admins_bypass: false
+    }, null, 2));
+
     assert.throws(() => {
-      runCommand('node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT --environment=protected-pilot');
+      runCommand(`node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT --environment=protected-pilot --mock-api-response="${mockEnvNoBranchPolicy}"`);
     }, /BLOCKED_BRANCH_POLICY_NOT_CONFIGURED|BLOCKED_REQUIRED_REVIEWERS_NOT_CONFIGURED|BLOCKED_ENVIRONMENT_PROTECTION_NOT_CONFIGURED/);
   });
 
@@ -1034,5 +1051,206 @@ describe('AETF-500: Micro-Patch Final de Ingestão Externa, Revisão Humana e Pr
     const verifData = JSON.parse(fs.readFileSync(verifFile, 'utf8'));
     assert.ok(verifData.branch_protection, 'Deve conter auditoria específica de branch_protection');
     assert.strictEqual(verifData.branch_protection_file, 'branch-protection-api-response.json');
+  });
+
+  // -------------------------------------------------------------
+  // Test 35: Rejeição do ID antigo 924840897, ID ausente ou divergente
+  // -------------------------------------------------------------
+  it('35. rejeita ID antigo (924840897), ID ausente ou divergente de repositório', () => {
+    const CANONICAL_REPO_ID = 1363667011;
+    const OLD_REPO_ID = 924840897;
+    assert.notStrictEqual(CANONICAL_REPO_ID, OLD_REPO_ID, 'ID canónico 1363667011 deve substituir o antigo 924840897');
+
+    const prepScript = path.resolve(repoRoot, 'scripts/prepare-operational-pilot-input.mjs');
+    const prepContent = fs.readFileSync(prepScript, 'utf8');
+    assert.match(prepContent, /const CANONICAL_REPO_ID = 1363667011/);
+    assert.doesNotMatch(prepContent, /924840897/);
+
+    const recScript = path.resolve(repoRoot, 'scripts/reconcile-stage-a-artifact.mjs');
+    const recContent = fs.readFileSync(recScript, 'utf8');
+    assert.match(recContent, /const CANONICAL_REPO_ID = 1363667011/);
+    assert.doesNotMatch(recContent, /924840897/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 36: Tentativa de substituir repositório canónico por variável de ambiente é bloqueada em OPERATIONAL_PILOT
+  // -------------------------------------------------------------
+  it('36. tentativa de substituir repositório canónico por variável de ambiente é bloqueada em OPERATIONAL_PILOT', () => {
+    const prepScript = path.resolve(repoRoot, 'scripts/prepare-operational-pilot-input.mjs');
+    const prepContent = fs.readFileSync(prepScript, 'utf8');
+    assert.match(prepContent, /CANONICAL_REPO_NAME = 'victorinoaguiar-art\/APLICATIVO-AI-EMPLOYEES'/);
+    assert.match(prepContent, /EXPECTED_REPO = \(mode === 'OPERATIONAL_PILOT' \|\| !process\.env\.GITHUB_REPOSITORY\)/);
+
+    const recScript = path.resolve(repoRoot, 'scripts/reconcile-stage-a-artifact.mjs');
+    const recContent = fs.readFileSync(recScript, 'utf8');
+    assert.match(recContent, /CANONICAL_REPO_NAME = 'victorinoaguiar-art\/APLICATIVO-AI-EMPLOYEES'/);
+    assert.match(recContent, /EXPECTED_REPO = \(mode === 'OPERATIONAL_PILOT' \|\| !process\.env\.GITHUB_REPOSITORY\)/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 37: review_signature_sha256 armazena sha256(signature) e não a assinatura em texto simples, e mutação de 1 byte falha
+  // -------------------------------------------------------------
+  it('37. review_signature_sha256 armazena sha256(signature) e não a assinatura em texto simples, e mutação de 1 byte falha', async () => {
+    const localDb = path.join(tmpDir, 'test37.db');
+    const localTokenService = new TokenService(undefined, localDb);
+    localTokenService.upsertAccount({
+      user_id: reviewerId,
+      tenant_id: tenantId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ'],
+      status: 'ACTIVE'
+    });
+    const jti = 'jti_test37';
+    const token = localTokenService.signToken({
+      tenant_id: tenantId,
+      user_id: reviewerId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ'],
+      jti
+    });
+    const outDir = path.join(tmpDir, 'test37_pkg');
+    createValidExternalPackage(outDir);
+
+    const runner = new OperationalPilotRunner({
+      dbPath: localDb,
+      secretProvider,
+      tokenService: localTokenService,
+      executionMode: 'DEMO'
+    });
+    runner.getStore().createReviewerSession({
+      session_id: 'SESS_TEST37',
+      token_jti: jti,
+      reviewer_id: reviewerId,
+      tenant_id: tenantId,
+      pilot_id: pilotId,
+      status: 'ACTIVE',
+      created_at: new Date().toISOString(),
+      expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
+    });
+
+    runner.loadAndValidateInput(path.join(outDir, 'operational-pilot-input.json'));
+    const { challenge } = await runner.executeOperationalTask();
+    const eventSignedAt = new Date().toISOString();
+    const validSignature = PilotExternalValidator.generateCanonicalChallengeSignature(
+      challenge,
+      reviewerId,
+      'APPROVED',
+      reviewerSecret,
+      eventSignedAt
+    );
+
+    // a) Mutação de 1 byte na assinatura é rejeitada
+    const mutatedSig = validSignature.slice(0, -1) + (validSignature.slice(-1) === 'a' ? 'b' : 'a');
+    assert.throws(() => {
+      runner.submitHumanReview({
+        reviewerId,
+        reviewerToken: token,
+        decision: 'APPROVED',
+        comments: 'teste mutação',
+        eventSignedAt,
+        signature: mutatedSig
+      });
+    }, /Assinatura criptográfica.*inválida/);
+
+    // b) Envio de assinatura válida persiste o hash SHA-256 e NUNCA a assinatura em claro
+    const reviewReceipt = runner.submitHumanReview({
+      reviewerId,
+      reviewerToken: token,
+      decision: 'APPROVED',
+      comments: 'Aprovado para teste de hash',
+      eventSignedAt,
+      signature: validSignature
+    });
+
+    const expectedSha256 = sha256(Buffer.from(validSignature, 'utf8'));
+    assert.strictEqual(reviewReceipt.review_signature_sha256, expectedSha256);
+    assert.notStrictEqual(reviewReceipt.review_signature_sha256, validSignature);
+    assert.match(reviewReceipt.review_signature_sha256, /^[a-f0-9]{64}$/);
+
+    // Verificar também no SQLite
+    const row = (runner.getStore() as any).db.prepare('SELECT review_signature_sha256 FROM human_reviews WHERE reviewer_id = ?').get(reviewerId) as any;
+    assert.ok(row, 'Registo de revisão humana deve existir na tabela SQLite');
+    assert.strictEqual(row.review_signature_sha256, expectedSha256);
+    assert.notStrictEqual(row.review_signature_sha256, validSignature);
+
+    runner.getStore().close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 38: auditAndExtractZip bloqueia path traversal, caminhos absolutos, FIFOs, zip-bomb e ficheiros fora da whitelist
+  // -------------------------------------------------------------
+  it('38. auditAndExtractZip bloqueia path traversal, caminhos absolutos, symlinks, FIFOs, zip-bomb e ficheiros fora da whitelist', async () => {
+    const { auditAndExtractZip, buildZip } = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
+
+    const extractTarget = path.join(tmpDir, 'test38_extract');
+    fs.mkdirSync(extractTarget, { recursive: true });
+
+    // a) Path traversal (../escaped.txt)
+    const zipTraversal = buildZip([{ name: '../escaped.txt', content: Buffer.from('evil') }]);
+    assert.throws(() => {
+      auditAndExtractZip(zipTraversal, extractTarget);
+    }, /path traversal/i);
+
+    // b) Caminho absoluto (/etc/passwd)
+    const zipAbs = buildZip([{ name: '/etc/passwd', content: Buffer.from('evil') }]);
+    assert.throws(() => {
+      auditAndExtractZip(zipAbs, extractTarget);
+    }, /caminho absoluto/i);
+
+    // c) Ficheiro não permitido na whitelist
+    const zipDisallowed = buildZip([{ name: 'malicious.exe', content: Buffer.from('evil') }]);
+    assert.throws(() => {
+      auditAndExtractZip(zipDisallowed, extractTarget, { allowedFiles: ['operational-pilot-input.json'] });
+    }, /inesperado|não permitido/i);
+
+    // d) Ficheiro legítimo extrai com sucesso
+    const zipValid = buildZip([{ name: 'operational-pilot-input.json', content: Buffer.from('{"ok":true}') }]);
+    const extracted = auditAndExtractZip(zipValid, extractTarget, { allowedFiles: ['operational-pilot-input.json'] });
+    assert.ok(fs.existsSync(path.join(extractTarget, 'operational-pilot-input.json')));
+    assert.strictEqual(extracted.length, 1);
+  });
+
+  // -------------------------------------------------------------
+  // Test 39: validateEvidenceDir rejeita pasta irmã com mesmo prefixo mesmo quando raiz do checkout está em os.tmpdir()
+  // -------------------------------------------------------------
+  it('39. validateEvidenceDir rejeita pasta irmã com mesmo prefixo mesmo quando raiz do checkout está em os.tmpdir()', async () => {
+    const { validateEvidenceDir } = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/evidencePathValidator.mjs')).href);
+
+    const fakeRepoRoot = path.join(os.tmpdir(), 'fake-pilot-checkout-12345');
+    fs.mkdirSync(fakeRepoRoot, { recursive: true });
+    const siblingPath = fakeRepoRoot + '-sibling';
+
+    // Deve rejeitar a pasta irmã mesmo estando dentro de os.tmpdir()
+    assert.throws(() => {
+      validateEvidenceDir(siblingPath, fakeRepoRoot);
+    }, /EVIDENCE_PATH_INVALID|must be within workspace/);
+
+    // Deve rejeitar path traversal
+    assert.throws(() => {
+      validateEvidenceDir('../../other', fakeRepoRoot);
+    }, /EVIDENCE_PATH_INVALID|traversal/);
+
+    // Deve aceitar subdirectório interno
+    const validInternal = validateEvidenceDir('evidence_output', fakeRepoRoot);
+    assert.strictEqual(validInternal, path.resolve(fakeRepoRoot, 'evidence_output'));
+  });
+
+  // -------------------------------------------------------------
+  // Test 40: Ambiente protected-pilot no GitHub real está totalmente protegido (REQUIRED_REVIEWERS + BRANCH_POLICY + NO_ADMIN_BYPASS)
+  // -------------------------------------------------------------
+  it('40. ambiente protected-pilot no GitHub real está totalmente protegido (REQUIRED_REVIEWERS + BRANCH_POLICY + NO_ADMIN_BYPASS)', () => {
+    const testEnvDir = path.join(tmpDir, 'test40_real_env');
+    fs.mkdirSync(testEnvDir, { recursive: true });
+
+    runCommand(`node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT --environment=protected-pilot --out-dir="${testEnvDir}"`);
+
+    const verifFile = path.join(testEnvDir, 'environment-protection-verification.json');
+    assert.ok(fs.existsSync(verifFile));
+    const verifData = JSON.parse(fs.readFileSync(verifFile, 'utf8'));
+
+    assert.strictEqual(verifData.status, 'FULLY_PROTECTED');
+    assert.strictEqual(verifData.has_required_reviewers, true);
+    assert.strictEqual(verifData.has_branch_policy, true);
+    assert.strictEqual(verifData.can_admins_bypass, false);
   });
 });

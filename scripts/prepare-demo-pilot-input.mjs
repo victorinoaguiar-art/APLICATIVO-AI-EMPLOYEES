@@ -4,6 +4,8 @@ import * as fs from 'node:fs';
 import { createHash } from 'node:crypto';
 import { PhysicalDocumentValidator } from '../packages/runtime/dist/pilot/PhysicalDocumentValidator.js';
 
+import { buildTarGz } from './lib/secureTarExtractor.mjs';
+
 function sha256(buf) {
   return createHash('sha256').update(buf).digest('hex');
 }
@@ -18,6 +20,7 @@ function getArg(name, fallback = '') {
 const outDir = path.resolve(process.cwd(), getArg('out-dir', '.artifacts/pilot'));
 const tenantId = getArg('tenant-id', 'DEMO_TENANT_ALFA_001');
 const taskId = getArg('task-id', 'DEMO_TASK_NOTICE_001');
+const packageTarOut = getArg('package-tar-out', '');
 
 fs.mkdirSync(outDir, { recursive: true });
 
@@ -27,9 +30,12 @@ console.log('================================================================');
 console.log(`Directório de Destino: ${outDir}`);
 console.log(`Tenant ID:             ${tenantId}`);
 console.log(`Task ID:               ${taskId}`);
+if (packageTarOut) {
+  console.log(`Pacote Tar Destino:    ${packageTarOut}`);
+}
 
 // 1. Gerar documento binário de autorização simulada de teste com dados inequivocamente fictícios
-const authDocPath = path.join(outDir, 'despacho_autorizacao_demo.pdf');
+const authDocPath = path.join(outDir, 'authorization-document.pdf');
 const authLines = [
   'DEMO — SEM VALIDADE COMERCIAL, FISCAL OU JURIDICA',
   'EMPRESA DEMONSTRACAO ALFA, LDA. (DEMO_ORG_ALFA)',
@@ -61,7 +67,7 @@ const demoInput = {
   organization_id: 'DEMO_ORG_ALFA',
   organization_name: 'Empresa Demonstração Alfa, Lda.',
   authorization_reference: 'AUTH-DEMO-SIMULATION-2026',
-  authorization_document_path: authDocPath,
+  authorization_document_path: 'authorization-document.pdf',
   authorization_document_sha256: authSha256,
   authorized_by: 'responsavel_demo_alfa_001',
   authorized_at: '2026-09-18T08:00:00Z',
@@ -103,16 +109,54 @@ const demoInput = {
   formats: ['PDF', 'DOCX']
 };
 
+const inputRaw = JSON.stringify(demoInput, null, 2);
+const inputBytes = Buffer.from(inputRaw, 'utf8');
 const inputPath = path.join(outDir, 'operational-pilot-input.json');
-fs.writeFileSync(inputPath, JSON.stringify(demoInput, null, 2), 'utf8');
+fs.writeFileSync(inputPath, inputBytes);
+const inputSha256 = sha256(inputBytes);
 
-// Também criar o runtime-context.json para DEMO
+// 3. Gerar ficheiros complementares canónicos de proveniência e hash
+const provenanceData = {
+  package_type: 'AUTOMATED_OPERATIONAL_DEMO',
+  provenance: 'SYNTHETIC_DEMO_GENERATOR',
+  created_at: new Date().toISOString(),
+  tenant_id: tenantId,
+  task_id: taskId,
+  disclaimer: 'DEMO — DADOS E DOCUMENTOS PURAMENTE FICTÍCIOS'
+};
+const provenanceBytes = Buffer.from(JSON.stringify(provenanceData, null, 2), 'utf8');
+fs.writeFileSync(path.join(outDir, 'package-provenance.json'), provenanceBytes);
+
+const hashFileBytes = Buffer.from(inputSha256 + '  operational-pilot-input.json\n', 'utf8');
+fs.writeFileSync(path.join(outDir, 'input-package.sha256'), hashFileBytes);
+
+// 4. Se solicitado arquivo .tar.gz demonstrativo, construir com buildTarGz
+if (packageTarOut) {
+  const resolvedTarOut = path.resolve(process.cwd(), packageTarOut);
+  fs.mkdirSync(path.dirname(resolvedTarOut), { recursive: true });
+
+  const tarGzBytes = buildTarGz([
+    { name: 'operational-pilot-input.json', data: inputBytes },
+    { name: 'authorization-document.pdf', data: authPdfBytes },
+    { name: 'input-package.sha256', data: hashFileBytes },
+    { name: 'package-provenance.json', data: provenanceBytes }
+  ]);
+
+  fs.writeFileSync(resolvedTarOut, tarGzBytes);
+  const tarGzSha = sha256(tarGzBytes);
+  fs.writeFileSync(resolvedTarOut + '.sha256', tarGzSha, 'utf8');
+
+  console.log(`[PASS] Pacote demonstrativo gerado em: ${resolvedTarOut}`);
+  console.log(`[PASS] SHA-256 do pacote demonstrativo: ${tarGzSha}`);
+}
+
+// 5. Criar o runtime-context.json para DEMO
 const runtimeContext = {
   type: 'DERIVED_RUNTIME_CONTEXT',
   created_at: new Date().toISOString(),
   original_input_file: 'operational-pilot-input.json',
-  original_input_sha256: sha256(Buffer.from(JSON.stringify(demoInput, null, 2), 'utf8')),
-  original_authorization_file: 'despacho_autorizacao_demo.pdf',
+  original_input_sha256: inputSha256,
+  original_authorization_file: 'authorization-document.pdf',
   original_authorization_sha256: authSha256,
   resolved_authorization_document_path: authDocPath,
   package_dir: outDir

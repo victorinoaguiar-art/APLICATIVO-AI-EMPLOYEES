@@ -16,8 +16,9 @@ on:
         required: false
         default: ''
       expected_package_sha256:
-        description: 'Hash SHA-256 (64 hex minúsculos) esperado do arquivo original-package.tar.gz'
-        required: true
+        description: 'Hash SHA-256 (64 hex minúsculos) esperado do arquivo original-package.tar.gz (obrigatório em OPERATIONAL_PILOT)'
+        required: false
+        default: ''
       tenant_id:
         description: 'Tenant ID Autorizado'
         required: true
@@ -51,34 +52,49 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Compile Monorepo Packages
+        run: npm run build:packages
+
       - name: Obtain and Verify Physical Package Payload
         run: |
           mkdir -p .artifacts/intake_staging
-          EXPECTED_SHA="${{ github.event.inputs.expected_package_sha256 }}"
-          if ! [[ "$EXPECTED_SHA" =~ ^[a-f0-9]{64}$ ]]; then
-            echo "[FAIL-CLOSED] expected_package_sha256 inválido (deve ter 64 hex minúsculos)."
-            exit 1
-          fi
 
           if [ "${{ github.event.inputs.execution_mode }}" = "DEMO" ] && [ -z "${{ github.event.inputs.source_artifact_id }}" ]; then
-            echo "[DEMO] A gerar pacote demonstrativo controlado..."
-            node scripts/prepare-demo-pilot-input.mjs --out-dir=.artifacts/intake_demo_temp
-            # Criar tar.gz com os ficheiros demo
-            tar -czf .artifacts/intake_staging/original-package.tar.gz \
-              -C .artifacts/intake_demo_temp \
-              operational-pilot-input.json \
-              despacho_autorizacao_demo.pdf \
-              runtime-context.json
+            echo "[DEMO] A gerar pacote demonstrativo controlado com os 4 ficheiros canónicos..."
+            node scripts/prepare-demo-pilot-input.mjs \
+              --out-dir=.artifacts/intake_demo_temp \
+              --package-tar-out=.artifacts/intake_staging/original-package.tar.gz \
+              --tenant-id="${{ github.event.inputs.tenant_id }}" \
+              --task-id="${{ github.event.inputs.task_id }}"
+
+            DEMO_SHA=$(cat .artifacts/intake_staging/original-package.tar.gz.sha256)
+            echo "EFFECTIVE_PACKAGE_SHA=$DEMO_SHA" >> $GITHUB_ENV
+            echo "[DEMO] Hash SHA-256 do pacote demonstrativo calculado: $DEMO_SHA"
           else
+            EXPECTED_SHA="${{ github.event.inputs.expected_package_sha256 }}"
+            if ! [[ "$EXPECTED_SHA" =~ ^[a-f0-9]{64}$ ]]; then
+              echo "[FAIL-CLOSED] expected_package_sha256 inválido (deve ter 64 hex minúsculos no modo operacional)."
+              exit 1
+            fi
+
             SOURCE_ID="${{ github.event.inputs.source_artifact_id }}"
             if [ -z "$SOURCE_ID" ] || ! [[ "$SOURCE_ID" =~ ^[0-9]+$ ]]; then
               echo "[FAIL-CLOSED] source_artifact_id ausente ou não numérico para transferência de pacote real."
               exit 1
             fi
+
             echo "[OPERATIONAL] A descarregar artefacto fonte privado '$SOURCE_ID'..."
             gh api "repos/${{ github.repository }}/actions/artifacts/$SOURCE_ID/zip" > .artifacts/intake_staging/source.zip
             mkdir -p .artifacts/intake_staging/unzipped
-            tar -xf .artifacts/intake_staging/source.zip -C .artifacts/intake_staging/unzipped
+
+            node -e "
+              import('./scripts/lib/secureTarExtractor.mjs').then(m => {
+                m.auditAndExtractZip('.artifacts/intake_staging/source.zip', '.artifacts/intake_staging/unzipped', {
+                  allowedFiles: ['original-package.tar.gz', 'package.tar.gz']
+                });
+              });
+            "
+
             if [ -f .artifacts/intake_staging/unzipped/original-package.tar.gz ]; then
               cp .artifacts/intake_staging/unzipped/original-package.tar.gz .artifacts/intake_staging/original-package.tar.gz
             elif [ -f .artifacts/intake_staging/unzipped/package.tar.gz ]; then
@@ -87,6 +103,8 @@ jobs:
               echo "[FAIL-CLOSED] Arquivo original-package.tar.gz não encontrado dentro do artefacto fonte."
               exit 1
             fi
+
+            echo "EFFECTIVE_PACKAGE_SHA=$EXPECTED_SHA" >> $GITHUB_ENV
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -99,7 +117,7 @@ jobs:
             --tenant-id="${{ github.event.inputs.tenant_id }}" \
             --task-id="${{ github.event.inputs.task_id }}" \
             --mode="${{ github.event.inputs.execution_mode }}" \
-            --input-package-sha256="${{ github.event.inputs.expected_package_sha256 }}"
+            --input-package-sha256="$EFFECTIVE_PACKAGE_SHA"
 
       - name: Publish Immutable Intake Artifact
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1

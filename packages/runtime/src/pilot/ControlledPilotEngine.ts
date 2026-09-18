@@ -914,7 +914,7 @@ export class ControlledPilotEngine {
       previous_output_hash: prevHash,
       new_output_hash: newHash,
       auth_method: authToken ? 'SESSION_TOKEN' : (params.auth_method || 'HMAC_SIGNATURE'),
-      review_signature_sha256: signature,
+      review_signature_sha256: sha256(Buffer.from(signature, 'utf8')),
       receipt_sha256: '',
       challenge_issued_at: challengeIssuedAt,
       event_signed_at: eventSignedAt,

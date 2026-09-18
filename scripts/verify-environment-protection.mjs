@@ -28,20 +28,32 @@ console.log(`VERIFICAÇÃO DE REGRAS DE PROTEÇÃO DO AMBIENTE E DA BRANCH: ${en
 console.log(`Modo de Execução: ${mode} | Repositório: ${repo}`);
 console.log('================================================================');
 
+const mockApiResponseArg = getArg('mock-api-response', process.env.MOCK_ENV_API_RESPONSE || '');
+const mockBranchResponseArg = getArg('mock-branch-response', process.env.MOCK_BRANCH_API_RESPONSE || '');
+
 // 1. Consulta ao Ambiente GitHub (protected-pilot)
 const queryEnvUrl = `https://api.github.com/repos/${repo}/environments/${envName}`;
 let rawApiText = '';
 let apiResponse = null;
 let fetchEnvError = null;
 
-try {
-  rawApiText = execFileSync('gh', ['api', `repos/${repo}/environments/${envName}`], {
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'pipe']
-  });
-  apiResponse = JSON.parse(rawApiText);
-} catch (err) {
-  fetchEnvError = err.message;
+if (mockApiResponseArg && fs.existsSync(mockApiResponseArg)) {
+  rawApiText = fs.readFileSync(mockApiResponseArg, 'utf8');
+  try {
+    apiResponse = JSON.parse(rawApiText);
+  } catch (err) {
+    fetchEnvError = err.message;
+  }
+} else {
+  try {
+    rawApiText = execFileSync('gh', ['api', `repos/${repo}/environments/${envName}`], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+    apiResponse = JSON.parse(rawApiText);
+  } catch (err) {
+    fetchEnvError = err.message;
+  }
 }
 
 // 2. Consulta à Proteção de Branch master
@@ -50,14 +62,23 @@ let rawBranchText = '';
 let branchResponse = null;
 let fetchBranchError = null;
 
-try {
-  rawBranchText = execFileSync('gh', ['api', `repos/${repo}/branches/master/protection`], {
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'pipe']
-  });
-  branchResponse = JSON.parse(rawBranchText);
-} catch (err) {
-  fetchBranchError = err.message;
+if (mockBranchResponseArg && fs.existsSync(mockBranchResponseArg)) {
+  rawBranchText = fs.readFileSync(mockBranchResponseArg, 'utf8');
+  try {
+    branchResponse = JSON.parse(rawBranchText);
+  } catch (err) {
+    fetchBranchError = err.message;
+  }
+} else {
+  try {
+    rawBranchText = execFileSync('gh', ['api', `repos/${repo}/branches/master/protection`], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+    branchResponse = JSON.parse(rawBranchText);
+  } catch (err) {
+    fetchBranchError = err.message;
+  }
 }
 
 let commitSha = 'LOCAL_EXECUTION';
@@ -144,6 +165,7 @@ const verificationReport = {
   status,
   has_required_reviewers: hasRequiredReviewers,
   has_deployment_branch_policy: hasBranchPolicy,
+  has_branch_policy: hasBranchPolicy,
   can_admins_bypass: canAdminsBypass,
   protection_rules_count: Array.isArray(apiResponse?.protection_rules) ? apiResponse.protection_rules.length : 0,
   protection_rules: apiResponse?.protection_rules || [],

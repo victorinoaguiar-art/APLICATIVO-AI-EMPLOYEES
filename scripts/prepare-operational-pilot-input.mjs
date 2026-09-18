@@ -4,7 +4,7 @@ import * as fs from 'node:fs';
 import * as os from 'node:os';
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { auditAndExtractTar } from './lib/secureTarExtractor.mjs';
+import { auditAndExtractTar, auditAndExtractZip } from './lib/secureTarExtractor.mjs';
 
 function sha256(buf) {
   return createHash('sha256').update(buf).digest('hex');
@@ -28,15 +28,15 @@ function getArg(name, fallback = '') {
 }
 
 const outDir = path.resolve(process.cwd(), getArg('out-dir', '.artifacts/pilot'));
-const packagePath = getArg('package-path', process.env.PILOT_EXTERNAL_PACKAGE_PATH || '');
-const packageTar = getArg('package-tar', process.env.PILOT_EXTERNAL_PACKAGE_TAR || '');
-const intakeRunId = getArg('intake-run-id', process.env.PILOT_INTAKE_RUN_ID || '');
-const inputArtifactId = getArg('input-artifact-id', process.env.PILOT_INPUT_ARTIFACT_ID || '');
-const inputArtifactName = getArg('input-artifact-name', process.env.PILOT_INPUT_ARTIFACT_NAME || '');
-const inputPackageSha256 = getArg('input-package-sha256', process.env.PILOT_INPUT_PACKAGE_SHA256 || '').toLowerCase();
+const packagePath = getArg('package-path', '');
+const packageTar = getArg('package-tar', '');
+const intakeRunId = getArg('intake-run-id', '');
+const inputArtifactId = getArg('input-artifact-id', '');
+const inputArtifactName = getArg('input-artifact-name', '');
+const inputPackageSha256 = getArg('input-package-sha256', '');
+const mode = getArg('mode', process.env.EXECUTION_MODE || 'DEMO').toUpperCase();
 const expectedTenantId = getArg('tenant-id', '');
 const expectedTaskId = getArg('task-id', '');
-const mode = getArg('mode', process.env.EXECUTION_MODE || 'OPERATIONAL_PILOT').toUpperCase();
 
 console.log('================================================================');
 console.log('INGESTÃO E VALIDAÇÃO DE PACOTE EXTERNO DO PILOTO OPERACIONAL REAL');
@@ -65,8 +65,11 @@ if (inputPackageSha256 && !/^[a-f0-9]{64}$/.test(inputPackageSha256)) {
   process.exit(1);
 }
 
-const CANONICAL_REPO_ID = 924840897;
-const EXPECTED_REPO = process.env.GITHUB_REPOSITORY || 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES';
+const CANONICAL_REPO_ID = 1363667011;
+const CANONICAL_REPO_NAME = 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES';
+const EXPECTED_REPO = (mode === 'OPERATIONAL_PILOT' || !process.env.GITHUB_REPOSITORY)
+  ? CANONICAL_REPO_NAME
+  : process.env.GITHUB_REPOSITORY;
 
 let effectivePackageDir = packagePath;
 let originalTarBuffer = null;
@@ -136,18 +139,24 @@ else if (!effectivePackageDir) {
       if (artifactMeta.workflow_run.id !== Number(intakeRunId)) {
         throw new Error(`Run ID divergente: esperado '${intakeRunId}', obtido '${artifactMeta.workflow_run.id}'.`);
       }
-      if (artifactMeta.workflow_run.repository_id && artifactMeta.workflow_run.repository_id !== CANONICAL_REPO_ID) {
-        throw new Error(`Repository ID divergente no artefacto: esperado '${CANONICAL_REPO_ID}', obtido '${artifactMeta.workflow_run.repository_id}'.`);
+      if (!artifactMeta.workflow_run.repository_id || Number(artifactMeta.workflow_run.repository_id) !== CANONICAL_REPO_ID) {
+        throw new Error(`Repository ID divergente no artefacto: esperado '${CANONICAL_REPO_ID}', obtido '${artifactMeta.workflow_run?.repository_id}'.`);
+      }
+      if (!artifactMeta.workflow_run.head_repository_id || Number(artifactMeta.workflow_run.head_repository_id) !== CANONICAL_REPO_ID) {
+        throw new Error(`head_repository_id divergente no artefacto: esperado '${CANONICAL_REPO_ID}', obtido '${artifactMeta.workflow_run?.head_repository_id}'.`);
       }
 
       // 2. Consultar e reconciliar metadados do workflow run
       runMeta = callGhApi(`repos/${EXPECTED_REPO}/actions/runs/${intakeRunId}`);
 
-      if (runMeta.repository.id !== CANONICAL_REPO_ID) {
-        throw new Error(`Repository ID divergente no run: esperado '${CANONICAL_REPO_ID}', obtido '${runMeta.repository.id}'.`);
+      if (!runMeta.repository || Number(runMeta.repository.id) !== CANONICAL_REPO_ID) {
+        throw new Error(`Repository ID divergente no run: esperado '${CANONICAL_REPO_ID}', obtido '${runMeta.repository?.id}'.`);
       }
-      if (runMeta.head_repository && runMeta.head_repository.id !== CANONICAL_REPO_ID) {
-        throw new Error(`head_repository.id divergente: esperado '${CANONICAL_REPO_ID}', obtido '${runMeta.head_repository.id}'.`);
+      if (!runMeta.head_repository || Number(runMeta.head_repository.id) !== CANONICAL_REPO_ID) {
+        throw new Error(`head_repository.id divergente: esperado '${CANONICAL_REPO_ID}', obtido '${runMeta.head_repository?.id}'.`);
+      }
+      if (Number(runMeta.repository.id) !== Number(runMeta.head_repository.id)) {
+        throw new Error(`repository.id (${runMeta.repository.id}) e head_repository.id (${runMeta.head_repository.id}) não são idênticos.`);
       }
       if (!runMeta.path || !runMeta.path.endsWith('operational-pilot-intake.yml')) {
         throw new Error(`Workflow de origem inválido: esperado '.github/workflows/operational-pilot-intake.yml', obtido '${runMeta.path}'.`);
@@ -168,14 +177,17 @@ else if (!effectivePackageDir) {
       }
 
       // 3. Descarregar o arquivo ZIP do artefacto via chamada segura
-      const zipPath = path.join(stagingDir, 'package.zip');
       const zipBytes = execFileSync('gh', ['api', `repos/${EXPECTED_REPO}/actions/artifacts/${inputArtifactId}/zip`], {
         maxBuffer: 50 * 1024 * 1024
       });
-      fs.writeFileSync(zipPath, zipBytes);
 
-      // Descompactar o ZIP do artefacto do GitHub
-      execFileSync('tar', ['-xf', zipPath, '-C', stagingDir]);
+      // Descompactar o ZIP do artefacto do GitHub com pré-auditoria estrita
+      auditAndExtractZip(zipBytes, stagingDir, {
+        allowedFiles: [
+          'original-package.tar.gz',
+          'package.tar.gz'
+        ]
+      });
 
       // 4. Localizar e verificar bytes originais de original-package.tar.gz
       const originalTarPath = path.join(stagingDir, 'original-package.tar.gz');

@@ -818,7 +818,7 @@ export class OperationalPilotRunner {
       previous_output_hash: activeOut.file_bytes_sha256,
       new_output_hash: activeOut.file_bytes_sha256,
       auth_method: 'SESSION_TOKEN',
-      review_signature_sha256: signature,
+      review_signature_sha256: sha256(Buffer.from(signature, 'utf8')),
       receipt_sha256: '',
       challenge_issued_at: challenge.issued_at,
       event_signed_at: eventSignedAt,
