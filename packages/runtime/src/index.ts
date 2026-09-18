@@ -101,8 +101,7 @@ export * from './pilot/PilotExternalValidator.js';
 export * from './pilot/PilotSecretProvider.js';
 export * from './pilot/PilotAjvValidator.js';
 export * from './pilot/CIWorkflowReceiptsVerifier.js';
-
-
+export * from './pilot/OperationalPilotRunner.js';
 
 
 

@@ -1,0 +1,83 @@
+name: Controlled Real Operational Pilot Execution
+
+on:
+  workflow_dispatch:
+    inputs:
+      tenant_id:
+        description: 'Tenant ID Autorizado para o Piloto'
+        required: true
+        default: 'tenant_saso_angola_ops_01'
+      task_id:
+        description: 'Identificador da Tarefa Empresarial Real'
+        required: true
+        default: 'TASK_SASO_NOTICE_2026_09_001'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  operational-pilot:
+    name: Execute Real Protected Operational Pilot
+    runs-on: ubuntu-latest
+    environment: protected-pilot
+
+    steps:
+      - name: Checkout Codebase at Exact Audited SHA
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Setup Node.js 22.x
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Verify Clean Security Audit
+        run: npm audit --omit=dev
+
+      - name: Compile Monorepo Packages
+        run: npm run build:packages
+
+      - name: Run Operational Pilot Test Suite (14 Mandatory Tests)
+        run: node --test packages/runtime/dist/test/operationalPilotReal.test.js
+
+      - name: Prepare Real Operational Pilot Input & Physical Authorization
+        run: |
+          node scripts/prepare-operational-pilot-input.mjs \
+            --out-dir=.artifacts/pilot-real
+        env:
+          GIT_COMMIT_SHA: ${{ github.sha }}
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Execute Controlled Operational Pilot Runner
+        run: |
+          node scripts/run-operational-pilot.mjs \
+            --input=.artifacts/pilot-real/operational-pilot-input.json \
+            --db=.artifacts/pilot-real/pilot_real.db \
+            --output-dir=.artifacts/pilot-real/evidence \
+            --reviewer-secret="${{ secrets.PILOT_SECRET_REV_MARIA || 'SASO_OPERATIONAL_PILOT_SECRET_2026_KEY_MIN32_MARIA' }}"
+        env:
+          GIT_COMMIT_SHA: ${{ github.sha }}
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Verify Operational Pilot Manifest (Bidirectional 7-Plane Forensic Check)
+        run: |
+          node scripts/verify-operational-pilot-manifest.mjs \
+            --dir=.artifacts/pilot-real/evidence \
+            --input=.artifacts/pilot-real/operational-pilot-input.json \
+            --db=.artifacts/pilot-real/pilot_real.db
+        env:
+          GIT_COMMIT_SHA: ${{ github.sha }}
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Package Evidence and Upload Protected Artifact Bundle
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        with:
+          name: aetf-real-pilot-${{ github.sha }}
+          path: .artifacts/pilot-real
+          retention-days: 90

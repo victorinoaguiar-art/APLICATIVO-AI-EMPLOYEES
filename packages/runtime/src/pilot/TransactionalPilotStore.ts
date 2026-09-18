@@ -66,6 +66,20 @@ export class TransactionalPilotStore {
     return this.db;
   }
 
+  public executeTransaction<T>(fn: () => T): T {
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      const result = fn();
+      this.db.exec('COMMIT');
+      return result;
+    } catch (err) {
+      try {
+        this.db.exec('ROLLBACK');
+      } catch {}
+      throw err;
+    }
+  }
+
   public getDbPath(): string {
     return this.dbPath;
   }

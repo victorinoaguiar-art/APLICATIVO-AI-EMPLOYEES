@@ -49,6 +49,21 @@
     "persistence_fingerprint": {
       "type": "string"
     },
+    "organization_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "idempotency_key": {
+      "type": "string"
+    },
+    "received_at": {
+      "type": "string"
+    },
+    "classification": {
+      "type": "string"
+    },
     "files": {
       "type": "array",
       "items": {
