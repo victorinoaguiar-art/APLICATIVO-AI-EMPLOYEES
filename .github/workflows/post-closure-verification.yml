@@ -65,7 +65,7 @@ jobs:
           sha256sum -c files.sha256
 
       - name: Upload Mini-Patch Closure Artifact Bundle
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb99ba811e # v4.6.1
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
           name: aetf-mini-patch-closure-${{ github.event.workflow_run.head_sha }}
           path: .artifacts/closure
