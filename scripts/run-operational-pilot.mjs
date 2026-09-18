@@ -25,12 +25,26 @@ const dbArg = getArg('db', process.env.PILOT_DB_PATH || path.resolve(process.cwd
 const outputDirArg = getArg('output-dir', process.env.PILOT_OUTPUT_DIR || path.resolve(process.cwd(), '.artifacts', 'pilot', 'evidence'));
 const tenantIdArg = getArg('tenant-id', '');
 const taskIdArg = getArg('task-id', '');
-const reviewerTokenArg = getArg('reviewer-token', process.env.PILOT_REVIEWER_TOKEN || '');
-const reviewerSecretArg = getArg('reviewer-secret', process.env.PILOT_REVIEWER_SECRET || process.env.PILOT_SECRET_REV_MARIA || '');
+const reviewerTokenArg = getArg('reviewer-token', process.env.PILOT_REVIEWER_TOKEN || process.env.REVIEWER_TOKEN || '');
+const reviewerSecretArg = getArg('reviewer-secret', process.env.PILOT_REVIEWER_SECRET || process.env.REVIEWER_SECRET || process.env.PILOT_SECRET_REV_MARIA || '');
 const reviewerIdArg = getArg('reviewer-id', process.env.PILOT_REVIEWER_ID || '');
-const signatureArg = getArg('signature', process.env.PILOT_REVIEW_SIGNATURE || '');
+const signatureArg = getArg('signature', process.env.PILOT_REVIEW_SIGNATURE || process.env.REVIEW_SIGNATURE || '');
 const decisionArg = getArg('decision', process.env.PILOT_REVIEW_DECISION || (mode === 'DEMO' ? 'APPROVED' : '')).toUpperCase();
 const commentsArg = getArg('comments', process.env.PILOT_REVIEW_COMMENTS || (mode === 'DEMO' ? 'Aprovação simulada de demonstração técnica.' : ''));
+
+const stageARunId = getArg('stage-a-run-id', process.env.STAGE_A_RUN_ID || '');
+const stageAArtifactId = getArg('stage-a-artifact-id', process.env.STAGE_A_ARTIFACT_ID || '');
+const stageAHeadSha = getArg('stage-a-head-sha', process.env.STAGE_A_HEAD_SHA || '');
+const challengeId = getArg('challenge-id', process.env.CHALLENGE_ID || '');
+const eventSignedAt = getArg('event-signed-at', process.env.EVENT_SIGNED_AT || '');
+
+const hasCliToken = process.argv.some(a => a.startsWith('--reviewer-token='));
+const hasCliSignature = process.argv.some(a => a.startsWith('--signature='));
+if ((hasCliToken || hasCliSignature) && mode === 'OPERATIONAL_PILOT') {
+  console.error('\n[FAIL-CLOSED] Passagem de credenciais ou assinaturas via argumentos de linha de comandos (--reviewer-token / --signature) é proibida por segurança.');
+  console.error('Utilize as variáveis de ambiente protegidas REVIEWER_TOKEN e REVIEW_SIGNATURE.');
+  process.exit(1);
+}
 
 console.log('================================================================');
 console.log('MOTOR DE EXECUÇÃO DO PILOTO OPERACIONAL PROTEGIDO (AETF-500)');
@@ -139,6 +153,29 @@ try {
   if (stage === 'review-and-close' || stage === 'full') {
     console.log('\n--- ETAPA B: DECISÃO HUMANA AUTÊNTICA E FECHO OPERACIONAL ---');
 
+    if (mode === 'OPERATIONAL_PILOT') {
+      if (!stageARunId || !/^\d+$/.test(stageARunId)) {
+        console.error('\n[FAIL-CLOSED] stage_a_run_id é estritamente obrigatório e numérico no modo operacional.');
+        process.exit(1);
+      }
+      if (!stageAArtifactId || !/^\d+$/.test(stageAArtifactId)) {
+        console.error('\n[FAIL-CLOSED] stage_a_artifact_id é estritamente obrigatório e numérico no modo operacional.');
+        process.exit(1);
+      }
+      if (!stageAHeadSha || !/^[a-f0-9]{40}$|^[a-f0-9]{64}$/.test(stageAHeadSha)) {
+        console.error('\n[FAIL-CLOSED] stage_a_head_sha é estritamente obrigatório e hexadecimal no modo operacional.');
+        process.exit(1);
+      }
+      if (!challengeId) {
+        console.error('\n[FAIL-CLOSED] challenge_id é estritamente obrigatório no modo operacional.');
+        process.exit(1);
+      }
+      if (!eventSignedAt || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(eventSignedAt)) {
+        console.error('\n[FAIL-CLOSED] event_signed_at é estritamente obrigatório e deve ser timestamp RFC 3339 no modo operacional.');
+        process.exit(1);
+      }
+    }
+
     // Se estiver a correr separadamente na Etapa B, carregar estado da BD SQLite
     if (stage === 'review-and-close') {
       console.log('[B1] A carregar contexto persistido a partir do SQLite...');
@@ -167,17 +204,17 @@ try {
     const targetReviewerId = reviewerIdArg || activeReviewer.reviewer_id;
 
     console.log('\n[B2] A validar credenciais e submeter decisão humana...');
-    let token = reviewerTokenArg;
-    let signature = signatureArg;
+    let token = process.env.REVIEWER_TOKEN || process.env.PILOT_REVIEWER_TOKEN || reviewerTokenArg;
+    let signature = process.env.REVIEW_SIGNATURE || process.env.PILOT_REVIEW_SIGNATURE || signatureArg;
 
     if (mode === 'OPERATIONAL_PILOT') {
       if (!token) {
-        console.error('\n[FAIL-CLOSED] Token de autenticação do revisor (--reviewer-token) é estritamente obrigatório no modo operacional.');
+        console.error('\n[FAIL-CLOSED] Token de autenticação do revisor (REVIEWER_TOKEN) é estritamente obrigatório no modo operacional.');
         console.error('Auto-emissão de token pelo próprio script é expressamente proibida.');
         process.exit(1);
       }
       if (!signature) {
-        console.error('\n[FAIL-CLOSED] Assinatura criptográfica externa (--signature) é estritamente obrigatória no modo operacional.');
+        console.error('\n[FAIL-CLOSED] Assinatura criptográfica externa (REVIEW_SIGNATURE) é estritamente obrigatória no modo operacional.');
         console.error('Auto-geração de assinatura pelo próprio script é expressamente proibida.');
         process.exit(1);
       }
@@ -202,7 +239,12 @@ try {
       reviewerToken: token,
       decision: decisionArg,
       comments: commentsArg || 'Decisão humana submetida em ambiente auditado.',
-      signature: signature || undefined
+      signature: signature || undefined,
+      expectedChallengeId: challengeId || undefined,
+      expectedTenantId: tenantIdArg || undefined,
+      expectedTaskId: taskIdArg || undefined,
+      expectedCommitSha: stageAHeadSha || undefined,
+      eventSignedAt: eventSignedAt || undefined
     });
     console.log(`[PASS] Decisão registada: ${reviewReceipt.decision} por ${reviewReceipt.reviewer}`);
     console.log(`[PASS] Recibo de Revisão: ${reviewReceipt.review_id} (SHA: ${reviewReceipt.receipt_sha256.slice(0, 16)}...)`);

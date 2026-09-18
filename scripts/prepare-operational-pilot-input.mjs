@@ -1,11 +1,23 @@
 #!/usr/bin/env node
 import * as path from 'node:path';
 import * as fs from 'node:fs';
-import { createHash } from 'node:crypto';
-import { execSync } from 'node:child_process';
+import * as os from 'node:os';
+import { createHash, timingSafeEqual } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { auditAndExtractTar } from './lib/secureTarExtractor.mjs';
 
 function sha256(buf) {
   return createHash('sha256').update(buf).digest('hex');
+}
+
+function verifyShaConstantTime(actualHex, expectedHex) {
+  if (!/^[a-f0-9]{64}$/i.test(actualHex) || !/^[a-f0-9]{64}$/i.test(expectedHex)) {
+    return false;
+  }
+  const bufA = Buffer.from(actualHex.toLowerCase(), 'hex');
+  const bufB = Buffer.from(expectedHex.toLowerCase(), 'hex');
+  if (bufA.length !== 32 || bufB.length !== 32) return false;
+  return timingSafeEqual(bufA, bufB);
 }
 
 const args = process.argv.slice(2);
@@ -17,10 +29,11 @@ function getArg(name, fallback = '') {
 
 const outDir = path.resolve(process.cwd(), getArg('out-dir', '.artifacts/pilot'));
 const packagePath = getArg('package-path', process.env.PILOT_EXTERNAL_PACKAGE_PATH || '');
+const packageTar = getArg('package-tar', process.env.PILOT_EXTERNAL_PACKAGE_TAR || '');
 const intakeRunId = getArg('intake-run-id', process.env.PILOT_INTAKE_RUN_ID || '');
 const inputArtifactId = getArg('input-artifact-id', process.env.PILOT_INPUT_ARTIFACT_ID || '');
 const inputArtifactName = getArg('input-artifact-name', process.env.PILOT_INPUT_ARTIFACT_NAME || '');
-const inputPackageSha256 = getArg('input-package-sha256', process.env.PILOT_INPUT_PACKAGE_SHA256 || '');
+const inputPackageSha256 = getArg('input-package-sha256', process.env.PILOT_INPUT_PACKAGE_SHA256 || '').toLowerCase();
 const expectedTenantId = getArg('tenant-id', '');
 const expectedTaskId = getArg('task-id', '');
 const mode = getArg('mode', process.env.EXECUTION_MODE || 'OPERATIONAL_PILOT').toUpperCase();
@@ -30,51 +43,193 @@ console.log('INGESTÃO E VALIDAÇÃO DE PACOTE EXTERNO DO PILOTO OPERACIONAL REA
 console.log('================================================================');
 console.log(`Modo de Execução:       ${mode}`);
 console.log(`Pacote Fonte Local:     ${packagePath || '(não especificado)'}`);
+console.log(`Arquivo Tar Fonte:      ${packageTar || '(não especificado)'}`);
 console.log(`Intake Run ID:          ${intakeRunId || '(não especificado)'}`);
 console.log(`Input Artifact ID:      ${inputArtifactId || '(não especificado)'}`);
+console.log(`Input Package SHA-256:  ${inputPackageSha256 || '(não especificado)'}`);
 console.log(`Directório de Destino:  ${outDir}`);
 console.log(`Tenant ID Requerido:    ${expectedTenantId || '(não especificado)'}`);
 console.log(`Task ID Requerida:      ${expectedTaskId || '(não especificado)'}`);
 
-// Mecanismo de transferência externa no GitHub Actions
-let effectivePackageDir = packagePath;
+// Validação regex estrita de identificadores externos (Prevenção de Shell Injection)
+if (intakeRunId && !/^\d+$/.test(intakeRunId)) {
+  console.error(`\n[FAIL-CLOSED] intake_run_id inválido: '${intakeRunId}' (deve ser estritamente numérico).`);
+  process.exit(1);
+}
+if (inputArtifactId && !/^\d+$/.test(inputArtifactId)) {
+  console.error(`\n[FAIL-CLOSED] input_artifact_id inválido: '${inputArtifactId}' (deve ser estritamente numérico).`);
+  process.exit(1);
+}
+if (inputPackageSha256 && !/^[a-f0-9]{64}$/.test(inputPackageSha256)) {
+  console.error(`\n[FAIL-CLOSED] input_package_sha256 inválido: '${inputPackageSha256}' (deve ter exactamente 64 hexadecimais minúsculos).`);
+  process.exit(1);
+}
 
-if (!effectivePackageDir) {
+const CANONICAL_REPO_ID = 924840897;
+const EXPECTED_REPO = process.env.GITHUB_REPOSITORY || 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES';
+
+let effectivePackageDir = packagePath;
+let originalTarBuffer = null;
+
+// Caso A: Arquivo compactado .tar.gz fornecido directamente via --package-tar
+if (packageTar) {
+  const tarResolved = path.resolve(packageTar);
+  if (!fs.existsSync(tarResolved)) {
+    console.error(`\n[FAIL-CLOSED] Arquivo de pacote tar '${tarResolved}' não existe.`);
+    process.exit(1);
+  }
+  originalTarBuffer = fs.readFileSync(tarResolved);
+  const calculatedTarSha = sha256(originalTarBuffer);
+
+  if (inputPackageSha256) {
+    if (!verifyShaConstantTime(calculatedTarSha, inputPackageSha256)) {
+      console.error(`\n[FAIL-CLOSED] Hash SHA-256 do pacote original (${calculatedTarSha}) diverge do hash autorizado (${inputPackageSha256}).`);
+      process.exit(1);
+    }
+    console.log(`[PASS] Hash SHA-256 do pacote original verificado em tempo constante: ${calculatedTarSha}`);
+  }
+
+  const tempExtractedDir = fs.mkdtempSync(path.join(os.tmpdir(), 'aetf_intake_tar_'));
+  try {
+    auditAndExtractTar(originalTarBuffer, tempExtractedDir, {
+      allowedFiles: [
+        'operational-pilot-input.json',
+        'authorization-document.pdf',
+        'input-package.sha256',
+        'package-provenance.json'
+      ]
+    });
+  } catch (err) {
+    console.error(`\n[FAIL-CLOSED] Falha na auditoria pré-extracção do pacote tar: ${err.message}`);
+    process.exit(1);
+  }
+  effectivePackageDir = tempExtractedDir;
+}
+
+// Caso B: Transferência remota autenticada via GitHub Actions Intake
+else if (!effectivePackageDir) {
   if (intakeRunId && inputArtifactId) {
-    console.log('\n[TRANSFERÊNCIA EXTERNA] A transferir pacote autenticado do GitHub Actions Intake...');
+    console.log('\n[TRANSFERÊNCIA EXTERNA] A transferir pacote autenticado do GitHub Actions Intake via API segura...');
     const stagingDir = path.resolve(process.cwd(), '.artifacts', 'intake_staging');
     fs.mkdirSync(stagingDir, { recursive: true });
+
+    function callGhApi(endpoint) {
+      const stdout = execFileSync('gh', ['api', endpoint], { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+      return JSON.parse(stdout);
+    }
+
+    let artifactMeta;
+    let runMeta;
     try {
-      const repo = process.env.GITHUB_REPOSITORY || 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES';
-      // Validar metadados do artefacto
-      const artifactMetaRaw = execSync(`gh api repos/${repo}/actions/artifacts/${inputArtifactId}`, { encoding: 'utf8' });
-      const artifactMeta = JSON.parse(artifactMetaRaw);
+      // 1. Consultar e reconciliar metadados do artefacto
+      artifactMeta = callGhApi(`repos/${EXPECTED_REPO}/actions/artifacts/${inputArtifactId}`);
 
       if (artifactMeta.expired) {
-        throw new Error(`Artefacto de intake '${inputArtifactId}' expirado.`);
+        throw new Error(`Artefacto de intake '${inputArtifactId}' está expirado (expired: true).`);
       }
       if (inputArtifactName && artifactMeta.name !== inputArtifactName) {
         throw new Error(`Nome de artefacto divergente: esperado '${inputArtifactName}', obtido '${artifactMeta.name}'.`);
       }
-      if (artifactMeta.workflow_run && artifactMeta.workflow_run.id !== Number(intakeRunId)) {
+      if (!artifactMeta.workflow_run) {
+        throw new Error(`Artefacto de intake '${inputArtifactId}' não possui workflow_run associado.`);
+      }
+      if (artifactMeta.workflow_run.id !== Number(intakeRunId)) {
         throw new Error(`Run ID divergente: esperado '${intakeRunId}', obtido '${artifactMeta.workflow_run.id}'.`);
       }
+      if (artifactMeta.workflow_run.repository_id && artifactMeta.workflow_run.repository_id !== CANONICAL_REPO_ID) {
+        throw new Error(`Repository ID divergente no artefacto: esperado '${CANONICAL_REPO_ID}', obtido '${artifactMeta.workflow_run.repository_id}'.`);
+      }
 
-      // Descarregar zip do artefacto
+      // 2. Consultar e reconciliar metadados do workflow run
+      runMeta = callGhApi(`repos/${EXPECTED_REPO}/actions/runs/${intakeRunId}`);
+
+      if (runMeta.repository.id !== CANONICAL_REPO_ID) {
+        throw new Error(`Repository ID divergente no run: esperado '${CANONICAL_REPO_ID}', obtido '${runMeta.repository.id}'.`);
+      }
+      if (runMeta.head_repository && runMeta.head_repository.id !== CANONICAL_REPO_ID) {
+        throw new Error(`head_repository.id divergente: esperado '${CANONICAL_REPO_ID}', obtido '${runMeta.head_repository.id}'.`);
+      }
+      if (!runMeta.path || !runMeta.path.endsWith('operational-pilot-intake.yml')) {
+        throw new Error(`Workflow de origem inválido: esperado '.github/workflows/operational-pilot-intake.yml', obtido '${runMeta.path}'.`);
+      }
+      if (runMeta.head_branch !== 'master') {
+        throw new Error(`Branch de origem do intake inválida: esperado 'master', obtido '${runMeta.head_branch}'.`);
+      }
+      if (runMeta.status !== 'completed') {
+        throw new Error(`Run de intake não concluído: status actual é '${runMeta.status}'.`);
+      }
+      if (runMeta.conclusion !== 'success') {
+        throw new Error(`Run de intake não teve conclusão de sucesso: conclusion actual é '${runMeta.conclusion}'.`);
+      }
+
+      const currentCommitSha = process.env.GIT_COMMIT_SHA || process.env.GITHUB_SHA;
+      if (currentCommitSha && runMeta.head_sha !== currentCommitSha) {
+        throw new Error(`head_sha divergente no intake: esperado '${currentCommitSha}', obtido '${runMeta.head_sha}'.`);
+      }
+
+      // 3. Descarregar o arquivo ZIP do artefacto via chamada segura
       const zipPath = path.join(stagingDir, 'package.zip');
-      execSync(`gh api repos/${repo}/actions/artifacts/${inputArtifactId}/zip > "${zipPath}"`, { stdio: 'inherit' });
+      const zipBytes = execFileSync('gh', ['api', `repos/${EXPECTED_REPO}/actions/artifacts/${inputArtifactId}/zip`], {
+        maxBuffer: 50 * 1024 * 1024
+      });
+      fs.writeFileSync(zipPath, zipBytes);
 
-      // Descompactar
-      execSync(`tar -xf "${zipPath}" -C "${stagingDir}"`);
-      effectivePackageDir = stagingDir;
-      console.log(`[PASS] Pacote externo descarregado e autenticado com sucesso em: ${stagingDir}`);
+      // Descompactar o ZIP do artefacto do GitHub
+      execFileSync('tar', ['-xf', zipPath, '-C', stagingDir]);
+
+      // 4. Localizar e verificar bytes originais de original-package.tar.gz
+      const originalTarPath = path.join(stagingDir, 'original-package.tar.gz');
+      if (!fs.existsSync(originalTarPath)) {
+        throw new Error("Artefacto de intake não contém o arquivo 'original-package.tar.gz' com os bytes originais.");
+      }
+
+      originalTarBuffer = fs.readFileSync(originalTarPath);
+      const calculatedTarSha = sha256(originalTarBuffer);
+
+      if (!inputPackageSha256) {
+        throw new Error('Hash input_package_sha256 não fornecido para validar o pacote original transferido.');
+      }
+      if (!verifyShaConstantTime(calculatedTarSha, inputPackageSha256)) {
+        throw new Error(`Hash SHA-256 de original-package.tar.gz (${calculatedTarSha}) diverge do hash autorizado (${inputPackageSha256}).`);
+      }
+      console.log(`[PASS] Hash SHA-256 de original-package.tar.gz conferido em tempo constante: ${calculatedTarSha}`);
+
+      // 5. Auditoria de segurança pré-extracção e descompressão segura
+      const extractedDir = path.join(stagingDir, 'extracted');
+      auditAndExtractTar(originalTarBuffer, extractedDir, {
+        allowedFiles: [
+          'operational-pilot-input.json',
+          'authorization-document.pdf',
+          'input-package.sha256',
+          'package-provenance.json'
+        ]
+      });
+
+      // 6. Preservar evidência física das respostas da API
+      fs.mkdirSync(outDir, { recursive: true });
+      fs.writeFileSync(path.join(outDir, 'intake-run-api-response.json'), JSON.stringify({
+        api_url: `https://api.github.com/repos/${EXPECTED_REPO}/actions/runs/${intakeRunId}`,
+        retrieved_at: new Date().toISOString(),
+        status: 200,
+        response: runMeta
+      }, null, 2), 'utf8');
+
+      fs.writeFileSync(path.join(outDir, 'intake-artifact-api-response.json'), JSON.stringify({
+        api_url: `https://api.github.com/repos/${EXPECTED_REPO}/actions/artifacts/${inputArtifactId}`,
+        retrieved_at: new Date().toISOString(),
+        status: 200,
+        response: artifactMeta
+      }, null, 2), 'utf8');
+
+      effectivePackageDir = extractedDir;
+      console.log(`[PASS] Pacote externo autenticado e auditado com sucesso em: ${stagingDir}`);
     } catch (err) {
       console.error(`\n[FAIL-CLOSED] Falha ao transferir pacote externo via GitHub API: ${err.message}`);
       process.exit(1);
     }
   } else if (mode === 'OPERATIONAL_PILOT') {
     console.error('\n[FAIL-CLOSED] BLOCKED_EXTERNAL_PACKAGE_TRANSFER_NOT_CONFIGURED');
-    console.error('Nenhum pacote externo local (--package-path) nem transferência de intake (--intake-run-id / --input-artifact-id) fornecida.');
+    console.error('Nenhum pacote externo local (--package-path / --package-tar) nem transferência de intake (--intake-run-id / --input-artifact-id) fornecida.');
     console.error('O caminho operacional real exige prova física de transferência externa.');
     process.exit(1);
   } else {
@@ -130,7 +285,7 @@ for (const rf of requiredFiles) {
 // Verificar se existem ficheiros físicos não autorizados / não indexados
 const physicalEntries = fs.readdirSync(effectivePackageDir);
 for (const entry of physicalEntries) {
-  if (!requiredFiles.includes(entry)) {
+  if (!requiredFiles.includes(entry) && entry !== 'original-package.tar.gz' && entry !== 'original-package.sha256') {
     console.error(`\n[FAIL-CLOSED] Ficheiro físico não indexado/não autorizado detectado no pacote: '${entry}'.`);
     process.exit(1);
   }
@@ -334,6 +489,21 @@ fs.copyFileSync(path.join(effectivePackageDir, 'authorization-document.pdf'), de
 fs.copyFileSync(path.join(effectivePackageDir, 'package-provenance.json'), destProvPath);
 fs.copyFileSync(path.join(effectivePackageDir, 'input-package.sha256'), destChecksumPath);
 
+// Se original-package.tar.gz existir, preservá-lo também
+const originalTarPath = path.join(effectivePackageDir, 'original-package.tar.gz');
+if (fs.existsSync(originalTarPath)) {
+  fs.copyFileSync(originalTarPath, path.join(outDir, 'original-package.tar.gz'));
+} else if (originalTarBuffer) {
+  fs.writeFileSync(path.join(outDir, 'original-package.tar.gz'), originalTarBuffer);
+}
+
+// Se tivermos o arquivo tar original, gravar recibo com hash calculado
+const finalTarPath = path.join(outDir, 'original-package.tar.gz');
+if (fs.existsSync(finalTarPath)) {
+  const tarHash = sha256(fs.readFileSync(finalTarPath));
+  fs.writeFileSync(path.join(outDir, 'original-package.sha256'), `${tarHash}  original-package.tar.gz\n`, 'utf8');
+}
+
 // Validar que os hashes antes e depois da cópia são 100% idênticos
 const copiedInputSha = sha256(fs.readFileSync(destInputPath));
 const copiedAuthPdfSha = sha256(fs.readFileSync(destAuthPdfPath));
@@ -355,6 +525,8 @@ const runtimeContext = {
   original_authorization_sha256: computedAuthPdfHash,
   original_provenance_file: 'package-provenance.json',
   original_provenance_sha256: computedProvHash,
+  original_package_tar_file: fs.existsSync(finalTarPath) ? 'original-package.tar.gz' : null,
+  original_package_tar_sha256: fs.existsSync(finalTarPath) ? sha256(fs.readFileSync(finalTarPath)) : null,
   resolved_authorization_document_path: destAuthPdfPath,
   package_dir: outDir
 };

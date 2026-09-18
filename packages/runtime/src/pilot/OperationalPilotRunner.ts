@@ -647,12 +647,42 @@ export class OperationalPilotRunner {
     comments: string;
     eventSignedAt?: string;
     signature?: string;
+    expectedChallengeId?: string;
+    expectedTenantId?: string;
+    expectedTaskId?: string;
+    expectedCommitSha?: string;
   }): PilotHumanReviewReceipt {
     if (this.state !== 'PENDING_HUMAN_REVIEW') {
       throw new Error(`Revisão rejeitada: estado actual é '${this.state}', esperado 'PENDING_HUMAN_REVIEW'.`);
     }
     if (!this.loadedInput || !this.taskReceipt || !this.activeChallenge) {
       throw new Error('Estado inconsistente: tarefa ou desafio não encontrados para revisão.');
+    }
+
+    if (params.expectedChallengeId && this.activeChallenge.challenge_id !== params.expectedChallengeId) {
+      throw new Error(`Divergência de challenge_id: esperado '${params.expectedChallengeId}', activo '${this.activeChallenge.challenge_id}'.`);
+    }
+    if (params.expectedTenantId && this.loadedInput.tenant_id !== params.expectedTenantId) {
+      throw new Error(`Divergência de tenant_id na revisão: esperado '${params.expectedTenantId}', carregado '${this.loadedInput.tenant_id}'.`);
+    }
+    if (params.expectedTaskId && this.taskReceipt.task_id !== params.expectedTaskId) {
+      throw new Error(`Divergência de task_id na revisão: esperado '${params.expectedTaskId}', activo '${this.taskReceipt.task_id}'.`);
+    }
+    if (params.expectedCommitSha && this.getCommitSha() !== params.expectedCommitSha) {
+      throw new Error(`Divergência de commit_sha na revisão: esperado '${params.expectedCommitSha}', runner '${this.getCommitSha()}'.`);
+    }
+
+    if (params.eventSignedAt) {
+      const parsedTime = new Date(params.eventSignedAt).getTime();
+      if (isNaN(parsedTime)) {
+        throw new Error(`Timestamp eventSignedAt inválido: '${params.eventSignedAt}'.`);
+      }
+      if (parsedTime < new Date(this.activeChallenge.issued_at).getTime()) {
+        throw new Error(`Timestamp eventSignedAt anterior à emissão do desafio (emitido: ${this.activeChallenge.issued_at}, assinado: ${params.eventSignedAt}).`);
+      }
+      if (parsedTime > new Date(this.activeChallenge.expires_at).getTime()) {
+        throw new Error(`Timestamp eventSignedAt posterior à expiração do desafio (expirou: ${this.activeChallenge.expires_at}, assinado: ${params.eventSignedAt}).`);
+      }
     }
 
     // 0. Validate explicit decision

@@ -12,23 +12,19 @@ on:
           - 'OPERATIONAL_PILOT'
           - 'DEMO'
       stage_a_run_id:
-        description: 'Run ID da Etapa A no GitHub Actions'
+        description: 'Run ID da Etapa A no GitHub Actions (numérico)'
         required: true
       stage_a_artifact_id:
-        description: 'Artifact ID da Etapa A (opcional se run_id for fornecido)'
-        required: false
-        default: ''
+        description: 'Artifact ID exacto da Etapa A (numérico)'
+        required: true
+      stage_a_head_sha:
+        description: 'Commit SHA exacto verificado e auditado na Etapa A'
+        required: true
       challenge_id:
-        description: 'ID do Desafio de Revisão Criptográfico (ex: CHAL_...)'
+        description: 'ID do Desafio de Revisão Criptográfico pendente (ex: CHAL_...)'
         required: true
-      tenant_id:
-        description: 'Tenant ID Autorizado'
-        required: true
-      task_id:
-        description: 'Identificador da Tarefa Empresarial'
-        required: true
-      reviewer_id:
-        description: 'ID do Revisor Humano Autorizado'
+      event_signed_at:
+        description: 'Timestamp RFC 3339 correspondente à assinatura da decisão humana'
         required: true
       decision:
         description: 'Decisão Humana Explícita'
@@ -38,16 +34,17 @@ on:
           - 'APPROVED'
           - 'REJECTED'
           - 'REQUEST_CHANGES'
-      event_signed_at:
-        description: 'Timestamp ISO-8601 correspondente à assinatura criptográfica'
-        required: false
-        default: ''
-      review_signature:
-        description: 'Assinatura HMAC externa calculada pelo revisor'
-        required: false
-        default: ''
-      reviewer_token:
-        description: 'Token de autenticação pré-existente do revisor'
+      tenant_id:
+        description: 'Tenant ID Autorizado'
+        required: true
+      task_id:
+        description: 'Identificador da Tarefa Empresarial'
+        required: true
+      reviewer_id:
+        description: 'ID do Revisor Humano Autorizado'
+        required: true
+      review_signature_receipt:
+        description: 'Recibo da assinatura criptográfica externa (opcional se fornecido via secret)'
         required: false
         default: ''
 
@@ -65,7 +62,7 @@ jobs:
       - name: Checkout Codebase at Exact Audited SHA
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event.inputs.stage_a_head_sha }}
 
       - name: Setup Node.js 22.x
         uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
@@ -79,12 +76,26 @@ jobs:
       - name: Compile Monorepo Packages
         run: npm run build:packages
 
-      - name: Download Stage A Artifacts
+      - name: Download and Reconcile Stage A Physical Artifacts
         run: |
+          mkdir -p .artifacts/stage_a_zip
+          STAGE_A_ART_ID="${{ github.event.inputs.stage_a_artifact_id }}"
+          if ! [[ "$STAGE_A_ART_ID" =~ ^[0-9]+$ ]]; then
+            echo "[FAIL-CLOSED] stage_a_artifact_id deve ser estritamente numérico."
+            exit 1
+          fi
+
+          STAGE_A_RUN_ID="${{ github.event.inputs.stage_a_run_id }}"
+          if ! [[ "$STAGE_A_RUN_ID" =~ ^[0-9]+$ ]]; then
+            echo "[FAIL-CLOSED] stage_a_run_id deve ser estritamente numérico."
+            exit 1
+          fi
+
+          echo "[PASS] A descarregar artefacto da Etapa A ($STAGE_A_ART_ID) via API directa..."
+          gh api "repos/${{ github.repository }}/actions/artifacts/$STAGE_A_ART_ID/zip" > .artifacts/stage_a_zip/stage_a.zip
+
           mkdir -p .artifacts/pilot
-          gh run download "${{ github.event.inputs.stage_a_run_id }}" \
-            --name="aetf-pilot-stage-a-${{ github.sha }}" \
-            --dir=.artifacts/pilot
+          tar -xf .artifacts/stage_a_zip/stage_a.zip -C .artifacts/pilot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -96,16 +107,21 @@ jobs:
             --input=.artifacts/pilot/operational-pilot-input.json \
             --db=.artifacts/pilot/pilot.db \
             --output-dir=.artifacts/pilot/evidence \
+            --stage-a-run-id="${{ github.event.inputs.stage_a_run_id }}" \
+            --stage-a-artifact-id="${{ github.event.inputs.stage_a_artifact_id }}" \
+            --stage-a-head-sha="${{ github.event.inputs.stage_a_head_sha }}" \
+            --challenge-id="${{ github.event.inputs.challenge_id }}" \
+            --event-signed-at="${{ github.event.inputs.event_signed_at }}" \
             --tenant-id="${{ github.event.inputs.tenant_id }}" \
             --task-id="${{ github.event.inputs.task_id }}" \
             --reviewer-id="${{ github.event.inputs.reviewer_id }}" \
-            --reviewer-token="${{ github.event.inputs.reviewer_token }}" \
-            --reviewer-secret="${{ secrets.PILOT_SECRET_REV_MARIA }}" \
-            --signature="${{ github.event.inputs.review_signature }}" \
             --decision="${{ github.event.inputs.decision }}"
         env:
-          GIT_COMMIT_SHA: ${{ github.sha }}
-          GITHUB_SHA: ${{ github.sha }}
+          GIT_COMMIT_SHA: ${{ github.event.inputs.stage_a_head_sha }}
+          GITHUB_SHA: ${{ github.event.inputs.stage_a_head_sha }}
+          REVIEWER_TOKEN: ${{ secrets.PILOT_REVIEWER_TOKEN }}
+          REVIEW_SIGNATURE: ${{ secrets.PILOT_REVIEW_SIGNATURE || github.event.inputs.review_signature_receipt }}
+          REVIEWER_SECRET: ${{ secrets.PILOT_SECRET_REV_MARIA }}
 
       - name: Verify Operational Pilot Manifest (Bidirectional 7-Plane Forensic Check)
         run: |
@@ -114,12 +130,12 @@ jobs:
             --input=.artifacts/pilot/operational-pilot-input.json \
             --db=.artifacts/pilot/pilot.db
         env:
-          GIT_COMMIT_SHA: ${{ github.sha }}
-          GITHUB_SHA: ${{ github.sha }}
+          GIT_COMMIT_SHA: ${{ github.event.inputs.stage_a_head_sha }}
+          GITHUB_SHA: ${{ github.event.inputs.stage_a_head_sha }}
 
       - name: Package Evidence and Upload Protected Closure Bundle
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
-          name: aetf-pilot-closure-${{ github.sha }}
+          name: aetf-pilot-closure-${{ github.event.inputs.stage_a_head_sha }}
           path: .artifacts/pilot
           retention-days: 90

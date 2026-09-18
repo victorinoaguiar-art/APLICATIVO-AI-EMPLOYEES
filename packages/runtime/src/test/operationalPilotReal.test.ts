@@ -4,6 +4,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
 import { createHash, randomUUID, createHmac } from 'node:crypto';
+import { pathToFileURL } from 'node:url';
 import { execSync } from 'node:child_process';
 import {
   OperationalPilotRunner,
@@ -746,5 +747,292 @@ describe('AETF-500: Micro-Patch Final de Ingestão Externa, Revisão Humana e Pr
       'CONTROLLED_REAL_PILOT_EXECUTED — HUMAN_REVIEW_CONFIRMED — APPROVED_AND_ARCHIVED'
     );
     runner.getStore().close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 23: Hash do pacote original malformado ou divergente é rejeitado
+  // -------------------------------------------------------------
+  it('23. hash do pacote original malformado ou divergente é rejeitado', async () => {
+    const pkgDir = path.join(tmpDir, 'test23_pkg');
+    createValidExternalPackage(pkgDir);
+
+    // a) Hash malformado (não 64 hex minúsculos)
+    assert.throws(() => {
+      runCommand(
+        `node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --input-package-sha256="not_a_valid_sha" --out-dir="${path.join(tmpDir, 'out23a')}"`
+      );
+    }, /input_package_sha256 inválido/);
+
+    // b) Hash divergente
+    const extractorModule = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
+    const tarGzBytes = extractorModule.buildTarGz([
+      { name: 'operational-pilot-input.json', data: fs.readFileSync(path.join(pkgDir, 'operational-pilot-input.json')) },
+      { name: 'authorization-document.pdf', data: fs.readFileSync(path.join(pkgDir, 'authorization-document.pdf')) },
+      { name: 'input-package.sha256', data: fs.readFileSync(path.join(pkgDir, 'input-package.sha256')) },
+      { name: 'package-provenance.json', data: fs.readFileSync(path.join(pkgDir, 'package-provenance.json')) }
+    ]);
+    const tarFile = path.join(tmpDir, 'test23_original.tar.gz');
+    fs.writeFileSync(tarFile, tarGzBytes);
+    const wrongSha = 'a'.repeat(64);
+
+    assert.throws(() => {
+      runCommand(
+        `node scripts/prepare-operational-pilot-input.mjs --package-tar="${tarFile}" --input-package-sha256="${wrongSha}" --out-dir="${path.join(tmpDir, 'out23b')}"`
+      );
+    }, /diverge do hash autorizado/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 24: Alteração física de bytes no arquivo após o intake é detectada
+  // -------------------------------------------------------------
+  it('24. alteração física de bytes no arquivo após o intake é detectada', async () => {
+    const pkgDir = path.join(tmpDir, 'test24_pkg');
+    createValidExternalPackage(pkgDir);
+    const extractorModule = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
+    const tarGzBytes = extractorModule.buildTarGz([
+      { name: 'operational-pilot-input.json', data: fs.readFileSync(path.join(pkgDir, 'operational-pilot-input.json')) },
+      { name: 'authorization-document.pdf', data: fs.readFileSync(path.join(pkgDir, 'authorization-document.pdf')) },
+      { name: 'input-package.sha256', data: fs.readFileSync(path.join(pkgDir, 'input-package.sha256')) },
+      { name: 'package-provenance.json', data: fs.readFileSync(path.join(pkgDir, 'package-provenance.json')) }
+    ]);
+    const validSha = sha256(tarGzBytes);
+
+    // Corromper 1 byte
+    const tamperedTar = Buffer.from(tarGzBytes);
+    tamperedTar[tamperedTar.length - 20] ^= 0xff;
+    const tamperedFile = path.join(tmpDir, 'test24_tampered.tar.gz');
+    fs.writeFileSync(tamperedFile, tamperedTar);
+
+    assert.throws(() => {
+      runCommand(
+        `node scripts/prepare-operational-pilot-input.mjs --package-tar="${tamperedFile}" --input-package-sha256="${validSha}" --out-dir="${path.join(tmpDir, 'out24')}"`
+      );
+    }, /diverge do hash autorizado|Falha ao descompactar/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 25: Pre-extracção bloqueia path traversal (..) no arquivo tar
+  // -------------------------------------------------------------
+  it('25. pre-extracção bloqueia path traversal (..) no arquivo tar', async () => {
+    const extractorModule = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
+    const badTar = extractorModule.buildTarGz([
+      { name: '../escape.json', data: '{"attack": true}' }
+    ]);
+    const extractOut = path.join(tmpDir, 'out25_extract');
+
+    assert.throws(() => {
+      extractorModule.auditAndExtractTar(badTar, extractOut);
+    }, /Path traversal/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 26: Pre-extracção bloqueia caminhos absolutos no arquivo tar
+  // -------------------------------------------------------------
+  it('26. pre-extracção bloqueia caminhos absolutos no arquivo tar', async () => {
+    const extractorModule = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
+    const badTar1 = extractorModule.buildTarGz([
+      { name: '/etc/shadow', data: 'root::0:0:::' }
+    ]);
+    const badTar2 = extractorModule.buildTarGz([
+      { name: 'C:\\Windows\\System32\\evil.dll', data: 'evil' }
+    ]);
+    const extractOut = path.join(tmpDir, 'out26_extract');
+
+    assert.throws(() => {
+      extractorModule.auditAndExtractTar(badTar1, extractOut);
+    }, /Caminho absoluto proibido/);
+
+    assert.throws(() => {
+      extractorModule.auditAndExtractTar(badTar2, extractOut);
+    }, /Caminho absoluto proibido/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 27: Pre-extracção bloqueia symlinks e hardlinks no arquivo tar
+  // -------------------------------------------------------------
+  it('27. pre-extracção bloqueia symlinks e hardlinks no arquivo tar', async () => {
+    const extractorModule = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
+    const symlinkTar = extractorModule.buildTarGz([
+      { name: 'operational-pilot-input.json', data: 'link-target', type: '2' }
+    ]);
+    const hardlinkTar = extractorModule.buildTarGz([
+      { name: 'operational-pilot-input.json', data: 'link-target', type: '1' }
+    ]);
+    const extractOut = path.join(tmpDir, 'out27_extract');
+
+    assert.throws(() => {
+      extractorModule.auditAndExtractTar(symlinkTar, extractOut);
+    }, /Symlink proibido/);
+
+    assert.throws(() => {
+      extractorModule.auditAndExtractTar(hardlinkTar, extractOut);
+    }, /Hardlink proibido/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 28: Pre-extracção bloqueia entradas especiais e arquivos inesperados
+  // -------------------------------------------------------------
+  it('28. pre-extracção bloqueia entradas especiais e arquivos inesperados', async () => {
+    const extractorModule = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
+    const fifoTar = extractorModule.buildTarGz([
+      { name: 'pipe_file', data: '', type: '6' }
+    ]);
+    const unexpectedTar = extractorModule.buildTarGz([
+      { name: 'malware.sh', data: '#!/bin/sh\nexit 1' }
+    ]);
+    const extractOut = path.join(tmpDir, 'out28_extract');
+
+    assert.throws(() => {
+      extractorModule.auditAndExtractTar(fifoTar, extractOut);
+    }, /dispositivo especial/);
+
+    assert.throws(() => {
+      extractorModule.auditAndExtractTar(unexpectedTar, extractOut, {
+        allowedFiles: ['operational-pilot-input.json']
+      });
+    }, /Ficheiro inesperado pelo manifesto/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 29: Passagem de credenciais ou assinaturas via argumentos CLI (--reviewer-token/--signature) é bloqueada
+  // -------------------------------------------------------------
+  it('29. passagem de credenciais ou assinaturas via argumentos CLI (--reviewer-token/--signature) é bloqueada', () => {
+    assert.throws(() => {
+      runCommand(
+        'node scripts/run-operational-pilot.mjs --stage=review-and-close --mode=OPERATIONAL_PILOT --reviewer-token=secret_cli_token'
+      );
+    }, /Passagem de credenciais ou assinaturas via argumentos de linha de comandos.*proibida/);
+
+    assert.throws(() => {
+      runCommand(
+        'node scripts/run-operational-pilot.mjs --stage=review-and-close --mode=OPERATIONAL_PILOT --signature=sig_cli_value'
+      );
+    }, /Passagem de credenciais ou assinaturas via argumentos de linha de comandos.*proibida/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 30: Etapa B sem stage_a_run_id, stage_a_artifact_id ou stage_a_head_sha obrigatórios falha
+  // -------------------------------------------------------------
+  it('30. Etapa B sem stage_a_run_id, stage_a_artifact_id ou stage_a_head_sha obrigatórios falha', () => {
+    const inputPkg = path.join(tmpDir, 'test30_pkg');
+    createValidExternalPackage(inputPkg);
+    const dbFile = path.join(tmpDir, 'test30.db');
+
+    assert.throws(() => {
+      runCommand(
+        `node scripts/run-operational-pilot.mjs --stage=review-and-close --mode=OPERATIONAL_PILOT --input="${path.join(inputPkg, 'operational-pilot-input.json')}" --db="${dbFile}"`
+      );
+    }, /stage_a_run_id é estritamente obrigatório/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 31: Etapa B com challenge_id ou event_signed_at divergentes/inválidos falha
+  // -------------------------------------------------------------
+  it('31. Etapa B com challenge_id ou event_signed_at divergentes/inválidos falha', async () => {
+    const inputData = createValidInput();
+    const runner = new OperationalPilotRunner({
+      dbPath: path.join(tmpDir, 'test31.db'),
+      secretProvider,
+      tokenService,
+      executionMode: 'DEMO'
+    });
+    runner.loadAndValidateInput(inputData);
+    const { challenge } = await runner.executeOperationalTask();
+
+    // a) challenge_id divergente
+    assert.throws(() => {
+      runner.submitHumanReview({
+        reviewerId,
+        reviewerToken: validReviewerToken,
+        decision: 'APPROVED',
+        comments: 'teste',
+        expectedChallengeId: 'CHAL_WRONG_12345'
+      });
+    }, /Divergência de challenge_id/);
+
+    // b) eventSignedAt inválido
+    assert.throws(() => {
+      runner.submitHumanReview({
+        reviewerId,
+        reviewerToken: validReviewerToken,
+        decision: 'APPROVED',
+        comments: 'teste',
+        eventSignedAt: 'invalid-date-string'
+      });
+    }, /Timestamp eventSignedAt inválido/);
+
+    // c) eventSignedAt anterior à emissão do desafio
+    assert.throws(() => {
+      runner.submitHumanReview({
+        reviewerId,
+        reviewerToken: validReviewerToken,
+        decision: 'APPROVED',
+        comments: 'teste',
+        eventSignedAt: '2020-01-01T00:00:00Z'
+      });
+    }, /Timestamp eventSignedAt anterior à emissão do desafio/);
+
+    runner.getStore().close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 32: Tentativa de shell injection em identificadores externos é bloqueada
+  // -------------------------------------------------------------
+  it('32. tentativa de shell injection em identificadores externos é bloqueada', () => {
+    assert.throws(() => {
+      runCommand(
+        'node scripts/prepare-operational-pilot-input.mjs --intake-run-id="123; echo injected" --mode=OPERATIONAL_PILOT'
+      );
+    }, /intake_run_id inválido.*estritamente numérico/);
+
+    assert.throws(() => {
+      runCommand(
+        'node scripts/prepare-operational-pilot-input.mjs --input-artifact-id="456 && calc" --mode=OPERATIONAL_PILOT'
+      );
+    }, /input_artifact_id inválido.*estritamente numérico/);
+
+    assert.throws(() => {
+      runCommand(
+        'node scripts/prepare-operational-pilot-input.mjs --input-package-sha256="`id`" --mode=OPERATIONAL_PILOT'
+      );
+    }, /input_package_sha256 inválido/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 33: Workflow de intake rejeita pacote base64 e aceita apenas transferência protegida
+  // -------------------------------------------------------------
+  it('33. workflow de intake rejeita pacote base64 e aceita apenas transferência protegida', () => {
+    const intakeWorkflowPath = path.resolve(repoRoot, '.github/workflows/operational-pilot-intake.yml');
+    assert.ok(fs.existsSync(intakeWorkflowPath), 'Workflow de intake deve existir');
+    const content = fs.readFileSync(intakeWorkflowPath, 'utf8');
+
+    // Não deve existir package_payload_base64
+    assert.doesNotMatch(content, /package_payload_base64/);
+
+    // Deve declarar source_artifact_id e expected_package_sha256
+    assert.match(content, /source_artifact_id:/);
+    assert.match(content, /expected_package_sha256:/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 34: Verificação de ambiente audita separadamente ruleset/branch protection e ambiente protegido
+  // -------------------------------------------------------------
+  it('34. verificação de ambiente audita separadamente ruleset/branch protection e ambiente protegido', () => {
+    const testEnvDir = path.join(tmpDir, 'test34_artifacts');
+    fs.mkdirSync(testEnvDir, { recursive: true });
+
+    runCommand(`node scripts/verify-environment-protection.mjs --mode=DEMO --out-dir="${testEnvDir}"`);
+
+    const envFile = path.join(testEnvDir, 'environment-api-response.json');
+    const branchFile = path.join(testEnvDir, 'branch-protection-api-response.json');
+    const verifFile = path.join(testEnvDir, 'environment-protection-verification.json');
+
+    assert.ok(fs.existsSync(envFile), 'environment-api-response.json deve ser gravado fisicamente');
+    assert.ok(fs.existsSync(branchFile), 'branch-protection-api-response.json deve ser gravado fisicamente');
+    assert.ok(fs.existsSync(verifFile), 'environment-protection-verification.json deve ser gravado fisicamente');
+
+    const verifData = JSON.parse(fs.readFileSync(verifFile, 'utf8'));
+    assert.ok(verifData.branch_protection, 'Deve conter auditoria específica de branch_protection');
+    assert.strictEqual(verifData.branch_protection_file, 'branch-protection-api-response.json');
   });
 });

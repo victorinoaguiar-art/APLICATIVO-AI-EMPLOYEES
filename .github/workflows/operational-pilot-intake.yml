@@ -3,11 +3,20 @@ name: Operational Pilot - Intake de Pacote Externo
 on:
   workflow_dispatch:
     inputs:
-      package_payload_base64:
-        description: 'Conteúdo do pacote em base64 (tar.gz contendo os 4 ficheiros obrigatórios)'
+      execution_mode:
+        description: 'Modo de Execução (DEMO ou OPERATIONAL_PILOT)'
         required: true
+        default: 'DEMO'
+        type: choice
+        options:
+          - 'DEMO'
+          - 'OPERATIONAL_PILOT'
+      source_artifact_id:
+        description: 'Artifact ID do pacote fonte privado previamente carregado (obrigatório em OPERATIONAL_PILOT)'
+        required: false
+        default: ''
       expected_package_sha256:
-        description: 'Hash SHA-256 esperado do pacote'
+        description: 'Hash SHA-256 (64 hex minúsculos) esperado do arquivo original-package.tar.gz'
         required: true
       tenant_id:
         description: 'Tenant ID Autorizado'
@@ -42,27 +51,55 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Materialize Incoming Package Payload
+      - name: Obtain and Verify Physical Package Payload
         run: |
           mkdir -p .artifacts/intake_staging
-          echo "${{ github.event.inputs.package_payload_base64 }}" | base64 -d > .artifacts/intake_staging/package.tar.gz
-          CALCULATED_SHA=$(sha256sum .artifacts/intake_staging/package.tar.gz | awk '{print $1}')
           EXPECTED_SHA="${{ github.event.inputs.expected_package_sha256 }}"
-          if [ "$CALCULATED_SHA" != "$EXPECTED_SHA" ]; then
-            echo "[FAIL-CLOSED] Hash SHA-256 do pacote transferido ($CALCULATED_SHA) diverge do esperado ($EXPECTED_SHA)."
+          if ! [[ "$EXPECTED_SHA" =~ ^[a-f0-9]{64}$ ]]; then
+            echo "[FAIL-CLOSED] expected_package_sha256 inválido (deve ter 64 hex minúsculos)."
             exit 1
           fi
-          mkdir -p .artifacts/intake_extracted
-          tar -xzf .artifacts/intake_staging/package.tar.gz -C .artifacts/intake_extracted
 
-      - name: Validate Package Integrity Without Executing Task
+          if [ "${{ github.event.inputs.execution_mode }}" = "DEMO" ] && [ -z "${{ github.event.inputs.source_artifact_id }}" ]; then
+            echo "[DEMO] A gerar pacote demonstrativo controlado..."
+            node scripts/prepare-demo-pilot-input.mjs --out-dir=.artifacts/intake_demo_temp
+            # Criar tar.gz com os ficheiros demo
+            tar -czf .artifacts/intake_staging/original-package.tar.gz \
+              -C .artifacts/intake_demo_temp \
+              operational-pilot-input.json \
+              despacho_autorizacao_demo.pdf \
+              runtime-context.json
+          else
+            SOURCE_ID="${{ github.event.inputs.source_artifact_id }}"
+            if [ -z "$SOURCE_ID" ] || ! [[ "$SOURCE_ID" =~ ^[0-9]+$ ]]; then
+              echo "[FAIL-CLOSED] source_artifact_id ausente ou não numérico para transferência de pacote real."
+              exit 1
+            fi
+            echo "[OPERATIONAL] A descarregar artefacto fonte privado '$SOURCE_ID'..."
+            gh api "repos/${{ github.repository }}/actions/artifacts/$SOURCE_ID/zip" > .artifacts/intake_staging/source.zip
+            mkdir -p .artifacts/intake_staging/unzipped
+            tar -xf .artifacts/intake_staging/source.zip -C .artifacts/intake_staging/unzipped
+            if [ -f .artifacts/intake_staging/unzipped/original-package.tar.gz ]; then
+              cp .artifacts/intake_staging/unzipped/original-package.tar.gz .artifacts/intake_staging/original-package.tar.gz
+            elif [ -f .artifacts/intake_staging/unzipped/package.tar.gz ]; then
+              cp .artifacts/intake_staging/unzipped/package.tar.gz .artifacts/intake_staging/original-package.tar.gz
+            else
+              echo "[FAIL-CLOSED] Arquivo original-package.tar.gz não encontrado dentro do artefacto fonte."
+              exit 1
+            fi
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pre-Extraction Safety Audit and Package Validation
         run: |
           node scripts/prepare-operational-pilot-input.mjs \
-            --package-path=.artifacts/intake_extracted \
+            --package-tar=.artifacts/intake_staging/original-package.tar.gz \
             --out-dir=.artifacts/intake_validated \
             --tenant-id="${{ github.event.inputs.tenant_id }}" \
             --task-id="${{ github.event.inputs.task_id }}" \
-            --mode=OPERATIONAL_PILOT
+            --mode="${{ github.event.inputs.execution_mode }}" \
+            --input-package-sha256="${{ github.event.inputs.expected_package_sha256 }}"
 
       - name: Publish Immutable Intake Artifact
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
