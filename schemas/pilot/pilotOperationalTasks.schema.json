@@ -92,7 +92,9 @@
           "execution_mode": {
             "type": "string",
             "enum": [
-              "OPERATIONAL_PILOT"
+              "OPERATIONAL_PILOT",
+              "SIMULATION",
+              "DEMO"
             ]
           }
         }

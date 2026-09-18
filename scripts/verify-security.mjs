@@ -62,39 +62,57 @@ if (fs.existsSync(gitignorePath)) {
   checks.push({ check: 'PACKAGE_LOCK_TRACKING', status: 'PASS', detail: 'No .gitignore blocking package-lock' });
 }
 
-// 2. Scan codebase for prohibited fallback secrets
+// 2. Scan codebase for prohibited fallback secrets and fallback expressions
 const prohibitedSecrets = [
   'aetf-500-hardened-cryptographic-token-secret-2026',
   'test_webhook_secret_stripe_2026',
   'test_webhook_secret_expresspay_2026',
-  'sk_live_'
+  'sk_live_',
+  'SASO_OPERATIONAL_PILOT_SECRET_2026_KEY_MIN32_MARIA'
 ];
 
 let foundProhibitedSecret = false;
 let prohibitedSecretDetail = '';
+
+const workflowSecretFallbackRegex = /secrets\.[A-Za-z0-9_]+\s*\|\|\s*['"][^'"]+['"]/;
+const processEnvFallbackRegex = /process\.env\.[A-Za-z0-9_]*(?:SECRET|KEY|TOKEN)[A-Za-z0-9_]*\s*\|\|\s*['"][a-zA-Z0-9_\-]{8,}['"]/;
 
 function scanDirForSecrets(dir) {
   if (!fs.existsSync(dir)) return;
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
     if (entry.name === 'node_modules' || entry.name === 'dist' || entry.name === '.next' || entry.name === 'generated') continue;
+    if (entry.name === 'verify-security.mjs') continue;
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       scanDirForSecrets(fullPath);
-    } else if (entry.isFile() && (entry.name.endsWith('.ts') || entry.name.endsWith('.js'))) {
-      const content = fs.readFileSync(fullPath, 'utf8');
-      for (const secret of prohibitedSecrets) {
-        if (content.includes(secret)) {
+    } else if (entry.isFile()) {
+      const ext = path.extname(entry.name).toLowerCase();
+      if (['.ts', '.js', '.mjs', '.yml', '.yaml'].includes(ext)) {
+        const content = fs.readFileSync(fullPath, 'utf8');
+        for (const secret of prohibitedSecrets) {
+          if (content.includes(secret)) {
+            foundProhibitedSecret = true;
+            prohibitedSecretDetail = `Prohibited literal secret '${secret}' found in ${path.relative(process.cwd(), fullPath)}`;
+            return;
+          }
+        }
+        if (workflowSecretFallbackRegex.test(content)) {
           foundProhibitedSecret = true;
-          prohibitedSecretDetail = `${secret} in ${path.relative(process.cwd(), fullPath)}`;
-          break;
+          prohibitedSecretDetail = `Prohibited GitHub Actions secret fallback expression found in ${path.relative(process.cwd(), fullPath)}`;
+          return;
+        }
+        if (processEnvFallbackRegex.test(content)) {
+          foundProhibitedSecret = true;
+          prohibitedSecretDetail = `Prohibited process.env secret fallback expression found in ${path.relative(process.cwd(), fullPath)}`;
+          return;
         }
       }
     }
   }
 }
 
-for (const d of ['apps', 'packages', 'scripts']) {
+for (const d of ['.github', 'apps', 'packages', 'scripts']) {
   scanDirForSecrets(path.resolve(process.cwd(), d));
 }
 
@@ -103,13 +121,13 @@ if (foundProhibitedSecret) {
   checks.push({
     check: 'NO_FALLBACK_OR_LIVE_SECRETS',
     status: 'FAIL',
-    detail: `Prohibited fallback or live secret found: ${prohibitedSecretDetail}`
+    detail: prohibitedSecretDetail
   });
 } else {
   checks.push({
     check: 'NO_FALLBACK_OR_LIVE_SECRETS',
     status: 'PASS',
-    detail: 'Zero known fallback or live credentials present in source files'
+    detail: 'Zero known fallback or live credentials/expressions present in source and workflow files'
   });
 }
 

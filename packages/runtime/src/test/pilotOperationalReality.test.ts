@@ -55,8 +55,8 @@ test('Pilot Operational Reality — 20 Mandatory Verification Tests (Prompt Pont
   fs.writeFileSync(authDocPath, authDocContent);
   const authDocSha = sha256(authDocContent);
 
-  const reviewerSecretMaria = 'SASO_OPERATIONAL_PILOT_SECRET_2026_KEY_MIN32_MARIA';
-  const reviewerSecretJoao = 'SASO_OPERATIONAL_PILOT_SECRET_2026_KEY_MIN32_JOAO';
+  const reviewerSecretMaria = 'test_isolated_maria_sec_key_min32_chars!';
+  const reviewerSecretJoao = 'test_isolated_joao_sec_key_min32_chars!';
   process.env.PILOT_SECRET_REV_MARIA = reviewerSecretMaria;
   process.env.PILOT_SECRET_REV_JOAO = reviewerSecretJoao;
 

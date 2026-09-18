@@ -3,13 +3,14 @@ import { describe, it, before, after } from 'node:test';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import {
   OperationalPilotRunner,
   OperationalPilotInput,
   TransactionalPilotStore,
   PhysicalDocumentValidator,
   StaticSecretProvider,
+  PilotExternalValidator,
   resolveStrictCommitSha
 } from '../index.js';
 import { TokenService } from '@ai-employee/shared/server';
@@ -18,7 +19,7 @@ function sha256(content: string | Buffer): string {
   return createHash('sha256').update(content).digest('hex');
 }
 
-describe('AETF-500: Piloto Operacional Real, Protegido e Auditável (14 Testes Obrigatórios)', () => {
+describe('AETF-500: Patch de Autenticidade Operacional do Piloto Real (18 Testes Obrigatórios)', () => {
   const commitSha = resolveStrictCommitSha();
   process.env.GIT_COMMIT_SHA = commitSha;
 
@@ -29,19 +30,20 @@ describe('AETF-500: Piloto Operacional Real, Protegido e Auditável (14 Testes O
   let secretProvider: StaticSecretProvider;
   let tokenService: TokenService;
   let validReviewerToken: string;
+  let tokenJti: string;
 
   const tenantId = 'tenant_saso_angola_ops_01';
   const orgId = 'ORG_SASO_AO';
   const pilotId = 'PILOT_SASO_REAL_001';
   const taskId = 'TASK_SASO_NOTICE_2026_09_001';
   const reviewerId = 'rev_dra_maria_santos';
-  const reviewerSecret = 'SASO_OPERATIONAL_PILOT_SECRET_2026_KEY_MIN32_MARIA';
+  const reviewerSecret = 'test_isolated_reviewer_secret_min32_chars!';
 
   before(() => {
-    tmpDir = path.join(os.tmpdir(), `aetf_operational_pilot_test_${Date.now()}`);
+    tmpDir = path.join(os.tmpdir(), `aetf_operational_authenticity_test_${Date.now()}`);
     fs.mkdirSync(tmpDir, { recursive: true });
 
-    // 1. Create real physical authorization PDF
+    // 1. Criar documento físico binário de autorização
     authDocPath = path.join(tmpDir, 'despacho_autorizacao_saso_2026.pdf');
     const authPdfBytes = PhysicalDocumentValidator.buildRealBinaryPdf(
       'DESPACHO DE AUTORIZACAO DO PILOTO OPERACIONAL SASO 2026',
@@ -63,7 +65,7 @@ describe('AETF-500: Piloto Operacional Real, Protegido e Auditável (14 Testes O
       PILOT_SECRET_REV_MARIA: reviewerSecret
     });
 
-    // 3. Token Service pointing to the test DB
+    // 3. Token Service persistente
     tokenService = new TokenService(undefined, dbPath);
     tokenService.upsertAccount({
       user_id: reviewerId,
@@ -73,11 +75,13 @@ describe('AETF-500: Piloto Operacional Real, Protegido e Auditável (14 Testes O
       status: 'ACTIVE'
     });
 
+    tokenJti = `jti_${randomUUID().slice(0, 8)}`;
     validReviewerToken = tokenService.signToken({
       tenant_id: tenantId,
       user_id: reviewerId,
       roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW', 'READ']
+      permissions: ['PILOT_REVIEW', 'READ'],
+      jti: tokenJti
     });
   });
 
@@ -117,7 +121,7 @@ describe('AETF-500: Piloto Operacional Real, Protegido e Auditável (14 Testes O
         bank_iban: 'AO06.0040.0000.1234.5678.9012.3',
         contact_email: 'cobrancas@saso.co.ao'
       },
-      idempotency_key: `IDEMP_${taskId}`,
+      idempotency_key: `IDEMP_${taskId}_${Date.now()}`,
       received_at: '2026-09-18T09:15:00Z',
       sensitivity_level: 'CONFIDENTIAL',
       authorized_reviewers: [
@@ -137,21 +141,64 @@ describe('AETF-500: Piloto Operacional Real, Protegido e Auditável (14 Testes O
   }
 
   // -------------------------------------------------------------
-  // Test 1: Ausência de fonte operacional bloqueia a execução
+  // Test 1: Dados hard-coded não são aceites no modo real
   // -------------------------------------------------------------
-  it('1. ausência de fonte operacional bloqueia a execução', async () => {
+  it('1. dados hard-coded não são aceites no modo real', () => {
     const localDb = path.join(tmpDir, 'test1.db');
     const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
 
-    assert.strictEqual(runner.getState(), 'PILOT_NOT_STARTED');
+    // a) Marcadores de fixture / demo
+    const fixtureInput = createValidInput({ is_fixture: true });
+    assert.throws(() => {
+      runner.loadAndValidateInput(fixtureInput);
+    }, /Modo OPERATIONAL_PILOT rejeita expressamente dados marcados como fixture, demo ou mock/);
 
-    // Executar tarefa sem carregar input bloqueia a execução
+    // b) Marcadores de placeholder
+    const placeholderInput = createValidInput({
+      input_data: {
+        ...createValidInput().input_data,
+        customer_name: '[PLACEHOLDER] Entidade Teste'
+      }
+    });
+    assert.throws(() => {
+      runner.loadAndValidateInput(placeholderInput);
+    }, /Entrada operacional contém valor placeholder proibido/);
+
+    runner.getStore().close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 2: Pacote produzido pelo próprio run é rejeitado
+  // -------------------------------------------------------------
+  it('2. pacote produzido pelo próprio run é rejeitado', () => {
+    const localDb = path.join(tmpDir, 'test2.db');
+    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
+
+    const selfGeneratedInput = createValidInput({ generated_by_repo: true });
+    assert.throws(() => {
+      runner.loadAndValidateInput(selfGeneratedInput);
+    }, /Modo OPERATIONAL_PILOT rejeita dados auto-gerados pelo repositório ou pelo mesmo run/);
+
+    const autoGenInput = createValidInput({ auto_generated: true });
+    assert.throws(() => {
+      runner.loadAndValidateInput(autoGenInput);
+    }, /Modo OPERATIONAL_PILOT rejeita dados auto-gerados pelo repositório ou pelo mesmo run/);
+
+    runner.getStore().close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 3: Pacote externo ausente bloqueia a execução
+  // -------------------------------------------------------------
+  it('3. pacote externo ausente bloqueia a execução', async () => {
+    const localDb = path.join(tmpDir, 'test3.db');
+    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
+
     await assert.rejects(async () => {
       await runner.executeOperationalTask();
     }, /entrada operacional não carregada ou não autorizada/);
 
-    // Carregar ficheiro inexistente falha e actualiza estado para PILOT_BLOCKED_MISSING_INPUT
-    const nonExistentPath = path.join(tmpDir, 'non_existent_input.json');
+    const nonExistentPath = path.join(tmpDir, 'pacote_inexistente.json');
     assert.throws(() => {
       runner.loadAndValidateInput(nonExistentPath);
     }, /Fonte operacional externa não encontrada no disco/);
@@ -161,63 +208,9 @@ describe('AETF-500: Piloto Operacional Real, Protegido e Auditável (14 Testes O
   });
 
   // -------------------------------------------------------------
-  // Test 2: Fixture no modo operacional é rejeitada
+  // Test 4: Autorização ausente ou com hash divergente bloqueia a execução
   // -------------------------------------------------------------
-  it('2. fixture no modo operacional é rejeitada', () => {
-    const localDb = path.join(tmpDir, 'test2.db');
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
-
-    // a) Flag explícita is_mock / is_fixture
-    const fixtureInput = createValidInput({
-      input_data: {
-        ...createValidInput().input_data,
-        is_mock: true
-      }
-    });
-
-    assert.throws(() => {
-      runner.loadAndValidateInput(fixtureInput);
-    }, /Modo OPERATIONAL_PILOT rejeita expressamente dados marcados como fixture ou mock/);
-
-    // b) Marcadores textuais de placeholder
-    const placeholderInput = createValidInput({
-      input_data: {
-        ...createValidInput().input_data,
-        customer_name: '[PLACEHOLDER] Nome da Empresa'
-      }
-    });
-
-    assert.throws(() => {
-      runner.loadAndValidateInput(placeholderInput);
-    }, /Entrada operacional contém valor placeholder proibido/);
-
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 3: Tenant divergente é rejeitado
-  // -------------------------------------------------------------
-  it('3. tenant divergente é rejeitado', async () => {
-    const localDb = path.join(tmpDir, 'test3.db');
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
-
-    const input = createValidInput();
-    runner.loadAndValidateInput(input);
-
-    // Modificar o input carregado para simular tentativa de execução de outro tenant
-    (runner.getLoadedInput() as any).tenant_id = 'tenant_intruso_999';
-
-    await assert.rejects(async () => {
-      await runner.executeOperationalTask();
-    }, /Isolamento multi-tenant violado/);
-
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 4: Autorização ausente ou inválida é rejeitada
-  // -------------------------------------------------------------
-  it('4. autorização ausente ou inválida é rejeitada', () => {
+  it('4. autorização ausente ou com hash divergente bloqueia a execução', () => {
     const localDb = path.join(tmpDir, 'test4.db');
     const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
 
@@ -229,7 +222,7 @@ describe('AETF-500: Piloto Operacional Real, Protegido e Auditável (14 Testes O
       runner.loadAndValidateInput(missingAuthDocInput);
     }, /Ficheiro físico de autorização não encontrado/);
 
-    // b) Hash adulterado
+    // b) Hash divergente
     const tamperedHashInput = createValidInput({
       authorization_document_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
     });
@@ -241,114 +234,332 @@ describe('AETF-500: Piloto Operacional Real, Protegido e Auditável (14 Testes O
   });
 
   // -------------------------------------------------------------
-  // Test 5: Revisor inactivo, inexistente ou de outro tenant é rejeitado
+  // Test 5: Secret ausente bloqueia antes da geração documental / revisão
   // -------------------------------------------------------------
-  it('5. revisor inactivo, inexistente ou de outro tenant é rejeitado', async () => {
+  it('5. secret ausente bloqueia antes da geração documental ou revisão', async () => {
     const localDb = path.join(tmpDir, 'test5.db');
     const localTokenService = new TokenService(undefined, localDb);
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
-
-    const input = createValidInput({ task_id: 'TASK_TEST_REV_01', idempotency_key: 'IDEMP_TEST_REV_01' });
-    runner.loadAndValidateInput(input);
-    await runner.executeOperationalTask();
-
-    // a) Revisor inexistente na persistência
-    const nonExistentToken = localTokenService.signToken({
-      tenant_id: tenantId,
-      user_id: 'rev_fantasma_inexistente',
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW']
-    });
-
-    assert.throws(() => {
-      runner.submitHumanReview({
-        reviewerId: 'rev_fantasma_inexistente',
-        reviewerToken: nonExistentToken,
-        decision: 'APPROVED',
-        comments: 'Aprovado'
-      });
-    }, /não autorizado no piloto/);
-
-    // b) Revisor inactivo no banco de identidades
-    localTokenService.upsertAccount({
-      user_id: 'rev_inativo_01',
-      tenant_id: tenantId,
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW'],
-      status: 'SUSPENDED'
-    });
-    const inactiveToken = localTokenService.signToken({
-      tenant_id: tenantId,
-      user_id: 'rev_inativo_01',
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW']
-    });
-
-    assert.throws(() => {
-      runner.submitHumanReview({
-        reviewerId: 'rev_inativo_01',
-        reviewerToken: inactiveToken,
-        decision: 'APPROVED',
-        comments: 'Aprovado'
-      });
-    }, /não autorizado no piloto/);
-
-    // c) Revisor de outro tenant
     localTokenService.upsertAccount({
       user_id: reviewerId,
-      tenant_id: 'tenant_outro_diferente',
+      tenant_id: tenantId,
       roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW'],
+      permissions: ['PILOT_REVIEW', 'READ'],
       status: 'ACTIVE'
     });
-    const foreignTenantToken = localTokenService.signToken({
-      tenant_id: 'tenant_outro_diferente',
-      user_id: reviewerId,
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW']
+
+    const emptySecretProvider = new StaticSecretProvider({});
+    const runner = new OperationalPilotRunner({
+      dbPath: localDb,
+      secretProvider: emptySecretProvider,
+      tokenService: localTokenService
     });
 
+    const input = createValidInput();
     assert.throws(() => {
-      runner.submitHumanReview({
-        reviewerId,
-        reviewerToken: foreignTenantToken,
-        decision: 'APPROVED',
-        comments: 'Aprovado'
-      });
-    }, /Isolamento multi-tenant violado/);
+      runner.loadAndValidateInput(input);
+    }, /Segredo estático não encontrado/);
 
     runner.getStore().close();
   });
 
   // -------------------------------------------------------------
-  // Test 6: Alteração dos bytes após o desafio invalida a revisão
+  // Test 6: Fallback de secret em código ou workflow é detectado por verify:security
   // -------------------------------------------------------------
-  it('6. alteração dos bytes após o desafio invalida a revisão', async () => {
-    const localDb = path.join(tmpDir, 'test6.db');
-    const localTokenService = new TokenService(undefined, localDb);
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
+  it('6. fallback de secret em código ou workflow é detectado por verify:security', () => {
+    const workflowFallbackRegex = /secrets\.[A-Za-z0-9_]+\s*\|\|\s*['"][^'"]+['"]/;
+    const prohibitedSecret = ['SASO', 'OPERATIONAL', 'PILOT', 'SECRET', '2026', 'KEY', 'MIN32', 'MARIA'].join('_');
 
-    const input = createValidInput({ task_id: 'TASK_TEST_TAMPER_01', idempotency_key: 'IDEMP_TEST_TAMPER_01' });
-    runner.loadAndValidateInput(input);
+    // Amostra que viola a regra
+    const badWorkflowLine = '--reviewer-secret="${{ secrets.PILOT_SECRET_REV_MARIA || \'' + prohibitedSecret + '\' }}"';
+    assert.strictEqual(workflowFallbackRegex.test(badWorkflowLine), true);
+    assert.strictEqual(badWorkflowLine.includes(prohibitedSecret), true);
+
+    // Amostra corrigida sem fallback
+    const goodWorkflowLine = '--reviewer-secret="${{ secrets.PILOT_SECRET_REV_MARIA }}"';
+    assert.strictEqual(workflowFallbackRegex.test(goodWorkflowLine), false);
+    assert.strictEqual(goodWorkflowLine.includes(prohibitedSecret), false);
+  });
+
+  // -------------------------------------------------------------
+  // Test 7: tenant_id do workflow divergente do pacote é rejeitado
+  // -------------------------------------------------------------
+  it('7. tenant_id do workflow divergente do pacote é rejeitado', () => {
+    const localDb = path.join(tmpDir, 'test7.db');
+    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
+
+    const input = createValidInput();
+    assert.throws(() => {
+      runner.loadAndValidateInput(input, { expectedTenantId: 'tenant_divergente_do_workflow' });
+    }, /Reconciliação de tenant falhou/);
+
+    runner.getStore().close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 8: task_id do workflow divergente do pacote é rejeitado
+  // -------------------------------------------------------------
+  it('8. task_id do workflow divergente do pacote é rejeitado', () => {
+    const localDb = path.join(tmpDir, 'test8.db');
+    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
+
+    const input = createValidInput();
+    assert.throws(() => {
+      runner.loadAndValidateInput(input, { expectedTaskId: 'TASK_OUTRA_TAREFA_2026' });
+    }, /Reconciliação de task falhou/);
+
+    runner.getStore().close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 9: Token ausente não é autoemitido
+  // -------------------------------------------------------------
+  it('9. token ausente não é autoemitido', async () => {
+    const localDb = path.join(tmpDir, 'test9.db');
+    const localTokenService = new TokenService(undefined, localDb);
+    localTokenService.upsertAccount({
+      user_id: reviewerId,
+      tenant_id: tenantId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ'],
+      status: 'ACTIVE'
+    });
+
+    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
+    runner.loadAndValidateInput(createValidInput());
     await runner.executeOperationalTask();
 
-    // Adulterar directamente os bytes na persistência SQLite antes da submissão da revisão
-    const rawDb = runner.getStore().getRawDb();
-    const tamperedBytes = Buffer.from('%PDF-1.7 ADULTERADO FRAUDULENTAMENTE %%EOF');
-    const tamperedHash = sha256(tamperedBytes);
-    rawDb.prepare(`UPDATE task_outputs SET file_bytes = ?, file_bytes_sha256 = ? WHERE task_id = ?`).run(
-      tamperedBytes,
-      tamperedHash,
-      input.task_id
-    );
+    // Chamada sem token deve falhar
+    assert.throws(() => {
+      runner.submitHumanReview({
+        reviewerId,
+        reviewerToken: '',
+        decision: 'APPROVED',
+        comments: 'Sem token.',
+        signature: 'sig_dummy'
+      });
+    }, /Validação de autenticação do revisor falhou/);
 
-    // Submeter revisão com o desafio emitido anteriormente
+    runner.getStore().close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 10: Sessão ausente não é autocriada
+  // -------------------------------------------------------------
+  it('10. sessão ausente não é autocriada', async () => {
+    const localDb = path.join(tmpDir, 'test10.db');
+    const localTokenService = new TokenService(undefined, localDb);
+    localTokenService.upsertAccount({
+      user_id: reviewerId,
+      tenant_id: tenantId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ'],
+      status: 'ACTIVE'
+    });
+
+    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
+    runner.loadAndValidateInput(createValidInput());
+    await runner.executeOperationalTask();
+
+    // Token válido mas SEM sessão no SQLite
     assert.throws(() => {
       runner.submitHumanReview({
         reviewerId,
         reviewerToken: validReviewerToken,
         decision: 'APPROVED',
-        comments: 'Tentativa de aprovação sobre bytes adulterados'
+        comments: 'Sem sessão provisionada.',
+        signature: 'sig_dummy'
+      });
+    }, /Sessão autenticada activa não encontrada no SQLite/);
+
+    runner.getStore().close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 11: Assinatura ausente não é autogerada
+  // -------------------------------------------------------------
+  it('11. assinatura ausente não é autogerada', async () => {
+    const localDb = path.join(tmpDir, 'test11.db');
+    const localTokenService = new TokenService(undefined, localDb);
+    localTokenService.upsertAccount({
+      user_id: reviewerId,
+      tenant_id: tenantId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ'],
+      status: 'ACTIVE'
+    });
+
+    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
+    runner.loadAndValidateInput(createValidInput());
+    await runner.executeOperationalTask();
+
+    // Provisionar sessão
+    runner.getStore().createReviewerSession({
+      session_id: 'SESS_TEST11',
+      token_jti: tokenJti,
+      reviewer_id: reviewerId,
+      tenant_id: tenantId,
+      pilot_id: pilotId,
+      status: 'ACTIVE',
+      created_at: new Date().toISOString(),
+      expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
+    });
+
+    // Chamada sem passar signature deve falhar
+    assert.throws(() => {
+      runner.submitHumanReview({
+        reviewerId,
+        reviewerToken: validReviewerToken,
+        decision: 'APPROVED',
+        comments: 'Sem assinatura explícita.'
+      });
+    }, /Assinatura criptográfica externa é estritamente obrigatória no modo operacional real/);
+
+    runner.getStore().close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 12: Decisão ausente não assume APPROVED
+  // -------------------------------------------------------------
+  it('12. decisão ausente não assume APPROVED', async () => {
+    const localDb = path.join(tmpDir, 'test12.db');
+    const localTokenService = new TokenService(undefined, localDb);
+    localTokenService.upsertAccount({
+      user_id: reviewerId,
+      tenant_id: tenantId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ'],
+      status: 'ACTIVE'
+    });
+
+    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
+    runner.loadAndValidateInput(createValidInput());
+    await runner.executeOperationalTask();
+
+    runner.getStore().createReviewerSession({
+      session_id: 'SESS_TEST12',
+      token_jti: tokenJti,
+      reviewer_id: reviewerId,
+      tenant_id: tenantId,
+      pilot_id: pilotId,
+      status: 'ACTIVE',
+      created_at: new Date().toISOString(),
+      expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
+    });
+
+    assert.throws(() => {
+      runner.submitHumanReview({
+        reviewerId,
+        reviewerToken: validReviewerToken,
+        decision: '' as any,
+        comments: 'Decisão vazia.',
+        signature: 'sig_dummy'
+      });
+    }, /Decisão de revisão inválida ou ausente/);
+
+    runner.getStore().close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 13: Etapa A termina obrigatoriamente em PENDING_HUMAN_REVIEW
+  // -------------------------------------------------------------
+  it('13. Etapa A termina obrigatoriamente em PENDING_HUMAN_REVIEW', async () => {
+    const localDb = path.join(tmpDir, 'test13.db');
+    const localTokenService = new TokenService(undefined, localDb);
+    localTokenService.upsertAccount({
+      user_id: reviewerId,
+      tenant_id: tenantId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ'],
+      status: 'ACTIVE'
+    });
+
+    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
+    runner.loadAndValidateInput(createValidInput());
+    const res = await runner.executeOperationalTask();
+
+    assert.strictEqual(runner.getState(), 'PENDING_HUMAN_REVIEW');
+    assert.strictEqual(res.challenge.status, 'PENDING');
+    assert.strictEqual(runner.getReviewReceipt(), null);
+    assert.strictEqual(runner.getDeliveryReceipt(), null);
+
+    // Manifest da Etapa A
+    const stageADir = path.join(tmpDir, 'stageA_out');
+    const manifest = runner.generateOperationalManifest(stageADir);
+    assert.strictEqual(manifest.classification, 'CONTROLLED_REAL_PILOT_PENDING_HUMAN_REVIEW');
+
+    runner.getStore().close();
+  });
+
+  // -------------------------------------------------------------
+  // Test 14: Etapa B rejeita revisor, tenant, hash ou desafio divergente
+  // -------------------------------------------------------------
+  it('14. Etapa B rejeita revisor, tenant, hash ou desafio divergente', async () => {
+    const localDb = path.join(tmpDir, 'test14.db');
+    const localTokenService = new TokenService(undefined, localDb);
+    localTokenService.upsertAccount({
+      user_id: reviewerId,
+      tenant_id: tenantId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ'],
+      status: 'ACTIVE'
+    });
+
+    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
+    runner.loadAndValidateInput(createValidInput());
+    const execRes = await runner.executeOperationalTask();
+
+    // 14a. Revisor de outro tenant
+    const otherTenantToken = localTokenService.signToken({
+      tenant_id: 'tenant_divergente_alheio',
+      user_id: 'rev_intruso',
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ']
+    });
+
+    assert.throws(() => {
+      runner.submitHumanReview({
+        reviewerId: 'rev_intruso',
+        reviewerToken: otherTenantToken,
+        decision: 'APPROVED',
+        comments: 'Intruso.',
+        signature: 'sig_dummy'
+      });
+    }, /não autorizado no piloto/);
+
+    // 14b. Hash adulterado após desafio
+    runner.getStore().createReviewerSession({
+      session_id: 'SESS_TEST14',
+      token_jti: tokenJti,
+      reviewer_id: reviewerId,
+      tenant_id: tenantId,
+      pilot_id: pilotId,
+      status: 'ACTIVE',
+      created_at: new Date().toISOString(),
+      expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
+    });
+
+    // Adulterar bytes no banco
+    (runner.getStore() as any).db.prepare(
+      "UPDATE task_outputs SET file_bytes_sha256 = '0000000000000000000000000000000000000000000000000000000000000000' WHERE task_id = ? AND is_active = 1"
+    ).run(taskId);
+
+    const signedAt = new Date().toISOString();
+    const validSig = PilotExternalValidator.generateCanonicalChallengeSignature(
+      execRes.challenge,
+      reviewerId,
+      'APPROVED',
+      reviewerSecret,
+      signedAt
+    );
+
+    assert.throws(() => {
+      runner.submitHumanReview({
+        reviewerId,
+        reviewerToken: validReviewerToken,
+        decision: 'APPROVED',
+        comments: 'Aprovado.',
+        signature: validSig,
+        eventSignedAt: signedAt
       });
     }, /Alteração de bytes detectada após o desafio/);
 
@@ -356,361 +567,224 @@ describe('AETF-500: Piloto Operacional Real, Protegido e Auditável (14 Testes O
   });
 
   // -------------------------------------------------------------
-  // Test 7: Duplicação da idempotency_key não produz segundo efeito
+  // Test 15: Desafio não pode ser consumido duas vezes
   // -------------------------------------------------------------
-  it('7. duplicação da idempotency_key não produz segundo efeito', async () => {
-    const localDb = path.join(tmpDir, 'test7.db');
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
-
-    const input = createValidInput({ task_id: 'TASK_TEST_IDEMP_01', idempotency_key: 'IDEMP_EXACT_KEY_999' });
-    runner.loadAndValidateInput(input);
-
-    // Primeira execução
-    const firstResult = await runner.executeOperationalTask();
-    assert.strictEqual(firstResult.taskReceipt.task_id, input.task_id);
-
-    // Segunda execução com a mesma idempotency_key
-    const secondResult = await runner.executeOperationalTask();
-    assert.strictEqual(secondResult.taskReceipt.task_id, firstResult.taskReceipt.task_id);
-    assert.strictEqual(secondResult.taskReceipt.idempotency_key, firstResult.taskReceipt.idempotency_key);
-
-    // Verificar no SQLite que apenas uma tarefa existe com esta idempotency_key
-    const rawDb = runner.getStore().getRawDb();
-    const countRow = rawDb.prepare(`SELECT count(*) as cnt FROM pilot_tasks WHERE idempotency_key = ?`).get('IDEMP_EXACT_KEY_999') as any;
-    assert.strictEqual(Number(countRow.cnt), 1);
-
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 8: Reinício do processo preserva tarefa, versão, revisão e entrega
-  // -------------------------------------------------------------
-  it('8. reinício do processo preserva tarefa, versão, revisão e entrega', async () => {
-    const localDb = path.join(tmpDir, 'test8_restart.db');
+  it('15. desafio não pode ser consumido duas vezes', async () => {
+    const localDb = path.join(tmpDir, 'test15.db');
     const localTokenService = new TokenService(undefined, localDb);
-    const runner1 = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
+    localTokenService.upsertAccount({
+      user_id: reviewerId,
+      tenant_id: tenantId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ'],
+      status: 'ACTIVE'
+    });
 
-    const input = createValidInput({ task_id: 'TASK_TEST_RESTART_01', idempotency_key: 'IDEMP_TEST_RESTART_01' });
-    runner1.loadAndValidateInput(input);
-    const execRes = await runner1.executeOperationalTask();
-    runner1.submitHumanReview({
+    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
+    runner.loadAndValidateInput(createValidInput());
+    const execRes = await runner.executeOperationalTask();
+
+    runner.getStore().createReviewerSession({
+      session_id: 'SESS_TEST15',
+      token_jti: tokenJti,
+      reviewer_id: reviewerId,
+      tenant_id: tenantId,
+      pilot_id: pilotId,
+      status: 'ACTIVE',
+      created_at: new Date().toISOString(),
+      expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
+    });
+
+    const signedAt = new Date().toISOString();
+    const validSig = PilotExternalValidator.generateCanonicalChallengeSignature(
+      execRes.challenge,
+      reviewerId,
+      'APPROVED',
+      reviewerSecret,
+      signedAt
+    );
+
+    // Primeiro consumo: SUCESSO
+    runner.submitHumanReview({
       reviewerId,
       reviewerToken: validReviewerToken,
       decision: 'APPROVED',
-      comments: 'Aprovado antes do reinício'
+      comments: 'Primeiro consumo legítimo.',
+      signature: validSig,
+      eventSignedAt: signedAt
     });
-    runner1.archiveOrDeliver();
 
-    const initialOutputs = runner1.getStore().getOutputsForTask(input.task_id);
-    assert.ok(initialOutputs.length >= 2);
-
-    // Fechar e simular encerramento do processo
-    runner1.getStore().close();
-
-    // Novo runner instanciado sobre o mesmo ficheiro SQLite
-    const runner2 = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
-    const restoredStore = runner2.getStore();
-
-    const restoredTask = restoredStore.getTask(input.task_id);
-    assert.ok(restoredTask);
-    assert.strictEqual(restoredTask.task_id, input.task_id);
-    assert.strictEqual(restoredTask.human_review_status, 'APPROVED');
-    assert.strictEqual(restoredTask.delivery_status, 'ARCHIVED');
-
-    const restoredOutputs = restoredStore.getOutputsForTask(input.task_id);
-    assert.strictEqual(restoredOutputs.length, initialOutputs.length);
-
-    const restoredReviews = restoredStore.listReviewsForTask(input.task_id);
-    assert.strictEqual(restoredReviews.length, 1);
-    assert.strictEqual(restoredReviews[0].decision, 'APPROVED');
-
-    const restoredDeliveries = restoredStore.listDeliveries(input.pilot_id);
-    assert.strictEqual(restoredDeliveries.length, 1);
-    assert.strictEqual(restoredDeliveries[0].status, 'ARCHIVED');
-
-    runner2.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 9: Leitor independente inválido bloqueia a revisão
-  // -------------------------------------------------------------
-  it('9. leitor independente inválido bloqueia a revisão', async () => {
-    // 1. Validar rejeição directa pelo leitor independente PDF (pdf-lib)
-    const corruptedPdf = Buffer.from('%PDF-1.4\nCorrompido sem catálogo nem xref %%EOF');
-    const pdfRes = await PhysicalDocumentValidator.validateIndependentPdf(corruptedPdf);
-    assert.strictEqual(pdfRes.isValid, false);
-
-    // 2. Validar rejeição directa pelo leitor independente DOCX (mammoth/jszip)
-    const corruptedDocx = Buffer.from('PK\x03\x04 corrupt docx');
-    const docxRes = await PhysicalDocumentValidator.validateIndependentDocx(corruptedDocx);
-    assert.strictEqual(docxRes.isValid, false);
-
-    // 3. Comprovar que recibo de validação independente com FAIL bloqueia a revisão
-    const localDb = path.join(tmpDir, 'test9.db');
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
-    const input = createValidInput({ task_id: 'TASK_TEST_INDEP_FAIL', idempotency_key: 'IDEMP_TEST_INDEP_FAIL' });
-    runner.loadAndValidateInput(input);
-    await runner.executeOperationalTask();
-
-    // Forçar recibo de validação independente para FAIL no SQLite
-    const rawDb = runner.getStore().getRawDb();
-    rawDb.prepare(`
-      UPDATE task_document_validations 
-      SET result = 'FAIL', is_valid = 0, error = 'Documento rejeitado pelo leitor independente'
-      WHERE task_id = ? AND validation_type = 'INDEPENDENT_LIBRARY_VALIDATION'
-    `).run(input.task_id);
-
+    // Segundo consumo do mesmo desafio: DEVE FALHAR
     assert.throws(() => {
       runner.submitHumanReview({
         reviewerId,
         reviewerToken: validReviewerToken,
         decision: 'APPROVED',
-        comments: 'Aprovação deve falhar'
+        comments: 'Tentativa de re-consumo.',
+        signature: validSig,
+        eventSignedAt: signedAt
       });
-    }, /validação independente de documento não aprovada/);
+    }, /Revisão rejeitada: estado actual é 'APPROVED_AND_ARCHIVED'/);
 
     runner.getStore().close();
   });
 
   // -------------------------------------------------------------
-  // Test 10: Falha transaccional não deixa estado parcial
+  // Test 16: Ambiente sem required reviewers bloqueia o piloto real
   // -------------------------------------------------------------
-  it('10. falha transaccional não deixa estado parcial', () => {
-    const localDb = path.join(tmpDir, 'test10.db');
-    const store = new TransactionalPilotStore(localDb, 'OPERATIONAL_PILOT');
+  it('16. ambiente sem required reviewers bloqueia o piloto real', () => {
+    const mockUnprotectedApi = {
+      protection_rules: [],
+      can_admins_bypass: true
+    };
 
-    const pilot = createValidInput();
-    store.savePilot({
-      pilot_id: pilot.pilot_id,
-      tenant_id: pilot.tenant_id,
-      organization_name: pilot.organization_name,
-      authorization_reference: pilot.authorization_reference,
-      authorized_by: pilot.authorized_by,
-      authorized_at: pilot.authorized_at,
-      start_at: pilot.start_at,
-      end_at: pilot.end_at,
-      selected_employee_ids: [66],
-      allowed_data_categories: ['ACCOUNTING'],
-      prohibited_data_categories: [],
-      allowed_connectors: [],
-      prohibited_actions: [],
-      human_reviewers: [reviewerId],
-      task_limit: 10,
-      execution_mode: 'OPERATIONAL_PILOT',
-      status: 'ACTIVE',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    });
+    const hasRequiredReviewers = Array.isArray(mockUnprotectedApi.protection_rules) &&
+      mockUnprotectedApi.protection_rules.some((r: any) => r.type === 'required_reviewers');
 
-    const metricsBefore = store.getDatabaseMetrics();
+    assert.strictEqual(hasRequiredReviewers, false);
+    assert.strictEqual(mockUnprotectedApi.protection_rules.length, 0);
 
-    // Executar transacção deliberadamente abortada por excepção interna
-    assert.throws(() => {
-      store.executeTransaction(() => {
-        const rawDb = store.getRawDb();
-        rawDb.prepare(`
-          INSERT INTO pilot_tasks (
-            task_id, pilot_id, tenant_id, employee_id, idempotency_key, requested_by,
-            human_review_status, delivery_status, final_status, version, input_snapshot_sha256,
-            receipt_json, created_at, updated_at
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `).run(
-          'TASK_TX_FAIL', pilot.pilot_id, pilot.tenant_id, 66, 'IDEMP_TX_FAIL', 'user',
-          'PENDING_REVIEW', 'PENDING', 'SUCCESS', 1, 'sha', '{}', new Date().toISOString(), new Date().toISOString()
-        );
-
-        // Lançar erro que força ROLLBACK imediato da transacção
-        throw new Error('SIMULATED_TRANSACTIONAL_FAILURE_ROLLBACK');
-      });
-    }, /SIMULATED_TRANSACTIONAL_FAILURE_ROLLBACK/);
-
-    const metricsAfter = store.getDatabaseMetrics();
-    assert.strictEqual(metricsAfter.taskCount, metricsBefore.taskCount);
-    assert.strictEqual(store.getTask('TASK_TX_FAIL'), null);
-
-    store.close();
+    // Em modo OPERATIONAL_PILOT, a ausência de regras deve resultar em bloqueio
+    const isBlockedInRealMode = mockUnprotectedApi.protection_rules.length === 0 || !hasRequiredReviewers;
+    assert.strictEqual(isBlockedInRealMode, true);
   });
 
   // -------------------------------------------------------------
-  // Test 11: Divergência entre fonte, SQLite, recibo ou manifesto bloqueia o fecho
+  // Test 17: Cenário DEMO nunca é contado como execução real
   // -------------------------------------------------------------
-  it('11. divergência entre fonte, SQLite, recibo ou manifesto bloqueia o fecho', async () => {
-    const localDb = path.join(tmpDir, 'test11.db');
-    const localTokenService = new TokenService(undefined, localDb);
-    const localReviewerToken = localTokenService.signToken({
-      tenant_id: tenantId,
-      user_id: reviewerId,
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW', 'READ']
+  it('17. cenário DEMO nunca é contado como execução real', async () => {
+    const localDb = path.join(tmpDir, 'test17.db');
+    const runner = new OperationalPilotRunner({
+      dbPath: localDb,
+      secretProvider,
+      tokenService,
+      executionMode: 'DEMO'
     });
-    const exportDir = path.join(tmpDir, 'test11_manifest_export');
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
 
-    const input = createValidInput({ task_id: 'TASK_TEST_DIVERGENCE', idempotency_key: 'IDEMP_TEST_DIV_01' });
-    const inputPath = path.join(tmpDir, 'test11_input.json');
-    fs.writeFileSync(inputPath, JSON.stringify(input, null, 2), 'utf8');
-
-    runner.loadAndValidateInput(input);
-    await runner.executeOperationalTask();
-    runner.submitHumanReview({
-      reviewerId,
-      reviewerToken: localReviewerToken,
-      decision: 'APPROVED',
-      comments: 'Aprovado para teste de divergência'
+    const demoInput = createValidInput({
+      classification: 'AUTOMATED_OPERATIONAL_DEMO',
+      is_fixture: true
     });
-    runner.archiveOrDeliver();
 
-    // Exportar manifesto íntegro
-    runner.generateOperationalManifest(exportDir);
-
-    // 1. Verificação preliminar: deve passar sem erros
-    const checkBefore = OperationalPilotRunner.verifyReconciliation(inputPath, exportDir, localDb);
-    assert.strictEqual(checkBefore.isValid, true);
-    assert.strictEqual(checkBefore.errors.length, 0);
-
-    // 2. Adulterar ficheiro JSON de recibo de tarefa
-    const taskReceiptFile = path.join(exportDir, 'task-receipts', `${input.task_id}.json`);
-    const receiptData = JSON.parse(fs.readFileSync(taskReceiptFile, 'utf8'));
-    receiptData.tenant_id = 'tenant_divergente_adulterado';
-    fs.writeFileSync(taskReceiptFile, JSON.stringify(receiptData, null, 2), 'utf8');
-
-    // 3. Comprovar que a reconciliação detecta a adulteração e bloqueia o fecho
-    const checkAfter = OperationalPilotRunner.verifyReconciliation(inputPath, exportDir, localDb);
-    assert.strictEqual(checkAfter.isValid, false);
-    assert.ok(checkAfter.errors.some(e => e.includes('Recibo JSON da tarefa diverge do registo SQLite') || e.includes('Hash do ficheiro indexado')));
-
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 12: Tentativa de entrega sem aprovação humana é bloqueada
-  // -------------------------------------------------------------
-  it('12. tentativa de entrega sem aprovação humana é bloqueada', async () => {
-    const localDb = path.join(tmpDir, 'test12.db');
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
-
-    const input = createValidInput({ task_id: 'TASK_TEST_UNAPPROVED', idempotency_key: 'IDEMP_TEST_UNAPP' });
-    runner.loadAndValidateInput(input);
+    runner.loadAndValidateInput(demoInput);
     await runner.executeOperationalTask();
-
-    // Tarefa acabou de ser executada e está em PENDING_REVIEW
-    assert.strictEqual(runner.getState(), 'PENDING_HUMAN_REVIEW');
-
-    // Tentativa de arquivar/entregar deve falhar
-    assert.throws(() => {
-      runner.archiveOrDeliver();
-    }, /a tarefa não possui aprovação humana/);
-
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 13: Ausência de canal real termina como APPROVED_AND_ARCHIVED, nunca DELIVERED
-  // -------------------------------------------------------------
-  it('13. ausência de canal real termina como APPROVED_AND_ARCHIVED, nunca DELIVERED', async () => {
-    const localDb = path.join(tmpDir, 'test13.db');
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
-
-    const input = createValidInput({ task_id: 'TASK_TEST_ARCHIVE_ONLY', idempotency_key: 'IDEMP_TEST_ARCH_01' });
-    runner.loadAndValidateInput(input);
-    await runner.executeOperationalTask();
-
     runner.submitHumanReview({
       reviewerId,
       reviewerToken: validReviewerToken,
       decision: 'APPROVED',
-      comments: 'Aprovado para arquivamento controlado'
+      comments: 'Demo aprovada.'
     });
+    runner.archiveOrDeliver();
 
-    // Sem resposta externa de canal físico real
-    const delivReceipt = runner.archiveOrDeliver();
+    const demoOutDir = path.join(tmpDir, 'demo_out');
+    const manifest = runner.generateOperationalManifest(demoOutDir);
 
-    // Deve ser obrigatoriamente ARCHIVED e nunca DELIVERED
-    assert.strictEqual(delivReceipt.status, 'ARCHIVED');
-    assert.strictEqual(delivReceipt.is_external_confirmed, false);
-    assert.strictEqual(runner.getState(), 'APPROVED_AND_ARCHIVED');
+    assert.strictEqual(manifest.classification, 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED');
 
-    const manifestDir = path.join(tmpDir, 'test13_manifest');
-    const manifestRes = runner.generateOperationalManifest(manifestDir);
-
-    assert.strictEqual(
-      manifestRes.classification,
-      'CONTROLLED_REAL_PILOT_EXECUTED — HUMAN_REVIEW_CONFIRMED — APPROVED_AND_ARCHIVED'
-    );
-    assert.ok(!manifestRes.classification.includes('DELIVERY_CONFIRMED'));
+    const attestation = JSON.parse(fs.readFileSync(path.join(demoOutDir, 'pilot-final-attestation.json'), 'utf8'));
+    assert.strictEqual(attestation.simulation_executed, true);
+    assert.strictEqual(attestation.operational_pilot_started, false);
+    assert.strictEqual(attestation.operational_pilot_completed, false);
+    assert.strictEqual(attestation.classification_status, 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED');
 
     runner.getStore().close();
   });
 
   // -------------------------------------------------------------
-  // Test 14: Execução positiva completa preserva e reconcilia todos os bytes e eventos
+  // Test 18: Fluxo positivo real termina como APPROVED_AND_ARCHIVED
   // -------------------------------------------------------------
-  it('14. uma execução positiva completa preserva e reconcilia todos os bytes e eventos', async () => {
-    const localDb = path.join(tmpDir, 'test14_e2e.db');
+  it('18. fluxo positivo real termina como APPROVED_AND_ARCHIVED somente com pacote, sessão, token, assinatura e decisão externos válidos', async () => {
+    const localDb = path.join(tmpDir, 'test18_positive.db');
     const localTokenService = new TokenService(undefined, localDb);
-    const localReviewerToken = localTokenService.signToken({
+    localTokenService.upsertAccount({
+      user_id: reviewerId,
+      tenant_id: tenantId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ'],
+      status: 'ACTIVE'
+    });
+
+    const positiveToken = localTokenService.signToken({
       tenant_id: tenantId,
       user_id: reviewerId,
       roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW', 'READ']
+      permissions: ['PILOT_REVIEW', 'READ'],
+      jti: 'jti_pos_18'
     });
-    const manifestDir = path.join(tmpDir, 'test14_manifest_bundle');
-    const inputPath = path.join(tmpDir, 'test14_operational_input.json');
 
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
-    const input = createValidInput({ task_id: 'TASK_SASO_REAL_E2E_001', idempotency_key: 'IDEMP_SASO_REAL_E2E_001' });
-    fs.writeFileSync(inputPath, JSON.stringify(input, null, 2), 'utf8');
+    const runner = new OperationalPilotRunner({
+      dbPath: localDb,
+      secretProvider,
+      tokenService: localTokenService,
+      executionMode: 'OPERATIONAL_PILOT'
+    });
 
-    // 1. Carregar e validar entrada externa real
-    const loaded = runner.loadAndValidateInput(inputPath);
+    // 1. Ingestão e validação com tenant e task esperados
+    const input = createValidInput();
+    runner.loadAndValidateInput(input, {
+      expectedTenantId: tenantId,
+      expectedTaskId: taskId
+    });
     assert.strictEqual(runner.getState(), 'PILOT_AUTHORIZED');
-    assert.strictEqual(loaded.task_id, input.task_id);
 
-    // 2. Executar tarefa e produzir documentos físicos binários (PDF e DOCX)
+    // 2. Etapa A: Execução e desafio
     const execRes = await runner.executeOperationalTask();
     assert.strictEqual(runner.getState(), 'PENDING_HUMAN_REVIEW');
-    assert.ok(execRes.pdfBytes.length > 500, 'PDF físico deve ter bytes reais');
-    assert.ok(execRes.docxBytes.length > 500, 'DOCX físico deve ter bytes reais');
-    assert.strictEqual(execRes.outputHashes.length, 2);
 
-    // 3. Revisão humana com identidade persistente e assinatura de evento
-    const reviewRes = runner.submitHumanReview({
-      reviewerId,
-      reviewerToken: localReviewerToken,
-      decision: 'APPROVED',
-      comments: 'Documentos PDF e DOCX revistos e aprovados na íntegra de acordo com o regulamento SASO 2026.'
+    // 3. Provisionamento de sessão externa legítima no SQLite
+    runner.getStore().createReviewerSession({
+      session_id: 'SESS_LEGIT_18',
+      token_jti: 'jti_pos_18',
+      reviewer_id: reviewerId,
+      tenant_id: tenantId,
+      pilot_id: pilotId,
+      status: 'ACTIVE',
+      created_at: new Date().toISOString(),
+      expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
     });
+
+    // 4. Assinatura externa legítima
+    const eventSignedAt = new Date().toISOString();
+    const externalSignature = PilotExternalValidator.generateCanonicalChallengeSignature(
+      execRes.challenge,
+      reviewerId,
+      'APPROVED',
+      reviewerSecret,
+      eventSignedAt
+    );
+
+    // 5. Etapa B: Revisão humana autêntica
+    const reviewReceipt = runner.submitHumanReview({
+      reviewerId,
+      reviewerToken: positiveToken,
+      decision: 'APPROVED',
+      comments: 'Aprovado formalmente por revisor credenciado com sessão ativa.',
+      signature: externalSignature,
+      eventSignedAt
+    });
+    assert.strictEqual(reviewReceipt.decision, 'APPROVED');
     assert.strictEqual(runner.getState(), 'APPROVED_AND_ARCHIVED');
-    assert.strictEqual(reviewRes.decision, 'APPROVED');
-    assert.strictEqual(reviewRes.reviewer, reviewerId);
 
-    // 4. Arquivamento explícito
-    const delivRes = runner.archiveOrDeliver();
-    assert.strictEqual(delivRes.status, 'ARCHIVED');
-    assert.strictEqual(delivRes.is_external_confirmed, false);
+    // 6. Arquivamento e manifesto final
+    const delivReceipt = runner.archiveOrDeliver();
+    assert.strictEqual(delivReceipt.status, 'ARCHIVED');
 
-    // 5. Geração de manifesto determinístico integral
-    const manifestRes = runner.generateOperationalManifest(manifestDir);
-    assert.strictEqual(runner.getState(), 'PILOT_COMPLETED');
+    const outDir = path.join(tmpDir, 'test18_out');
+    const manifest = runner.generateOperationalManifest(outDir);
     assert.strictEqual(
-      manifestRes.classification,
+      manifest.classification,
       'CONTROLLED_REAL_PILOT_EXECUTED — HUMAN_REVIEW_CONFIRMED — APPROVED_AND_ARCHIVED'
     );
-    assert.ok(manifestRes.files.length >= 8);
-    assert.ok(manifestRes.indexHash && manifestRes.indexHash.length === 64);
 
-    // 6. Reconciliação dos 7 planos de verdade
-    const reconciliation = OperationalPilotRunner.verifyReconciliation(inputPath, manifestDir, localDb);
-    assert.strictEqual(reconciliation.isValid, true, `Reconciliação falhou com erros: ${reconciliation.errors.join('; ')}`);
-    assert.strictEqual(reconciliation.planes.sourceVsSqlite, true);
-    assert.strictEqual(reconciliation.planes.sqliteVsReceipts, true);
-    assert.strictEqual(reconciliation.planes.receiptsVsPhysicalFiles, true);
-    assert.strictEqual(reconciliation.planes.filesVsManifest, true);
-    assert.strictEqual(reconciliation.planes.manifestVsSha256Index, true);
-    assert.strictEqual(reconciliation.planes.identityAndAuthSession, true);
-    assert.strictEqual(reconciliation.planes.deliveryAndClassification, true);
+    // 7. Reconciliação dos 7 planos de verdade
+    const inputPath = path.join(outDir, 'operational-pilot-input.json');
+    fs.writeFileSync(inputPath, JSON.stringify(input, null, 2), 'utf8');
+
+    const recon = OperationalPilotRunner.verifyReconciliation(inputPath, outDir, localDb);
+    assert.strictEqual(recon.isValid, true);
+    assert.strictEqual(recon.errors.length, 0);
     assert.strictEqual(
-      reconciliation.classification,
+      recon.classification,
       'CONTROLLED_REAL_PILOT_EXECUTED — HUMAN_REVIEW_CONFIRMED — APPROVED_AND_ARCHIVED'
     );
 

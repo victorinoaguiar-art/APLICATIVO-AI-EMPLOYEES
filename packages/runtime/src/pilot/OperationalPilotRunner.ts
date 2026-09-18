@@ -56,8 +56,11 @@ export type OperationalPilotState =
 
 export type OperationalPilotClassification =
   | 'OPERATIONAL_PILOT_PREPARATION'
+  | 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED'
+  | 'CONTROLLED_REAL_PILOT_PENDING_HUMAN_REVIEW'
   | 'CONTROLLED_REAL_PILOT_EXECUTED — HUMAN_REVIEW_CONFIRMED — APPROVED_AND_ARCHIVED'
-  | 'CONTROLLED_REAL_PILOT_COMPLETED — EXTERNAL_INPUT_VALIDATED — HUMAN_REVIEW_CONFIRMED — PHYSICAL_DOCUMENTS_VERIFIED — DELIVERY_CONFIRMED';
+  | 'CONTROLLED_REAL_PILOT_COMPLETED — EXTERNAL_INPUT_VALIDATED — HUMAN_REVIEW_CONFIRMED — PHYSICAL_DOCUMENTS_VERIFIED — DELIVERY_CONFIRMED'
+  | 'OPERATIONAL_AUTHENTICITY_HARDENED — DEMO_TRUTHFULLY_CLASSIFIED — REAL_PILOT_BLOCKED_PENDING_EXTERNAL_INPUT_AND_HUMAN_REVIEW';
 
 export interface OperationalReviewerConfig {
   reviewer_id: string;
@@ -102,6 +105,11 @@ export interface OperationalPilotInput {
   delivery_channel: string;
   destination: string;
   formats: Array<'PDF' | 'DOCX'>;
+  is_fixture?: boolean;
+  is_mock?: boolean;
+  classification?: string;
+  generated_by_repo?: boolean;
+  auto_generated?: boolean;
 }
 
 export interface OperationalPilotRunnerOptions {
@@ -180,7 +188,10 @@ export class OperationalPilotRunner {
   // -------------------------------------------------------------
   // 1. Load & Validate External Operational Input
   // -------------------------------------------------------------
-  public loadAndValidateInput(inputOrPath: string | OperationalPilotInput): OperationalPilotInput {
+  public loadAndValidateInput(
+    inputOrPath: string | OperationalPilotInput,
+    options?: { expectedTenantId?: string; expectedTaskId?: string }
+  ): OperationalPilotInput {
     let raw: any;
     if (typeof inputOrPath === 'string') {
       if (!fs.existsSync(inputOrPath)) {
@@ -203,10 +214,25 @@ export class OperationalPilotRunner {
       throw new Error('Entrada operacional ausente ou vazia.');
     }
 
-    // 1. Prohibit fixtures, mocks and placeholder values in operational mode
+    // 0. Validate options reconciliation if provided by caller/workflow
+    if (options?.expectedTenantId) {
+      if (raw.tenant_id !== options.expectedTenantId) {
+        throw new Error(`Reconciliação de tenant falhou: esperado '${options.expectedTenantId}', recebido no pacote '${raw.tenant_id}'.`);
+      }
+    }
+    if (options?.expectedTaskId) {
+      if (raw.task_id !== options.expectedTaskId) {
+        throw new Error(`Reconciliação de task falhou: esperado '${options.expectedTaskId}', recebido no pacote '${raw.task_id}'.`);
+      }
+    }
+
+    // 1. Prohibit fixtures, mocks, demos and placeholder values in operational mode
     if (this.executionMode === 'OPERATIONAL_PILOT') {
-      if (raw.is_mock === true || raw.is_fixture === true || raw.input_data?.is_mock || raw.input_data?.is_fixture) {
-        throw new Error('Modo OPERATIONAL_PILOT rejeita expressamente dados marcados como fixture ou mock.');
+      if (raw.is_mock === true || raw.is_fixture === true || raw.input_data?.is_mock || raw.input_data?.is_fixture || raw.classification === 'AUTOMATED_OPERATIONAL_DEMO') {
+        throw new Error('Modo OPERATIONAL_PILOT rejeita expressamente dados marcados como fixture, demo ou mock.');
+      }
+      if (raw.generated_by_repo === true || raw.auto_generated === true) {
+        throw new Error('Modo OPERATIONAL_PILOT rejeita dados auto-gerados pelo repositório ou pelo mesmo run.');
       }
       const rawText = JSON.stringify(raw);
       const placeholderPatterns = [
@@ -344,25 +370,34 @@ export class OperationalPilotRunner {
     this.pilotProgram = pilotConfig;
 
     // 7. Ensure persistent accounts in TokenService identity store
-    for (const rev of raw.authorized_reviewers) {
-      this.tokenService.upsertAccount({
-        user_id: rev.reviewer_id,
-        tenant_id: raw.tenant_id,
-        roles: ['HUMAN_REVIEWER'],
-        permissions: ['PILOT_REVIEW', 'READ'],
-        status: 'ACTIVE'
-      });
-      if (this.store.getDbPath() !== ':memory:' && this.tokenService.getDatabasePath() !== this.store.getDbPath()) {
-        try {
-          const storeTokenSvc = new TokenService(undefined, this.store.getDbPath());
-          storeTokenSvc.upsertAccount({
-            user_id: rev.reviewer_id,
-            tenant_id: raw.tenant_id,
-            roles: ['HUMAN_REVIEWER'],
-            permissions: ['PILOT_REVIEW', 'READ'],
-            status: 'ACTIVE'
-          });
-        } catch {}
+    if (this.executionMode === 'OPERATIONAL_PILOT') {
+      for (const rev of raw.authorized_reviewers) {
+        const existing = this.tokenService.getAccount(rev.reviewer_id);
+        if (!existing || existing.tenant_id !== raw.tenant_id || existing.status !== 'ACTIVE') {
+          throw new Error(`Conta persistente do revisor '${rev.reviewer_id}' não provisionada ou inactiva no tenant '${raw.tenant_id}'. Auto-criação de contas proibida no modo operacional.`);
+        }
+      }
+    } else {
+      for (const rev of raw.authorized_reviewers) {
+        this.tokenService.upsertAccount({
+          user_id: rev.reviewer_id,
+          tenant_id: raw.tenant_id,
+          roles: ['HUMAN_REVIEWER'],
+          permissions: ['PILOT_REVIEW', 'READ'],
+          status: 'ACTIVE'
+        });
+        if (this.store.getDbPath() !== ':memory:' && this.tokenService.getDatabasePath() !== this.store.getDbPath()) {
+          try {
+            const storeTokenSvc = new TokenService(undefined, this.store.getDbPath());
+            storeTokenSvc.upsertAccount({
+              user_id: rev.reviewer_id,
+              tenant_id: raw.tenant_id,
+              roles: ['HUMAN_REVIEWER'],
+              permissions: ['PILOT_REVIEW', 'READ'],
+              status: 'ACTIVE'
+            });
+          } catch {}
+        }
       }
     }
 
@@ -555,7 +590,7 @@ export class OperationalPilotRunner {
       document_version: 1,
       document_sha256: primaryHash,
       reviewer_id: input.authorized_reviewers[0].reviewer_id,
-      allowed_decision: 'APPROVED',
+      allowed_decision: null,
       issued_at: issuedAt,
       challenge_issued_at: issuedAt,
       expires_at: expiresAt,
@@ -594,6 +629,11 @@ export class OperationalPilotRunner {
       throw new Error('Estado inconsistente: tarefa ou desafio não encontrados para revisão.');
     }
 
+    // 0. Validate explicit decision
+    if (!params.decision || !['APPROVED', 'REJECTED', 'APPROVED_WITH_CORRECTIONS'].includes(params.decision)) {
+      throw new Error(`Decisão de revisão inválida ou ausente: '${params.decision}'. Esperado APPROVED, REJECTED ou APPROVED_WITH_CORRECTIONS.`);
+    }
+
     const reviewReceivedAt = new Date().toISOString();
     const eventSignedAt = params.eventSignedAt || reviewReceivedAt;
 
@@ -629,7 +669,10 @@ export class OperationalPilotRunner {
       this.loadedInput.pilot_id
     );
     if (!session) {
-      // Auto-create active session for verified token in SQLite
+      if (this.executionMode === 'OPERATIONAL_PILOT') {
+        throw new Error(`Sessão autenticada activa não encontrada no SQLite para o token do revisor '${params.reviewerId}'. A auto-criação de sessão é proibida no modo operacional real.`);
+      }
+      // Auto-create active session for verified token in SQLite (DEMO mode only)
       const sessionId = `SESS_${params.reviewerId}_${randomUUID().slice(0, 8)}`;
       this.store.createReviewerSession({
         session_id: sessionId,
@@ -675,6 +718,9 @@ export class OperationalPilotRunner {
     const secretKey = this.secretProvider.resolveSecret(reviewerCfg.secret_ref, this.loadedInput.tenant_id);
     let signature = params.signature;
     if (!signature) {
+      if (this.executionMode === 'OPERATIONAL_PILOT') {
+        throw new Error('Assinatura criptográfica externa é estritamente obrigatória no modo operacional real. Auto-geração proibida.');
+      }
       signature = PilotExternalValidator.generateCanonicalChallengeSignature(
         challenge,
         params.reviewerId,
@@ -924,23 +970,28 @@ export class OperationalPilotRunner {
 
     // Classification
     let classification: OperationalPilotClassification;
-    if (this.deliveryReceipt?.status === 'DELIVERED') {
+    if (this.executionMode === 'DEMO' || this.loadedInput.is_fixture || this.loadedInput.classification === 'AUTOMATED_OPERATIONAL_DEMO') {
+      classification = 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED';
+    } else if (this.state === 'PENDING_HUMAN_REVIEW') {
+      classification = 'CONTROLLED_REAL_PILOT_PENDING_HUMAN_REVIEW';
+    } else if (this.deliveryReceipt?.status === 'DELIVERED') {
       classification = 'CONTROLLED_REAL_PILOT_COMPLETED — EXTERNAL_INPUT_VALIDATED — HUMAN_REVIEW_CONFIRMED — PHYSICAL_DOCUMENTS_VERIFIED — DELIVERY_CONFIRMED';
     } else {
       classification = 'CONTROLLED_REAL_PILOT_EXECUTED — HUMAN_REVIEW_CONFIRMED — APPROVED_AND_ARCHIVED';
     }
 
     // Final Attestation
+    const isDemo = this.executionMode === 'DEMO' || this.loadedInput.is_fixture || this.loadedInput.classification === 'AUTOMATED_OPERATIONAL_DEMO';
     const attestation: PilotFinalAttestation = {
       pilot_id: this.loadedInput.pilot_id,
       tenant_id: this.loadedInput.tenant_id,
       organization_name: this.loadedInput.organization_name,
       execution_mode: this.executionMode,
       infrastructure_implemented: true,
-      simulation_executed: false,
-      operational_pilot_started: true,
-      operational_pilot_completed: true,
-      classification_status: 'CONTROLLED_OPERATIONAL_PILOT_VALIDATED',
+      simulation_executed: isDemo,
+      operational_pilot_started: !isDemo,
+      operational_pilot_completed: !isDemo && (this.state === 'PILOT_COMPLETED' || this.state === 'APPROVED_AND_ARCHIVED'),
+      classification_status: isDemo ? 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED' : 'CONTROLLED_OPERATIONAL_PILOT_VALIDATED',
       classification,
       operational_state: classification,
       metrics,
@@ -1248,7 +1299,13 @@ export class OperationalPilotRunner {
 
     // 7. Plane 7: Delivery vs Archive Classification
     const deliveries = store.listDeliveries(source.pilot_id);
-    let finalClassification: OperationalPilotClassification = 'CONTROLLED_REAL_PILOT_EXECUTED — HUMAN_REVIEW_CONFIRMED — APPROVED_AND_ARCHIVED';
+    let finalClassification: OperationalPilotClassification;
+    if (source.is_fixture === true || source.classification === 'AUTOMATED_OPERATIONAL_DEMO') {
+      finalClassification = 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED';
+    } else {
+      finalClassification = 'CONTROLLED_REAL_PILOT_EXECUTED — HUMAN_REVIEW_CONFIRMED — APPROVED_AND_ARCHIVED';
+    }
+
     if (deliveries.length === 0) {
       errors.push('Plano 7 Falhou: Nenhum registo de entrega/arquivamento no SQLite.');
     } else {
@@ -1257,9 +1314,13 @@ export class OperationalPilotRunner {
         if (!deliv.is_external_confirmed || !deliv.external_provider_response) {
           errors.push("Plano 7 Falhou: Tarefa classificada como 'DELIVERED' sem confirmação externa do canal físico.");
         }
-        finalClassification = 'CONTROLLED_REAL_PILOT_COMPLETED — EXTERNAL_INPUT_VALIDATED — HUMAN_REVIEW_CONFIRMED — PHYSICAL_DOCUMENTS_VERIFIED — DELIVERY_CONFIRMED';
+        if (source.is_fixture !== true && source.classification !== 'AUTOMATED_OPERATIONAL_DEMO') {
+          finalClassification = 'CONTROLLED_REAL_PILOT_COMPLETED — EXTERNAL_INPUT_VALIDATED — HUMAN_REVIEW_CONFIRMED — PHYSICAL_DOCUMENTS_VERIFIED — DELIVERY_CONFIRMED';
+        }
       } else if (deliv.status === 'ARCHIVED') {
-        finalClassification = 'CONTROLLED_REAL_PILOT_EXECUTED — HUMAN_REVIEW_CONFIRMED — APPROVED_AND_ARCHIVED';
+        if (source.is_fixture !== true && source.classification !== 'AUTOMATED_OPERATIONAL_DEMO') {
+          finalClassification = 'CONTROLLED_REAL_PILOT_EXECUTED — HUMAN_REVIEW_CONFIRMED — APPROVED_AND_ARCHIVED';
+        }
       } else {
         errors.push(`Plano 7 Falhou: Estado de entrega '${deliv.status}' não reconhecido.`);
       }

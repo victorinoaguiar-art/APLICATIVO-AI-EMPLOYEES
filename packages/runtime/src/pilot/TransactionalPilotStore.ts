@@ -441,6 +441,15 @@ export class TransactionalPilotStore {
         pilot_id, tenant_id, organization_name, authorization_reference,
         execution_mode, status, task_limit, config_json, created_at, updated_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(pilot_id) DO UPDATE SET
+        tenant_id = excluded.tenant_id,
+        organization_name = excluded.organization_name,
+        authorization_reference = excluded.authorization_reference,
+        execution_mode = excluded.execution_mode,
+        status = excluded.status,
+        task_limit = excluded.task_limit,
+        config_json = excluded.config_json,
+        updated_at = excluded.updated_at
     `);
     stmt.run(
       pilot.pilot_id,

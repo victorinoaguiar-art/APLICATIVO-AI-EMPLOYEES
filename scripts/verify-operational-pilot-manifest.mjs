@@ -17,9 +17,9 @@ function getArg(name, fallback = '') {
   return found ? found.slice(prefix.length) : fallback;
 }
 
-const dirArg = getArg('dir', path.resolve(process.cwd(), '.artifacts', 'pilot-real', 'evidence'));
+const dirArg = getArg('dir', path.resolve(process.cwd(), '.artifacts', 'pilot', 'evidence'));
 const inputArg = getArg('input', path.join(dirArg, 'operational-pilot-input.json'));
-const dbArg = getArg('db', path.resolve(process.cwd(), '.artifacts', 'pilot-real', 'pilot_real.db'));
+const dbArg = getArg('db', path.resolve(process.cwd(), '.artifacts', 'pilot', 'pilot.db'));
 
 console.log('================================================================');
 console.log('VERIFICAÇÃO BIDIRECIONAL DO MANIFESTO DO PILOTO OPERACIONAL REAL');

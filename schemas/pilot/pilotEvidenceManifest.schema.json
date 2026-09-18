@@ -31,7 +31,8 @@
       "type": "string",
       "enum": [
         "SIMULATION",
-        "OPERATIONAL_PILOT"
+        "OPERATIONAL_PILOT",
+        "DEMO"
       ]
     },
     "commit_sha": {

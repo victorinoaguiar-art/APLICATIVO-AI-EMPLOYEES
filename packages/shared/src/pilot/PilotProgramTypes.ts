@@ -1,4 +1,4 @@
-export type OperationalPilotMode = 'SIMULATION' | 'OPERATIONAL_PILOT';
+export type OperationalPilotMode = 'SIMULATION' | 'OPERATIONAL_PILOT' | 'DEMO';
 
 export type ControlledPilotStatus =
   | 'DRAFT'
@@ -310,6 +310,7 @@ export interface PilotFinalAttestation {
     | 'CONTROLLED_PILOT_SIMULATOR_IMPLEMENTED'
     | 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY'
     | 'CONTROLLED_OPERATIONAL_PILOT_VALIDATED'
+    | 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED'
     | 'NOT_PROVEN';
   classification?: string;
   operational_state: string;
