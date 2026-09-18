@@ -42,6 +42,21 @@ export const ALL_NINE_RECEIPT_FILES = [
   ...REQUIRED_ARTIFACT_FILES
 ];
 
+export const EXPECTED_CLOSURE_PACKAGE_FILES = [
+  'closure-verification-result.json',
+  'final-resolved-report.md',
+  'requirement-test-evidence-sha-matrix.json',
+  'workflow-artifacts-ci-readiness.json',
+  'workflow-artifacts-evidence-remote.json',
+  'workflow-artifacts-final-forensic.json',
+  'workflow-jobs-ci-readiness.json',
+  'workflow-jobs-evidence-remote.json',
+  'workflow-jobs-final-forensic.json',
+  'workflow-run-ci-readiness.json',
+  'workflow-run-evidence-remote.json',
+  'workflow-run-final-forensic.json'
+];
+
 export const REQUIRED_REPOSITORY = 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES';
 
 export const EXPECTED_WORKFLOW_SPEC: Record<string, { exactName: string; expectedPath: string }> = {
@@ -145,6 +160,7 @@ export interface VerifyWorkflowReceiptsOptions {
   expectedSha?: string;
   reportPath?: string;
   requireNineFiles?: boolean;
+  isClosurePackage?: boolean;
 }
 
 export interface VerifyWorkflowReceiptsResult {
@@ -319,10 +335,46 @@ export function validateSingleJobsReceipt(
     }
 
     // Steps
-    if (Array.isArray(job.steps)) {
-      for (const step of job.steps) {
-        if (step.conclusion === 'failure') {
-          throw new Error(`Passo '${step.name}' no job '${job.name}' falhou em '${filename}'.`);
+    if (!Array.isArray(job.steps) || job.steps.length === 0) {
+      throw new Error(`Job '${job.name}' (ID: ${job.id}) em '${filename}' não possui array 'steps' ou steps está vazio.`);
+    }
+
+    const stepNumbers = new Set<number>();
+    for (const step of job.steps) {
+      if (!step || typeof step !== 'object') {
+        throw new Error(`Passo inválido em job '${job.name}' de '${filename}': não é um objeto JSON.`);
+      }
+
+      if (typeof step.number !== 'number' || !Number.isInteger(step.number) || step.number <= 0) {
+        throw new Error(`Passo '${step.name || 'desconhecido'}' no job '${job.name}' de '${filename}' possui 'number' inválido: ${JSON.stringify(step.number)}.`);
+      }
+      if (stepNumbers.has(step.number)) {
+        throw new Error(`Passo com número duplicado ${step.number} detectado no job '${job.name}' de '${filename}'.`);
+      }
+      stepNumbers.add(step.number);
+
+      if (!step.name || typeof step.name !== 'string' || step.name.trim() === '') {
+        throw new Error(`Passo número ${step.number} no job '${job.name}' de '${filename}' possui nome ausente ou vazio.`);
+      }
+
+      if (step.status !== 'completed') {
+        throw new Error(`Passo '${step.name}' no job '${job.name}' em '${filename}' possui status '${step.status}', esperado estritamente 'completed'.`);
+      }
+
+      // Whitelist estrita: apenas 'success' é aceito. Rejeitar failure, cancelled, timed_out, action_required, stale, startup_failure, null, etc.
+      if (step.conclusion !== 'success') {
+        throw new Error(`Passo '${step.name}' no job '${job.name}' em '${filename}' possui conclusão inválida ou não-sucedida: '${step.conclusion}', esperado estritamente 'success'.`);
+      }
+
+      // Timestamps do step se presentes
+      if (step.started_at && step.completed_at) {
+        const stepStarted = Date.parse(step.started_at);
+        const stepCompleted = Date.parse(step.completed_at);
+        if (isNaN(stepStarted) || isNaN(stepCompleted)) {
+          throw new Error(`Passo '${step.name}' no job '${job.name}' em '${filename}' possui timestamps inválidos.`);
+        }
+        if (stepCompleted < stepStarted) {
+          throw new Error(`Passo '${step.name}' no job '${job.name}' em '${filename}' possui completed_at anterior a started_at.`);
         }
       }
     }
@@ -384,16 +436,59 @@ export function validateSingleArtifactsReceipt(
       throw new Error(`Artefacto '${art.name}' (ID: ${art.id}) em '${filename}' possui tamanho inválido: ${art.size_in_bytes}.`);
     }
 
-    if (art.workflow_run) {
-      if (art.workflow_run.id !== undefined && art.workflow_run.id !== expectedRunId) {
-        throw new Error(`Artefacto '${art.name}' em '${filename}' associado a run_id '${art.workflow_run.id}', esperado '${expectedRunId}'.`);
+    // Timestamps ISO válidos e ordenados
+    for (const tsField of ['created_at', 'updated_at']) {
+      const val = art[tsField];
+      if (!val || typeof val !== 'string' || isNaN(Date.parse(val))) {
+        throw new Error(`Artefacto '${art.name}' em '${filename}' possui '${tsField}' ausente ou timestamp ISO inválido: ${JSON.stringify(val)}.`);
       }
-      if (art.workflow_run.head_sha && art.workflow_run.head_sha.toLowerCase() !== expectedSha.toLowerCase()) {
-        throw new Error(`Artefacto '${art.name}' em '${filename}' associado a SHA '${art.workflow_run.head_sha}', esperado '${expectedSha}'.`);
-      }
-      if (art.workflow_run.head_branch && art.workflow_run.head_branch !== 'master') {
-        throw new Error(`Artefacto '${art.name}' em '${filename}' associado a branch '${art.workflow_run.head_branch}', esperado 'master'.`);
-      }
+    }
+    if (Date.parse(art.updated_at) < Date.parse(art.created_at)) {
+      throw new Error(`Artefacto '${art.name}' em '${filename}' possui updated_at anterior a created_at.`);
+    }
+
+    // Validação de URL
+    if (typeof art.url !== 'string' || !art.url.includes(`repos/${REQUIRED_REPOSITORY}/actions/artifacts`)) {
+      throw new Error(`Artefacto '${art.name}' em '${filename}' possui 'url' inválida ou não associada ao repositório '${REQUIRED_REPOSITORY}'.`);
+    }
+
+    // workflow_run ESTRITAMENTE OBRIGATÓRIO (sem condições nem fallbacks)
+    if (!art.workflow_run || typeof art.workflow_run !== 'object') {
+      throw new Error(`Artefacto '${art.name}' (ID: ${art.id}) em '${filename}' não possui o objecto obrigatório 'workflow_run'.`);
+    }
+
+    const wfRun = art.workflow_run;
+
+    // workflow_run.id
+    if (typeof wfRun.id !== 'number' || !Number.isInteger(wfRun.id) || wfRun.id <= 0) {
+      throw new Error(`Artefacto '${art.name}' em '${filename}' possui 'workflow_run.id' inválido: ${JSON.stringify(wfRun.id)}.`);
+    }
+    if (wfRun.id !== expectedRunId) {
+      throw new Error(`Artefacto '${art.name}' em '${filename}' associado a run_id '${wfRun.id}', esperado '${expectedRunId}'.`);
+    }
+
+    // workflow_run.head_sha
+    if (!wfRun.head_sha || typeof wfRun.head_sha !== 'string' || !/^[0-9a-f]{40}$/i.test(wfRun.head_sha)) {
+      throw new Error(`Artefacto '${art.name}' em '${filename}' possui 'workflow_run.head_sha' ausente ou inválido: ${JSON.stringify(wfRun.head_sha)}.`);
+    }
+    if (wfRun.head_sha.toLowerCase() !== expectedSha.toLowerCase()) {
+      throw new Error(`Artefacto '${art.name}' em '${filename}' associado a SHA '${wfRun.head_sha}', esperado '${expectedSha}'.`);
+    }
+
+    // workflow_run.head_branch
+    if (!wfRun.head_branch || wfRun.head_branch !== 'master') {
+      throw new Error(`Artefacto '${art.name}' em '${filename}' associado a branch '${wfRun.head_branch}', esperado estritamente 'master'.`);
+    }
+
+    // repository_id e head_repository_id
+    if (typeof wfRun.repository_id !== 'number' || !Number.isInteger(wfRun.repository_id) || wfRun.repository_id <= 0) {
+      throw new Error(`Artefacto '${art.name}' em '${filename}' possui 'workflow_run.repository_id' inválido: ${JSON.stringify(wfRun.repository_id)}.`);
+    }
+    if (typeof wfRun.head_repository_id !== 'number' || !Number.isInteger(wfRun.head_repository_id) || wfRun.head_repository_id <= 0) {
+      throw new Error(`Artefacto '${art.name}' em '${filename}' possui 'workflow_run.head_repository_id' inválido: ${JSON.stringify(wfRun.head_repository_id)}.`);
+    }
+    if (wfRun.repository_id !== wfRun.head_repository_id) {
+      throw new Error(`Artefacto '${art.name}' em '${filename}' possui divergência entre repository_id (${wfRun.repository_id}) e head_repository_id (${wfRun.head_repository_id}).`);
     }
 
     // Verificar se corresponde ao padrão obrigatório
@@ -412,8 +507,128 @@ export function validateSingleArtifactsReceipt(
   return artifacts;
 }
 
+export function validateFilesSha256Manifest(
+  receiptsDir: string,
+  manifestPath: string,
+  isClosurePackage: boolean = false
+): { verifiedFilesCount: number; manifestFiles: string[] } {
+  if (!fs.existsSync(manifestPath)) {
+    throw new Error(`Manifesto 'files.sha256' não existe em '${manifestPath}'.`);
+  }
+
+  const manifestContent = fs.readFileSync(manifestPath, 'utf8');
+  const lines = manifestContent.trim().split('\n');
+  if (lines.length === 0 || (lines.length === 1 && lines[0].trim() === '')) {
+    throw new Error(`Manifesto 'files.sha256' está vazio.`);
+  }
+
+  const manifestMap = new Map<string, string>();
+
+  for (let i = 0; i < lines.length; i++) {
+    const rawLine = lines[i].trim();
+    if (!rawLine) continue;
+
+    const parts = rawLine.split(/\s+/);
+    if (parts.length < 2) {
+      throw new Error(`Linha ${i + 1} de 'files.sha256' malformada: '${rawLine}'.`);
+    }
+    const expectedHash = parts[0];
+    const targetFilename = parts.slice(1).join(' ');
+
+    if (!/^[0-9a-f]{64}$/i.test(expectedHash)) {
+      throw new Error(`Linha ${i + 1} de 'files.sha256': hash SHA-256 inválido '${expectedHash}'.`);
+    }
+
+    if (targetFilename === 'files.sha256') {
+      throw new Error(`Manifesto 'files.sha256' não pode conter auto-referência a si próprio na linha ${i + 1}.`);
+    }
+
+    // Rejeitar caminhos absolutos
+    if (
+      path.isAbsolute(targetFilename) ||
+      /^[a-zA-Z]:[\\/]/.test(targetFilename) ||
+      targetFilename.startsWith('/') ||
+      targetFilename.startsWith('\\')
+    ) {
+      throw new Error(`Linha ${i + 1} de 'files.sha256': caminho absoluto não permitido: '${targetFilename}'.`);
+    }
+
+    // Rejeitar travessias de directório
+    if (targetFilename.includes('..') || targetFilename.split(/[\\/]/).includes('..')) {
+      throw new Error(`Linha ${i + 1} de 'files.sha256': travessia de directório '..' não permitida: '${targetFilename}'.`);
+    }
+
+    // Rejeitar subdirectórios no pacote de fecho
+    if (targetFilename.includes('/') || targetFilename.includes('\\')) {
+      throw new Error(`Linha ${i + 1} de 'files.sha256': subdirectórios não permitidos no pacote: '${targetFilename}'.`);
+    }
+
+    // Rejeitar duplicatas
+    if (manifestMap.has(targetFilename)) {
+      throw new Error(`Entrada duplicada para '${targetFilename}' detectada em 'files.sha256'.`);
+    }
+
+    manifestMap.set(targetFilename, expectedHash.toLowerCase());
+  }
+
+  // Descoberta física de ficheiros no directório
+  const dirEntries = fs.readdirSync(receiptsDir, { withFileTypes: true });
+  const physicalFiles = new Set<string>();
+
+  for (const entry of dirEntries) {
+    if (entry.isSymbolicLink()) {
+      throw new Error(`Symlink não permitido detectado no directório de recibos: '${entry.name}'.`);
+    }
+    if (entry.isDirectory()) {
+      continue;
+    }
+    if (entry.isFile()) {
+      if (entry.name === 'files.sha256') {
+        continue; // Excluído explicitamente por regra canónica de não auto-referência
+      }
+      physicalFiles.add(entry.name);
+      // Bidirecionalidade parte 1: Ficheiro físico deve estar no manifesto
+      if (!manifestMap.has(entry.name)) {
+        throw new Error(`Ficheiro físico adicional '${entry.name}' no directório não está indexado no manifesto 'files.sha256'.`);
+      }
+    }
+  }
+
+  // Bidirecionalidade parte 2: Cada entrada do manifesto deve corresponder a um ficheiro físico regular
+  for (const [manifestFilename, expectedHash] of manifestMap.entries()) {
+    if (!physicalFiles.has(manifestFilename)) {
+      throw new Error(`Manifesto 'files.sha256' referencia ficheiro inexistente no directório: '${manifestFilename}'.`);
+    }
+
+    const filePath = path.join(receiptsDir, manifestFilename);
+    const stat = fs.statSync(filePath);
+    if (!stat.isFile()) {
+      throw new Error(`Entrada '${manifestFilename}' em 'files.sha256' não é um ficheiro regular.`);
+    }
+
+    const actualHash = sha256(fs.readFileSync(filePath));
+    if (actualHash !== expectedHash) {
+      throw new Error(`Divergência de hash SHA-256 no manifesto para '${manifestFilename}': esperado '${expectedHash}', obtido '${actualHash}'.`);
+    }
+  }
+
+  // Se for pacote de fecho, validar cobertura dos 12 ficheiros obrigatórios
+  if (isClosurePackage) {
+    for (const reqFile of EXPECTED_CLOSURE_PACKAGE_FILES) {
+      if (!manifestMap.has(reqFile)) {
+        throw new Error(`Ficheiro obrigatório do pacote de fecho '${reqFile}' ausente do manifesto 'files.sha256'.`);
+      }
+    }
+  }
+
+  return {
+    verifiedFilesCount: manifestMap.size,
+    manifestFiles: Array.from(manifestMap.keys())
+  };
+}
+
 export function verifyWorkflowReceipts(options: VerifyWorkflowReceiptsOptions): VerifyWorkflowReceiptsResult {
-  const { receiptsDir, expectedSha, reportPath, requireNineFiles } = options;
+  const { receiptsDir, expectedSha, reportPath, requireNineFiles = true } = options;
 
   if (!receiptsDir) {
     throw new Error('Directório de recibos (--receipts-dir) obrigatório.');
@@ -480,7 +695,7 @@ export function verifyWorkflowReceipts(options: VerifyWorkflowReceiptsOptions): 
     throw new Error(`Recibos duplicados detectados: os 3 ficheiros devem corresponder aos 3 workflows distintos.`);
   }
 
-  // 2. Validar ficheiros de jobs e artefactos (quando presentes ou quando requireNineFiles === true)
+  // 2. Validar ficheiros de jobs e artefactos (obrigatórios por defeito se requireNineFiles !== false)
   let jobsCount = 0;
   let artifactsCount = 0;
 
@@ -523,24 +738,13 @@ export function verifyWorkflowReceipts(options: VerifyWorkflowReceiptsOptions): 
     }
   }
 
-  // 3. Validação do manifesto files.sha256 se presente
+  // 3. Validação do manifesto files.sha256 (bidirecional)
+  const isClosure = options.isClosurePackage ?? (typeof reportPath === 'string' && path.basename(reportPath) === 'final-resolved-report.md');
   const shaManifestPath = path.join(receiptsDir, 'files.sha256');
   if (fs.existsSync(shaManifestPath)) {
-    const manifestContent = fs.readFileSync(shaManifestPath, 'utf8');
-    const lines = manifestContent.trim().split('\n');
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (!trimmed) continue;
-      const [expectedHash, targetFilename] = trimmed.split(/\s+/);
-      const targetFilePath = path.join(receiptsDir, targetFilename);
-      if (!fs.existsSync(targetFilePath)) {
-        throw new Error(`Manifesto 'files.sha256' referencia ficheiro inexistente: '${targetFilename}'.`);
-      }
-      const actualHash = sha256(fs.readFileSync(targetFilePath));
-      if (actualHash !== expectedHash) {
-        throw new Error(`Divergência de hash SHA-256 no manifesto para '${targetFilename}': esperado '${expectedHash}', obtido '${actualHash}'.`);
-      }
-    }
+    validateFilesSha256Manifest(receiptsDir, shaManifestPath, isClosure);
+  } else if (requireNineFiles && reportPath) {
+    throw new Error(`Manifesto obrigatório 'files.sha256' ausente em '${receiptsDir}'.`);
   }
 
   // 4. Validação do relatório se fornecido

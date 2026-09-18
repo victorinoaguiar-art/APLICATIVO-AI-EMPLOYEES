@@ -69,8 +69,8 @@ function createValidJobsForFile(filename: string, runId: number, overrides: Reco
     started_at: '2026-09-18T00:00:01Z',
     completed_at: '2026-09-18T00:03:00Z',
     steps: [
-      { name: 'Setup', status: 'completed', conclusion: 'success' },
-      { name: 'Action', status: 'completed', conclusion: 'success' }
+      { number: 1, name: 'Setup', status: 'completed', conclusion: 'success', started_at: '2026-09-18T00:00:01Z', completed_at: '2026-09-18T00:01:00Z' },
+      { number: 2, name: 'Action', status: 'completed', conclusion: 'success', started_at: '2026-09-18T00:01:00Z', completed_at: '2026-09-18T00:03:00Z' }
     ]
   }));
 
@@ -91,13 +91,17 @@ function createValidArtifactsForFile(filename: string, runId: number, sha: strin
       name: `${prefix}${sha}`,
       size_in_bytes: 4096,
       expired: false,
+      url: `https://api.github.com/repos/${REQUIRED_REPOSITORY}/actions/artifacts/70000`,
+      archive_download_url: `https://api.github.com/repos/${REQUIRED_REPOSITORY}/actions/artifacts/70000/zip`,
+      created_at: '2026-09-18T00:04:00Z',
+      updated_at: '2026-09-18T00:04:05Z',
       workflow_run: {
         id: runId,
         head_sha: sha,
-        head_branch: 'master'
-      },
-      created_at: '2026-09-18T00:04:00Z',
-      updated_at: '2026-09-18T00:04:05Z'
+        head_branch: 'master',
+        repository_id: 1363667011,
+        head_repository_id: 1363667011
+      }
     }
   ];
 
@@ -111,7 +115,7 @@ function createValidArtifactsForFile(filename: string, runId: number, sha: strin
 function setupTempReceiptsDir(
   sha: string = VALID_TEST_SHA,
   overridesPerFile: Record<string, Record<string, any>> = {},
-  includeAllNine: boolean = false
+  includeAllNine: boolean = true
 ): string {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ci-receipts-test-'));
   const runIds: Record<string, number> = {
@@ -154,6 +158,11 @@ function setupTempReceiptsDir(
       path.join(tmpDir, 'workflow-artifacts-final-forensic.json'),
       JSON.stringify(createValidArtifactsForFile('workflow-artifacts-final-forensic.json', runIds['workflow-run-final-forensic.json'], sha, overridesPerFile['workflow-artifacts-final-forensic.json'] || {}), null, 2)
     );
+
+    // Gerar files.sha256 cobrindo os 9 ficheiros
+    const allFiles = fs.readdirSync(tmpDir).filter(f => f !== 'files.sha256').sort();
+    const shaLines = allFiles.map(f => `${sha256(fs.readFileSync(path.join(tmpDir, f)))}  ${f}`);
+    fs.writeFileSync(path.join(tmpDir, 'files.sha256'), shaLines.join('\n') + '\n', 'utf8');
   }
 
   return tmpDir;
@@ -166,6 +175,7 @@ describe('Verificador Read-Only Expandido: Runs, Jobs, Artefactos e Rigor Forens
     const reportPath = path.join(tmpDir, 'report.md');
     try {
       fs.writeFileSync(reportPath, '# Relatório\nSem o campo esperado.\n');
+      fs.appendFileSync(path.join(tmpDir, 'files.sha256'), `${sha256(fs.readFileSync(reportPath))}  report.md\n`);
       assert.throws(() => {
         verifyWorkflowReceipts({ receiptsDir: tmpDir, reportPath });
       }, /não contém um 'final_audited_sha' válido de 40 caracteres/i);
@@ -180,11 +190,18 @@ describe('Verificador Read-Only Expandido: Runs, Jobs, Artefactos e Rigor Forens
     const reportPath = path.join(tmpDir, 'report.md');
     try {
       fs.writeFileSync(reportPath, '# Relatório\nfinal_audited_sha: A ser gerado no commit unificado\n');
+      fs.appendFileSync(path.join(tmpDir, 'files.sha256'), `${sha256(fs.readFileSync(reportPath))}  report.md\n`);
       assert.throws(() => {
         verifyWorkflowReceipts({ receiptsDir: tmpDir, reportPath });
       }, /contém placeholder não resolvido para o SHA/i);
 
       fs.writeFileSync(reportPath, '# Relatório\nfinal_audited_sha: PENDING\n');
+      // Atualizar o hash de report.md no manifesto
+      const lines = fs.readFileSync(path.join(tmpDir, 'files.sha256'), 'utf8').trim().split('\n');
+      const filtered = lines.filter(l => !l.endsWith('  report.md'));
+      filtered.push(`${sha256(fs.readFileSync(reportPath))}  report.md`);
+      fs.writeFileSync(path.join(tmpDir, 'files.sha256'), filtered.join('\n') + '\n', 'utf8');
+
       assert.throws(() => {
         verifyWorkflowReceipts({ receiptsDir: tmpDir, reportPath });
       }, /contém placeholder não resolvido para o SHA/i);
@@ -200,6 +217,7 @@ describe('Verificador Read-Only Expandido: Runs, Jobs, Artefactos e Rigor Forens
     try {
       const divergentSha = '9999999999999999999999999999999999999999';
       fs.writeFileSync(reportPath, `# Relatório\nfinal_audited_sha: ${divergentSha}\n`);
+      fs.appendFileSync(path.join(tmpDir, 'files.sha256'), `${sha256(fs.readFileSync(reportPath))}  report.md\n`);
       assert.throws(() => {
         verifyWorkflowReceipts({ receiptsDir: tmpDir, reportPath });
       }, /Divergência entre o SHA do relatório/i);
@@ -218,7 +236,7 @@ describe('Verificador Read-Only Expandido: Runs, Jobs, Artefactos e Rigor Forens
       fs.writeFileSync(path.join(tmpDir, 'workflow-run-final-forensic.json'), JSON.stringify(createValidReceiptForFile('workflow-run-final-forensic.json')));
 
       assert.throws(() => {
-        verifyWorkflowReceipts({ receiptsDir: tmpDir });
+        verifyWorkflowReceipts({ receiptsDir: tmpDir, requireNineFiles: false });
       }, /possui 'name' inválido: esperado estritamente 'CI \/ Production Readiness & Audit Gate'/i);
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
@@ -244,7 +262,7 @@ describe('Verificador Read-Only Expandido: Runs, Jobs, Artefactos e Rigor Forens
       fs.writeFileSync(path.join(tmpDir, 'workflow-run-final-forensic.json'), JSON.stringify(createValidReceiptForFile('workflow-run-final-forensic.json', { id: 778 })));
 
       assert.throws(() => {
-        verifyWorkflowReceipts({ receiptsDir: tmpDir });
+        verifyWorkflowReceipts({ receiptsDir: tmpDir, requireNineFiles: false });
       }, /Recibos duplicados detectados: os 3 ficheiros devem corresponder a execuções com IDs distintos/i);
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
@@ -350,6 +368,7 @@ describe('Verificador Read-Only Expandido: Runs, Jobs, Artefactos e Rigor Forens
         reportPath,
         `# Relatório\nfinal_audited_sha: ${VALID_TEST_SHA}\nFOUR_WORKFLOWS_CONFIRMED_ON_SAME_SHA\n`
       );
+      fs.appendFileSync(path.join(tmpDir, 'files.sha256'), `${sha256(fs.readFileSync(reportPath))}  report.md\n`);
       assert.throws(() => {
         verifyWorkflowReceipts({ receiptsDir: tmpDir, reportPath });
       }, /declaração prematura de conclusão do 4º workflow/i);
@@ -479,48 +498,219 @@ describe('Verificador Read-Only Expandido: Runs, Jobs, Artefactos e Rigor Forens
     artData2.artifacts[0].workflow_run.head_branch = 'feature/test';
     assert.throws(() => {
       validateSingleArtifactsReceipt(artData2, 'workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
-    }, /associado a branch 'feature\/test', esperado 'master'/i);
+    }, /associado a branch 'feature\/test', esperado estritamente 'master'/i);
   });
 
   // Teste 27: Validação semântica de artefactos: artefacto obrigatório ausente
   it('27. artefactos: rejeita resposta que não contém o artefacto obrigatório do workflow', () => {
     const artData = createValidArtifactsForFile('workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
-    artData.artifacts[0].name = 'outr-nome-desconhecido';
+    artData.artifacts[0].name = 'outro-nome-desconhecido';
     assert.throws(() => {
       validateSingleArtifactsReceipt(artData, 'workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
     }, /Artefacto obrigatório com prefixo 'aetf-evidence-bundle-' e SHA '.*' ausente/i);
   });
 
-  // Teste 28: Manifesto files.sha256 com divergência de hash físico
-  it('28. manifesto files.sha256: rejeita ficheiro com hash físico divergente', () => {
+  // Teste 28: Validação semântica de artefactos: workflow_run ausente ou não-objeto
+  it('28. artefactos: rejeita artefacto com workflow_run ausente, nulo ou não-objeto', () => {
+    const artData1 = createValidArtifactsForFile('workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    delete artData1.artifacts[0].workflow_run;
+    assert.throws(() => {
+      validateSingleArtifactsReceipt(artData1, 'workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    }, /não possui o objecto obrigatório 'workflow_run'/i);
+
+    const artData2 = createValidArtifactsForFile('workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    artData2.artifacts[0].workflow_run = null;
+    assert.throws(() => {
+      validateSingleArtifactsReceipt(artData2, 'workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    }, /não possui o objecto obrigatório 'workflow_run'/i);
+  });
+
+  // Teste 29: Validação semântica de artefactos: repository_id e head_repository_id inválidos ou divergentes
+  it('29. artefactos: rejeita repository_id ou head_repository_id inválidos ou divergentes', () => {
+    const artData1 = createValidArtifactsForFile('workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    artData1.artifacts[0].workflow_run.repository_id = -1;
+    assert.throws(() => {
+      validateSingleArtifactsReceipt(artData1, 'workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    }, /possui 'workflow_run\.repository_id' inválido/i);
+
+    const artData2 = createValidArtifactsForFile('workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    artData2.artifacts[0].workflow_run.head_repository_id = 999999;
+    assert.throws(() => {
+      validateSingleArtifactsReceipt(artData2, 'workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    }, /divergência entre repository_id/i);
+  });
+
+  // Teste 30: Validação semântica de artefactos: updated_at anterior a created_at
+  it('30. artefactos: rejeita updated_at anterior a created_at', () => {
+    const artData = createValidArtifactsForFile('workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    artData.artifacts[0].created_at = '2026-09-18T00:10:00Z';
+    artData.artifacts[0].updated_at = '2026-09-18T00:05:00Z';
+    assert.throws(() => {
+      validateSingleArtifactsReceipt(artData, 'workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    }, /possui updated_at anterior a created_at/i);
+  });
+
+  // Teste 31: Validação semântica de jobs: step com conclusão inválida ou não-sucedida
+  it('31. jobs: rejeita step com conclusion failure, cancelled, timed_out, action_required, stale ou null', () => {
+    for (const badConclusion of ['failure', 'cancelled', 'timed_out', 'action_required', 'stale', null, 'unknown']) {
+      const jobsData = createValidJobsForFile('workflow-jobs-ci-readiness.json', 10001);
+      jobsData.jobs[0].steps[0].conclusion = badConclusion;
+      assert.throws(() => {
+        validateSingleJobsReceipt(jobsData, 'workflow-jobs-ci-readiness.json', 10001);
+      }, /possui conclusão inválida ou não-sucedida.*esperado estritamente 'success'/i);
+    }
+  });
+
+  // Teste 32: Validação semântica de jobs: step com status in_progress ou diferente de completed
+  it('32. jobs: rejeita step com status in_progress, queued ou diferente de completed', () => {
+    for (const badStatus of ['in_progress', 'queued', 'pending', '']) {
+      const jobsData = createValidJobsForFile('workflow-jobs-ci-readiness.json', 10001);
+      jobsData.jobs[0].steps[0].status = badStatus;
+      assert.throws(() => {
+        validateSingleJobsReceipt(jobsData, 'workflow-jobs-ci-readiness.json', 10001);
+      }, /possui status '.*', esperado estritamente 'completed'/i);
+    }
+  });
+
+  // Teste 33: Validação semântica de jobs: job sem array steps ou com steps vazio
+  it('33. jobs: rejeita job sem array steps ou com steps vazio', () => {
+    const jobsData1 = createValidJobsForFile('workflow-jobs-ci-readiness.json', 10001);
+    delete jobsData1.jobs[0].steps;
+    assert.throws(() => {
+      validateSingleJobsReceipt(jobsData1, 'workflow-jobs-ci-readiness.json', 10001);
+    }, /não possui array 'steps' ou steps está vazio/i);
+
+    const jobsData2 = createValidJobsForFile('workflow-jobs-ci-readiness.json', 10001);
+    jobsData2.jobs[0].steps = [];
+    assert.throws(() => {
+      validateSingleJobsReceipt(jobsData2, 'workflow-jobs-ci-readiness.json', 10001);
+    }, /não possui array 'steps' ou steps está vazio/i);
+  });
+
+  // Teste 34: Validação semântica de jobs: step com number duplicado
+  it('34. jobs: rejeita steps com número duplicado', () => {
+    const jobsData = createValidJobsForFile('workflow-jobs-ci-readiness.json', 10001);
+    jobsData.jobs[0].steps[1].number = jobsData.jobs[0].steps[0].number;
+    assert.throws(() => {
+      validateSingleJobsReceipt(jobsData, 'workflow-jobs-ci-readiness.json', 10001);
+    }, /Passo com número duplicado/i);
+  });
+
+  // Teste 35: Obrigatoriedade dos 9 recibos físicos por omissão
+  it('35. obrigatoriedade dos 9 recibos: falha imediatamente quando qualquer um dos 9 ficheiros é removido', () => {
+    for (const targetFile of ALL_NINE_RECEIPT_FILES) {
+      const tmpDir = setupTempReceiptsDir(VALID_TEST_SHA, {}, true);
+      try {
+        fs.unlinkSync(path.join(tmpDir, targetFile));
+        // Recalcular files.sha256 para isolar o teste na ausência do recibo
+        const remainingFiles = fs.readdirSync(tmpDir).filter(f => f !== 'files.sha256');
+        const shaLines = remainingFiles.map(f => `${sha256(fs.readFileSync(path.join(tmpDir, f)))}  ${f}`);
+        fs.writeFileSync(path.join(tmpDir, 'files.sha256'), shaLines.join('\n') + '\n', 'utf8');
+
+        assert.throws(() => {
+          verifyWorkflowReceipts({ receiptsDir: tmpDir });
+        }, /ausente em/i, `Deveria falhar ao remover ${targetFile}`);
+      } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    }
+  });
+
+  // Teste 36: Manifesto files.sha256: ficheiro físico adicional não indexado
+  it('36. manifesto files.sha256: rejeita ficheiro físico adicional não indexado no manifesto', () => {
     const tmpDir = setupTempReceiptsDir(VALID_TEST_SHA, {}, true);
     try {
-      const manifestPath = path.join(tmpDir, 'files.sha256');
-      fs.writeFileSync(manifestPath, `0000000000000000000000000000000000000000000000000000000000000000  workflow-run-ci-readiness.json\n`);
+      // Criar ficheiro físico adicional órfão
+      fs.writeFileSync(path.join(tmpDir, 'ficheiro-adicional-infiltrado.json'), '{"extra": true}', 'utf8');
       assert.throws(() => {
         verifyWorkflowReceipts({ receiptsDir: tmpDir });
-      }, /Divergência de hash SHA-256 no manifesto para 'workflow-run-ci-readiness.json'/i);
+      }, /Ficheiro físico adicional 'ficheiro-adicional-infiltrado\.json' no directório não está indexado no manifesto 'files\.sha256'/i);
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
     }
   });
 
-  // Teste 29: Manifesto files.sha256 com ficheiro inexistente
-  it('29. manifesto files.sha256: rejeita entrada apontando para ficheiro ausente', () => {
+  // Teste 37: Manifesto files.sha256: rejeita entrada com ficheiro físico inexistente
+  it('37. manifesto files.sha256: rejeita entrada apontando para ficheiro físico inexistente', () => {
     const tmpDir = setupTempReceiptsDir(VALID_TEST_SHA, {}, true);
     try {
-      const manifestPath = path.join(tmpDir, 'files.sha256');
-      fs.writeFileSync(manifestPath, `43885f10453bbf9a1bd67022c1ed18c03e0c5a74e42c2eb6a8144aeea3fa3ee3  ficheiro-fantasma.json\n`);
+      fs.appendFileSync(tmpDir + '/files.sha256', `${'0'.repeat(64)}  ficheiro-fantasma.json\n`, 'utf8');
       assert.throws(() => {
         verifyWorkflowReceipts({ receiptsDir: tmpDir });
-      }, /Manifesto 'files.sha256' referencia ficheiro inexistente: 'ficheiro-fantasma.json'/i);
+      }, /Manifesto 'files\.sha256' referencia ficheiro inexistente no directório: 'ficheiro-fantasma\.json'/i);
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
     }
   });
 
-  // Teste Positivo Integral: Fixtures de teste isoladas para os 9 ficheiros + relatório + manifesto files.sha256
-  it('30. teste positivo integral: 9 recibos físicos válidos com fixtures isoladas passam com 100% de sucesso e validam relatório factual', () => {
+  // Teste 38: Manifesto files.sha256: rejeita auto-referência a si próprio
+  it('38. manifesto files.sha256: rejeita auto-referência a si próprio', () => {
+    const tmpDir = setupTempReceiptsDir(VALID_TEST_SHA, {}, true);
+    try {
+      fs.appendFileSync(tmpDir + '/files.sha256', `${'0'.repeat(64)}  files.sha256\n`, 'utf8');
+      assert.throws(() => {
+        verifyWorkflowReceipts({ receiptsDir: tmpDir });
+      }, /Manifesto 'files\.sha256' não pode conter auto-referência a si próprio/i);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  // Teste 39: Manifesto files.sha256: rejeita caminhos absolutos e travessias ..
+  it('39. manifesto files.sha256: rejeita caminhos absolutos e travessias ..', () => {
+    const tmpDir = setupTempReceiptsDir(VALID_TEST_SHA, {}, true);
+    try {
+      fs.appendFileSync(tmpDir + '/files.sha256', `${'0'.repeat(64)}  ../outro.json\n`, 'utf8');
+      assert.throws(() => {
+        verifyWorkflowReceipts({ receiptsDir: tmpDir });
+      }, /travessia de directório '\.\.' não permitida/i);
+
+      fs.writeFileSync(tmpDir + '/files.sha256', `${'0'.repeat(64)}  /etc/passwd\n`, 'utf8');
+      assert.throws(() => {
+        verifyWorkflowReceipts({ receiptsDir: tmpDir });
+      }, /caminho absoluto não permitido/i);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  // Teste 40: Manifesto files.sha256: rejeita entrada duplicada
+  it('40. manifesto files.sha256: rejeita entrada duplicada', () => {
+    const tmpDir = setupTempReceiptsDir(VALID_TEST_SHA, {}, true);
+    try {
+      const firstFile = REQUIRED_WORKFLOW_FILES[0];
+      fs.appendFileSync(tmpDir + '/files.sha256', `${'0'.repeat(64)}  ${firstFile}\n`, 'utf8');
+      assert.throws(() => {
+        verifyWorkflowReceipts({ receiptsDir: tmpDir });
+      }, /Entrada duplicada para '.*' detectada em 'files\.sha256'/i);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  // Teste 41: Manifesto files.sha256: rejeita divergência de hash físico
+  it('41. manifesto files.sha256: rejeita ficheiro com hash físico divergente', () => {
+    const tmpDir = setupTempReceiptsDir(VALID_TEST_SHA, {}, true);
+    try {
+      const manifestPath = path.join(tmpDir, 'files.sha256');
+      const lines = fs.readFileSync(manifestPath, 'utf8').trim().split('\n');
+      const tamperedLines = lines.map(line => {
+        if (line.includes('workflow-run-ci-readiness.json')) {
+          return `${'0'.repeat(64)}  workflow-run-ci-readiness.json`;
+        }
+        return line;
+      });
+      fs.writeFileSync(manifestPath, tamperedLines.join('\n') + '\n', 'utf8');
+      assert.throws(() => {
+        verifyWorkflowReceipts({ receiptsDir: tmpDir });
+      }, /Divergência de hash SHA-256 no manifesto/i);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  // Teste Positivo Integral: Fixtures de teste isoladas para os 12 ficheiros do pacote de fecho + files.sha256
+  it('42. teste positivo integral: pacote de fecho com 12 ficheiros válidos + manifesto bidirecional passa com 100% de sucesso', () => {
     const testSha = 'abcdef0123456789abcdef0123456789abcdef01';
     const tmpDir = setupTempReceiptsDir(testSha, {}, true);
     const reportPath = path.join(tmpDir, 'final-resolved-report.md');
@@ -531,8 +721,20 @@ describe('Verificador Read-Only Expandido: Runs, Jobs, Artefactos e Rigor Forens
         'utf8'
       );
 
-      // Gerar manifesto files.sha256 para todos os ficheiros criados
-      const allFiles = fs.readdirSync(tmpDir).sort();
+      // Adicionar os ficheiros restantes do pacote de fecho
+      fs.writeFileSync(
+        path.join(tmpDir, 'closure-verification-result.json'),
+        JSON.stringify({ status: 'PACKAGING_IN_PROGRESS', final_audited_sha: testSha }, null, 2),
+        'utf8'
+      );
+      fs.writeFileSync(
+        path.join(tmpDir, 'requirement-test-evidence-sha-matrix.json'),
+        JSON.stringify({ requirements: [{ id: 'REQ-1', result: 'PASS' }] }, null, 2),
+        'utf8'
+      );
+
+      // Gerar manifesto files.sha256 para todos os 12 ficheiros
+      const allFiles = fs.readdirSync(tmpDir).filter(f => f !== 'files.sha256').sort();
       const shaLines = allFiles.map(f => `${sha256(fs.readFileSync(path.join(tmpDir, f)))}  ${f}`);
       fs.writeFileSync(path.join(tmpDir, 'files.sha256'), shaLines.join('\n') + '\n', 'utf8');
 
