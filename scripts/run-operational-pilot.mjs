@@ -71,11 +71,13 @@ if (!fs.existsSync(dbDir)) {
 let secretProvider;
 if (reviewerSecretArg && reviewerSecretArg.trim().length > 0) {
   secretProvider = new StaticSecretProvider({
-    PILOT_SECRET_REV_MARIA: reviewerSecretArg
+    PILOT_SECRET_REV_MARIA: reviewerSecretArg,
+    PILOT_SECRET_REV_DEMO: reviewerSecretArg
   });
 } else if (mode === 'DEMO') {
   // No modo DEMO estritamente isolado, utiliza chave sintética efêmera para demonstração
   secretProvider = new StaticSecretProvider({
+    PILOT_SECRET_REV_DEMO: 'EPHEMERAL_DEMO_SECRET_KEY_FOR_AUTOMATED_SIMULATION_ONLY',
     PILOT_SECRET_REV_MARIA: 'EPHEMERAL_DEMO_SECRET_KEY_FOR_AUTOMATED_SIMULATION_ONLY'
   });
 } else {
