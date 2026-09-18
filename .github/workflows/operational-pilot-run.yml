@@ -133,7 +133,7 @@ jobs:
         run: npm run build:packages
 
       - name: Download Stage A Artifacts
-        uses: actions/download-artifact@ccb291b63b4b574c713597d4802218cc98da0030 # v4.1.7
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
         with:
           name: aetf-pilot-stage-a-${{ github.sha }}
           path: .artifacts/pilot
