@@ -117,17 +117,26 @@ const inputSha256 = sha256(inputBytes);
 
 // 3. Gerar ficheiros complementares canónicos de proveniência e hash
 const provenanceData = {
+  package_id: `PKG_DEMO_${Date.now()}`,
+  source_type: 'SYNTHETIC_DEMO_GENERATOR',
+  source_reference: 'DEMO_INTAKE_001',
+  source_created_at: new Date().toISOString(),
+  source_actor_id: 'revisor_demo_humano_01',
+  tenant_id: tenantId,
+  task_id: taskId,
+  authorization_sha256: authSha256,
+  input_sha256: inputSha256,
   package_type: 'AUTOMATED_OPERATIONAL_DEMO',
   provenance: 'SYNTHETIC_DEMO_GENERATOR',
   created_at: new Date().toISOString(),
-  tenant_id: tenantId,
-  task_id: taskId,
   disclaimer: 'DEMO — DADOS E DOCUMENTOS PURAMENTE FICTÍCIOS'
 };
 const provenanceBytes = Buffer.from(JSON.stringify(provenanceData, null, 2), 'utf8');
 fs.writeFileSync(path.join(outDir, 'package-provenance.json'), provenanceBytes);
 
-const hashFileBytes = Buffer.from(inputSha256 + '  operational-pilot-input.json\n', 'utf8');
+const provenanceSha256 = sha256(provenanceBytes);
+const hashFileContent = `${inputSha256}  operational-pilot-input.json\n${authSha256}  authorization-document.pdf\n${provenanceSha256}  package-provenance.json\n`;
+const hashFileBytes = Buffer.from(hashFileContent, 'utf8');
 fs.writeFileSync(path.join(outDir, 'input-package.sha256'), hashFileBytes);
 
 // 4. Se solicitado arquivo .tar.gz demonstrativo, construir com buildTarGz

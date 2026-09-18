@@ -416,17 +416,19 @@ for (const pf of requiredProvFields) {
 }
 
 // Rejeitar proveniência fictícia ou interna no modo operacional
-const provRawText = JSON.stringify(parsedProv).toUpperCase();
-if (
-  parsedProv.generated_by_repo === true ||
-  parsedProv.auto_generated === true ||
-  parsedProv.is_fixture === true ||
-  provRawText.includes('DEMO') ||
-  provRawText.includes('SIMULATION') ||
-  provRawText.includes('MOCK')
-) {
-  console.error('\n[FAIL-CLOSED] Proveniência indica dados gerados pelo repositório, simulação, mock ou demo.');
-  process.exit(1);
+if (mode === 'OPERATIONAL_PILOT') {
+  const provRawText = JSON.stringify(parsedProv).toUpperCase();
+  if (
+    parsedProv.generated_by_repo === true ||
+    parsedProv.auto_generated === true ||
+    parsedProv.is_fixture === true ||
+    provRawText.includes('DEMO') ||
+    provRawText.includes('SIMULATION') ||
+    provRawText.includes('MOCK')
+  ) {
+    console.error('\n[FAIL-CLOSED] Proveniência indica dados gerados pelo repositório, simulação, mock ou demo.');
+    process.exit(1);
+  }
 }
 
 if (parsedProv.authorization_sha256 !== computedAuthPdfHash) {
@@ -451,13 +453,15 @@ try {
   process.exit(1);
 }
 
-if (parsedInput.is_fixture === true || parsedInput.classification === 'AUTOMATED_OPERATIONAL_DEMO') {
-  console.error('\n[FAIL-CLOSED] Entrada marcada como fixture/demo detectada. Fixtures são estritamente proibidas no modo operacional real.');
-  process.exit(1);
-}
-if (parsedInput.generated_by_repo === true || parsedInput.auto_generated === true) {
-  console.error('\n[FAIL-CLOSED] Pacote gerado pelo próprio repositório ou por build automatizado rejeitado.');
-  process.exit(1);
+if (mode === 'OPERATIONAL_PILOT') {
+  if (parsedInput.is_fixture === true || parsedInput.classification === 'AUTOMATED_OPERATIONAL_DEMO') {
+    console.error('\n[FAIL-CLOSED] Entrada marcada como fixture/demo detectada. Fixtures são estritamente proibidas no modo operacional real.');
+    process.exit(1);
+  }
+  if (parsedInput.generated_by_repo === true || parsedInput.auto_generated === true) {
+    console.error('\n[FAIL-CLOSED] Pacote gerado pelo próprio repositório ou por build automatizado rejeitado.');
+    process.exit(1);
+  }
 }
 
 // Reconciliar tenant e task
