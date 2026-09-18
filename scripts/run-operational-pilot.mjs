@@ -69,9 +69,14 @@ if (!fs.existsSync(dbDir)) {
 
 // Configurar provedor de segredos
 let secretProvider;
-if (reviewerSecretArg) {
+if (reviewerSecretArg && reviewerSecretArg.trim().length > 0) {
   secretProvider = new StaticSecretProvider({
     PILOT_SECRET_REV_MARIA: reviewerSecretArg
+  });
+} else if (mode === 'DEMO') {
+  // No modo DEMO estritamente isolado, utiliza chave sintética efêmera para demonstração
+  secretProvider = new StaticSecretProvider({
+    PILOT_SECRET_REV_MARIA: 'EPHEMERAL_DEMO_SECRET_KEY_FOR_AUTOMATED_SIMULATION_ONLY'
   });
 } else {
   secretProvider = new EnvironmentSecretProvider();
