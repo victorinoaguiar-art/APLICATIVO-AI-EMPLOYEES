@@ -59,6 +59,7 @@ export const EXPECTED_CLOSURE_PACKAGE_FILES = [
 ];
 
 export const REQUIRED_REPOSITORY = 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES';
+export const EXPECTED_REPOSITORY_ID = 1363667011;
 
 export const EXPECTED_WORKFLOW_SPEC = {
   'workflow-run-ci-readiness.json': {
@@ -169,6 +170,11 @@ export function validateSingleWorkflowReceipt(receipt, filename, expectedSha) {
   if (repoName !== REQUIRED_REPOSITORY) {
     throw new Error(`Recibo '${filename}' pertence ao repositório '${repoName}', esperado estritamente '${REQUIRED_REPOSITORY}'.`);
   }
+  if (receipt.repository && receipt.repository.id !== undefined) {
+    if (receipt.repository.id !== EXPECTED_REPOSITORY_ID) {
+      throw new Error(`Recibo '${filename}' possui repository.id '${receipt.repository.id}', esperado estritamente '${EXPECTED_REPOSITORY_ID}'.`);
+    }
+  }
 
   // Head SHA
   const headSha = receipt.head_sha;
@@ -267,7 +273,14 @@ export function validateSingleJobsReceipt(jobsData, filename, expectedRunId) {
     }
     jobIds.add(job.id);
 
-    if (job.run_id !== undefined && job.run_id !== expectedRunId) {
+    // run_id estritamente obrigatório, seguro e coincidente com o run esperado
+    if (job.run_id === undefined || job.run_id === null) {
+      throw new Error(`Job '${job.name}' (ID: ${job.id}) em '${filename}' possui 'run_id' ausente ou nulo.`);
+    }
+    if (typeof job.run_id !== 'number' || !Number.isSafeInteger(job.run_id) || job.run_id <= 0) {
+      throw new Error(`Job '${job.name}' (ID: ${job.id}) em '${filename}' possui 'run_id' inválido: esperado inteiro positivo, obtido ${JSON.stringify(job.run_id)}.`);
+    }
+    if (job.run_id !== expectedRunId) {
       throw new Error(`Job '${job.name}' (ID: ${job.id}) em '${filename}' pertence a run_id '${job.run_id}', esperado '${expectedRunId}'.`);
     }
 
@@ -429,12 +442,18 @@ export function validateSingleArtifactsReceipt(artifactsData, filename, expected
       throw new Error(`Artefacto '${art.name}' em '${filename}' associado a branch '${wfRun.head_branch}', esperado estritamente 'master'.`);
     }
 
-    // repository_id e head_repository_id
-    if (typeof wfRun.repository_id !== 'number' || !Number.isInteger(wfRun.repository_id) || wfRun.repository_id <= 0) {
+    // repository_id e head_repository_id estritamente vinculados ao ID canónico do repositório
+    if (typeof wfRun.repository_id !== 'number' || !Number.isSafeInteger(wfRun.repository_id) || wfRun.repository_id <= 0) {
       throw new Error(`Artefacto '${art.name}' em '${filename}' possui 'workflow_run.repository_id' inválido: ${JSON.stringify(wfRun.repository_id)}.`);
     }
-    if (typeof wfRun.head_repository_id !== 'number' || !Number.isInteger(wfRun.head_repository_id) || wfRun.head_repository_id <= 0) {
+    if (typeof wfRun.head_repository_id !== 'number' || !Number.isSafeInteger(wfRun.head_repository_id) || wfRun.head_repository_id <= 0) {
       throw new Error(`Artefacto '${art.name}' em '${filename}' possui 'workflow_run.head_repository_id' inválido: ${JSON.stringify(wfRun.head_repository_id)}.`);
+    }
+    if (wfRun.repository_id !== EXPECTED_REPOSITORY_ID) {
+      throw new Error(`Artefacto '${art.name}' em '${filename}' possui 'workflow_run.repository_id' (${wfRun.repository_id}) divergente do ID canónico (${EXPECTED_REPOSITORY_ID}).`);
+    }
+    if (wfRun.head_repository_id !== EXPECTED_REPOSITORY_ID) {
+      throw new Error(`Artefacto '${art.name}' em '${filename}' possui 'workflow_run.head_repository_id' (${wfRun.head_repository_id}) divergente do ID canónico (${EXPECTED_REPOSITORY_ID}).`);
     }
     if (wfRun.repository_id !== wfRun.head_repository_id) {
       throw new Error(`Artefacto '${art.name}' em '${filename}' possui divergência entre repository_id (${wfRun.repository_id}) e head_repository_id (${wfRun.head_repository_id}).`);
@@ -573,7 +592,11 @@ export function validateFilesSha256Manifest(receiptsDir, manifestPath, isClosure
 }
 
 export function verifyWorkflowReceipts(options) {
-  const { receiptsDir, expectedSha, reportPath, requireNineFiles = true } = options;
+  const { receiptsDir, expectedSha, reportPath } = options;
+
+  if (options.requireNineFiles === false || options.allowFewerReceipts) {
+    throw new Error('[FAIL-CLOSED] Não é permitido desactivar a obrigatoriedade dos nove recibos.');
+  }
 
   if (!receiptsDir) {
     throw new Error('Directório de recibos (--receipts-dir) obrigatório.');
@@ -592,7 +615,7 @@ export function verifyWorkflowReceipts(options) {
   let commonSha = null;
   const runIdByFile = {};
 
-  // 1. Validar recibos de runs
+  // 1. Validar recibos de runs (3 ficheiros)
   for (const filename of REQUIRED_WORKFLOW_FILES) {
     const filePath = path.join(receiptsDir, filename);
     if (!fs.existsSync(filePath)) {
@@ -640,47 +663,42 @@ export function verifyWorkflowReceipts(options) {
     throw new Error(`Recibos duplicados detectados: os 3 ficheiros devem corresponder aos 3 workflows distintos.`);
   }
 
-  // 2. Validar ficheiros de jobs e artefactos (quando presentes ou quando requireNineFiles === true)
+  // 2. Validar ficheiros de jobs e artefactos (incondicionalmente obrigatórios: 6 ficheiros adicionais)
   let jobsCount = 0;
   let artifactsCount = 0;
 
-  const hasJobFiles = REQUIRED_JOB_FILES.some(f => fs.existsSync(path.join(receiptsDir, f)));
-  const hasArtifactFiles = REQUIRED_ARTIFACT_FILES.some(f => fs.existsSync(path.join(receiptsDir, f)));
-
-  if (requireNineFiles || hasJobFiles || hasArtifactFiles) {
-    // Validar os 3 ficheiros de jobs
-    for (const jobFilename of REQUIRED_JOB_FILES) {
-      const jobFilePath = path.join(receiptsDir, jobFilename);
-      if (!fs.existsSync(jobFilePath)) {
-        throw new Error(`Ficheiro de jobs obrigatório '${jobFilename}' ausente em '${receiptsDir}'.`);
-      }
-      const rawJobBytes = fs.readFileSync(jobFilePath);
-      if (rawJobBytes.length === 0) {
-        throw new Error(`Ficheiro de jobs '${jobFilename}' está vazio.`);
-      }
-      const parsedJobData = JSON.parse(rawJobBytes.toString('utf8'));
-      const spec = EXPECTED_JOBS_SPEC[jobFilename];
-      const expectedRunId = runIdByFile[spec.runFile];
-      const validatedJobs = validateSingleJobsReceipt(parsedJobData, jobFilename, expectedRunId);
-      jobsCount += validatedJobs.length;
+  // Validar os 3 ficheiros de jobs
+  for (const jobFilename of REQUIRED_JOB_FILES) {
+    const jobFilePath = path.join(receiptsDir, jobFilename);
+    if (!fs.existsSync(jobFilePath)) {
+      throw new Error(`Ficheiro de jobs obrigatório '${jobFilename}' ausente em '${receiptsDir}'. Todos os 9 recibos são obrigatórios.`);
     }
-
-    // Validar os 3 ficheiros de artefactos
-    for (const artFilename of REQUIRED_ARTIFACT_FILES) {
-      const artFilePath = path.join(receiptsDir, artFilename);
-      if (!fs.existsSync(artFilePath)) {
-        throw new Error(`Ficheiro de artefactos obrigatório '${artFilename}' ausente em '${receiptsDir}'.`);
-      }
-      const rawArtBytes = fs.readFileSync(artFilePath);
-      if (rawArtBytes.length === 0) {
-        throw new Error(`Ficheiro de artefactos '${artFilename}' está vazio.`);
-      }
-      const parsedArtData = JSON.parse(rawArtBytes.toString('utf8'));
-      const spec = EXPECTED_ARTIFACTS_SPEC[artFilename];
-      const expectedRunId = runIdByFile[spec.runFile];
-      const validatedArtifacts = validateSingleArtifactsReceipt(parsedArtData, artFilename, expectedRunId, commonSha);
-      artifactsCount += validatedArtifacts.length;
+    const rawJobBytes = fs.readFileSync(jobFilePath);
+    if (rawJobBytes.length === 0) {
+      throw new Error(`Ficheiro de jobs '${jobFilename}' está vazio.`);
     }
+    const parsedJobData = JSON.parse(rawJobBytes.toString('utf8'));
+    const spec = EXPECTED_JOBS_SPEC[jobFilename];
+    const expectedRunId = runIdByFile[spec.runFile];
+    const validatedJobs = validateSingleJobsReceipt(parsedJobData, jobFilename, expectedRunId);
+    jobsCount += validatedJobs.length;
+  }
+
+  // Validar os 3 ficheiros de artefactos
+  for (const artFilename of REQUIRED_ARTIFACT_FILES) {
+    const artFilePath = path.join(receiptsDir, artFilename);
+    if (!fs.existsSync(artFilePath)) {
+      throw new Error(`Ficheiro de artefactos obrigatório '${artFilename}' ausente em '${receiptsDir}'. Todos os 9 recibos são obrigatórios.`);
+    }
+    const rawArtBytes = fs.readFileSync(artFilePath);
+    if (rawArtBytes.length === 0) {
+      throw new Error(`Ficheiro de artefactos '${artFilename}' está vazio.`);
+    }
+    const parsedArtData = JSON.parse(rawArtBytes.toString('utf8'));
+    const spec = EXPECTED_ARTIFACTS_SPEC[artFilename];
+    const expectedRunId = runIdByFile[spec.runFile];
+    const validatedArtifacts = validateSingleArtifactsReceipt(parsedArtData, artFilename, expectedRunId, commonSha);
+    artifactsCount += validatedArtifacts.length;
   }
 
   // 3. Validação do manifesto files.sha256 (bidirecional)
@@ -688,7 +706,7 @@ export function verifyWorkflowReceipts(options) {
   const shaManifestPath = path.join(receiptsDir, 'files.sha256');
   if (fs.existsSync(shaManifestPath)) {
     validateFilesSha256Manifest(receiptsDir, shaManifestPath, isClosure);
-  } else if (requireNineFiles && reportPath) {
+  } else if (reportPath) {
     throw new Error(`Manifesto obrigatório 'files.sha256' ausente em '${receiptsDir}'.`);
   }
 
@@ -743,7 +761,6 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToP
   let receiptsDir = '';
   let expectedSha = '';
   let reportPath = '';
-  let requireNineFiles = true; // Obrigatório por padrão no CLI e na CI
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
@@ -762,9 +779,21 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToP
     } else if (arg.startsWith('--report=')) {
       reportPath = arg.slice('--report='.length);
     } else if (arg === '--require-nine-files') {
-      requireNineFiles = true;
+      // No-op aceito declarativamente (todos os 9 recibos já são estritamente obrigatórios)
     } else if (arg === '--allow-fewer-receipts' || arg === '--no-require-nine-files') {
-      requireNineFiles = false;
+      console.error('================================================================');
+      console.error('VERIFICAÇÃO DE RECIBOS DE CI DOS WORKFLOWS — FALHA FORENSE');
+      console.error('================================================================');
+      console.error(`Erro: [FAIL-CLOSED] Argumento proibido: '${arg}'. Todos os 9 recibos são incondicionalmente obrigatórios.`);
+      console.error('================================================================');
+      process.exit(1);
+    } else {
+      console.error('================================================================');
+      console.error('VERIFICAÇÃO DE RECIBOS DE CI DOS WORKFLOWS — FALHA FORENSE');
+      console.error('================================================================');
+      console.error(`Erro: [FAIL-CLOSED] Argumento desconhecido ou não permitido: '${arg}'.`);
+      console.error('================================================================');
+      process.exit(1);
     }
   }
 
@@ -773,7 +802,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToP
   }
 
   try {
-    const res = verifyWorkflowReceipts({ receiptsDir, expectedSha, reportPath, requireNineFiles });
+    const res = verifyWorkflowReceipts({ receiptsDir, expectedSha, reportPath });
     console.log('================================================================');
     console.log('VERIFICAÇÃO DE RECIBOS DE CI DOS WORKFLOWS — SUCESSO FORENSE');
     console.log('================================================================');

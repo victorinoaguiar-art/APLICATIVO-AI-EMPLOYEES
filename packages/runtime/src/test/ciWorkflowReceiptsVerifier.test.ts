@@ -3,6 +3,7 @@ import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import { spawnSync } from 'node:child_process';
 import {
   verifyWorkflowReceipts,
   validateSingleWorkflowReceipt,
@@ -14,6 +15,7 @@ import {
   REQUIRED_ARTIFACT_FILES,
   ALL_NINE_RECEIPT_FILES,
   REQUIRED_REPOSITORY,
+  EXPECTED_REPOSITORY_ID,
   EXPECTED_WORKFLOW_SPEC,
   EXPECTED_JOBS_SPEC,
   EXPECTED_ARTIFACTS_SPEC,
@@ -228,15 +230,13 @@ describe('Verificador Read-Only Expandido: Runs, Jobs, Artefactos e Rigor Forens
 
   // Teste 4: Workflow no ficheiro errado
   it('4. rejeita workflow guardado no nome de ficheiro errado', () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ci-receipts-test-'));
+    const wrongReceipt = createValidReceiptForFile('workflow-run-evidence-remote.json');
+    const tmpDir = setupTempReceiptsDir(VALID_TEST_SHA, {
+      'workflow-run-ci-readiness.json': wrongReceipt
+    });
     try {
-      const wrongReceipt = createValidReceiptForFile('workflow-run-evidence-remote.json');
-      fs.writeFileSync(path.join(tmpDir, 'workflow-run-ci-readiness.json'), JSON.stringify(wrongReceipt));
-      fs.writeFileSync(path.join(tmpDir, 'workflow-run-evidence-remote.json'), JSON.stringify(wrongReceipt));
-      fs.writeFileSync(path.join(tmpDir, 'workflow-run-final-forensic.json'), JSON.stringify(createValidReceiptForFile('workflow-run-final-forensic.json')));
-
       assert.throws(() => {
-        verifyWorkflowReceipts({ receiptsDir: tmpDir, requireNineFiles: false });
+        verifyWorkflowReceipts({ receiptsDir: tmpDir });
       }, /possui 'name' inválido: esperado estritamente 'CI \/ Production Readiness & Audit Gate'/i);
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
@@ -253,16 +253,12 @@ describe('Verificador Read-Only Expandido: Runs, Jobs, Artefactos e Rigor Forens
 
   // Teste 6: Duplicatas
   it('6. rejeita três recibos do mesmo workflow ou IDs duplicados', () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ci-receipts-test-'));
+    const tmpDir = setupTempReceiptsDir(VALID_TEST_SHA, {
+      'workflow-run-evidence-remote.json': { id: 10001 }
+    });
     try {
-      const ciReceipt = createValidReceiptForFile('workflow-run-ci-readiness.json', { id: 777 });
-      fs.writeFileSync(path.join(tmpDir, 'workflow-run-ci-readiness.json'), JSON.stringify(ciReceipt));
-      const remoteWithSameId = createValidReceiptForFile('workflow-run-evidence-remote.json', { id: 777 });
-      fs.writeFileSync(path.join(tmpDir, 'workflow-run-evidence-remote.json'), JSON.stringify(remoteWithSameId));
-      fs.writeFileSync(path.join(tmpDir, 'workflow-run-final-forensic.json'), JSON.stringify(createValidReceiptForFile('workflow-run-final-forensic.json', { id: 778 })));
-
       assert.throws(() => {
-        verifyWorkflowReceipts({ receiptsDir: tmpDir, requireNineFiles: false });
+        verifyWorkflowReceipts({ receiptsDir: tmpDir });
       }, /Recibos duplicados detectados: os 3 ficheiros devem corresponder a execuções com IDs distintos/i);
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
@@ -537,7 +533,7 @@ describe('Verificador Read-Only Expandido: Runs, Jobs, Artefactos e Rigor Forens
     artData2.artifacts[0].workflow_run.head_repository_id = 999999;
     assert.throws(() => {
       validateSingleArtifactsReceipt(artData2, 'workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
-    }, /divergência entre repository_id/i);
+    }, /divergente do ID canónico|divergência entre repository_id/i);
   });
 
   // Teste 30: Validação semântica de artefactos: updated_at anterior a created_at
@@ -741,8 +737,7 @@ describe('Verificador Read-Only Expandido: Runs, Jobs, Artefactos e Rigor Forens
       const result = verifyWorkflowReceipts({
         receiptsDir: tmpDir,
         expectedSha: testSha,
-        reportPath,
-        requireNineFiles: true
+        reportPath
       });
 
       assert.strictEqual(result.verified, true);
@@ -757,6 +752,141 @@ describe('Verificador Read-Only Expandido: Runs, Jobs, Artefactos e Rigor Forens
         assert.strictEqual(wf.status, 'completed');
         assert.strictEqual(wf.conclusion, 'success');
       }
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  // Teste Negativo 1: Opções permissivas removidas do CLI e da biblioteca
+  it('43. opções permissivas removidas: CLI rejeita --allow-fewer-receipts e --no-require-nine-files, e biblioteca rejeita requireNineFiles: false', () => {
+    const candidates = [
+      path.resolve(process.cwd(), 'scripts/verify-ci-workflow-receipts.mjs'),
+      path.resolve(process.cwd(), '../../scripts/verify-ci-workflow-receipts.mjs'),
+      path.resolve(__dirname, '../../../../scripts/verify-ci-workflow-receipts.mjs')
+    ];
+    const scriptPath = candidates.find(c => fs.existsSync(c)) || candidates[0];
+
+    // Testar CLI com --allow-fewer-receipts
+    const res1 = spawnSync(process.execPath, [scriptPath, '--allow-fewer-receipts'], { encoding: 'utf8' });
+    assert.strictEqual(res1.status, 1, 'CLI deve falhar com exit code 1 para --allow-fewer-receipts');
+    assert.match(res1.stderr + res1.stdout, /Argumento proibido: '--allow-fewer-receipts'/i);
+
+    // Testar CLI com --no-require-nine-files
+    const res2 = spawnSync(process.execPath, [scriptPath, '--no-require-nine-files'], { encoding: 'utf8' });
+    assert.strictEqual(res2.status, 1, 'CLI deve falhar com exit code 1 para --no-require-nine-files');
+    assert.match(res2.stderr + res2.stdout, /Argumento proibido: '--no-require-nine-files'/i);
+
+    // Testar biblioteca rejeitando tentativa de desativar os nove recibos
+    const tmpDir = setupTempReceiptsDir();
+    try {
+      assert.throws(() => {
+        (verifyWorkflowReceipts as any)({ receiptsDir: tmpDir, requireNineFiles: false });
+      }, /\[FAIL-CLOSED\] Não é permitido desactivar a obrigatoriedade dos nove recibos/i);
+
+      assert.throws(() => {
+        (verifyWorkflowReceipts as any)({ receiptsDir: tmpDir, allowFewerReceipts: true });
+      }, /\[FAIL-CLOSED\] Não é permitido desactivar a obrigatoriedade dos nove recibos/i);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  // Teste Negativo 2: job.run_id ausente ou inválido
+  it('44. jobs: rejeita job com run_id ausente, nulo, string, zero, negativo, decimal ou divergente', () => {
+    const validJobs = createValidJobsForFile('workflow-jobs-ci-readiness.json', 10001);
+
+    // 1. run_id ausente
+    const missingRunId = JSON.parse(JSON.stringify(validJobs));
+    delete missingRunId.jobs[0].run_id;
+    assert.throws(() => {
+      validateSingleJobsReceipt(missingRunId, 'workflow-jobs-ci-readiness.json', 10001);
+    }, /possui 'run_id' ausente ou nulo/i);
+
+    // 2. run_id nulo
+    const nullRunId = JSON.parse(JSON.stringify(validJobs));
+    nullRunId.jobs[0].run_id = null;
+    assert.throws(() => {
+      validateSingleJobsReceipt(nullRunId, 'workflow-jobs-ci-readiness.json', 10001);
+    }, /possui 'run_id' ausente ou nulo/i);
+
+    // 3. run_id string
+    const stringRunId = JSON.parse(JSON.stringify(validJobs));
+    stringRunId.jobs[0].run_id = '10001';
+    assert.throws(() => {
+      validateSingleJobsReceipt(stringRunId, 'workflow-jobs-ci-readiness.json', 10001);
+    }, /possui 'run_id' inválido: esperado inteiro positivo/i);
+
+    // 4. run_id zero
+    const zeroRunId = JSON.parse(JSON.stringify(validJobs));
+    zeroRunId.jobs[0].run_id = 0;
+    assert.throws(() => {
+      validateSingleJobsReceipt(zeroRunId, 'workflow-jobs-ci-readiness.json', 10001);
+    }, /possui 'run_id' inválido: esperado inteiro positivo/i);
+
+    // 5. run_id negativo
+    const negRunId = JSON.parse(JSON.stringify(validJobs));
+    negRunId.jobs[0].run_id = -10001;
+    assert.throws(() => {
+      validateSingleJobsReceipt(negRunId, 'workflow-jobs-ci-readiness.json', 10001);
+    }, /possui 'run_id' inválido: esperado inteiro positivo/i);
+
+    // 6. run_id decimal
+    const decimalRunId = JSON.parse(JSON.stringify(validJobs));
+    decimalRunId.jobs[0].run_id = 10001.5;
+    assert.throws(() => {
+      validateSingleJobsReceipt(decimalRunId, 'workflow-jobs-ci-readiness.json', 10001);
+    }, /possui 'run_id' inválido: esperado inteiro positivo/i);
+
+    // 7. run_id divergente do run esperado
+    const divergentRunId = JSON.parse(JSON.stringify(validJobs));
+    divergentRunId.jobs[0].run_id = 99999;
+    assert.throws(() => {
+      validateSingleJobsReceipt(divergentRunId, 'workflow-jobs-ci-readiness.json', 10001);
+    }, /pertence a run_id '99999', esperado '10001'/i);
+  });
+
+  // Teste Negativo 3: IDs canónicos do repositório divergentes
+  it('45. artefactos: rejeita repository_id ou head_repository_id divergentes do ID canónico (1363667011), mesmo quando iguais entre si', () => {
+    // 1. Ambos com ID forjado igual (ex: 999999999)
+    const fakeMatchingIds = createValidArtifactsForFile('workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    fakeMatchingIds.artifacts[0].workflow_run.repository_id = 999999999;
+    fakeMatchingIds.artifacts[0].workflow_run.head_repository_id = 999999999;
+    assert.throws(() => {
+      validateSingleArtifactsReceipt(fakeMatchingIds, 'workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    }, /divergente do ID canónico \(1363667011\)/i);
+
+    // 2. repository_id divergente
+    const fakeRepoId = createValidArtifactsForFile('workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    fakeRepoId.artifacts[0].workflow_run.repository_id = 888888888;
+    assert.throws(() => {
+      validateSingleArtifactsReceipt(fakeRepoId, 'workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    }, /divergente do ID canónico \(1363667011\)/i);
+
+    // 3. head_repository_id divergente
+    const fakeHeadRepoId = createValidArtifactsForFile('workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    fakeHeadRepoId.artifacts[0].workflow_run.head_repository_id = 777777777;
+    assert.throws(() => {
+      validateSingleArtifactsReceipt(fakeHeadRepoId, 'workflow-artifacts-ci-readiness.json', 10001, VALID_TEST_SHA);
+    }, /divergente do ID canónico \(1363667011\)/i);
+  });
+
+  // Teste Negativo 4: Symlink no directório de recibos
+  it('46. manifesto files.sha256: rejeita symlink dentro do directório de recibos antes de aceitar o manifesto', () => {
+    const tmpDir = setupTempReceiptsDir(VALID_TEST_SHA, {}, true);
+    try {
+      const symlinkPath = path.join(tmpDir, 'symlink-infiltrado');
+      try {
+        fs.symlinkSync(path.join(tmpDir, 'closure-verification-result.json'), symlinkPath, 'file');
+      } catch {
+        // Fallback cross-platform para Windows sem privilégios de developer mode (junction)
+        const targetDir = path.join(tmpDir, 'target-subfolder');
+        fs.mkdirSync(targetDir);
+        fs.symlinkSync(targetDir, symlinkPath, 'junction');
+      }
+
+      assert.throws(() => {
+        verifyWorkflowReceipts({ receiptsDir: tmpDir });
+      }, /Symlink não permitido detectado no directório de recibos/i);
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
     }
