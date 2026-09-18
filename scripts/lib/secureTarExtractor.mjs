@@ -397,9 +397,6 @@ export function auditAndExtractZip(archiveBufferOrPath, targetDir, options = {})
     if (compSize === 0xffffffff || uncompSize === 0xffffffff || localOffset === 0xffffffff) {
       throw new Error(`Entrada utiliza extensões ZIP64 não suportadas.`);
     }
-    if ((flags & 0x08) !== 0) {
-      throw new Error(`Data descriptor não suportado no arquivo ZIP.`);
-    }
 
     if (pos + 46 + nameLen > rawZip.length) {
       throw new Error('Nome de ficheiro excede limites do directório central.');
@@ -485,20 +482,34 @@ export function auditAndExtractZip(archiveBufferOrPath, targetDir, options = {})
     const localNameLen = rawZip.readUInt16LE(localOffset + 26);
     const localExtraLen = rawZip.readUInt16LE(localOffset + 28);
 
-    if ((localFlags & 0x08) !== 0) {
-      throw new Error(`Data descriptor local não suportado no arquivo ZIP para '${name}'.`);
+    const hasDataDescriptor = (flags & 0x08) !== 0;
+    const localHasDataDescriptor = (localFlags & 0x08) !== 0;
+    if (hasDataDescriptor !== localHasDataDescriptor) {
+      throw new Error(`Flag de data descriptor diverge entre cabeçalho central e local para '${name}'.`);
     }
     if (localMethod !== method) {
       throw new Error(`Método de compressão diverge entre cabeçalho central (${method}) e local (${localMethod}) para '${name}'.`);
     }
-    if (localCrc !== crc) {
-      throw new Error(`CRC32 diverge entre cabeçalho central (${crc}) e local (${localCrc}) para '${name}'.`);
-    }
-    if (localCompSize !== compSize) {
-      throw new Error(`Tamanho comprimido diverge entre cabeçalho central (${compSize}) e local (${localCompSize}) para '${name}'.`);
-    }
-    if (localUncompSize !== uncompSize) {
-      throw new Error(`Tamanho descompactado diverge entre cabeçalho central (${uncompSize}) e local (${localUncompSize}) para '${name}'.`);
+    if (!hasDataDescriptor) {
+      if (localCrc !== crc) {
+        throw new Error(`CRC32 diverge entre cabeçalho central (${crc}) e local (${localCrc}) para '${name}'.`);
+      }
+      if (localCompSize !== compSize) {
+        throw new Error(`Tamanho comprimido diverge entre cabeçalho central (${compSize}) e local (${localCompSize}) para '${name}'.`);
+      }
+      if (localUncompSize !== uncompSize) {
+        throw new Error(`Tamanho descompactado diverge entre cabeçalho central (${uncompSize}) e local (${localUncompSize}) para '${name}'.`);
+      }
+    } else {
+      if (localCrc !== 0 && localCrc !== crc) {
+        throw new Error(`CRC32 local diverge do central para '${name}'.`);
+      }
+      if (localCompSize !== 0 && localCompSize !== compSize) {
+        throw new Error(`Tamanho comprimido local diverge do central para '${name}'.`);
+      }
+      if (localUncompSize !== 0 && localUncompSize !== uncompSize) {
+        throw new Error(`Tamanho descompactado local diverge do central para '${name}'.`);
+      }
     }
 
     if (localOffset + 30 + localNameLen > rawZip.length) {
