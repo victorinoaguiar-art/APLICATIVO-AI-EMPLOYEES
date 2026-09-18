@@ -59,7 +59,7 @@ jobs:
         run: |
           mkdir -p .artifacts/intake_staging
 
-          if [ "${{ github.event.inputs.execution_mode }}" = "DEMO" ] && [ -z "${{ github.event.inputs.source_artifact_id }}" ]; then
+          if [ "${{ github.event.inputs.execution_mode }}" = "DEMO" ] && { [ -z "${{ github.event.inputs.source_artifact_id }}" ] || [ "${{ github.event.inputs.source_artifact_id }}" = "DEMO" ]; }; then
             echo "[DEMO] A gerar pacote demonstrativo controlado com os 4 ficheiros canónicos..."
             node scripts/prepare-demo-pilot-input.mjs \
               --out-dir=.artifacts/intake_demo_temp \
