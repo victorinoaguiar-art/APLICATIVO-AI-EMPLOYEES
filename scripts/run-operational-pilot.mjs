@@ -179,8 +179,8 @@ try {
         console.error('Auto-geração de assinatura pelo próprio script é expressamente proibida.');
         process.exit(1);
       }
-      if (!decisionArg || !['APPROVED', 'REJECTED', 'APPROVED_WITH_CORRECTIONS'].includes(decisionArg)) {
-        console.error(`\n[FAIL-CLOSED] Decisão humana explícita (--decision=APPROVED|REJECTED|APPROVED_WITH_CORRECTIONS) é obrigatória. Recebido: '${decisionArg}'.`);
+      if (!decisionArg || !['APPROVED', 'REJECTED', 'REQUEST_CHANGES', 'APPROVED_WITH_CORRECTIONS'].includes(decisionArg)) {
+        console.error(`\n[FAIL-CLOSED] Decisão humana explícita (--decision=APPROVED|REJECTED|REQUEST_CHANGES|APPROVED_WITH_CORRECTIONS) é obrigatória. Recebido: '${decisionArg}'.`);
         process.exit(1);
       }
     } else {

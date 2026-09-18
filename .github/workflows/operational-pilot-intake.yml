@@ -1,0 +1,72 @@
+name: Operational Pilot - Intake de Pacote Externo
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_payload_base64:
+        description: 'Conteúdo do pacote em base64 (tar.gz contendo os 4 ficheiros obrigatórios)'
+        required: true
+      expected_package_sha256:
+        description: 'Hash SHA-256 esperado do pacote'
+        required: true
+      tenant_id:
+        description: 'Tenant ID Autorizado'
+        required: true
+        default: 'tenant_saso_angola_ops_01'
+      task_id:
+        description: 'Task ID da Tarefa Empresarial'
+        required: true
+        default: 'TASK_SASO_NOTICE_2026_09_001'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate-and-publish-intake:
+    name: "Validar e Publicar Pacote de Intake Imutável"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Codebase at Exact Audited SHA
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Setup Node.js 22.x
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Materialize Incoming Package Payload
+        run: |
+          mkdir -p .artifacts/intake_staging
+          echo "${{ github.event.inputs.package_payload_base64 }}" | base64 -d > .artifacts/intake_staging/package.tar.gz
+          CALCULATED_SHA=$(sha256sum .artifacts/intake_staging/package.tar.gz | awk '{print $1}')
+          EXPECTED_SHA="${{ github.event.inputs.expected_package_sha256 }}"
+          if [ "$CALCULATED_SHA" != "$EXPECTED_SHA" ]; then
+            echo "[FAIL-CLOSED] Hash SHA-256 do pacote transferido ($CALCULATED_SHA) diverge do esperado ($EXPECTED_SHA)."
+            exit 1
+          fi
+          mkdir -p .artifacts/intake_extracted
+          tar -xzf .artifacts/intake_staging/package.tar.gz -C .artifacts/intake_extracted
+
+      - name: Validate Package Integrity Without Executing Task
+        run: |
+          node scripts/prepare-operational-pilot-input.mjs \
+            --package-path=.artifacts/intake_extracted \
+            --out-dir=.artifacts/intake_validated \
+            --tenant-id="${{ github.event.inputs.tenant_id }}" \
+            --task-id="${{ github.event.inputs.task_id }}" \
+            --mode=OPERATIONAL_PILOT
+
+      - name: Publish Immutable Intake Artifact
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        with:
+          name: aetf-pilot-intake-${{ github.sha }}
+          path: .artifacts/intake_validated
+          retention-days: 90

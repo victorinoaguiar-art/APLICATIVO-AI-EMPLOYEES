@@ -13,6 +13,7 @@ export type HumanReviewStatus =
   | 'PENDING_REVIEW'
   | 'APPROVED'
   | 'APPROVED_WITH_CORRECTIONS'
+  | 'REQUEST_CHANGES'
   | 'REJECTED'
   | 'BLOCKED';
 

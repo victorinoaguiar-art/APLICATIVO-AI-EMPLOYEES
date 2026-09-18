@@ -1,4 +1,4 @@
-name: Protected Operational Pilot Pipeline
+name: Operational Pilot - Etapa A (Preparacao e Desafio)
 
 on:
   workflow_dispatch:
@@ -11,18 +11,30 @@ on:
         options:
           - 'DEMO'
           - 'OPERATIONAL_PILOT'
+      intake_run_id:
+        description: 'Run ID do workflow de intake (obrigatório em OPERATIONAL_PILOT)'
+        required: false
+        default: ''
+      input_artifact_id:
+        description: 'Artifact ID do pacote validado pelo intake (obrigatório em OPERATIONAL_PILOT)'
+        required: false
+        default: ''
+      input_artifact_name:
+        description: 'Nome do artefacto de intake (obrigatório em OPERATIONAL_PILOT)'
+        required: false
+        default: ''
+      input_package_sha256:
+        description: 'SHA-256 do pacote externo (obrigatório em OPERATIONAL_PILOT)'
+        required: false
+        default: ''
       tenant_id:
-        description: 'Tenant ID Autorizado para o Piloto'
+        description: 'Tenant ID Autorizado'
         required: true
-        default: 'tenant_saso_angola_ops_01'
+        default: 'DEMO_TENANT_ALFA_001'
       task_id:
         description: 'Identificador da Tarefa Empresarial'
         required: true
-        default: 'TASK_SASO_NOTICE_2026_09_001'
-      external_package_path:
-        description: 'Caminho do pacote externo autorizado (obrigatório em OPERATIONAL_PILOT)'
-        required: false
-        default: ''
+        default: 'DEMO_TASK_NOTICE_001'
 
 permissions:
   contents: read
@@ -30,7 +42,7 @@ permissions:
 
 jobs:
   stage-a-prepare-and-challenge:
-    name: "Etapa A: Preparação, Execução e Desafio"
+    name: "Etapa A: Ingestão, Validação e Desafio Aberto"
     runs-on: ubuntu-latest
 
     steps:
@@ -54,7 +66,7 @@ jobs:
       - name: Compile Monorepo Packages
         run: npm run build:packages
 
-      - name: Run Operational Pilot Test Suite (18 Mandatory Tests)
+      - name: Run Operational Pilot Test Suite (22 Mandatory Tests)
         run: node --test packages/runtime/dist/test/operationalPilotReal.test.js
 
       - name: Verify Repository Security Gate (No Fallback Secrets)
@@ -73,10 +85,14 @@ jobs:
         run: |
           if [ "${{ github.event.inputs.execution_mode }}" = "OPERATIONAL_PILOT" ]; then
             node scripts/prepare-operational-pilot-input.mjs \
-              --package-path="${{ github.event.inputs.external_package_path }}" \
+              --intake-run-id="${{ github.event.inputs.intake_run_id }}" \
+              --input-artifact-id="${{ github.event.inputs.input_artifact_id }}" \
+              --input-artifact-name="${{ github.event.inputs.input_artifact_name }}" \
+              --input-package-sha256="${{ github.event.inputs.input_package_sha256 }}" \
               --out-dir=.artifacts/pilot \
               --tenant-id="${{ github.event.inputs.tenant_id }}" \
-              --task-id="${{ github.event.inputs.task_id }}"
+              --task-id="${{ github.event.inputs.task_id }}" \
+              --mode=OPERATIONAL_PILOT
           else
             node scripts/prepare-demo-pilot-input.mjs \
               --out-dir=.artifacts/pilot \
@@ -105,67 +121,5 @@ jobs:
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
           name: aetf-pilot-stage-a-${{ github.sha }}
-          path: .artifacts/pilot
-          retention-days: 90
-
-  stage-b-human-review-closure:
-    name: "Etapa B: Decisão Humana e Fecho Operacional"
-    needs: stage-a-prepare-and-challenge
-    runs-on: ubuntu-latest
-    environment: protected-pilot
-
-    steps:
-      - name: Checkout Codebase at Exact Audited SHA
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          ref: ${{ github.sha }}
-
-      - name: Setup Node.js 22.x
-        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
-        with:
-          node-version: 22.x
-          cache: 'npm'
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Compile Monorepo Packages
-        run: npm run build:packages
-
-      - name: Download Stage A Artifacts
-        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
-        with:
-          name: aetf-pilot-stage-a-${{ github.sha }}
-          path: .artifacts/pilot
-
-      - name: Execute Stage B (Review and Archival Closure)
-        run: |
-          node scripts/run-operational-pilot.mjs \
-            --stage=review-and-close \
-            --mode="${{ github.event.inputs.execution_mode || 'DEMO' }}" \
-            --input=.artifacts/pilot/operational-pilot-input.json \
-            --db=.artifacts/pilot/pilot.db \
-            --output-dir=.artifacts/pilot/evidence \
-            --tenant-id="${{ github.event.inputs.tenant_id }}" \
-            --task-id="${{ github.event.inputs.task_id }}" \
-            --reviewer-secret="${{ secrets.PILOT_SECRET_REV_MARIA }}"
-        env:
-          GIT_COMMIT_SHA: ${{ github.sha }}
-          GITHUB_SHA: ${{ github.sha }}
-
-      - name: Verify Operational Pilot Manifest (Bidirectional 7-Plane Forensic Check)
-        run: |
-          node scripts/verify-operational-pilot-manifest.mjs \
-            --dir=.artifacts/pilot/evidence \
-            --input=.artifacts/pilot/operational-pilot-input.json \
-            --db=.artifacts/pilot/pilot.db
-        env:
-          GIT_COMMIT_SHA: ${{ github.sha }}
-          GITHUB_SHA: ${{ github.sha }}
-
-      - name: Package Evidence and Upload Protected Closure Bundle
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
-        with:
-          name: aetf-pilot-closure-${{ github.sha }}
           path: .artifacts/pilot
           retention-days: 90

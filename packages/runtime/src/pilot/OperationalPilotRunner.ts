@@ -128,6 +128,8 @@ export class OperationalPilotRunner {
   private ajvValidator: PilotAjvValidator;
   private executionMode: OperationalPilotMode;
   private loadedInput: OperationalPilotInput | null = null;
+  private originalInputFilePath: string | null = null;
+  private originalInputFileBytes: Buffer | null = null;
   private pilotProgram: PilotProgram | null = null;
   private taskReceipt: PilotTaskReceipt | null = null;
   private activeChallenge: PilotReviewChallenge | null = null;
@@ -199,7 +201,9 @@ export class OperationalPilotRunner {
         throw new Error(`Fonte operacional externa não encontrada no disco: '${inputOrPath}'.`);
       }
       try {
-        const fileContent = fs.readFileSync(inputOrPath, 'utf8').replace(/^\uFEFF/, '');
+        this.originalInputFilePath = path.resolve(inputOrPath);
+        this.originalInputFileBytes = fs.readFileSync(inputOrPath);
+        const fileContent = this.originalInputFileBytes.toString('utf8').replace(/^\uFEFF/, '');
         raw = JSON.parse(fileContent);
       } catch (err: any) {
         this.state = 'PILOT_BLOCKED_MISSING_INPUT';
@@ -289,10 +293,32 @@ export class OperationalPilotRunner {
     }
 
     // 3. Authorization document validation
-    if (!fs.existsSync(raw.authorization_document_path)) {
+    let resolvedAuthDocPath = raw.authorization_document_path;
+    if (!fs.existsSync(resolvedAuthDocPath)) {
+      if (typeof inputOrPath === 'string') {
+        const inputDir = path.dirname(inputOrPath);
+        const runtimeCtxPath = path.join(inputDir, 'runtime-context.json');
+        if (fs.existsSync(runtimeCtxPath)) {
+          try {
+            const ctx = JSON.parse(fs.readFileSync(runtimeCtxPath, 'utf8'));
+            if (ctx.resolved_authorization_document_path && fs.existsSync(ctx.resolved_authorization_document_path)) {
+              resolvedAuthDocPath = ctx.resolved_authorization_document_path;
+            }
+          } catch {}
+        }
+        if (!fs.existsSync(resolvedAuthDocPath)) {
+          const candidateRel = path.resolve(inputDir, raw.authorization_document_path);
+          if (fs.existsSync(candidateRel)) {
+            resolvedAuthDocPath = candidateRel;
+          }
+        }
+      }
+    }
+
+    if (!fs.existsSync(resolvedAuthDocPath)) {
       throw new Error(`Ficheiro físico de autorização não encontrado: '${raw.authorization_document_path}'.`);
     }
-    const authFileBytes = fs.readFileSync(raw.authorization_document_path);
+    const authFileBytes = fs.readFileSync(resolvedAuthDocPath);
     const actualAuthSha = sha256(authFileBytes);
     if (actualAuthSha !== raw.authorization_document_sha256) {
       throw new Error(
@@ -617,7 +643,7 @@ export class OperationalPilotRunner {
   public submitHumanReview(params: {
     reviewerId: string;
     reviewerToken: string;
-    decision: 'APPROVED' | 'REJECTED' | 'APPROVED_WITH_CORRECTIONS';
+    decision: 'APPROVED' | 'REJECTED' | 'APPROVED_WITH_CORRECTIONS' | 'REQUEST_CHANGES';
     comments: string;
     eventSignedAt?: string;
     signature?: string;
@@ -630,8 +656,8 @@ export class OperationalPilotRunner {
     }
 
     // 0. Validate explicit decision
-    if (!params.decision || !['APPROVED', 'REJECTED', 'APPROVED_WITH_CORRECTIONS'].includes(params.decision)) {
-      throw new Error(`Decisão de revisão inválida ou ausente: '${params.decision}'. Esperado APPROVED, REJECTED ou APPROVED_WITH_CORRECTIONS.`);
+    if (!params.decision || !['APPROVED', 'REJECTED', 'APPROVED_WITH_CORRECTIONS', 'REQUEST_CHANGES'].includes(params.decision)) {
+      throw new Error(`Decisão de revisão inválida ou ausente: '${params.decision}'. Esperado APPROVED, REJECTED ou REQUEST_CHANGES.`);
     }
 
     const reviewReceivedAt = new Date().toISOString();
@@ -881,12 +907,40 @@ export class OperationalPilotRunner {
       fs.mkdirSync(p, { recursive: true });
     }
 
-    // Export raw input snapshot
-    fs.writeFileSync(
-      path.join(outputDir, 'operational-pilot-input.json'),
-      JSON.stringify(this.loadedInput, null, 2),
-      'utf8'
-    );
+    // Export raw input snapshot preserving original bytes
+    const destInputFile = path.join(outputDir, 'operational-pilot-input.json');
+    if (this.originalInputFileBytes) {
+      fs.writeFileSync(destInputFile, this.originalInputFileBytes);
+    } else {
+      fs.writeFileSync(
+        destInputFile,
+        JSON.stringify(this.loadedInput, null, 2),
+        'utf8'
+      );
+    }
+
+    // Copy auxiliary verification and provenance files if present in input directory or parent directory
+    const candidateDirs = new Set<string>();
+    if (this.originalInputFilePath) {
+      candidateDirs.add(path.dirname(this.originalInputFilePath));
+    }
+    candidateDirs.add(path.dirname(outputDir));
+    const auxFiles = [
+      'environment-api-response.json',
+      'environment-protection-verification.json',
+      'package-provenance.json',
+      'runtime-context.json',
+      'input-package.sha256'
+    ];
+    for (const cDir of candidateDirs) {
+      for (const af of auxFiles) {
+        const srcAux = path.join(cDir, af);
+        const destAux = path.join(outputDir, af);
+        if (fs.existsSync(srcAux) && !fs.existsSync(destAux)) {
+          fs.copyFileSync(srcAux, destAux);
+        }
+      }
+    }
 
     // Export pilot configuration and authorization
     fs.writeFileSync(

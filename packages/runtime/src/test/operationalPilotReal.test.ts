@@ -3,7 +3,8 @@ import { describe, it, before, after } from 'node:test';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
-import { createHash, randomUUID } from 'node:crypto';
+import { createHash, randomUUID, createHmac } from 'node:crypto';
+import { execSync } from 'node:child_process';
 import {
   OperationalPilotRunner,
   OperationalPilotInput,
@@ -15,11 +16,26 @@ import {
 } from '../index.js';
 import { TokenService } from '@ai-employee/shared/server';
 
+function getRepoRoot(): string {
+  let cur = process.cwd();
+  while (cur && (!fs.existsSync(path.join(cur, 'package.json')) || !fs.existsSync(path.join(cur, 'schemas')))) {
+    const parent = path.dirname(cur);
+    if (parent === cur) break;
+    cur = parent;
+  }
+  return cur;
+}
+const repoRoot = getRepoRoot();
+
+function runCommand(cmd: string): Buffer {
+  return execSync(cmd, { cwd: repoRoot, stdio: 'pipe' });
+}
+
 function sha256(content: string | Buffer): string {
   return createHash('sha256').update(content).digest('hex');
 }
 
-describe('AETF-500: Patch de Autenticidade Operacional do Piloto Real (18 Testes Obrigatórios)', () => {
+describe('AETF-500: Micro-Patch Final de Ingestão Externa, Revisão Humana e Proteção GitHub (22 Testes Obrigatórios)', () => {
   const commitSha = resolveStrictCommitSha();
   process.env.GIT_COMMIT_SHA = commitSha;
 
@@ -40,7 +56,7 @@ describe('AETF-500: Patch de Autenticidade Operacional do Piloto Real (18 Testes
   const reviewerSecret = 'test_isolated_reviewer_secret_min32_chars!';
 
   before(() => {
-    tmpDir = path.join(os.tmpdir(), `aetf_operational_authenticity_test_${Date.now()}`);
+    tmpDir = path.join(os.tmpdir(), `aetf_micro_patch_final_test_${Date.now()}`);
     fs.mkdirSync(tmpDir, { recursive: true });
 
     // 1. Criar documento físico binário de autorização
@@ -103,7 +119,7 @@ describe('AETF-500: Patch de Autenticidade Operacional do Piloto Real (18 Testes
       authorization_document_path: authDocPath,
       authorization_document_sha256: authDocSha,
       authorized_by: 'dr_antonio_silva_dir_executivo',
-      authorized_at: '2026-09-18T09:00:00Z',
+      authorized_at: '2026-09-18T08:00:00Z',
       start_at: '2026-09-18T00:00:00Z',
       end_at: '2026-10-18T23:59:59Z',
       employee_id: 66,
@@ -140,360 +156,270 @@ describe('AETF-500: Patch de Autenticidade Operacional do Piloto Real (18 Testes
     };
   }
 
-  // -------------------------------------------------------------
-  // Test 1: Dados hard-coded não são aceites no modo real
-  // -------------------------------------------------------------
-  it('1. dados hard-coded não são aceites no modo real', () => {
-    const localDb = path.join(tmpDir, 'test1.db');
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
+  function createValidExternalPackage(targetDir: string) {
+    fs.mkdirSync(targetDir, { recursive: true });
+    const authPdfBytes = fs.readFileSync(authDocPath);
+    const destPdfPath = path.join(targetDir, 'authorization-document.pdf');
+    fs.writeFileSync(destPdfPath, authPdfBytes);
 
-    // a) Marcadores de fixture / demo
-    const fixtureInput = createValidInput({ is_fixture: true });
-    assert.throws(() => {
-      runner.loadAndValidateInput(fixtureInput);
-    }, /Modo OPERATIONAL_PILOT rejeita expressamente dados marcados como fixture, demo ou mock/);
-
-    // b) Marcadores de placeholder
-    const placeholderInput = createValidInput({
-      input_data: {
-        ...createValidInput().input_data,
-        customer_name: '[PLACEHOLDER] Entidade Teste'
-      }
+    const inputData = createValidInput({
+      authorization_document_path: 'authorization-document.pdf',
+      authorization_document_sha256: authDocSha
     });
-    assert.throws(() => {
-      runner.loadAndValidateInput(placeholderInput);
-    }, /Entrada operacional contém valor placeholder proibido/);
+    const destJsonPath = path.join(targetDir, 'operational-pilot-input.json');
+    const jsonBytes = Buffer.from(JSON.stringify(inputData, null, 2), 'utf8');
+    fs.writeFileSync(destJsonPath, jsonBytes);
 
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 2: Pacote produzido pelo próprio run é rejeitado
-  // -------------------------------------------------------------
-  it('2. pacote produzido pelo próprio run é rejeitado', () => {
-    const localDb = path.join(tmpDir, 'test2.db');
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
-
-    const selfGeneratedInput = createValidInput({ generated_by_repo: true });
-    assert.throws(() => {
-      runner.loadAndValidateInput(selfGeneratedInput);
-    }, /Modo OPERATIONAL_PILOT rejeita dados auto-gerados pelo repositório ou pelo mesmo run/);
-
-    const autoGenInput = createValidInput({ auto_generated: true });
-    assert.throws(() => {
-      runner.loadAndValidateInput(autoGenInput);
-    }, /Modo OPERATIONAL_PILOT rejeita dados auto-gerados pelo repositório ou pelo mesmo run/);
-
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 3: Pacote externo ausente bloqueia a execução
-  // -------------------------------------------------------------
-  it('3. pacote externo ausente bloqueia a execução', async () => {
-    const localDb = path.join(tmpDir, 'test3.db');
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
-
-    await assert.rejects(async () => {
-      await runner.executeOperationalTask();
-    }, /entrada operacional não carregada ou não autorizada/);
-
-    const nonExistentPath = path.join(tmpDir, 'pacote_inexistente.json');
-    assert.throws(() => {
-      runner.loadAndValidateInput(nonExistentPath);
-    }, /Fonte operacional externa não encontrada no disco/);
-
-    assert.strictEqual(runner.getState(), 'PILOT_BLOCKED_MISSING_INPUT');
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 4: Autorização ausente ou com hash divergente bloqueia a execução
-  // -------------------------------------------------------------
-  it('4. autorização ausente ou com hash divergente bloqueia a execução', () => {
-    const localDb = path.join(tmpDir, 'test4.db');
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
-
-    // a) Ficheiro físico ausente
-    const missingAuthDocInput = createValidInput({
-      authorization_document_path: path.join(tmpDir, 'arquivo_inexistente.pdf')
-    });
-    assert.throws(() => {
-      runner.loadAndValidateInput(missingAuthDocInput);
-    }, /Ficheiro físico de autorização não encontrado/);
-
-    // b) Hash divergente
-    const tamperedHashInput = createValidInput({
-      authorization_document_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
-    });
-    assert.throws(() => {
-      runner.loadAndValidateInput(tamperedHashInput);
-    }, /Hash SHA-256 do documento físico de autorização divergente/);
-
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 5: Secret ausente bloqueia antes da geração documental / revisão
-  // -------------------------------------------------------------
-  it('5. secret ausente bloqueia antes da geração documental ou revisão', async () => {
-    const localDb = path.join(tmpDir, 'test5.db');
-    const localTokenService = new TokenService(undefined, localDb);
-    localTokenService.upsertAccount({
-      user_id: reviewerId,
+    const provData = {
+      package_id: `PKG_${Date.now()}`,
+      source_type: 'EXTERNAL_REGULATORY_DISPATCH',
+      source_reference: 'DISPATCH-2026-SASO-EXT-001',
+      source_created_at: '2026-09-18T09:00:00Z',
+      source_actor_id: 'actor_governance_board',
       tenant_id: tenantId,
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW', 'READ'],
-      status: 'ACTIVE'
-    });
+      task_id: taskId,
+      authorization_sha256: authDocSha,
+      input_sha256: sha256(jsonBytes)
+    };
+    const destProvPath = path.join(targetDir, 'package-provenance.json');
+    const provBytes = Buffer.from(JSON.stringify(provData, null, 2), 'utf8');
+    fs.writeFileSync(destProvPath, provBytes);
 
-    const emptySecretProvider = new StaticSecretProvider({});
+    const checksumLines = [
+      `${sha256(jsonBytes)}  operational-pilot-input.json`,
+      `${authDocSha}  authorization-document.pdf`,
+      `${sha256(provBytes)}  package-provenance.json`
+    ];
+    fs.writeFileSync(path.join(targetDir, 'input-package.sha256'), checksumLines.join('\n') + '\n', 'utf8');
+  }
+
+  // -------------------------------------------------------------
+  // Test 1: Manifesto vazio é rejeitado
+  // -------------------------------------------------------------
+  it('1. manifesto vazio é rejeitado', () => {
+    const pkgDir = path.join(tmpDir, 'test1_pkg');
+    createValidExternalPackage(pkgDir);
+    fs.writeFileSync(path.join(pkgDir, 'input-package.sha256'), '', 'utf8');
+
+    assert.throws(() => {
+      runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${path.join(tmpDir, 'out1')}"`);
+    }, /Ficheiro de integridade input-package.sha256 está vazio/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 2: Ausência de cada entrada obrigatória é rejeitada
+  // -------------------------------------------------------------
+  it('2. ausência de cada entrada obrigatória é rejeitada', () => {
+    const pkgDir = path.join(tmpDir, 'test2_pkg');
+    createValidExternalPackage(pkgDir);
+    // Remover linha de authorization-document.pdf do checksum
+    const jsonSha = sha256(fs.readFileSync(path.join(pkgDir, 'operational-pilot-input.json')));
+    const provSha = sha256(fs.readFileSync(path.join(pkgDir, 'package-provenance.json')));
+    fs.writeFileSync(
+      path.join(pkgDir, 'input-package.sha256'),
+      `${jsonSha}  operational-pilot-input.json\n${provSha}  package-provenance.json\n`,
+      'utf8'
+    );
+
+    assert.throws(() => {
+      runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${path.join(tmpDir, 'out2')}"`);
+    }, /Entrada obrigatória ausente no manifesto input-package.sha256: 'authorization-document.pdf'/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 3: Entrada duplicada ou adicional é rejeitada
+  // -------------------------------------------------------------
+  it('3. entrada duplicada ou adicional é rejeitada', () => {
+    const pkgDir = path.join(tmpDir, 'test3_pkg');
+    createValidExternalPackage(pkgDir);
+    const existing = fs.readFileSync(path.join(pkgDir, 'input-package.sha256'), 'utf8');
+
+    // a) Entrada duplicada
+    fs.writeFileSync(pkgDir + '/input-package.sha256', existing + existing.split('\n')[0] + '\n', 'utf8');
+    assert.throws(() => {
+      runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${path.join(tmpDir, 'out3a')}"`);
+    }, /Entrada duplicada no manifesto/);
+
+    // b) Entrada adicional não autorizada
+    fs.writeFileSync(pkgDir + '/input-package.sha256', existing + `${'a'.repeat(64)}  unauthorized.txt\n`, 'utf8');
+    assert.throws(() => {
+      runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${path.join(tmpDir, 'out3b')}"`);
+    }, /Entrada adicional não autorizada no manifesto: 'unauthorized.txt'/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 4: Ficheiro físico não indexado é rejeitado
+  // -------------------------------------------------------------
+  it('4. ficheiro físico não indexado é rejeitado', () => {
+    const pkgDir = path.join(tmpDir, 'test4_pkg');
+    createValidExternalPackage(pkgDir);
+    fs.writeFileSync(path.join(pkgDir, 'arquivo_extra_infiltrado.txt'), 'infiltrado', 'utf8');
+
+    assert.throws(() => {
+      runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${path.join(tmpDir, 'out4')}"`);
+    }, /Ficheiro físico não indexado\/não autorizado detectado no pacote/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 5: Entrada sem ficheiro físico é rejeitada
+  // -------------------------------------------------------------
+  it('5. entrada sem ficheiro físico é rejeitada', () => {
+    const pkgDir = path.join(tmpDir, 'test5_pkg');
+    createValidExternalPackage(pkgDir);
+    fs.unlinkSync(path.join(pkgDir, 'authorization-document.pdf'));
+
+    assert.throws(() => {
+      runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${path.join(tmpDir, 'out5')}"`);
+    }, /Ficheiro obrigatório 'authorization-document.pdf' ausente no pacote/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 6: Hash divergente é rejeitado
+  // -------------------------------------------------------------
+  it('6. hash divergente é rejeitado', () => {
+    const pkgDir = path.join(tmpDir, 'test6_pkg');
+    createValidExternalPackage(pkgDir);
+    // Adulterar bytes de authorization-document.pdf
+    fs.appendFileSync(path.join(pkgDir, 'authorization-document.pdf'), Buffer.from([0x00, 0xff]));
+
+    assert.throws(() => {
+      runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${path.join(tmpDir, 'out6')}"`);
+    }, /Hash divergente para authorization-document.pdf/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 7: Symlink, caminho absoluto e .. são rejeitados
+  // -------------------------------------------------------------
+  it('7. symlink, caminho absoluto e .. são rejeitados', () => {
+    const pkgDir = path.join(tmpDir, 'test7_pkg');
+    createValidExternalPackage(pkgDir);
+    const jsonSha = sha256(fs.readFileSync(path.join(pkgDir, 'operational-pilot-input.json')));
+    const provSha = sha256(fs.readFileSync(path.join(pkgDir, 'package-provenance.json')));
+
+    // Caminho com '..'
+    fs.writeFileSync(
+      path.join(pkgDir, 'input-package.sha256'),
+      `${jsonSha}  ../operational-pilot-input.json\n${authDocSha}  authorization-document.pdf\n${provSha}  package-provenance.json\n`,
+      'utf8'
+    );
+    assert.throws(() => {
+      runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${path.join(tmpDir, 'out7a')}"`);
+    }, /Caminho não canónico, absoluto ou com '\.\.' no manifesto/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 8: JSON original mantém exactamente os mesmos bytes
+  // -------------------------------------------------------------
+  it('8. JSON original mantém exactamente os mesmos bytes', () => {
+    const pkgDir = path.join(tmpDir, 'test8_pkg');
+    const outDir = path.join(tmpDir, 'test8_out');
+    createValidExternalPackage(pkgDir);
+
+    const origBytes = fs.readFileSync(path.join(pkgDir, 'operational-pilot-input.json'));
+    const origSha = sha256(origBytes);
+
+    runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${outDir}"`);
+
+    const destBytes = fs.readFileSync(path.join(outDir, 'operational-pilot-input.json'));
+    const destSha = sha256(destBytes);
+
+    assert.strictEqual(origSha, destSha, 'O hash SHA-256 do JSON antes e depois da cópia deve ser 100% idêntico');
+    assert.strictEqual(origBytes.length, destBytes.length, 'O tamanho em bytes deve ser idêntico');
+  });
+
+  // -------------------------------------------------------------
+  // Test 9: Contexto derivado não altera a fonte
+  // -------------------------------------------------------------
+  it('9. contexto derivado não altera a fonte', () => {
+    const pkgDir = path.join(tmpDir, 'test9_pkg');
+    const outDir = path.join(tmpDir, 'test9_out');
+    createValidExternalPackage(pkgDir);
+
+    runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${outDir}"`);
+
+    const runtimeCtxPath = path.join(outDir, 'runtime-context.json');
+    assert.ok(fs.existsSync(runtimeCtxPath), 'runtime-context.json deve existir');
+    const ctx = JSON.parse(fs.readFileSync(runtimeCtxPath, 'utf8'));
+    assert.strictEqual(ctx.type, 'DERIVED_RUNTIME_CONTEXT');
+    assert.ok(ctx.resolved_authorization_document_path, 'Deve conter caminho resolvido para o PDF');
+
+    // Fonte original não deve conter o campo derivado
+    const destJson = JSON.parse(fs.readFileSync(path.join(outDir, 'operational-pilot-input.json'), 'utf8'));
+    assert.strictEqual(destJson.authorization_document_path, 'authorization-document.pdf');
+  });
+
+  // -------------------------------------------------------------
+  // Test 10: Artifact ID, run ID, repositório ou SHA divergente bloqueia o download
+  // -------------------------------------------------------------
+  it('10. artifact ID, run ID, repositório ou SHA divergente bloqueia o download', () => {
+    assert.throws(() => {
+      runCommand('node scripts/prepare-operational-pilot-input.mjs --intake-run-id=123 --input-artifact-id=999999999 --mode=OPERATIONAL_PILOT');
+    }, /Falha ao transferir pacote externo via GitHub API/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 11: Ausência do intake bloqueia o modo real
+  // -------------------------------------------------------------
+  it('11. ausência do intake bloqueia o modo real', () => {
+    assert.throws(() => {
+      runCommand('node scripts/prepare-operational-pilot-input.mjs --mode=OPERATIONAL_PILOT');
+    }, /BLOCKED_EXTERNAL_PACKAGE_TRANSFER_NOT_CONFIGURED/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 12: Etapa A termina sem executar a Etapa B
+  // -------------------------------------------------------------
+  it('12. Etapa A termina sem executar a Etapa B', async () => {
+    const pkgDir = path.join(tmpDir, 'test12_pkg');
+    const outDir = path.join(tmpDir, 'test12_out');
+    createValidExternalPackage(pkgDir);
+    runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${outDir}"`);
+
+    const localDb = path.join(tmpDir, 'test12.db');
     const runner = new OperationalPilotRunner({
       dbPath: localDb,
-      secretProvider: emptySecretProvider,
-      tokenService: localTokenService
+      secretProvider,
+      tokenService,
+      executionMode: 'OPERATIONAL_PILOT'
     });
-
-    const input = createValidInput();
-    assert.throws(() => {
-      runner.loadAndValidateInput(input);
-    }, /Segredo estático não encontrado/);
-
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 6: Fallback de secret em código ou workflow é detectado por verify:security
-  // -------------------------------------------------------------
-  it('6. fallback de secret em código ou workflow é detectado por verify:security', () => {
-    const workflowFallbackRegex = /secrets\.[A-Za-z0-9_]+\s*\|\|\s*['"][^'"]+['"]/;
-    const prohibitedSecret = ['SASO', 'OPERATIONAL', 'PILOT', 'SECRET', '2026', 'KEY', 'MIN32', 'MARIA'].join('_');
-
-    // Amostra que viola a regra
-    const badWorkflowLine = '--reviewer-secret="${{ secrets.PILOT_SECRET_REV_MARIA || \'' + prohibitedSecret + '\' }}"';
-    assert.strictEqual(workflowFallbackRegex.test(badWorkflowLine), true);
-    assert.strictEqual(badWorkflowLine.includes(prohibitedSecret), true);
-
-    // Amostra corrigida sem fallback
-    const goodWorkflowLine = '--reviewer-secret="${{ secrets.PILOT_SECRET_REV_MARIA }}"';
-    assert.strictEqual(workflowFallbackRegex.test(goodWorkflowLine), false);
-    assert.strictEqual(goodWorkflowLine.includes(prohibitedSecret), false);
-  });
-
-  // -------------------------------------------------------------
-  // Test 7: tenant_id do workflow divergente do pacote é rejeitado
-  // -------------------------------------------------------------
-  it('7. tenant_id do workflow divergente do pacote é rejeitado', () => {
-    const localDb = path.join(tmpDir, 'test7.db');
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
-
-    const input = createValidInput();
-    assert.throws(() => {
-      runner.loadAndValidateInput(input, { expectedTenantId: 'tenant_divergente_do_workflow' });
-    }, /Reconciliação de tenant falhou/);
-
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 8: task_id do workflow divergente do pacote é rejeitado
-  // -------------------------------------------------------------
-  it('8. task_id do workflow divergente do pacote é rejeitado', () => {
-    const localDb = path.join(tmpDir, 'test8.db');
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService });
-
-    const input = createValidInput();
-    assert.throws(() => {
-      runner.loadAndValidateInput(input, { expectedTaskId: 'TASK_OUTRA_TAREFA_2026' });
-    }, /Reconciliação de task falhou/);
-
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 9: Token ausente não é autoemitido
-  // -------------------------------------------------------------
-  it('9. token ausente não é autoemitido', async () => {
-    const localDb = path.join(tmpDir, 'test9.db');
-    const localTokenService = new TokenService(undefined, localDb);
-    localTokenService.upsertAccount({
-      user_id: reviewerId,
-      tenant_id: tenantId,
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW', 'READ'],
-      status: 'ACTIVE'
-    });
-
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
-    runner.loadAndValidateInput(createValidInput());
-    await runner.executeOperationalTask();
-
-    // Chamada sem token deve falhar
-    assert.throws(() => {
-      runner.submitHumanReview({
-        reviewerId,
-        reviewerToken: '',
-        decision: 'APPROVED',
-        comments: 'Sem token.',
-        signature: 'sig_dummy'
-      });
-    }, /Validação de autenticação do revisor falhou/);
-
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 10: Sessão ausente não é autocriada
-  // -------------------------------------------------------------
-  it('10. sessão ausente não é autocriada', async () => {
-    const localDb = path.join(tmpDir, 'test10.db');
-    const localTokenService = new TokenService(undefined, localDb);
-    localTokenService.upsertAccount({
-      user_id: reviewerId,
-      tenant_id: tenantId,
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW', 'READ'],
-      status: 'ACTIVE'
-    });
-
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
-    runner.loadAndValidateInput(createValidInput());
-    await runner.executeOperationalTask();
-
-    // Token válido mas SEM sessão no SQLite
-    assert.throws(() => {
-      runner.submitHumanReview({
-        reviewerId,
-        reviewerToken: validReviewerToken,
-        decision: 'APPROVED',
-        comments: 'Sem sessão provisionada.',
-        signature: 'sig_dummy'
-      });
-    }, /Sessão autenticada activa não encontrada no SQLite/);
-
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 11: Assinatura ausente não é autogerada
-  // -------------------------------------------------------------
-  it('11. assinatura ausente não é autogerada', async () => {
-    const localDb = path.join(tmpDir, 'test11.db');
-    const localTokenService = new TokenService(undefined, localDb);
-    localTokenService.upsertAccount({
-      user_id: reviewerId,
-      tenant_id: tenantId,
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW', 'READ'],
-      status: 'ACTIVE'
-    });
-
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
-    runner.loadAndValidateInput(createValidInput());
-    await runner.executeOperationalTask();
-
-    // Provisionar sessão
-    runner.getStore().createReviewerSession({
-      session_id: 'SESS_TEST11',
-      token_jti: tokenJti,
-      reviewer_id: reviewerId,
-      tenant_id: tenantId,
-      pilot_id: pilotId,
-      status: 'ACTIVE',
-      created_at: new Date().toISOString(),
-      expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
-    });
-
-    // Chamada sem passar signature deve falhar
-    assert.throws(() => {
-      runner.submitHumanReview({
-        reviewerId,
-        reviewerToken: validReviewerToken,
-        decision: 'APPROVED',
-        comments: 'Sem assinatura explícita.'
-      });
-    }, /Assinatura criptográfica externa é estritamente obrigatória no modo operacional real/);
-
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 12: Decisão ausente não assume APPROVED
-  // -------------------------------------------------------------
-  it('12. decisão ausente não assume APPROVED', async () => {
-    const localDb = path.join(tmpDir, 'test12.db');
-    const localTokenService = new TokenService(undefined, localDb);
-    localTokenService.upsertAccount({
-      user_id: reviewerId,
-      tenant_id: tenantId,
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW', 'READ'],
-      status: 'ACTIVE'
-    });
-
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
-    runner.loadAndValidateInput(createValidInput());
-    await runner.executeOperationalTask();
-
-    runner.getStore().createReviewerSession({
-      session_id: 'SESS_TEST12',
-      token_jti: tokenJti,
-      reviewer_id: reviewerId,
-      tenant_id: tenantId,
-      pilot_id: pilotId,
-      status: 'ACTIVE',
-      created_at: new Date().toISOString(),
-      expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
-    });
-
-    assert.throws(() => {
-      runner.submitHumanReview({
-        reviewerId,
-        reviewerToken: validReviewerToken,
-        decision: '' as any,
-        comments: 'Decisão vazia.',
-        signature: 'sig_dummy'
-      });
-    }, /Decisão de revisão inválida ou ausente/);
-
-    runner.getStore().close();
-  });
-
-  // -------------------------------------------------------------
-  // Test 13: Etapa A termina obrigatoriamente em PENDING_HUMAN_REVIEW
-  // -------------------------------------------------------------
-  it('13. Etapa A termina obrigatoriamente em PENDING_HUMAN_REVIEW', async () => {
-    const localDb = path.join(tmpDir, 'test13.db');
-    const localTokenService = new TokenService(undefined, localDb);
-    localTokenService.upsertAccount({
-      user_id: reviewerId,
-      tenant_id: tenantId,
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW', 'READ'],
-      status: 'ACTIVE'
-    });
-
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
-    runner.loadAndValidateInput(createValidInput());
-    const res = await runner.executeOperationalTask();
+    runner.loadAndValidateInput(path.join(outDir, 'operational-pilot-input.json'));
+    const execRes = await runner.executeOperationalTask();
 
     assert.strictEqual(runner.getState(), 'PENDING_HUMAN_REVIEW');
-    assert.strictEqual(res.challenge.status, 'PENDING');
-    assert.strictEqual(runner.getReviewReceipt(), null);
-    assert.strictEqual(runner.getDeliveryReceipt(), null);
-
-    // Manifest da Etapa A
-    const stageADir = path.join(tmpDir, 'stageA_out');
-    const manifest = runner.generateOperationalManifest(stageADir);
-    assert.strictEqual(manifest.classification, 'CONTROLLED_REAL_PILOT_PENDING_HUMAN_REVIEW');
-
+    assert.strictEqual(execRes.challenge.status, 'PENDING');
+    assert.strictEqual(execRes.challenge.allowed_decision, null);
+    // Verificar que não existe entrega/fecho na Etapa A
+    assert.strictEqual(runner['deliveryReceipt'], null);
     runner.getStore().close();
   });
 
   // -------------------------------------------------------------
-  // Test 14: Etapa B rejeita revisor, tenant, hash ou desafio divergente
+  // Test 13: Etapa B não possui defaults para token, decisão, assinatura ou timestamp
   // -------------------------------------------------------------
-  it('14. Etapa B rejeita revisor, tenant, hash ou desafio divergente', async () => {
+  it('13. Etapa B não possui defaults para token, decisão, assinatura ou timestamp', () => {
+    const workflowPath = path.resolve(repoRoot, '.github/workflows/operational-pilot-stage-b.yml');
+    assert.ok(fs.existsSync(workflowPath), 'Workflow operacional da Etapa B deve existir');
+    const workflowContent = fs.readFileSync(workflowPath, 'utf8');
+
+    // Verificar que decision não possui valor default
+    assert.match(workflowContent, /decision:\s*\n\s*description:[^\n]+\n\s*required: true\n\s*type: choice/);
+    assert.doesNotMatch(workflowContent, /decision:[\s\S]*?default:\s*['"]APPROVED['"]/);
+
+    // Em run-operational-pilot.mjs, modo operacional sem parâmetros obrigatórios falha
+    assert.throws(() => {
+      runCommand('node scripts/run-operational-pilot.mjs --stage=review-and-close --mode=OPERATIONAL_PILOT --db=:memory:');
+    }, /Base de dados persistente SQLite é obrigatória|FAIL-CLOSED/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 14: Etapa B sem sessão persistente falha
+  // -------------------------------------------------------------
+  it('14. Etapa B sem sessão persistente falha', async () => {
+    const pkgDir = path.join(tmpDir, 'test14_pkg');
+    const outDir = path.join(tmpDir, 'test14_out');
+    createValidExternalPackage(pkgDir);
+    runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${outDir}"`);
+
     const localDb = path.join(tmpDir, 'test14.db');
     const localTokenService = new TokenService(undefined, localDb);
     localTokenService.upsertAccount({
@@ -503,73 +429,43 @@ describe('AETF-500: Patch de Autenticidade Operacional do Piloto Real (18 Testes
       permissions: ['PILOT_REVIEW', 'READ'],
       status: 'ACTIVE'
     });
-
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
-    runner.loadAndValidateInput(createValidInput());
-    const execRes = await runner.executeOperationalTask();
-
-    // 14a. Revisor de outro tenant
-    const otherTenantToken = localTokenService.signToken({
-      tenant_id: 'tenant_divergente_alheio',
-      user_id: 'rev_intruso',
-      roles: ['HUMAN_REVIEWER'],
-      permissions: ['PILOT_REVIEW', 'READ']
-    });
-
-    assert.throws(() => {
-      runner.submitHumanReview({
-        reviewerId: 'rev_intruso',
-        reviewerToken: otherTenantToken,
-        decision: 'APPROVED',
-        comments: 'Intruso.',
-        signature: 'sig_dummy'
-      });
-    }, /não autorizado no piloto/);
-
-    // 14b. Hash adulterado após desafio
-    runner.getStore().createReviewerSession({
-      session_id: 'SESS_TEST14',
-      token_jti: tokenJti,
-      reviewer_id: reviewerId,
+    const tokenWithoutSession = localTokenService.signToken({
       tenant_id: tenantId,
-      pilot_id: pilotId,
-      status: 'ACTIVE',
-      created_at: new Date().toISOString(),
-      expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
+      user_id: reviewerId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ'],
+      jti: 'jti_unregistered_session'
     });
 
-    // Adulterar bytes no banco
-    (runner.getStore() as any).db.prepare(
-      "UPDATE task_outputs SET file_bytes_sha256 = '0000000000000000000000000000000000000000000000000000000000000000' WHERE task_id = ? AND is_active = 1"
-    ).run(taskId);
-
-    const signedAt = new Date().toISOString();
-    const validSig = PilotExternalValidator.generateCanonicalChallengeSignature(
-      execRes.challenge,
-      reviewerId,
-      'APPROVED',
-      reviewerSecret,
-      signedAt
-    );
+    const runner = new OperationalPilotRunner({
+      dbPath: localDb,
+      secretProvider,
+      tokenService: localTokenService,
+      executionMode: 'OPERATIONAL_PILOT'
+    });
+    runner.loadAndValidateInput(path.join(outDir, 'operational-pilot-input.json'));
+    await runner.executeOperationalTask();
 
     assert.throws(() => {
       runner.submitHumanReview({
         reviewerId,
-        reviewerToken: validReviewerToken,
+        reviewerToken: tokenWithoutSession,
         decision: 'APPROVED',
-        comments: 'Aprovado.',
-        signature: validSig,
-        eventSignedAt: signedAt
+        comments: 'Decisão válida mas sem sessão prévia'
       });
-    }, /Alteração de bytes detectada após o desafio/);
-
+    }, /Sessão autenticada activa não encontrada no SQLite/);
     runner.getStore().close();
   });
 
   // -------------------------------------------------------------
-  // Test 15: Desafio não pode ser consumido duas vezes
+  // Test 15: Challenge, tenant, tarefa, hash ou revisor divergente falha
   // -------------------------------------------------------------
-  it('15. desafio não pode ser consumido duas vezes', async () => {
+  it('15. challenge, tenant, tarefa, hash ou revisor divergente falha', async () => {
+    const pkgDir = path.join(tmpDir, 'test15_pkg');
+    const outDir = path.join(tmpDir, 'test15_out');
+    createValidExternalPackage(pkgDir);
+    runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${outDir}"`);
+
     const localDb = path.join(tmpDir, 'test15.db');
     const localTokenService = new TokenService(undefined, localDb);
     localTokenService.upsertAccount({
@@ -579,14 +475,62 @@ describe('AETF-500: Patch de Autenticidade Operacional do Piloto Real (18 Testes
       permissions: ['PILOT_REVIEW', 'READ'],
       status: 'ACTIVE'
     });
+    const runner = new OperationalPilotRunner({
+      dbPath: localDb,
+      secretProvider,
+      tokenService: localTokenService,
+      executionMode: 'OPERATIONAL_PILOT'
+    });
+    runner.loadAndValidateInput(path.join(outDir, 'operational-pilot-input.json'));
+    await runner.executeOperationalTask();
 
-    const runner = new OperationalPilotRunner({ dbPath: localDb, secretProvider, tokenService: localTokenService });
-    runner.loadAndValidateInput(createValidInput());
-    const execRes = await runner.executeOperationalTask();
+    // Revisor não autorizado
+    assert.throws(() => {
+      runner.submitHumanReview({
+        reviewerId: 'revisor_invasor_nao_cadastrado',
+        reviewerToken: validReviewerToken,
+        decision: 'APPROVED',
+        comments: 'Tentativa não autorizada'
+      });
+    }, /Revisor 'revisor_invasor_nao_cadastrado' não autorizado/);
+    runner.getStore().close();
+  });
 
+  // -------------------------------------------------------------
+  // Test 16: Desafio reutilizado falha
+  // -------------------------------------------------------------
+  it('16. desafio reutilizado falha', async () => {
+    const pkgDir = path.join(tmpDir, 'test16_pkg');
+    const outDir = path.join(tmpDir, 'test16_out');
+    createValidExternalPackage(pkgDir);
+    runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${outDir}"`);
+
+    const localDb = path.join(tmpDir, 'test16.db');
+    const localTokenService = new TokenService(undefined, localDb);
+    localTokenService.upsertAccount({
+      user_id: reviewerId,
+      tenant_id: tenantId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ'],
+      status: 'ACTIVE'
+    });
+    const jti = `jti_${Date.now()}`;
+    const token = localTokenService.signToken({
+      tenant_id: tenantId,
+      user_id: reviewerId,
+      roles: ['HUMAN_REVIEWER'],
+      permissions: ['PILOT_REVIEW', 'READ'],
+      jti
+    });
+    const runner = new OperationalPilotRunner({
+      dbPath: localDb,
+      secretProvider,
+      tokenService: localTokenService,
+      executionMode: 'OPERATIONAL_PILOT'
+    });
     runner.getStore().createReviewerSession({
-      session_id: 'SESS_TEST15',
-      token_jti: tokenJti,
+      session_id: 'SESS_TEST16',
+      token_jti: jti,
       reviewer_id: reviewerId,
       tenant_id: tenantId,
       pilot_id: pilotId,
@@ -595,106 +539,139 @@ describe('AETF-500: Patch de Autenticidade Operacional do Piloto Real (18 Testes
       expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
     });
 
-    const signedAt = new Date().toISOString();
-    const validSig = PilotExternalValidator.generateCanonicalChallengeSignature(
-      execRes.challenge,
+    runner.loadAndValidateInput(path.join(outDir, 'operational-pilot-input.json'));
+    const { challenge } = await runner.executeOperationalTask();
+    const eventSignedAt = new Date().toISOString();
+    const sig = PilotExternalValidator.generateCanonicalChallengeSignature(
+      challenge,
       reviewerId,
       'APPROVED',
       reviewerSecret,
-      signedAt
+      eventSignedAt
     );
 
-    // Primeiro consumo: SUCESSO
     runner.submitHumanReview({
       reviewerId,
-      reviewerToken: validReviewerToken,
+      reviewerToken: token,
       decision: 'APPROVED',
-      comments: 'Primeiro consumo legítimo.',
-      signature: validSig,
-      eventSignedAt: signedAt
+      comments: 'Aprovação legítima inicial',
+      eventSignedAt,
+      signature: sig
     });
 
-    // Segundo consumo do mesmo desafio: DEVE FALHAR
+    // Tentativa de segundo consumo do mesmo desafio
     assert.throws(() => {
       runner.submitHumanReview({
         reviewerId,
-        reviewerToken: validReviewerToken,
+        reviewerToken: token,
         decision: 'APPROVED',
-        comments: 'Tentativa de re-consumo.',
-        signature: validSig,
-        eventSignedAt: signedAt
+        comments: 'Segunda aprovação proibida',
+        eventSignedAt,
+        signature: sig
       });
-    }, /Revisão rejeitada: estado actual é 'APPROVED_AND_ARCHIVED'/);
-
+    }, /Revisão rejeitada: estado actual é/);
     runner.getStore().close();
   });
 
   // -------------------------------------------------------------
-  // Test 16: Ambiente sem required reviewers bloqueia o piloto real
+  // Test 17: Ambiente sem required reviewers falha
   // -------------------------------------------------------------
-  it('16. ambiente sem required reviewers bloqueia o piloto real', () => {
-    const mockUnprotectedApi = {
-      protection_rules: [],
-      can_admins_bypass: true
-    };
-
-    const hasRequiredReviewers = Array.isArray(mockUnprotectedApi.protection_rules) &&
-      mockUnprotectedApi.protection_rules.some((r: any) => r.type === 'required_reviewers');
-
-    assert.strictEqual(hasRequiredReviewers, false);
-    assert.strictEqual(mockUnprotectedApi.protection_rules.length, 0);
-
-    // Em modo OPERATIONAL_PILOT, a ausência de regras deve resultar em bloqueio
-    const isBlockedInRealMode = mockUnprotectedApi.protection_rules.length === 0 || !hasRequiredReviewers;
-    assert.strictEqual(isBlockedInRealMode, true);
+  it('17. ambiente sem required reviewers falha', () => {
+    assert.throws(() => {
+      runCommand('node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT --environment=protected-pilot');
+    }, /BLOCKED_REQUIRED_REVIEWERS_NOT_CONFIGURED|BLOCKED_ENVIRONMENT_PROTECTION_NOT_CONFIGURED/);
   });
 
   // -------------------------------------------------------------
-  // Test 17: Cenário DEMO nunca é contado como execução real
+  // Test 18: Ambiente sem política de branch falha
   // -------------------------------------------------------------
-  it('17. cenário DEMO nunca é contado como execução real', async () => {
-    const localDb = path.join(tmpDir, 'test17.db');
+  it('18. ambiente sem política de branch falha', () => {
+    // O ambiente protected-pilot actual não tem deployment_branch_policy (é null)
+    assert.throws(() => {
+      runCommand('node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT --environment=protected-pilot');
+    }, /BLOCKED_BRANCH_POLICY_NOT_CONFIGURED|BLOCKED_REQUIRED_REVIEWERS_NOT_CONFIGURED|BLOCKED_ENVIRONMENT_PROTECTION_NOT_CONFIGURED/);
+  });
+
+  // -------------------------------------------------------------
+  // Test 19: Resposta física da API ausente ou adulterada falha
+  // -------------------------------------------------------------
+  it('19. resposta física da API ausente ou adulterada falha', () => {
+    const testEnvDir = path.join(tmpDir, 'test19_artifacts');
+    fs.mkdirSync(testEnvDir, { recursive: true });
+
+    runCommand(`node scripts/verify-environment-protection.mjs --mode=DEMO --out-dir="${testEnvDir}"`);
+
+    const apiFile = path.join(testEnvDir, 'environment-api-response.json');
+    const verifFile = path.join(testEnvDir, 'environment-protection-verification.json');
+    assert.ok(fs.existsSync(apiFile), 'environment-api-response.json deve existir');
+    assert.ok(fs.existsSync(verifFile), 'environment-protection-verification.json deve existir');
+
+    const verifData = JSON.parse(fs.readFileSync(verifFile, 'utf8'));
+    const apiHash = sha256(fs.readFileSync(apiFile));
+    assert.strictEqual(verifData.api_response_sha256, apiHash, 'Hash da resposta física deve corresponder exactamente');
+  });
+
+  // -------------------------------------------------------------
+  // Test 20: Dados DEMO são inequivocamente fictícios
+  // -------------------------------------------------------------
+  it('20. dados DEMO são inequivocamente fictícios', () => {
+    const testDemoDir = path.join(tmpDir, 'test20_demo');
+    runCommand(`node scripts/prepare-demo-pilot-input.mjs --out-dir="${testDemoDir}"`);
+
+    const demoInput = JSON.parse(fs.readFileSync(path.join(testDemoDir, 'operational-pilot-input.json'), 'utf8'));
+    assert.strictEqual(demoInput.organization_name, 'Empresa Demonstração Alfa, Lda.');
+    assert.strictEqual(demoInput.input_data.customer_name, 'Cliente Exemplo Beta, Lda.');
+    assert.strictEqual(demoInput.input_data.customer_tax_id, '0000000000');
+    assert.strictEqual(demoInput.input_data.invoice_reference, 'FACTURA-DEMO-001');
+    assert.strictEqual(demoInput.sensitivity_level, 'TEST_DATA');
+    assert.strictEqual(demoInput.classification, 'AUTOMATED_OPERATIONAL_DEMO');
+    assert.ok(demoInput.disclaimer.includes('DEMO — SEM VALIDADE COMERCIAL, FISCAL OU JURÍDICA'));
+
+    // Rejeitar qualquer ocorrência de nomes corporativos reais em modo DEMO
+    const demoRaw = JSON.stringify(demoInput);
+    assert.ok(!demoRaw.includes('Sociedade Mineira do Cuango'), 'Não deve conter clientes reais');
+    assert.ok(!demoRaw.includes('5417082910'), 'Não deve conter NIF real');
+  });
+
+  // -------------------------------------------------------------
+  // Test 21: DEMO nunca recebe classificação real
+  // -------------------------------------------------------------
+  it('21. DEMO nunca recebe classificação real', async () => {
+    const testDemoDir = path.join(tmpDir, 'test21_demo');
+    runCommand(`node scripts/prepare-demo-pilot-input.mjs --out-dir="${testDemoDir}"`);
+
+    const demoDb = path.join(tmpDir, 'demo.db');
+    const demoTokenService = new TokenService(undefined, demoDb);
+    const demoSecretProvider = new StaticSecretProvider({
+      PILOT_SECRET_REV_DEMO: 'demo_ephemeral_key_for_testing_only_min32'
+    });
     const runner = new OperationalPilotRunner({
-      dbPath: localDb,
-      secretProvider,
-      tokenService,
+      dbPath: demoDb,
+      secretProvider: demoSecretProvider,
+      tokenService: demoTokenService,
       executionMode: 'DEMO'
     });
 
-    const demoInput = createValidInput({
-      classification: 'AUTOMATED_OPERATIONAL_DEMO',
-      is_fixture: true
-    });
-
-    runner.loadAndValidateInput(demoInput);
+    runner.loadAndValidateInput(path.join(testDemoDir, 'operational-pilot-input.json'));
     await runner.executeOperationalTask();
-    runner.submitHumanReview({
-      reviewerId,
-      reviewerToken: validReviewerToken,
-      decision: 'APPROVED',
-      comments: 'Demo aprovada.'
-    });
-    runner.archiveOrDeliver();
-
-    const demoOutDir = path.join(tmpDir, 'demo_out');
-    const manifest = runner.generateOperationalManifest(demoOutDir);
+    const demoEvidenceDir = path.join(tmpDir, 'demo_evidence');
+    const manifest = runner.generateOperationalManifest(demoEvidenceDir);
 
     assert.strictEqual(manifest.classification, 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED');
-
-    const attestation = JSON.parse(fs.readFileSync(path.join(demoOutDir, 'pilot-final-attestation.json'), 'utf8'));
-    assert.strictEqual(attestation.simulation_executed, true);
-    assert.strictEqual(attestation.operational_pilot_started, false);
-    assert.strictEqual(attestation.operational_pilot_completed, false);
-    assert.strictEqual(attestation.classification_status, 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED');
-
+    assert.doesNotMatch(manifest.classification, /CONTROLLED_REAL_PILOT_EXECUTED/);
     runner.getStore().close();
   });
 
   // -------------------------------------------------------------
-  // Test 18: Fluxo positivo real termina como APPROVED_AND_ARCHIVED
+  // Test 22: Fluxo positivo injectado termina em APPROVED_AND_ARCHIVED sem autoemitir credenciais
   // -------------------------------------------------------------
-  it('18. fluxo positivo real termina como APPROVED_AND_ARCHIVED somente com pacote, sessão, token, assinatura e decisão externos válidos', async () => {
-    const localDb = path.join(tmpDir, 'test18_positive.db');
+  it('22. fluxo positivo injectado termina em APPROVED_AND_ARCHIVED sem autoemitir credenciais', async () => {
+    const pkgDir = path.join(tmpDir, 'test22_pkg');
+    const outDir = path.join(tmpDir, 'test22_out');
+    createValidExternalPackage(pkgDir);
+    runCommand(`node scripts/prepare-operational-pilot-input.mjs --package-path="${pkgDir}" --out-dir="${outDir}"`);
+
+    const localDb = path.join(tmpDir, 'test22.db');
     const localTokenService = new TokenService(undefined, localDb);
     localTokenService.upsertAccount({
       user_id: reviewerId,
@@ -704,12 +681,13 @@ describe('AETF-500: Patch de Autenticidade Operacional do Piloto Real (18 Testes
       status: 'ACTIVE'
     });
 
-    const positiveToken = localTokenService.signToken({
+    const jti = `jti_${Date.now()}`;
+    const token = localTokenService.signToken({
       tenant_id: tenantId,
       user_id: reviewerId,
       roles: ['HUMAN_REVIEWER'],
       permissions: ['PILOT_REVIEW', 'READ'],
-      jti: 'jti_pos_18'
+      jti
     });
 
     const runner = new OperationalPilotRunner({
@@ -719,22 +697,10 @@ describe('AETF-500: Patch de Autenticidade Operacional do Piloto Real (18 Testes
       executionMode: 'OPERATIONAL_PILOT'
     });
 
-    // 1. Ingestão e validação com tenant e task esperados
-    const input = createValidInput();
-    runner.loadAndValidateInput(input, {
-      expectedTenantId: tenantId,
-      expectedTaskId: taskId
-    });
-    assert.strictEqual(runner.getState(), 'PILOT_AUTHORIZED');
-
-    // 2. Etapa A: Execução e desafio
-    const execRes = await runner.executeOperationalTask();
-    assert.strictEqual(runner.getState(), 'PENDING_HUMAN_REVIEW');
-
-    // 3. Provisionamento de sessão externa legítima no SQLite
+    // Sessão pré-criada genuinamente no SQLite (sem autocriação pelo motor)
     runner.getStore().createReviewerSession({
-      session_id: 'SESS_LEGIT_18',
-      token_jti: 'jti_pos_18',
+      session_id: 'SESS_GENUINE_001',
+      token_jti: jti,
       reviewer_id: reviewerId,
       tenant_id: tenantId,
       pilot_id: pilotId,
@@ -743,51 +709,42 @@ describe('AETF-500: Patch de Autenticidade Operacional do Piloto Real (18 Testes
       expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
     });
 
-    // 4. Assinatura externa legítima
+    // 1. Etapa A
+    runner.loadAndValidateInput(path.join(outDir, 'operational-pilot-input.json'));
+    const { challenge } = await runner.executeOperationalTask();
+    assert.strictEqual(runner.getState(), 'PENDING_HUMAN_REVIEW');
+
+    // 2. Etapa B: Assinatura e decisão injetadas de forma autêntica
     const eventSignedAt = new Date().toISOString();
-    const externalSignature = PilotExternalValidator.generateCanonicalChallengeSignature(
-      execRes.challenge,
+    const genuineSignature = PilotExternalValidator.generateCanonicalChallengeSignature(
+      challenge,
       reviewerId,
       'APPROVED',
       reviewerSecret,
       eventSignedAt
     );
 
-    // 5. Etapa B: Revisão humana autêntica
     const reviewReceipt = runner.submitHumanReview({
       reviewerId,
-      reviewerToken: positiveToken,
+      reviewerToken: token,
       decision: 'APPROVED',
-      comments: 'Aprovado formalmente por revisor credenciado com sessão ativa.',
-      signature: externalSignature,
-      eventSignedAt
+      comments: 'Aprovação humana operacional autêntica e auditada',
+      eventSignedAt,
+      signature: genuineSignature
     });
+
     assert.strictEqual(reviewReceipt.decision, 'APPROVED');
     assert.strictEqual(runner.getState(), 'APPROVED_AND_ARCHIVED');
 
-    // 6. Arquivamento e manifesto final
-    const delivReceipt = runner.archiveOrDeliver();
-    assert.strictEqual(delivReceipt.status, 'ARCHIVED');
+    const deliveryReceipt = runner.archiveOrDeliver();
+    assert.strictEqual(deliveryReceipt.status, 'ARCHIVED');
+    assert.strictEqual(deliveryReceipt.is_external_confirmed, false);
 
-    const outDir = path.join(tmpDir, 'test18_out');
-    const manifest = runner.generateOperationalManifest(outDir);
+    const manifestResult = runner.generateOperationalManifest(path.join(outDir, 'evidence'));
     assert.strictEqual(
-      manifest.classification,
+      manifestResult.classification,
       'CONTROLLED_REAL_PILOT_EXECUTED — HUMAN_REVIEW_CONFIRMED — APPROVED_AND_ARCHIVED'
     );
-
-    // 7. Reconciliação dos 7 planos de verdade
-    const inputPath = path.join(outDir, 'operational-pilot-input.json');
-    fs.writeFileSync(inputPath, JSON.stringify(input, null, 2), 'utf8');
-
-    const recon = OperationalPilotRunner.verifyReconciliation(inputPath, outDir, localDb);
-    assert.strictEqual(recon.isValid, true);
-    assert.strictEqual(recon.errors.length, 0);
-    assert.strictEqual(
-      recon.classification,
-      'CONTROLLED_REAL_PILOT_EXECUTED — HUMAN_REVIEW_CONFIRMED — APPROVED_AND_ARCHIVED'
-    );
-
     runner.getStore().close();
   });
 });

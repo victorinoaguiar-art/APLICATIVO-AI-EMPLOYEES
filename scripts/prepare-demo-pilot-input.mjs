@@ -16,8 +16,8 @@ function getArg(name, fallback = '') {
 }
 
 const outDir = path.resolve(process.cwd(), getArg('out-dir', '.artifacts/pilot'));
-const tenantId = getArg('tenant-id', 'tenant_saso_angola_ops_01');
-const taskId = getArg('task-id', 'TASK_SASO_NOTICE_2026_09_001');
+const tenantId = getArg('tenant-id', 'DEMO_TENANT_ALFA_001');
+const taskId = getArg('task-id', 'DEMO_TASK_NOTICE_001');
 
 fs.mkdirSync(outDir, { recursive: true });
 
@@ -28,18 +28,20 @@ console.log(`Directório de Destino: ${outDir}`);
 console.log(`Tenant ID:             ${tenantId}`);
 console.log(`Task ID:               ${taskId}`);
 
-// 1. Gerar documento binário de autorização simulada de teste
+// 1. Gerar documento binário de autorização simulada de teste com dados inequivocamente fictícios
 const authDocPath = path.join(outDir, 'despacho_autorizacao_demo.pdf');
 const authLines = [
-  'SOCIEDADE ANGOLANA DE SERVICOS & OPERACOES LDA (SASO)',
+  'DEMO — SEM VALIDADE COMERCIAL, FISCAL OU JURIDICA',
+  'EMPRESA DEMONSTRACAO ALFA, LDA. (DEMO_ORG_ALFA)',
   'DESPACHO SIMULADO DE DEMONSTRACAO - AMBIENTE CONTROLADO DE TESTES',
   'ASSUNTO: Autorizacao para Execucao de Demonstracao Automatizada',
-  'REFERENCIA INSTITUCIONAL: AUTH-SASO-PILOT-DEMO-2026',
+  'REFERENCIA INSTITUCIONAL: AUTH-DEMO-SIMULATION-2026',
   'TENANT AUTORIZADO: ' + tenantId,
   'TAREFA DEMONSTRATIVA: ' + taskId,
   'CLASSIFICACAO: AUTOMATED_OPERATIONAL_DEMO',
-  'DESTINATARIO SIMULADO: Sociedade Mineira do Cuango SARL',
-  'REVISOR SIMULADO: Dra. Maria Santos (Supervisora Operacional)',
+  'NIVEL DE SENSIBILIDADE: TEST_DATA',
+  'DESTINATARIO SIMULADO: Cliente Exemplo Beta, Lda. (NIF: 0000000000)',
+  'REVISOR SIMULADO: Revisor Demo 001 (Supervisor Tecnico Ficticio)',
   'DESFECHO: Demonstracao Interna Controlada (DEMO_COMPLETED)'
 ];
 
@@ -52,54 +54,70 @@ const authSha256 = sha256(authPdfBytes);
 console.log(`[PASS] Documento Físico de Autorização (DEMO) emitido: ${authDocPath}`);
 console.log(`[PASS] SHA-256 do Despacho: ${authSha256}`);
 
-// 2. Gerar ficheiro de entrada JSON marcado como fixture / demo
+// 2. Gerar ficheiro de entrada JSON com dados inequivocamente fictícios
 const demoInput = {
-  pilot_id: 'PILOT_SASO_DEMO_001',
+  pilot_id: 'PILOT_DEMO_PROGRAM_001',
   tenant_id: tenantId,
-  organization_id: 'ORG_SASO_AO',
-  organization_name: 'Sociedade Angolana de Serviços & Operações Lda (SASO)',
-  authorization_reference: 'AUTH-SASO-PILOT-DEMO-2026',
+  organization_id: 'DEMO_ORG_ALFA',
+  organization_name: 'Empresa Demonstração Alfa, Lda.',
+  authorization_reference: 'AUTH-DEMO-SIMULATION-2026',
   authorization_document_path: authDocPath,
   authorization_document_sha256: authSha256,
-  authorized_by: 'dr_antonio_silva_dir_executivo',
+  authorized_by: 'responsavel_demo_alfa_001',
   authorized_at: '2026-09-18T08:00:00Z',
   start_at: '2026-09-18T00:00:00Z',
   end_at: '2026-10-18T23:59:59Z',
   employee_id: 66,
   task_id: taskId,
-  task_title: 'Demonstração: Emissão de Notificação Preventiva',
-  task_description: 'Execução demonstrativa em ambiente controlado para validação de infraestrutura técnica',
+  task_title: 'DEMO: Emissão de Notificação Preventiva Simulada',
+  task_description: 'Execução demonstrativa em ambiente controlado para validação de infraestrutura técnica com dados fictícios',
   input_data: {
-    customer_name: 'Sociedade Mineira do Cuango SARL',
-    customer_tax_id: '5417082910',
-    invoice_reference: 'FT 2026/0892',
-    invoice_date: '2026-08-15',
+    customer_name: 'Cliente Exemplo Beta, Lda.',
+    customer_tax_id: '0000000000',
+    invoice_reference: 'FACTURA-DEMO-001',
+    invoice_date: '2026-09-01',
     due_date: '2026-09-30',
-    amount: 4850000,
+    amount: 100000,
     currency: 'AOA',
-    bank_iban: 'AO06.0040.0000.1234.5678.9012.3',
-    contact_email: 'cobrancas@saso.co.ao'
+    bank_iban: 'AO06.0000.0000.0000.0000.0000.0',
+    contact_email: 'cobrancas@demo.invalid'
   },
   idempotency_key: `IDEMP_DEMO_${Date.now()}`,
   received_at: new Date().toISOString(),
-  sensitivity_level: 'CONFIDENTIAL',
+  sensitivity_level: 'TEST_DATA',
   is_fixture: true,
+  is_mock: true,
   classification: 'AUTOMATED_OPERATIONAL_DEMO',
+  disclaimer: 'DEMO — SEM VALIDADE COMERCIAL, FISCAL OU JURÍDICA',
   authorized_reviewers: [
     {
-      reviewer_id: 'rev_dra_maria_santos',
-      display_name: 'Dra. Maria Santos',
-      role: 'SUPERVISOR_OPERACIONAL',
-      secret_ref: 'PILOT_SECRET_REV_MARIA',
-      email: 'maria.santos@saso.co.ao'
+      reviewer_id: 'rev_demo_humano_01',
+      display_name: 'Revisor Demo 001',
+      role: 'SUPERVISOR_TECNICO_DEMO',
+      secret_ref: 'PILOT_SECRET_REV_DEMO',
+      email: 'revisor@demo.invalid'
     }
   ],
   delivery_channel: 'INTERNAL_ARCHIVE',
-  destination: 'arquivo.geral@saso.co.ao',
+  destination: 'arquivo@demo.invalid',
   formats: ['PDF', 'DOCX']
 };
 
 const inputPath = path.join(outDir, 'operational-pilot-input.json');
 fs.writeFileSync(inputPath, JSON.stringify(demoInput, null, 2), 'utf8');
+
+// Também criar o runtime-context.json para DEMO
+const runtimeContext = {
+  type: 'DERIVED_RUNTIME_CONTEXT',
+  created_at: new Date().toISOString(),
+  original_input_file: 'operational-pilot-input.json',
+  original_input_sha256: sha256(Buffer.from(JSON.stringify(demoInput, null, 2), 'utf8')),
+  original_authorization_file: 'despacho_autorizacao_demo.pdf',
+  original_authorization_sha256: authSha256,
+  resolved_authorization_document_path: authDocPath,
+  package_dir: outDir
+};
+fs.writeFileSync(path.join(outDir, 'runtime-context.json'), JSON.stringify(runtimeContext, null, 2), 'utf8');
+
 console.log(`[PASS] Entrada de Demonstração gravada em: ${inputPath}`);
 console.log('================================================================\n');

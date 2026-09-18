@@ -1,0 +1,125 @@
+name: Operational Pilot - Etapa B (Decisao Humana e Fecho)
+
+on:
+  workflow_dispatch:
+    inputs:
+      execution_mode:
+        description: 'Modo de Execução (OPERATIONAL_PILOT ou DEMO)'
+        required: true
+        default: 'OPERATIONAL_PILOT'
+        type: choice
+        options:
+          - 'OPERATIONAL_PILOT'
+          - 'DEMO'
+      stage_a_run_id:
+        description: 'Run ID da Etapa A no GitHub Actions'
+        required: true
+      stage_a_artifact_id:
+        description: 'Artifact ID da Etapa A (opcional se run_id for fornecido)'
+        required: false
+        default: ''
+      challenge_id:
+        description: 'ID do Desafio de Revisão Criptográfico (ex: CHAL_...)'
+        required: true
+      tenant_id:
+        description: 'Tenant ID Autorizado'
+        required: true
+      task_id:
+        description: 'Identificador da Tarefa Empresarial'
+        required: true
+      reviewer_id:
+        description: 'ID do Revisor Humano Autorizado'
+        required: true
+      decision:
+        description: 'Decisão Humana Explícita'
+        required: true
+        type: choice
+        options:
+          - 'APPROVED'
+          - 'REJECTED'
+          - 'REQUEST_CHANGES'
+      event_signed_at:
+        description: 'Timestamp ISO-8601 correspondente à assinatura criptográfica'
+        required: false
+        default: ''
+      review_signature:
+        description: 'Assinatura HMAC externa calculada pelo revisor'
+        required: false
+        default: ''
+      reviewer_token:
+        description: 'Token de autenticação pré-existente do revisor'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  stage-b-human-review-closure:
+    name: "Etapa B: Decisão Humana, Consumo de Desafio e Fecho"
+    runs-on: ubuntu-latest
+    environment: protected-pilot
+
+    steps:
+      - name: Checkout Codebase at Exact Audited SHA
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Setup Node.js 22.x
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Compile Monorepo Packages
+        run: npm run build:packages
+
+      - name: Download Stage A Artifacts
+        run: |
+          mkdir -p .artifacts/pilot
+          gh run download "${{ github.event.inputs.stage_a_run_id }}" \
+            --name="aetf-pilot-stage-a-${{ github.sha }}" \
+            --dir=.artifacts/pilot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Execute Stage B (Review and Archival Closure)
+        run: |
+          node scripts/run-operational-pilot.mjs \
+            --stage=review-and-close \
+            --mode="${{ github.event.inputs.execution_mode }}" \
+            --input=.artifacts/pilot/operational-pilot-input.json \
+            --db=.artifacts/pilot/pilot.db \
+            --output-dir=.artifacts/pilot/evidence \
+            --tenant-id="${{ github.event.inputs.tenant_id }}" \
+            --task-id="${{ github.event.inputs.task_id }}" \
+            --reviewer-id="${{ github.event.inputs.reviewer_id }}" \
+            --reviewer-token="${{ github.event.inputs.reviewer_token }}" \
+            --reviewer-secret="${{ secrets.PILOT_SECRET_REV_MARIA }}" \
+            --signature="${{ github.event.inputs.review_signature }}" \
+            --decision="${{ github.event.inputs.decision }}"
+        env:
+          GIT_COMMIT_SHA: ${{ github.sha }}
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Verify Operational Pilot Manifest (Bidirectional 7-Plane Forensic Check)
+        run: |
+          node scripts/verify-operational-pilot-manifest.mjs \
+            --dir=.artifacts/pilot/evidence \
+            --input=.artifacts/pilot/operational-pilot-input.json \
+            --db=.artifacts/pilot/pilot.db
+        env:
+          GIT_COMMIT_SHA: ${{ github.sha }}
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Package Evidence and Upload Protected Closure Bundle
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        with:
+          name: aetf-pilot-closure-${{ github.sha }}
+          path: .artifacts/pilot
+          retention-days: 90
