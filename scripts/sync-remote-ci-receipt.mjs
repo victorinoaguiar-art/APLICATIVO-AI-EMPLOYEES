@@ -305,43 +305,20 @@ try {
   fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2), 'utf8');
   console.log(`[SYNC-REMOTE-RECEIPT] Updated ${receiptPath} with completed run data (Status: ${receipt.status}, Conclusion: ${receipt.conclusion}, remote_synced_at: ${receipt.remote_synced_at}).`);
 
-  // Recalculate index hashes
+  // Recalculate index hashes for all evidence files
   const indexPath = path.join(evidenceDir, 'evidence-files.sha256');
   if (fs.existsSync(indexPath)) {
-    const filesToHash = [
-      'github-actions-receipt.json',
-      'branch-protection.json',
-      'branch-protection-api-response.json',
-      'remote-workflow-run-api-response.json',
-      'primary-ci-run-api-response.json',
-      'primary-ci-jobs-api-response.json'
-    ];
-    const hashes = {};
-    for (const f of filesToHash) {
-      const p = path.join(evidenceDir, f);
-      if (fs.existsSync(p)) {
-        hashes[f] = crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
-      }
-    }
-
-    const lines = fs.readFileSync(indexPath, 'utf8').split('\n').filter(l => l.trim().length > 0);
-    const updatedFiles = new Set();
-    const updatedLines = lines.map(line => {
-      for (const [f, h] of Object.entries(hashes)) {
-        if (line.endsWith(`  ${f}`) || line.includes(`  ${f}`)) {
-          updatedFiles.add(f);
-          return `${h}  ${f}`;
-        }
-      }
-      return line;
+    const dirEntries = fs.readdirSync(evidenceDir)
+      .filter(f => f !== 'evidence-files.sha256')
+      .filter(f => fs.statSync(path.join(evidenceDir, f)).isFile())
+      .sort();
+    const evidenceHashLines = dirEntries.map(f => {
+      const content = fs.readFileSync(path.join(evidenceDir, f));
+      const h = crypto.createHash('sha256').update(content).digest('hex');
+      return `${h}  ${f}`;
     });
-    for (const [f, h] of Object.entries(hashes)) {
-      if (!updatedFiles.has(f)) {
-        updatedLines.push(`${h}  ${f}`);
-      }
-    }
-    fs.writeFileSync(indexPath, updatedLines.join('\n') + '\n', 'utf8');
-    console.log(`[SYNC-REMOTE-RECEIPT] Recalculated index hashes in ${indexPath}.`);
+    fs.writeFileSync(indexPath, evidenceHashLines.join('\n') + '\n', 'utf8');
+    console.log(`[SYNC-REMOTE-RECEIPT] Recalculated index hashes in ${indexPath} (${dirEntries.length} files indexed).`);
   }
 } catch (err) {
   console.error('[ERROR] Failed to query GitHub API:', err.message);
