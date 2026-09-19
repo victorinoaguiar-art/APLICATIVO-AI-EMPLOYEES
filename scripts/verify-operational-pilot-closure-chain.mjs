@@ -137,8 +137,16 @@ try {
 
   // 3. Validar evidências preservadas da Etapa A e do Intake dentro da Etapa B
   console.log('\n--- 3. Descoberta e Reconciliação Transversal da Cadeia ---');
-  const stageARunApiFile = path.join(stageBExtractDir, 'stage-a-run-api-response.json');
-  const stageAArtifactApiFile = path.join(stageBExtractDir, 'stage-a-artifact-api-response.json');
+  const evidenceBaseDir = fs.existsSync(path.join(stageBExtractDir, 'evidence'))
+    ? path.join(stageBExtractDir, 'evidence')
+    : stageBExtractDir;
+
+  const stageARunApiFile = fs.existsSync(path.join(stageBExtractDir, 'stage-a-run-api-response.json'))
+    ? path.join(stageBExtractDir, 'stage-a-run-api-response.json')
+    : path.join(evidenceBaseDir, 'stage-a-run-api-response.json');
+  const stageAArtifactApiFile = fs.existsSync(path.join(stageBExtractDir, 'stage-a-artifact-api-response.json'))
+    ? path.join(stageBExtractDir, 'stage-a-artifact-api-response.json')
+    : path.join(evidenceBaseDir, 'stage-a-artifact-api-response.json');
 
   if (!fs.existsSync(stageARunApiFile) || !fs.existsSync(stageAArtifactApiFile)) {
     throw new Error('Respostas da API da Etapa A ausentes na evidência extraída da Etapa B.');
@@ -160,8 +168,12 @@ try {
     `path=${runAData.path}`);
 
   // Intake evidence
-  const intakeRunApiFile = path.join(stageBExtractDir, 'intake-run-api-response.json');
-  const intakeArtifactApiFile = path.join(stageBExtractDir, 'intake-artifact-api-response.json');
+  const intakeRunApiFile = fs.existsSync(path.join(stageBExtractDir, 'intake-run-api-response.json'))
+    ? path.join(stageBExtractDir, 'intake-run-api-response.json')
+    : path.join(evidenceBaseDir, 'intake-run-api-response.json');
+  const intakeArtifactApiFile = fs.existsSync(path.join(stageBExtractDir, 'intake-artifact-api-response.json'))
+    ? path.join(stageBExtractDir, 'intake-artifact-api-response.json')
+    : path.join(evidenceBaseDir, 'intake-artifact-api-response.json');
   let intakeRunId = 0;
   let intakeArtifactId = 0;
   if (fs.existsSync(intakeRunApiFile)) {
@@ -180,21 +192,25 @@ try {
   console.log('\n--- 4. Validação de Coerência DEMO e Recibo de Independência ---');
   let taskReceiptPath = null;
   let taskReceiptFile = null;
-  const taskReceiptsDir = path.join(stageBExtractDir, 'task-receipts');
-  if (fs.existsSync(taskReceiptsDir)) {
-    const f = fs.readdirSync(taskReceiptsDir).find(x => x.endsWith('.json'));
-    if (f) {
-      taskReceiptFile = `task-receipts/${f}`;
-      taskReceiptPath = path.join(taskReceiptsDir, f);
+
+  for (const base of [evidenceBaseDir, stageBExtractDir]) {
+    const sub = path.join(base, 'task-receipts');
+    if (fs.existsSync(sub)) {
+      const f = fs.readdirSync(sub).find(x => x.endsWith('.json'));
+      if (f) {
+        taskReceiptFile = `task-receipts/${f}`;
+        taskReceiptPath = path.join(sub, f);
+        break;
+      }
+    }
+    const rootF = fs.readdirSync(base).find(x => (x.startsWith('task-receipt-') || x.startsWith('task-receipt') || x.startsWith('pilot-task-receipt')) && x.endsWith('.json'));
+    if (rootF) {
+      taskReceiptFile = rootF;
+      taskReceiptPath = path.join(base, rootF);
+      break;
     }
   }
-  if (!taskReceiptPath) {
-    const f = fs.readdirSync(stageBExtractDir).find(x => (x.startsWith('task-receipt-') || x.startsWith('task-receipt') || x.startsWith('pilot-task-receipt')) && x.endsWith('.json'));
-    if (f) {
-      taskReceiptFile = f;
-      taskReceiptPath = path.join(stageBExtractDir, f);
-    }
-  }
+
   if (!taskReceiptPath || !fs.existsSync(taskReceiptPath)) {
     throw new Error('Ficheiro de recibo de tarefa (task-receipts/*.json) não encontrado no pacote de fecho.');
   }
@@ -204,7 +220,9 @@ try {
     taskReceipt.execution_mode === 'DEMO' && taskReceipt.is_simulation === true && taskReceipt.classification_level === 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED' ? 'PASS' : 'FAIL',
     `mode=${taskReceipt.execution_mode}, is_simulation=${taskReceipt.is_simulation}`);
 
-  const indepReceiptFile = path.join(stageBExtractDir, 'reviewer-independence-receipt.json');
+  const indepReceiptFile = fs.existsSync(path.join(evidenceBaseDir, 'reviewer-independence-receipt.json'))
+    ? path.join(evidenceBaseDir, 'reviewer-independence-receipt.json')
+    : path.join(stageBExtractDir, 'reviewer-independence-receipt.json');
   if (!fs.existsSync(indepReceiptFile)) {
     throw new Error('reviewer-independence-receipt.json não encontrado no pacote de fecho.');
   }
@@ -221,7 +239,9 @@ try {
     `type=${indepReceipt.independence_evidence_type}, approval_id=${indepReceipt.github_environment_approval_id}`);
 
   // Rejeição categórica de qualquer classificação operacional real sob DEMO
-  const finalAttestationFile = path.join(stageBExtractDir, 'pilot-final-attestation.json');
+  const finalAttestationFile = fs.existsSync(path.join(evidenceBaseDir, 'pilot-final-attestation.json'))
+    ? path.join(evidenceBaseDir, 'pilot-final-attestation.json')
+    : path.join(stageBExtractDir, 'pilot-final-attestation.json');
   if (fs.existsSync(finalAttestationFile)) {
     const finalAtt = JSON.parse(fs.readFileSync(finalAttestationFile, 'utf8'));
     recordCheck('NO_REAL_CLASSIFICATION_IN_DEMO', String(runBData.id), String(closureArtifact.id), 'pilot-final-attestation.json', sha256(fs.readFileSync(finalAttestationFile)),
@@ -233,7 +253,9 @@ try {
 
   // 5. Validação Física Bidirecional dos Hashes contra pilot-evidence-files.sha256
   console.log('\n--- 5. Validação Física dos Hashes do Pacote de Fecho ---');
-  const indexPath = path.join(stageBExtractDir, 'pilot-evidence-files.sha256');
+  const indexPath = fs.existsSync(path.join(evidenceBaseDir, 'pilot-evidence-files.sha256'))
+    ? path.join(evidenceBaseDir, 'pilot-evidence-files.sha256')
+    : path.join(stageBExtractDir, 'pilot-evidence-files.sha256');
   if (!fs.existsSync(indexPath)) {
     throw new Error('pilot-evidence-files.sha256 ausente no pacote de fecho.');
   }
@@ -246,7 +268,9 @@ try {
     const expectedH = parts[0];
     const rawFileName = parts.slice(1).join(' ');
     const normalizedFile = rawFileName.replace(/^[./\\]+/, '').split(/[/\\]/).join(path.sep);
-    const filePath = path.join(stageBExtractDir, normalizedFile);
+    const filePath = fs.existsSync(path.join(evidenceBaseDir, normalizedFile))
+      ? path.join(evidenceBaseDir, normalizedFile)
+      : path.join(stageBExtractDir, normalizedFile);
     if (!fs.existsSync(filePath)) {
       throw new Error(`Ficheiro indexado em pilot-evidence-files.sha256 ausente no disco: ${rawFileName} (resolvido: ${filePath})`);
     }
