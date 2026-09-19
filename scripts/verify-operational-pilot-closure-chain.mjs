@@ -168,7 +168,41 @@ export function reconcileArtifactResponses(aggregatedArtifact, individualArtifac
 }
 
 /**
- * Localiza e carrega o mapa de integridade a partir do índice SHA-256 do pacote
+ * Normaliza um caminho para formato canónico relativo (separador '/', sem './', sem '..', sem barras iniciais/finais)
+ */
+export function normalizeCanonicalPath(rawPath) {
+  if (typeof rawPath !== 'string' || !rawPath.trim()) {
+    throw new Error('[FAIL-CLOSED] Caminho vazio ou inválido no índice.');
+  }
+  const trimmed = rawPath.trim();
+  // Rejeitar caminhos absolutos (Windows e Unix)
+  if (path.isAbsolute(trimmed) || /^[a-zA-Z]:[/\\]/.test(trimmed) || trimmed.startsWith('/') || trimmed.startsWith('\\')) {
+    throw new Error(`[FAIL-CLOSED] Caminho absoluto não permitido no índice: '${trimmed}'.`);
+  }
+  // Converter barras invertidas em barras normais
+  const forward = trimmed.replace(/\\/g, '/');
+  // Rejeitar escape por '..'
+  const segments = forward.split('/');
+  for (const seg of segments) {
+    if (seg === '..') {
+      throw new Error(`[FAIL-CLOSED] Caminho com escape ('..') não permitido no índice: '${trimmed}'.`);
+    }
+  }
+  const cleanParts = segments.filter(s => s && s !== '.');
+  if (cleanParts.length === 0) {
+    throw new Error(`[FAIL-CLOSED] Caminho inválido ou raiz no índice: '${trimmed}'.`);
+  }
+  return cleanParts.join('/');
+}
+
+/**
+ * Localiza e carrega o mapa de integridade a partir do índice SHA-256 do pacote.
+ * Regras estritas:
+ * - Correspondência exclusiva por caminho relativo canónico exato;
+ * - Sem alias nem lookup por basename;
+ * - Rejeição estrita de caminhos parciais, absolutos ou com '..';
+ * - Rejeição de entradas duplicadas para o mesmo caminho canónico;
+ * - Rejeição de hashes SHA-256 malformados (exige exatamente 64 hexadecimais).
  */
 export function loadPackageIndexMap(extractDir) {
   const possibleIndexNames = [
@@ -200,24 +234,36 @@ export function loadPackageIndexMap(extractDir) {
   const lines = fs.readFileSync(foundIndexPath, 'utf8').split('\n');
   const indexMap = new Map();
 
-  for (const line of lines) {
+  for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+    const line = lines[lineIdx];
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith('#')) continue;
+
     const parts = trimmed.split(/\s+/);
-    if (parts.length >= 2) {
-      const expectedHash = parts[0].toLowerCase();
-      const rawFile = parts.slice(1).join(' ');
-      const normalized = rawFile.replace(/^[./\\]+/, '').split(/[/\\]/).join(path.sep);
-      indexMap.set(normalized, expectedHash);
-      indexMap.set(path.basename(normalized), expectedHash);
+    if (parts.length < 2) {
+      throw new Error(`[FAIL-CLOSED] Linha ${lineIdx + 1} malformada no índice de hashes em '${foundIndexPath}': '${line}'.`);
     }
+
+    const expectedHash = parts[0].toLowerCase();
+    if (!/^[a-f0-9]{64}$/.test(expectedHash)) {
+      throw new Error(`[FAIL-CLOSED] Hash SHA-256 malformado na linha ${lineIdx + 1} do índice '${foundIndexPath}': '${parts[0]}'.`);
+    }
+
+    const rawFile = parts.slice(1).join(' ');
+    const canonicalRel = normalizeCanonicalPath(rawFile);
+
+    if (indexMap.has(canonicalRel)) {
+      throw new Error(`[FAIL-CLOSED] Entrada duplicada no índice de hashes para o caminho canónico '${canonicalRel}'.`);
+    }
+
+    indexMap.set(canonicalRel, expectedHash);
   }
 
   return { foundIndexPath, indexMap };
 }
 
 /**
- * Valida um ficheiro físico contra o índice SHA-256 do pacote
+ * Valida um ficheiro físico contra o índice SHA-256 do pacote usando estritamente o caminho canónico relativo exato.
  */
 export function verifyFileAgainstPackageIndex(extractDir, fullFilePath, indexMap) {
   if (!fs.existsSync(fullFilePath)) {
@@ -225,22 +271,98 @@ export function verifyFileAgainstPackageIndex(extractDir, fullFilePath, indexMap
   }
 
   const relativeToExtract = path.relative(extractDir, fullFilePath);
-  const normalizedRel = relativeToExtract.replace(/^[./\\]+/, '').split(/[/\\]/).join(path.sep);
-  const baseName = path.basename(fullFilePath);
+  if (relativeToExtract.startsWith('..') || path.isAbsolute(relativeToExtract)) {
+    throw new Error(`[FAIL-CLOSED] Caminho do ficheiro '${fullFilePath}' escapa do diretório extraído '${extractDir}'.`);
+  }
 
-  const expectedHash = indexMap.get(normalizedRel) || indexMap.get(baseName);
+  const canonicalRel = normalizeCanonicalPath(relativeToExtract);
+
+  const expectedHash = indexMap.get(canonicalRel);
   if (!expectedHash) {
-    throw new Error(`[FAIL-CLOSED] Fonte de linkage '${normalizedRel}' presente mas não indexada no manifesto de hashes.`);
+    throw new Error(`[FAIL-CLOSED] Fonte de linkage '${canonicalRel}' presente mas não indexada no manifesto de hashes.`);
   }
 
   const fileBytes = fs.readFileSync(fullFilePath);
   const actualHash = sha256(fileBytes).toLowerCase();
 
   if (actualHash !== expectedHash.toLowerCase()) {
-    throw new Error(`[FAIL-CLOSED] Hash físico da fonte de linkage '${normalizedRel}' (${actualHash}) diverge do registado no índice (${expectedHash}).`);
+    throw new Error(`[FAIL-CLOSED] Hash físico da fonte de linkage '${canonicalRel}' (${actualHash}) diverge do registado no índice (${expectedHash}).`);
   }
 
-  return { normalizedRel, actualHash };
+  return { normalizedRel: canonicalRel, actualHash };
+}
+
+/**
+ * Reconcilia um conjunto de pares disponíveis (run_id + artifact_id + workflow_run.id + head_sha)
+ * com a referência consumida autenticada no pacote, selecionando univocamente o par correspondente.
+ * Rejeita com erro fail-closed se:
+ * - A referência consumida for inválida ou ausente;
+ * - Nenhum par disponível corresponder à referência consumida;
+ * - Houver ambiguidade ou múltiplos pares idênticos;
+ * - Houver inconsistência interna no par (ex.: workflow_run_id divergente de run_id ou head_sha divergente).
+ */
+export function reconcileConsumedPair(availablePairs, consumedReference, stageName = 'Stage') {
+  if (!consumedReference || typeof consumedReference !== 'object') {
+    throw new Error(`[FAIL-CLOSED] Referência consumida inválida para ${stageName}.`);
+  }
+
+  const refRunId = Number(consumedReference.stage_a_run_id || consumedReference.intake_run_id || consumedReference.run_id);
+  const refArtifactId = Number(consumedReference.stage_a_artifact_id || consumedReference.intake_artifact_id || consumedReference.artifact_id);
+
+  if (!refRunId || isNaN(refRunId)) {
+    throw new Error(`[FAIL-CLOSED] ID de run ausente na referência consumida para ${stageName}.`);
+  }
+  if (!refArtifactId || isNaN(refArtifactId)) {
+    throw new Error(`[FAIL-CLOSED] ID de artefacto ausente na referência consumida para ${stageName}.`);
+  }
+
+  if (!Array.isArray(availablePairs) || availablePairs.length === 0) {
+    throw new Error(`[FAIL-CLOSED] Lista de pares disponíveis vazia para ${stageName}.`);
+  }
+
+  for (const pair of availablePairs) {
+    if (!pair || typeof pair !== 'object') {
+      throw new Error(`[FAIL-CLOSED] Par disponível inválido em ${stageName}.`);
+    }
+    const pairRunId = Number(pair.run_id || pair.id);
+    const pairArtifactId = Number(pair.artifact_id || pair.artifact?.id);
+    const pairWorkflowRunId = Number(pair.workflow_run_id || pair.workflow_run?.id || pairRunId);
+
+    if (pairRunId !== pairWorkflowRunId) {
+      throw new Error(`[FAIL-CLOSED] Inconsistência no par disponível: run_id (${pairRunId}) diverge de workflow_run.id (${pairWorkflowRunId}) em ${stageName}.`);
+    }
+  }
+
+  const matchingPairs = availablePairs.filter(pair => {
+    const pairRunId = Number(pair.run_id || pair.id);
+    const pairArtifactId = Number(pair.artifact_id || pair.artifact?.id);
+    return pairRunId === refRunId && pairArtifactId === refArtifactId;
+  });
+
+  if (matchingPairs.length === 0) {
+    throw new Error(`[FAIL-CLOSED] Nenhum par disponível em ${stageName} corresponde à referência consumida (run_id: ${refRunId}, artifact_id: ${refArtifactId}).`);
+  }
+
+  if (matchingPairs.length > 1) {
+    throw new Error(`[FAIL-CLOSED] Ambiguidade: ${matchingPairs.length} pares disponíveis coincidem com a referência consumida em ${stageName}.`);
+  }
+
+  const selectedPair = matchingPairs[0];
+  const selectedRunId = Number(selectedPair.run_id || selectedPair.id);
+  const selectedArtifactId = Number(selectedPair.artifact_id || selectedPair.artifact?.id);
+  const selectedHeadSha = selectedPair.head_sha || selectedPair.artifact?.workflow_run?.head_sha || null;
+
+  const refSha = consumedReference.stage_a_head_sha || consumedReference.intake_head_sha || consumedReference.head_sha;
+  if (refSha && selectedHeadSha && refSha !== selectedHeadSha) {
+    throw new Error(`[FAIL-CLOSED] head_sha do par selecionado (${selectedHeadSha}) diverge da referência consumida (${refSha}) em ${stageName}.`);
+  }
+
+  return {
+    run_id: selectedRunId,
+    artifact_id: selectedArtifactId,
+    head_sha: selectedHeadSha,
+    pair: selectedPair
+  };
 }
 
 /**
@@ -750,6 +872,14 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       throw new Error(`[FAIL-CLOSED] ID do artefacto da Etapa A descarregado (${stageABundle.artifact.id}) diverge do ID consumido pela Etapa B (${stageAArtifactId}).`);
     }
 
+    const availableStageAPairs = [{
+      run_id: Number(stageARun.id),
+      artifact_id: Number(stageABundle.artifact.id),
+      workflow_run_id: Number(stageABundle.artifact.workflow_run?.id || stageARun.id),
+      head_sha: stageARun.head_sha
+    }];
+    const resolvedStageAPair = reconcileConsumedPair(availableStageAPairs, stageALinkage, 'Etapa A');
+
     recordCheck('STAGE_A_ARTIFACT_DOWNLOADED', String(stageARun.id), String(stageABundle.artifact.id), expectedStageAArtifactName, stageABundle.zipSha,
       stageABundle.extractedFiles.length > 0 ? 'PASS' : 'FAIL',
       `${stageABundle.extractedFiles.length} ficheiros extraídos`);
@@ -839,6 +969,14 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
     if (intakeBundle.artifact.id !== intakeArtifactId) {
       throw new Error(`[FAIL-CLOSED] ID do artefacto de Intake descarregado (${intakeBundle.artifact.id}) diverge do ID consumido pela Etapa A (${intakeArtifactId}).`);
     }
+
+    const availableIntakePairs = [{
+      run_id: Number(intakeRun.id),
+      artifact_id: Number(intakeBundle.artifact.id),
+      workflow_run_id: Number(intakeBundle.artifact.workflow_run?.id || intakeRun.id),
+      head_sha: intakeRun.head_sha
+    }];
+    const resolvedIntakePair = reconcileConsumedPair(availableIntakePairs, intakeLinkage, 'Intake');
 
     recordCheck('INTAKE_ARTIFACT_DOWNLOADED', String(intakeRun.id), String(intakeBundle.artifact.id), expectedIntakeArtifactName, intakeBundle.zipSha,
       intakeBundle.extractedFiles.length > 0 ? 'PASS' : 'FAIL',
@@ -987,10 +1125,10 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       if (parts.length < 2) continue;
       const expectedH = parts[0];
       const rawFileName = parts.slice(1).join(' ');
-      const normalizedFile = rawFileName.replace(/^[./\\]+/, '').split(/[/\\]/).join(path.sep);
-      const filePath = fs.existsSync(path.join(stageBEvidenceBase, normalizedFile))
-        ? path.join(stageBEvidenceBase, normalizedFile)
-        : path.join(stageBExtractDir, normalizedFile);
+      const canonicalFile = normalizeCanonicalPath(rawFileName);
+      const filePath = fs.existsSync(path.join(stageBEvidenceBase, canonicalFile))
+        ? path.join(stageBEvidenceBase, canonicalFile)
+        : path.join(stageBExtractDir, canonicalFile);
 
       if (!fs.existsSync(filePath)) {
         throw new Error(`[FAIL-CLOSED] Ficheiro indexado ausente: ${rawFileName}`);

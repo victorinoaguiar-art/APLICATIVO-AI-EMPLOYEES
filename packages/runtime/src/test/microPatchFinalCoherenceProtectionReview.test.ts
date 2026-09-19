@@ -1067,63 +1067,238 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       });
     });
 
-    it('7.1.5: duas execuções reais da Etapa A no mesmo SHA — seleção comprovada do run consumido', () => {
+    it('7.1.5: duas execuções reais da Etapa A (Par A1 e Par A2 físicos completos) — seleção comprovada do par consumido pelo código de produção', () => {
       const stageBExtractedDir = path.join(tmpDir, 'test_stage_b_real_two_stage_a');
       fs.mkdirSync(stageBExtractedDir, { recursive: true });
 
-      const consumedRunId = 35444821530;
-      const otherRunId = 35444829999;
-      const consumedArtId = 10584802564;
-      const otherArtId = 10584809999;
+      const runA1Id = 35444821530;
+      const artA1Id = 10584802564;
+      const runA2Id = 35444829999;
+      const artA2Id = 10584809999;
 
-      // Fixture: dois pares de Etapa A existem no SHA, mas Etapa B gravou e indexou apenas o par 1
-      const stageAFileContent = JSON.stringify({
-        id: consumedArtId,
+      // Par A1 físico: Run e Artefacto
+      const runA1 = {
+        id: runA1Id,
+        head_sha: testSha,
+        head_branch: 'master',
+        status: 'completed',
+        conclusion: 'success',
+        path: '.github/workflows/operational-pilot-stage-a.yml',
+        repository: { id: 1363667011 }
+      };
+      const artA1 = {
+        id: artA1Id,
         name: `aetf-pilot-stage-a-${testSha}`,
-        workflow_run: { id: consumedRunId, head_sha: testSha }
-      }, null, 2);
+        size_in_bytes: 45000,
+        expired: false,
+        workflow_run: { id: runA1Id, head_sha: testSha }
+      };
 
-      fs.writeFileSync(path.join(stageBExtractedDir, 'stage-a-artifact-api-response.json'), stageAFileContent);
-      const contentHash = createHash('sha256').update(Buffer.from(stageAFileContent, 'utf8')).digest('hex');
-      fs.writeFileSync(path.join(stageBExtractedDir, 'pilot-evidence-files.sha256'), `${contentHash}  stage-a-artifact-api-response.json\n`);
+      // Par A2 físico: Run e Artefacto
+      const runA2 = {
+        id: runA2Id,
+        head_sha: testSha,
+        head_branch: 'master',
+        status: 'completed',
+        conclusion: 'success',
+        path: '.github/workflows/operational-pilot-stage-a.yml',
+        repository: { id: 1363667011 }
+      };
+      const artA2 = {
+        id: artA2Id,
+        name: `aetf-pilot-stage-a-${testSha}`,
+        size_in_bytes: 45200,
+        expired: false,
+        workflow_run: { id: runA2Id, head_sha: testSha }
+      };
 
-      // Executa código de produção
+      // Gravação física dos 4 ficheiros dos dois pares
+      const rawRunA1 = JSON.stringify(runA1, null, 2);
+      const rawArtA1 = JSON.stringify(artA1, null, 2);
+      const rawRunA2 = JSON.stringify(runA2, null, 2);
+      const rawArtA2 = JSON.stringify(artA2, null, 2);
+
+      fs.writeFileSync(path.join(stageBExtractedDir, 'stage-a-1-run-api-response.json'), rawRunA1);
+      fs.writeFileSync(path.join(stageBExtractedDir, 'stage-a-1-artifact-api-response.json'), rawArtA1);
+      fs.writeFileSync(path.join(stageBExtractedDir, 'stage-a-2-run-api-response.json'), rawRunA2);
+      fs.writeFileSync(path.join(stageBExtractedDir, 'stage-a-2-artifact-api-response.json'), rawArtA2);
+
+      // Referência canónica consumida da Etapa B indicando que o Par A1 foi consumido
+      const consumedRef = {
+        stage_a_run_id: runA1Id,
+        stage_a_artifact_id: artA1Id,
+        stage_a_head_sha: testSha
+      };
+      const rawConsumed = JSON.stringify(consumedRef, null, 2);
+      fs.writeFileSync(path.join(stageBExtractedDir, 'consumed-stage-a.json'), rawConsumed);
+
+      // Manifesto físico cobrindo 100% dos 5 ficheiros com caminhos canónicos exatos e hashes SHA-256 recalculados
+      const filesToHash = [
+        'stage-a-1-run-api-response.json',
+        'stage-a-1-artifact-api-response.json',
+        'stage-a-2-run-api-response.json',
+        'stage-a-2-artifact-api-response.json',
+        'consumed-stage-a.json'
+      ];
+      const shaLines = filesToHash.map(f => {
+        const h = createHash('sha256').update(fs.readFileSync(path.join(stageBExtractedDir, f))).digest('hex');
+        return `${h}  ${f}`;
+      });
+      fs.writeFileSync(path.join(stageBExtractedDir, 'pilot-evidence-files.sha256'), shaLines.join('\n') + '\n');
+
+      // 1. Extração e autenticação da referência consumida pelo código de produção
       const linkage = verifierModule.extractConsumedStageAIdentifiers(stageBExtractedDir);
-      assert.strictEqual(linkage.stage_a_run_id, consumedRunId);
-      assert.notStrictEqual(linkage.stage_a_run_id, otherRunId);
-      assert.strictEqual(linkage.stage_a_artifact_id, consumedArtId);
-      assert.notStrictEqual(linkage.stage_a_artifact_id, otherArtId);
+      assert.strictEqual(linkage.stage_a_run_id, runA1Id);
+      assert.strictEqual(linkage.stage_a_artifact_id, artA1Id);
       assert.strictEqual(linkage.linkage_source_hashes_verified, true);
       assert.strictEqual(linkage.linkage_consensus_verified, true);
+
+      // 2. Construção dos pares disponíveis a partir dos ficheiros físicos validados
+      const { indexMap } = verifierModule.loadPackageIndexMap(stageBExtractedDir);
+      verifierModule.verifyFileAgainstPackageIndex(stageBExtractedDir, path.join(stageBExtractedDir, 'stage-a-1-run-api-response.json'), indexMap);
+      verifierModule.verifyFileAgainstPackageIndex(stageBExtractedDir, path.join(stageBExtractedDir, 'stage-a-1-artifact-api-response.json'), indexMap);
+      verifierModule.verifyFileAgainstPackageIndex(stageBExtractedDir, path.join(stageBExtractedDir, 'stage-a-2-run-api-response.json'), indexMap);
+      verifierModule.verifyFileAgainstPackageIndex(stageBExtractedDir, path.join(stageBExtractedDir, 'stage-a-2-artifact-api-response.json'), indexMap);
+
+      const availablePairs = [
+        {
+          run_id: runA1.id,
+          artifact_id: artA1.id,
+          workflow_run_id: artA1.workflow_run.id,
+          head_sha: runA1.head_sha
+        },
+        {
+          run_id: runA2.id,
+          artifact_id: artA2.id,
+          workflow_run_id: artA2.workflow_run.id,
+          head_sha: runA2.head_sha
+        }
+      ];
+
+      // 3. Reconciliação dos pares disponíveis com a referência consumida pelo código de produção
+      const reconciled = verifierModule.reconcileConsumedPair(availablePairs, linkage, 'Etapa A');
+      assert.strictEqual(reconciled.run_id, runA1Id);
+      assert.notStrictEqual(reconciled.run_id, runA2Id);
+      assert.strictEqual(reconciled.artifact_id, artA1Id);
+      assert.notStrictEqual(reconciled.artifact_id, artA2Id);
+      assert.strictEqual(reconciled.head_sha, testSha);
     });
 
-    it('7.1.6: duas execuções reais do Intake no mesmo SHA — seleção comprovada do run consumido', () => {
+    it('7.1.6: duas execuções reais do Intake (Par I1 e Par I2 físicos completos) — seleção comprovada do par consumido pelo código de produção', () => {
       const stageAExtractedDir = path.join(tmpDir, 'test_stage_a_real_two_intake');
       fs.mkdirSync(stageAExtractedDir, { recursive: true });
 
-      const consumedIntakeRunId = 35444671656;
-      const otherIntakeRunId = 35444679999;
-      const consumedIntakeArtId = 10585326688;
-      const otherIntakeArtId = 10585329999;
+      const runI1Id = 35444671656;
+      const artI1Id = 10585326688;
+      const runI2Id = 35444679999;
+      const artI2Id = 10585329999;
 
-      const intakeFileContent = JSON.stringify({
-        id: consumedIntakeArtId,
+      // Par I1 físico: Run e Artefacto
+      const runI1 = {
+        id: runI1Id,
+        head_sha: testSha,
+        head_branch: 'master',
+        status: 'completed',
+        conclusion: 'success',
+        path: '.github/workflows/operational-pilot-intake.yml',
+        repository: { id: 1363667011 }
+      };
+      const artI1 = {
+        id: artI1Id,
         name: `aetf-pilot-intake-${testSha}`,
-        workflow_run: { id: consumedIntakeRunId, head_sha: testSha }
-      }, null, 2);
+        size_in_bytes: 42000,
+        expired: false,
+        workflow_run: { id: runI1Id, head_sha: testSha }
+      };
 
-      fs.writeFileSync(path.join(stageAExtractedDir, 'intake-artifact-api-response.json'), intakeFileContent);
-      const contentHash = createHash('sha256').update(Buffer.from(intakeFileContent, 'utf8')).digest('hex');
-      fs.writeFileSync(path.join(stageAExtractedDir, 'pilot-evidence-files.sha256'), `${contentHash}  intake-artifact-api-response.json\n`);
+      // Par I2 físico: Run e Artefacto
+      const runI2 = {
+        id: runI2Id,
+        head_sha: testSha,
+        head_branch: 'master',
+        status: 'completed',
+        conclusion: 'success',
+        path: '.github/workflows/operational-pilot-intake.yml',
+        repository: { id: 1363667011 }
+      };
+      const artI2 = {
+        id: artI2Id,
+        name: `aetf-pilot-intake-${testSha}`,
+        size_in_bytes: 42300,
+        expired: false,
+        workflow_run: { id: runI2Id, head_sha: testSha }
+      };
 
-      // Executa código de produção
+      // Gravação física dos 4 ficheiros dos dois pares
+      const rawRunI1 = JSON.stringify(runI1, null, 2);
+      const rawArtI1 = JSON.stringify(artI1, null, 2);
+      const rawRunI2 = JSON.stringify(runI2, null, 2);
+      const rawArtI2 = JSON.stringify(artI2, null, 2);
+
+      fs.writeFileSync(path.join(stageAExtractedDir, 'intake-1-run-api-response.json'), rawRunI1);
+      fs.writeFileSync(path.join(stageAExtractedDir, 'intake-1-artifact-api-response.json'), rawArtI1);
+      fs.writeFileSync(path.join(stageAExtractedDir, 'intake-2-run-api-response.json'), rawRunI2);
+      fs.writeFileSync(path.join(stageAExtractedDir, 'intake-2-artifact-api-response.json'), rawArtI2);
+
+      // Referência canónica consumida do Intake (emitida na Etapa A)
+      const consumedRef = {
+        intake_run_id: runI1Id,
+        intake_artifact_id: artI1Id,
+        intake_head_sha: testSha
+      };
+      const rawConsumed = JSON.stringify(consumedRef, null, 2);
+      fs.writeFileSync(path.join(stageAExtractedDir, 'consumed-intake.json'), rawConsumed);
+
+      // Manifesto físico cobrindo 100% dos 5 ficheiros com caminhos canónicos exatos e hashes recalculados
+      const filesToHash = [
+        'intake-1-run-api-response.json',
+        'intake-1-artifact-api-response.json',
+        'intake-2-run-api-response.json',
+        'intake-2-artifact-api-response.json',
+        'consumed-intake.json'
+      ];
+      const shaLines = filesToHash.map(f => {
+        const h = createHash('sha256').update(fs.readFileSync(path.join(stageAExtractedDir, f))).digest('hex');
+        return `${h}  ${f}`;
+      });
+      fs.writeFileSync(path.join(stageAExtractedDir, 'pilot-evidence-files.sha256'), shaLines.join('\n') + '\n');
+
+      // 1. Extração e autenticação da referência consumida pelo código de produção
       const linkage = verifierModule.extractConsumedIntakeIdentifiers(stageAExtractedDir);
-      assert.strictEqual(linkage.intake_run_id, consumedIntakeRunId);
-      assert.notStrictEqual(linkage.intake_run_id, otherIntakeRunId);
-      assert.strictEqual(linkage.intake_artifact_id, consumedIntakeArtId);
-      assert.notStrictEqual(linkage.intake_artifact_id, otherIntakeArtId);
+      assert.strictEqual(linkage.intake_run_id, runI1Id);
+      assert.strictEqual(linkage.intake_artifact_id, artI1Id);
       assert.strictEqual(linkage.linkage_source_hashes_verified, true);
       assert.strictEqual(linkage.linkage_consensus_verified, true);
+
+      // 2. Construção dos pares disponíveis a partir dos ficheiros físicos validados
+      const { indexMap } = verifierModule.loadPackageIndexMap(stageAExtractedDir);
+      verifierModule.verifyFileAgainstPackageIndex(stageAExtractedDir, path.join(stageAExtractedDir, 'intake-1-run-api-response.json'), indexMap);
+      verifierModule.verifyFileAgainstPackageIndex(stageAExtractedDir, path.join(stageAExtractedDir, 'intake-1-artifact-api-response.json'), indexMap);
+      verifierModule.verifyFileAgainstPackageIndex(stageAExtractedDir, path.join(stageAExtractedDir, 'intake-2-run-api-response.json'), indexMap);
+      verifierModule.verifyFileAgainstPackageIndex(stageAExtractedDir, path.join(stageAExtractedDir, 'intake-2-artifact-api-response.json'), indexMap);
+
+      const availablePairs = [
+        {
+          run_id: runI1.id,
+          artifact_id: artI1.id,
+          workflow_run_id: artI1.workflow_run.id,
+          head_sha: runI1.head_sha
+        },
+        {
+          run_id: runI2.id,
+          artifact_id: artI2.id,
+          workflow_run_id: artI2.workflow_run.id,
+          head_sha: runI2.head_sha
+        }
+      ];
+
+      // 3. Reconciliação dos pares disponíveis com a referência consumida pelo código de produção
+      const reconciled = verifierModule.reconcileConsumedPair(availablePairs, linkage, 'Intake');
+      assert.strictEqual(reconciled.run_id, runI1Id);
+      assert.notStrictEqual(reconciled.run_id, runI2Id);
+      assert.strictEqual(reconciled.artifact_id, artI1Id);
+      assert.notStrictEqual(reconciled.artifact_id, artI2Id);
+      assert.strictEqual(reconciled.head_sha, testSha);
     });
 
     it('7.1.7: produção das respostas individuais e dos respetivos hashes (.json e .sha256)', () => {
@@ -1610,6 +1785,224 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       assert.throws(() => {
         verifierModule.extractConsumedStageAIdentifiers(stageBDir);
       }, /Índice de hashes ausente no pacote/);
+    });
+
+    it('7.2.28: Etapa A com dois pares disponíveis onde a referência consumida não corresponde a nenhum par falha no código de produção', () => {
+      const runA1Id = 35444821530;
+      const artA1Id = 10584802564;
+      const runA2Id = 35444829999;
+      const artA2Id = 10584809999;
+
+      const availablePairs = [
+        { run_id: runA1Id, artifact_id: artA1Id, workflow_run_id: runA1Id, head_sha: testSha },
+        { run_id: runA2Id, artifact_id: artA2Id, workflow_run_id: runA2Id, head_sha: testSha }
+      ];
+
+      const unknownReference = {
+        stage_a_run_id: 99999999999, // Não corresponde a nenhum par disponível
+        stage_a_artifact_id: artA1Id,
+        stage_a_head_sha: testSha
+      };
+
+      assert.throws(() => {
+        verifierModule.reconcileConsumedPair(availablePairs, unknownReference, 'Etapa A');
+      }, /Nenhum par disponível em Etapa A corresponde à referência consumida/);
+    });
+
+    it('7.2.29: Etapa A com duas referências canónicas incompatíveis (apontando para Par A1 e Par A2) falha por contradição', () => {
+      const stageBDir = path.join(tmpDir, 'test_stage_a_two_pairs_contradiction');
+      fs.mkdirSync(stageBDir, { recursive: true });
+
+      const runA1Id = 35444821530;
+      const artA1Id = 10584802564;
+      const runA2Id = 35444829999;
+      const artA2Id = 10584809999;
+
+      // Fonte 1 aponta para o Par A1
+      const content1 = JSON.stringify({ stage_a_run_id: runA1Id, stage_a_artifact_id: artA1Id, stage_a_head_sha: testSha });
+      // Fonte 2 aponta para o Par A2
+      const content2 = JSON.stringify({ stage_a_run_id: runA2Id, stage_a_artifact_id: artA2Id, stage_a_head_sha: testSha });
+
+      fs.writeFileSync(path.join(stageBDir, 'consumed-stage-a.json'), content1);
+      fs.writeFileSync(path.join(stageBDir, 'stage-a-linkage.json'), content2);
+
+      const h1 = createHash('sha256').update(content1).digest('hex');
+      const h2 = createHash('sha256').update(content2).digest('hex');
+      fs.writeFileSync(path.join(stageBDir, 'pilot-evidence-files.sha256'), `${h1}  consumed-stage-a.json\n${h2}  stage-a-linkage.json\n`);
+
+      assert.throws(() => {
+        verifierModule.extractConsumedStageAIdentifiers(stageBDir);
+      }, /Contradição entre fontes de evidência para stage_a_run_id/);
+    });
+
+    it('7.2.30: Intake com dois pares disponíveis onde a referência consumida não corresponde a nenhum par falha no código de produção', () => {
+      const runI1Id = 35444671656;
+      const artI1Id = 10585326688;
+      const runI2Id = 35444679999;
+      const artI2Id = 10585329999;
+
+      const availablePairs = [
+        { run_id: runI1Id, artifact_id: artI1Id, workflow_run_id: runI1Id, head_sha: testSha },
+        { run_id: runI2Id, artifact_id: artI2Id, workflow_run_id: runI2Id, head_sha: testSha }
+      ];
+
+      const unknownReference = {
+        intake_run_id: 88888888888, // Não corresponde a nenhum par disponível
+        intake_artifact_id: artI1Id,
+        intake_head_sha: testSha
+      };
+
+      assert.throws(() => {
+        verifierModule.reconcileConsumedPair(availablePairs, unknownReference, 'Intake');
+      }, /Nenhum par disponível em Intake corresponde à referência consumida/);
+    });
+
+    it('7.2.31: Intake com duas referências canónicas incompatíveis (apontando para Par I1 e Par I2) falha por contradição', () => {
+      const stageADir = path.join(tmpDir, 'test_intake_two_pairs_contradiction');
+      fs.mkdirSync(stageADir, { recursive: true });
+
+      const runI1Id = 35444671656;
+      const artI1Id = 10585326688;
+      const runI2Id = 35444679999;
+      const artI2Id = 10585329999;
+
+      // Fonte 1 aponta para o Par I1
+      const content1 = JSON.stringify({ intake_run_id: runI1Id, input_artifact_id: artI1Id, intake_head_sha: testSha });
+      // Fonte 2 aponta para o Par I2
+      const content2 = JSON.stringify({ intake_run_id: runI2Id, input_artifact_id: artI2Id, intake_head_sha: testSha });
+
+      fs.writeFileSync(path.join(stageADir, 'consumed-intake.json'), content1);
+      fs.writeFileSync(path.join(stageADir, 'intake-linkage.json'), content2);
+
+      const h1 = createHash('sha256').update(content1).digest('hex');
+      const h2 = createHash('sha256').update(content2).digest('hex');
+      fs.writeFileSync(path.join(stageADir, 'pilot-evidence-files.sha256'), `${h1}  consumed-intake.json\n${h2}  intake-linkage.json\n`);
+
+      assert.throws(() => {
+        verifierModule.extractConsumedIntakeIdentifiers(stageADir);
+      }, /Contradição entre fontes de evidência para intake_run_id/);
+    });
+
+    // -----------------------------------------------------------------------
+    // 7.3. TESTES OBRIGATÓRIOS DO ÍNDICE SHA-256 (CAMINHO CANÓNICO EXATO)
+    // -----------------------------------------------------------------------
+    it('7.3.1: evidence/stage-a-linkage.json indexado e o mesmo caminho físico passa', () => {
+      const pDir = path.join(tmpDir, 'test_index_7_3_1');
+      const evDir = path.join(pDir, 'evidence');
+      fs.mkdirSync(evDir, { recursive: true });
+
+      const filePath = path.join(evDir, 'stage-a-linkage.json');
+      const content = JSON.stringify({ stage_a_run_id: 12345, stage_a_artifact_id: 67890 });
+      fs.writeFileSync(filePath, content);
+      const h = createHash('sha256').update(content).digest('hex');
+
+      fs.writeFileSync(path.join(pDir, 'pilot-evidence-files.sha256'), `${h}  evidence/stage-a-linkage.json\n`);
+
+      const { indexMap } = verifierModule.loadPackageIndexMap(pDir);
+      const res = verifierModule.verifyFileAgainstPackageIndex(pDir, filePath, indexMap);
+      assert.strictEqual(res.normalizedRel, 'evidence/stage-a-linkage.json');
+      assert.strictEqual(res.actualHash, h);
+    });
+
+    it('7.3.2: apenas evidence/stage-a-linkage.json indexado, mas stage-a-linkage.json na raiz falha', () => {
+      const pDir = path.join(tmpDir, 'test_index_7_3_2');
+      fs.mkdirSync(pDir, { recursive: true });
+
+      const rootFile = path.join(pDir, 'stage-a-linkage.json');
+      const content = JSON.stringify({ stage_a_run_id: 12345, stage_a_artifact_id: 67890 });
+      fs.writeFileSync(rootFile, content);
+      const h = createHash('sha256').update(content).digest('hex');
+
+      // Apenas indexa o caminho com subdiretório 'evidence/'
+      fs.writeFileSync(path.join(pDir, 'pilot-evidence-files.sha256'), `${h}  evidence/stage-a-linkage.json\n`);
+
+      const { indexMap } = verifierModule.loadPackageIndexMap(pDir);
+      assert.throws(() => {
+        verifierModule.verifyFileAgainstPackageIndex(pDir, rootFile, indexMap);
+      }, /Fonte de linkage 'stage-a-linkage\.json' presente mas não indexada no manifesto de hashes/);
+    });
+
+    it('7.3.3: apenas o ficheiro da raiz indexado, mas o ficheiro em evidence/ falha', () => {
+      const pDir = path.join(tmpDir, 'test_index_7_3_3');
+      const evDir = path.join(pDir, 'evidence');
+      fs.mkdirSync(evDir, { recursive: true });
+
+      const evFile = path.join(evDir, 'stage-a-linkage.json');
+      const content = JSON.stringify({ stage_a_run_id: 12345, stage_a_artifact_id: 67890 });
+      fs.writeFileSync(evFile, content);
+      const h = createHash('sha256').update(content).digest('hex');
+
+      // Apenas indexa o caminho da raiz
+      fs.writeFileSync(path.join(pDir, 'pilot-evidence-files.sha256'), `${h}  stage-a-linkage.json\n`);
+
+      const { indexMap } = verifierModule.loadPackageIndexMap(pDir);
+      assert.throws(() => {
+        verifierModule.verifyFileAgainstPackageIndex(pDir, evFile, indexMap);
+      }, /Fonte de linkage 'evidence\/stage-a-linkage\.json' presente mas não indexada no manifesto de hashes/);
+    });
+
+    it('7.3.4: dois ficheiros com o mesmo basename em diretórios diferentes são validados pelas respetivas entradas', () => {
+      const pDir = path.join(tmpDir, 'test_index_7_3_4');
+      const evDir = path.join(pDir, 'evidence');
+      fs.mkdirSync(evDir, { recursive: true });
+
+      const rootFile = path.join(pDir, 'stage-a-linkage.json');
+      const evFile = path.join(evDir, 'stage-a-linkage.json');
+
+      const contentRoot = JSON.stringify({ version: 'root', stage_a_run_id: 11111 });
+      const contentEv = JSON.stringify({ version: 'evidence', stage_a_run_id: 22222 });
+
+      fs.writeFileSync(rootFile, contentRoot);
+      fs.writeFileSync(evFile, contentEv);
+
+      const hRoot = createHash('sha256').update(contentRoot).digest('hex');
+      const hEv = createHash('sha256').update(contentEv).digest('hex');
+
+      fs.writeFileSync(path.join(pDir, 'pilot-evidence-files.sha256'), `${hRoot}  stage-a-linkage.json\n${hEv}  evidence/stage-a-linkage.json\n`);
+
+      const { indexMap } = verifierModule.loadPackageIndexMap(pDir);
+      const resRoot = verifierModule.verifyFileAgainstPackageIndex(pDir, rootFile, indexMap);
+      const resEv = verifierModule.verifyFileAgainstPackageIndex(pDir, evFile, indexMap);
+
+      assert.strictEqual(resRoot.normalizedRel, 'stage-a-linkage.json');
+      assert.strictEqual(resRoot.actualHash, hRoot);
+      assert.strictEqual(resEv.normalizedRel, 'evidence/stage-a-linkage.json');
+      assert.strictEqual(resEv.actualHash, hEv);
+    });
+
+    it('7.3.5: entrada duplicada para o mesmo caminho canónico falha', () => {
+      const pDir = path.join(tmpDir, 'test_index_7_3_5');
+      fs.mkdirSync(pDir, { recursive: true });
+
+      const h = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+      fs.writeFileSync(path.join(pDir, 'pilot-evidence-files.sha256'), `${h}  stage-a-linkage.json\n${h}  stage-a-linkage.json\n`);
+
+      assert.throws(() => {
+        verifierModule.loadPackageIndexMap(pDir);
+      }, /Entrada duplicada no índice de hashes para o caminho canónico 'stage-a-linkage\.json'/);
+    });
+
+    it('7.3.6: caminho com ../ falha', () => {
+      const pDir = path.join(tmpDir, 'test_index_7_3_6');
+      fs.mkdirSync(pDir, { recursive: true });
+
+      const h = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+      fs.writeFileSync(path.join(pDir, 'pilot-evidence-files.sha256'), `${h}  ../outside.json\n`);
+
+      assert.throws(() => {
+        verifierModule.loadPackageIndexMap(pDir);
+      }, /Caminho com escape \('\.\.'\) não permitido no índice/);
+    });
+
+    it('7.3.7: hash malformado falha', () => {
+      const pDir = path.join(tmpDir, 'test_index_7_3_7');
+      fs.mkdirSync(pDir, { recursive: true });
+
+      fs.writeFileSync(path.join(pDir, 'pilot-evidence-files.sha256'), `short_hash  stage-a-linkage.json\n`);
+
+      assert.throws(() => {
+        verifierModule.loadPackageIndexMap(pDir);
+      }, /Hash SHA-256 malformado/);
     });
   });
 });
