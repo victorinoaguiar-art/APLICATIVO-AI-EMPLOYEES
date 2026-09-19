@@ -88,9 +88,18 @@ export function validateArtifactMetadata(artifact, expectedName, expectedRunId =
       throw new Error(`[FAIL-CLOSED] workflow_run.id do artefacto (${artifact.workflow_run.id}) diverge do run esperado (${expectedRunId}).`);
     }
   }
-  if (expectedSha && artifact.workflow_run.head_sha && artifact.workflow_run.head_sha !== expectedSha) {
-    throw new Error(`[FAIL-CLOSED] head_sha do artefacto (${artifact.workflow_run.head_sha}) diverge do SHA esperado (${expectedSha}).`);
+
+  // Validação estrita e inegociável de workflow_run.head_sha
+  if (!artifact.workflow_run.head_sha || !/^[a-f0-9]{40}$/.test(artifact.workflow_run.head_sha)) {
+    throw new Error(`[FAIL-CLOSED] 'workflow_run.head_sha' ausente ou malformado no artefacto '${artifact.name}'.`);
   }
+  if (expectedSha !== null && expectedSha !== undefined && expectedSha !== '') {
+    assertStrictSha(expectedSha, 'expectedSha');
+    if (artifact.workflow_run.head_sha !== expectedSha) {
+      throw new Error(`[FAIL-CLOSED] head_sha do artefacto (${artifact.workflow_run.head_sha}) diverge do SHA esperado (${expectedSha}).`);
+    }
+  }
+
   return true;
 }
 
@@ -112,12 +121,18 @@ export function validateRunMetadata(run, expectedRunId, expectedWorkflowPath = n
   if (expectedWorkflowPath && run.path !== expectedWorkflowPath) {
     throw new Error(`[FAIL-CLOSED] Workflow de origem inválido: esperado '${expectedWorkflowPath}', obtido '${run.path}'.`);
   }
-  if (expectedSha && run.head_sha !== expectedSha) {
-    throw new Error(`[FAIL-CLOSED] Commit SHA divergente no run ${run.id}: esperado '${expectedSha}', obtido '${run.head_sha}'.`);
+  if (expectedSha) {
+    assertStrictSha(expectedSha, 'expectedSha');
+    if (run.head_sha !== expectedSha) {
+      throw new Error(`[FAIL-CLOSED] Commit SHA divergente no run ${run.id}: esperado '${expectedSha}', obtido '${run.head_sha}'.`);
+    }
   }
-  if (run.head_branch && run.head_branch !== 'master') {
-    throw new Error(`[FAIL-CLOSED] Branch divergente no run ${run.id}: esperado 'master', obtido '${run.head_branch}'.`);
+
+  // Validação estrita e inegociável de head_branch: deve ser exatamente 'master'
+  if (!run.head_branch || run.head_branch !== 'master') {
+    throw new Error(`[FAIL-CLOSED] Branch de origem inválida ou ausente no run ${run.id}: esperado 'master', obtido '${run.head_branch}'.`);
   }
+
   if (run.status !== 'completed') {
     throw new Error(`[FAIL-CLOSED] Run ${run.id} não concluído (status: '${run.status}').`);
   }
@@ -128,137 +143,323 @@ export function validateRunMetadata(run, expectedRunId, expectedWorkflowPath = n
 }
 
 /**
- * Descoberta da Etapa A a partir da evidência física da Etapa B (Subprompt 1 — Correção B)
+ * Reconciliação Estrita entre Resposta Agregada e Endpoint Individual de Artefacto
  */
-export function extractConsumedStageAIdentifiers(stageBExtractDir) {
-  const possiblePaths = [
-    path.join(stageBExtractDir, 'consumed-stage-a.json'),
-    path.join(stageBExtractDir, 'evidence', 'consumed-stage-a.json'),
-    path.join(stageBExtractDir, 'stage-a-linkage.json'),
-    path.join(stageBExtractDir, 'evidence', 'stage-a-linkage.json'),
-    path.join(stageBExtractDir, 'stage-a-artifact-api-response.json'),
-    path.join(stageBExtractDir, 'evidence', 'stage-a-artifact-api-response.json')
-  ];
-
-  let stage_a_run_id = null;
-  let stage_a_artifact_id = null;
-  let stage_a_head_sha = null;
-  let evidenceFileUsed = null;
-
-  for (const p of possiblePaths) {
-    if (fs.existsSync(p)) {
-      try {
-        const data = JSON.parse(fs.readFileSync(p, 'utf8'));
-        if (data.stage_a_run_id && data.stage_a_artifact_id) {
-          stage_a_run_id = Number(data.stage_a_run_id);
-          stage_a_artifact_id = Number(data.stage_a_artifact_id);
-          stage_a_head_sha = data.stage_a_head_sha || data.head_sha || null;
-          evidenceFileUsed = p;
-          break;
-        }
-        if (data.id && data.workflow_run?.id) {
-          stage_a_artifact_id = Number(data.id);
-          stage_a_run_id = Number(data.workflow_run.id);
-          stage_a_head_sha = data.workflow_run.head_sha || null;
-          evidenceFileUsed = p;
-          break;
-        }
-      } catch {}
-    }
+export function reconcileArtifactResponses(aggregatedArtifact, individualArtifact) {
+  if (!aggregatedArtifact || typeof aggregatedArtifact !== 'object') {
+    throw new Error(`[FAIL-CLOSED] Resposta agregada de artefacto inválida ou ausente.`);
   }
-
-  if (!stage_a_run_id) {
-    const runRespPaths = [
-      path.join(stageBExtractDir, 'stage-a-run-api-response.json'),
-      path.join(stageBExtractDir, 'evidence', 'stage-a-run-api-response.json')
-    ];
-    for (const rp of runRespPaths) {
-      if (fs.existsSync(rp)) {
-        try {
-          const runData = JSON.parse(fs.readFileSync(rp, 'utf8'));
-          if (runData.id) {
-            stage_a_run_id = Number(runData.id);
-            if (!stage_a_head_sha) stage_a_head_sha = runData.head_sha;
-            if (!evidenceFileUsed) evidenceFileUsed = rp;
-            break;
-          }
-        } catch {}
-      }
-    }
+  if (!individualArtifact || typeof individualArtifact !== 'object') {
+    throw new Error(`[FAIL-CLOSED] Resposta individual de artefacto inválida ou ausente.`);
   }
-
-  if (!stage_a_run_id || !stage_a_artifact_id) {
-    throw new Error('[FAIL-CLOSED] stage_a_run_id ou stage_a_artifact_id ausente na evidência consumida pela Etapa B.');
+  if (aggregatedArtifact.id !== individualArtifact.id) {
+    throw new Error(`[FAIL-CLOSED] Inconsistência de ID entre resposta agregada (${aggregatedArtifact.id}) e endpoint individual (${individualArtifact.id}).`);
   }
-
-  return { stage_a_run_id, stage_a_artifact_id, stage_a_head_sha, evidenceFileUsed };
+  if (aggregatedArtifact.name !== individualArtifact.name) {
+    throw new Error(`[FAIL-CLOSED] Inconsistência de nome entre resposta agregada ('${aggregatedArtifact.name}') e endpoint individual ('${individualArtifact.name}').`);
+  }
+  if (aggregatedArtifact.size_in_bytes !== individualArtifact.size_in_bytes) {
+    throw new Error(`[FAIL-CLOSED] Inconsistência de tamanho entre resposta agregada (${aggregatedArtifact.size_in_bytes}) e endpoint individual (${individualArtifact.size_in_bytes}).`);
+  }
+  if (aggregatedArtifact.expired !== individualArtifact.expired) {
+    throw new Error(`[FAIL-CLOSED] Inconsistência de expiração entre resposta agregada (${aggregatedArtifact.expired}) e endpoint individual (${individualArtifact.expired}).`);
+  }
+  return true;
 }
 
 /**
- * Descoberta do Intake a partir da evidência física da Etapa A (Subprompt 1 — Correção B)
+ * Localiza e carrega o mapa de integridade a partir do índice SHA-256 do pacote
  */
-export function extractConsumedIntakeIdentifiers(stageAExtractDir) {
-  const possiblePaths = [
-    path.join(stageAExtractDir, 'consumed-intake.json'),
-    path.join(stageAExtractDir, 'evidence', 'consumed-intake.json'),
-    path.join(stageAExtractDir, 'intake-linkage.json'),
-    path.join(stageAExtractDir, 'evidence', 'intake-linkage.json'),
-    path.join(stageAExtractDir, 'intake-artifact-api-response.json'),
-    path.join(stageAExtractDir, 'evidence', 'intake-artifact-api-response.json')
+export function loadPackageIndexMap(extractDir) {
+  const possibleIndexNames = [
+    'pilot-evidence-files.sha256',
+    'chain-evidence-files.sha256',
+    'stage-a-evidence-files.sha256',
+    'stage-b-evidence-files.sha256',
+    'intake-evidence-files.sha256'
   ];
 
-  let intake_run_id = null;
-  let intake_artifact_id = null;
-  let intake_head_sha = null;
-  let evidenceFileUsed = null;
-
-  for (const p of possiblePaths) {
-    if (fs.existsSync(p)) {
-      try {
-        const data = JSON.parse(fs.readFileSync(p, 'utf8'));
-        if (data.intake_run_id && data.input_artifact_id) {
-          intake_run_id = Number(data.intake_run_id);
-          intake_artifact_id = Number(data.input_artifact_id);
-          intake_head_sha = data.intake_head_sha || data.head_sha || null;
-          evidenceFileUsed = p;
-          break;
-        }
-        if (data.id && data.workflow_run?.id) {
-          intake_artifact_id = Number(data.id);
-          intake_run_id = Number(data.workflow_run.id);
-          intake_head_sha = data.workflow_run.head_sha || null;
-          evidenceFileUsed = p;
-          break;
-        }
-      } catch {}
+  let foundIndexPath = null;
+  for (const name of possibleIndexNames) {
+    const directPath = path.join(extractDir, name);
+    const evidencePath = path.join(extractDir, 'evidence', name);
+    if (fs.existsSync(directPath)) {
+      foundIndexPath = directPath;
+      break;
+    }
+    if (fs.existsSync(evidencePath)) {
+      foundIndexPath = evidencePath;
+      break;
     }
   }
 
-  if (!intake_run_id) {
-    const runRespPaths = [
-      path.join(stageAExtractDir, 'intake-run-api-response.json'),
-      path.join(stageAExtractDir, 'evidence', 'intake-run-api-response.json')
-    ];
-    for (const rp of runRespPaths) {
-      if (fs.existsSync(rp)) {
-        try {
-          const runData = JSON.parse(fs.readFileSync(rp, 'utf8'));
-          if (runData.id) {
-            intake_run_id = Number(runData.id);
-            if (!intake_head_sha) intake_head_sha = runData.head_sha;
-            if (!evidenceFileUsed) evidenceFileUsed = rp;
-            break;
-          }
-        } catch {}
+  if (!foundIndexPath) {
+    throw new Error(`[FAIL-CLOSED] Índice de hashes ausente no pacote em '${extractDir}'.`);
+  }
+
+  const lines = fs.readFileSync(foundIndexPath, 'utf8').split('\n');
+  const indexMap = new Map();
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const parts = trimmed.split(/\s+/);
+    if (parts.length >= 2) {
+      const expectedHash = parts[0].toLowerCase();
+      const rawFile = parts.slice(1).join(' ');
+      const normalized = rawFile.replace(/^[./\\]+/, '').split(/[/\\]/).join(path.sep);
+      indexMap.set(normalized, expectedHash);
+      indexMap.set(path.basename(normalized), expectedHash);
+    }
+  }
+
+  return { foundIndexPath, indexMap };
+}
+
+/**
+ * Valida um ficheiro físico contra o índice SHA-256 do pacote
+ */
+export function verifyFileAgainstPackageIndex(extractDir, fullFilePath, indexMap) {
+  if (!fs.existsSync(fullFilePath)) {
+    throw new Error(`[FAIL-CLOSED] Ficheiro '${fullFilePath}' não existe.`);
+  }
+
+  const relativeToExtract = path.relative(extractDir, fullFilePath);
+  const normalizedRel = relativeToExtract.replace(/^[./\\]+/, '').split(/[/\\]/).join(path.sep);
+  const baseName = path.basename(fullFilePath);
+
+  const expectedHash = indexMap.get(normalizedRel) || indexMap.get(baseName);
+  if (!expectedHash) {
+    throw new Error(`[FAIL-CLOSED] Fonte de linkage '${normalizedRel}' presente mas não indexada no manifesto de hashes.`);
+  }
+
+  const fileBytes = fs.readFileSync(fullFilePath);
+  const actualHash = sha256(fileBytes).toLowerCase();
+
+  if (actualHash !== expectedHash.toLowerCase()) {
+    throw new Error(`[FAIL-CLOSED] Hash físico da fonte de linkage '${normalizedRel}' (${actualHash}) diverge do registado no índice (${expectedHash}).`);
+  }
+
+  return { normalizedRel, actualHash };
+}
+
+/**
+ * Descoberta da Etapa A a partir da evidência física da Etapa B com validação de índice e consenso
+ */
+export function extractConsumedStageAIdentifiers(stageBExtractDir) {
+  const { indexMap } = loadPackageIndexMap(stageBExtractDir);
+
+  const candidateRelativePaths = [
+    'consumed-stage-a.json',
+    path.join('evidence', 'consumed-stage-a.json'),
+    'stage-a-linkage.json',
+    path.join('evidence', 'stage-a-linkage.json'),
+    'stage-a-artifact-api-response.json',
+    path.join('evidence', 'stage-a-artifact-api-response.json'),
+    'stage-a-run-api-response.json',
+    path.join('evidence', 'stage-a-run-api-response.json')
+  ];
+
+  const candidateFullPaths = candidateRelativePaths
+    .map(rel => path.join(stageBExtractDir, rel))
+    .filter(fullP => fs.existsSync(fullP));
+
+  if (candidateFullPaths.length === 0) {
+    throw new Error('[FAIL-CLOSED] stage_a_run_id ou stage_a_artifact_id ausente na evidência consumida pela Etapa B.');
+  }
+
+  const verifiedSources = [];
+  const runIds = [];
+  const artifactIds = [];
+  const headShas = [];
+
+  for (const fullP of candidateFullPaths) {
+    // 1. Validar integridade física da fonte contra o índice de hashes
+    const { normalizedRel } = verifyFileAgainstPackageIndex(stageBExtractDir, fullP, indexMap);
+
+    // 2. Parse estrito de JSON (falha imediata em JSON corrompido)
+    let data;
+    try {
+      data = JSON.parse(fs.readFileSync(fullP, 'utf8'));
+    } catch (parseErr) {
+      throw new Error(`[FAIL-CLOSED] Fonte de linkage '${normalizedRel}' contém JSON inválido: ${parseErr.message}`);
+    }
+
+    let rId = null;
+    let aId = null;
+    let sSha = null;
+
+    if (data.stage_a_run_id) rId = Number(data.stage_a_run_id);
+    if (data.stage_a_artifact_id) aId = Number(data.stage_a_artifact_id);
+    if (data.stage_a_head_sha) sSha = String(data.stage_a_head_sha);
+
+    if (data.workflow_run && typeof data.workflow_run.id === 'number') {
+      rId = Number(data.workflow_run.id);
+      if (data.workflow_run.head_sha) sSha = String(data.workflow_run.head_sha);
+      if (typeof data.id === 'number') {
+        aId = Number(data.id);
       }
     }
+
+    if (data.path && data.path.includes('stage-a') && typeof data.id === 'number') {
+      rId = Number(data.id);
+      if (data.head_sha) sSha = String(data.head_sha);
+    } else if (typeof data.id === 'number' && !data.path && (normalizedRel.includes('artifact') || (data.name && data.name.includes('stage-a')))) {
+      aId = Number(data.id);
+    }
+
+    if (rId !== null) runIds.push({ value: rId, file: normalizedRel });
+    if (aId !== null) artifactIds.push({ value: aId, file: normalizedRel });
+    if (sSha !== null) headShas.push({ value: sSha, file: normalizedRel });
+
+    verifiedSources.push(normalizedRel);
   }
 
-  if (!intake_run_id || !intake_artifact_id) {
+  // 3. Regra de Consenso Estrito: Rejeitar qualquer contradição
+  if (runIds.length === 0) {
+    throw new Error('[FAIL-CLOSED] stage_a_run_id ausente na evidência consumida pela Etapa B.');
+  }
+  const uniqueRunIds = Array.from(new Set(runIds.map(x => x.value)));
+  if (uniqueRunIds.length > 1) {
+    const details = runIds.map(x => `${x.file}=${x.value}`).join(', ');
+    throw new Error(`[FAIL-CLOSED] Contradição entre fontes de evidência para stage_a_run_id: ${details}`);
+  }
+
+  if (artifactIds.length === 0) {
+    throw new Error('[FAIL-CLOSED] stage_a_artifact_id ausente na evidência consumida pela Etapa B.');
+  }
+  const uniqueArtifactIds = Array.from(new Set(artifactIds.map(x => x.value)));
+  if (uniqueArtifactIds.length > 1) {
+    const details = artifactIds.map(x => `${x.file}=${x.value}`).join(', ');
+    throw new Error(`[FAIL-CLOSED] Contradição entre fontes de evidência para stage_a_artifact_id: ${details}`);
+  }
+
+  if (headShas.length > 0) {
+    const uniqueHeadShas = Array.from(new Set(headShas.map(x => x.value)));
+    if (uniqueHeadShas.length > 1) {
+      const details = headShas.map(x => `${x.file}=${x.value}`).join(', ');
+      throw new Error(`[FAIL-CLOSED] Contradição entre fontes de evidência para stage_a_head_sha: ${details}`);
+    }
+  }
+
+  return {
+    stage_a_run_id: uniqueRunIds[0],
+    stage_a_artifact_id: uniqueArtifactIds[0],
+    stage_a_head_sha: headShas.length > 0 ? headShas[0].value : null,
+    linkage_sources: verifiedSources,
+    linkage_source_hashes_verified: true,
+    linkage_consensus_verified: true
+  };
+}
+
+/**
+ * Descoberta do Intake a partir da evidência física da Etapa A com validação de índice e consenso
+ */
+export function extractConsumedIntakeIdentifiers(stageAExtractDir) {
+  const { indexMap } = loadPackageIndexMap(stageAExtractDir);
+
+  const candidateRelativePaths = [
+    'consumed-intake.json',
+    path.join('evidence', 'consumed-intake.json'),
+    'intake-linkage.json',
+    path.join('evidence', 'intake-linkage.json'),
+    'intake-artifact-api-response.json',
+    path.join('evidence', 'intake-artifact-api-response.json'),
+    'intake-run-api-response.json',
+    path.join('evidence', 'intake-run-api-response.json')
+  ];
+
+  const candidateFullPaths = candidateRelativePaths
+    .map(rel => path.join(stageAExtractDir, rel))
+    .filter(fullP => fs.existsSync(fullP));
+
+  if (candidateFullPaths.length === 0) {
     throw new Error('[FAIL-CLOSED] intake_run_id ou intake_artifact_id ausente na evidência consumida pela Etapa A.');
   }
 
-  return { intake_run_id, intake_artifact_id, intake_head_sha, evidenceFileUsed };
+  const verifiedSources = [];
+  const runIds = [];
+  const artifactIds = [];
+  const headShas = [];
+
+  for (const fullP of candidateFullPaths) {
+    // 1. Validar integridade física contra o índice de hashes
+    const { normalizedRel } = verifyFileAgainstPackageIndex(stageAExtractDir, fullP, indexMap);
+
+    // 2. Parse estrito de JSON
+    let data;
+    try {
+      data = JSON.parse(fs.readFileSync(fullP, 'utf8'));
+    } catch (parseErr) {
+      throw new Error(`[FAIL-CLOSED] Fonte de linkage '${normalizedRel}' contém JSON inválido: ${parseErr.message}`);
+    }
+
+    let rId = null;
+    let aId = null;
+    let sSha = null;
+
+    if (data.intake_run_id) rId = Number(data.intake_run_id);
+    if (data.input_artifact_id) aId = Number(data.input_artifact_id);
+    if (data.intake_artifact_id) aId = Number(data.intake_artifact_id);
+    if (data.intake_head_sha) sSha = String(data.intake_head_sha);
+
+    if (data.workflow_run && typeof data.workflow_run.id === 'number') {
+      rId = Number(data.workflow_run.id);
+      if (data.workflow_run.head_sha) sSha = String(data.workflow_run.head_sha);
+      if (typeof data.id === 'number') {
+        aId = Number(data.id);
+      }
+    }
+
+    if (data.path && data.path.includes('intake') && typeof data.id === 'number') {
+      rId = Number(data.id);
+      if (data.head_sha) sSha = String(data.head_sha);
+    } else if (typeof data.id === 'number' && !data.path && (normalizedRel.includes('artifact') || (data.name && data.name.includes('intake')))) {
+      aId = Number(data.id);
+    }
+
+    if (rId !== null) runIds.push({ value: rId, file: normalizedRel });
+    if (aId !== null) artifactIds.push({ value: aId, file: normalizedRel });
+    if (sSha !== null) headShas.push({ value: sSha, file: normalizedRel });
+
+    verifiedSources.push(normalizedRel);
+  }
+
+  // 3. Regra de Consenso Estrito: Rejeitar qualquer contradição
+  if (runIds.length === 0) {
+    throw new Error('[FAIL-CLOSED] intake_run_id ausente na evidência consumida pela Etapa A.');
+  }
+  const uniqueRunIds = Array.from(new Set(runIds.map(x => x.value)));
+  if (uniqueRunIds.length > 1) {
+    const details = runIds.map(x => `${x.file}=${x.value}`).join(', ');
+    throw new Error(`[FAIL-CLOSED] Contradição entre fontes de evidência para intake_run_id: ${details}`);
+  }
+
+  if (artifactIds.length === 0) {
+    throw new Error('[FAIL-CLOSED] intake_artifact_id ausente na evidência consumida pela Etapa A.');
+  }
+  const uniqueArtifactIds = Array.from(new Set(artifactIds.map(x => x.value)));
+  if (uniqueArtifactIds.length > 1) {
+    const details = artifactIds.map(x => `${x.file}=${x.value}`).join(', ');
+    throw new Error(`[FAIL-CLOSED] Contradição entre fontes de evidência para intake_artifact_id: ${details}`);
+  }
+
+  if (headShas.length > 0) {
+    const uniqueHeadShas = Array.from(new Set(headShas.map(x => x.value)));
+    if (uniqueHeadShas.length > 1) {
+      const details = headShas.map(x => `${x.file}=${x.value}`).join(', ');
+      throw new Error(`[FAIL-CLOSED] Contradição entre fontes de evidência para intake_head_sha: ${details}`);
+    }
+  }
+
+  return {
+    intake_run_id: uniqueRunIds[0],
+    intake_artifact_id: uniqueArtifactIds[0],
+    intake_head_sha: headShas.length > 0 ? headShas[0].value : null,
+    linkage_sources: verifiedSources,
+    linkage_source_hashes_verified: true,
+    linkage_consensus_verified: true
+  };
 }
 
 /**
@@ -350,10 +551,8 @@ function downloadAndExtractArtifact(runId, expectedArtifactName, extractSubdir, 
   // 3. Validação estrita dos metadados do artefacto
   validateArtifactMetadata(indArt, expectedArtifactName, runId, sourceSha);
 
-  // 4. Verificação de consistência entre resposta agregada e endpoint individual (Teste Negativo 13)
-  if (indArt.id !== art.id || indArt.name !== art.name || indArt.size_in_bytes !== art.size_in_bytes || indArt.expired !== art.expired) {
-    throw new Error(`[FAIL-CLOSED] Inconsistência detectada entre resposta agregada e endpoint individual do artefacto '${expectedArtifactName}'.`);
-  }
+  // 4. Reconciliação e verificação de consistência entre resposta agregada e endpoint individual (Ponto 4)
+  reconcileArtifactResponses(art, indArt);
 
   const zipPath = path.join(outDir, `${expectedArtifactName}.zip`);
   const extractDir = path.join(outDir, extractSubdir);
@@ -503,7 +702,7 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       : stageBExtractDir;
 
     // -------------------------------------------------------------------------
-    // 2. Descoberta da Etapa A Consumida pela Etapa B (2.2)
+    // 2. Descoberta da Etapa A Consumida pela Etapa B com Consenso e Índice (2.2)
     // -------------------------------------------------------------------------
     console.log('\n--- 2. Descoberta da Etapa A Consumida pela Etapa B ---');
     const stageALinkage = extractConsumedStageAIdentifiers(stageBExtractDir);
@@ -513,7 +712,7 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
     assertStrictId(stageARunId, 'stage_a_run_id');
     assertStrictId(stageAArtifactId, 'stage_a_artifact_id');
 
-    console.log(`[PASS] Etapa A descoberta na evidência consumida da Etapa B: Run ${stageARunId} | Artefacto ${stageAArtifactId}`);
+    console.log(`[PASS] Etapa A descoberta na evidência consumida da Etapa B: Run ${stageARunId} | Artefacto ${stageAArtifactId} (Fontes: ${stageALinkage.linkage_sources.join(', ')})`);
 
     // Consulta individual ao run da Etapa A
     const resRunA = fetchIndividualApi(
@@ -593,7 +792,7 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       `challenge_id=${stageAChallengeId}`);
 
     // -------------------------------------------------------------------------
-    // 3. Descoberta do Intake Consumido pela Etapa A (2.3)
+    // 3. Descoberta do Intake Consumido pela Etapa A com Consenso e Índice (2.3)
     // -------------------------------------------------------------------------
     console.log('\n--- 3. Descoberta do Intake Consumido pela Etapa A ---');
     const intakeLinkage = extractConsumedIntakeIdentifiers(stageABundle.extractDir);
@@ -603,7 +802,7 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
     assertStrictId(intakeRunId, 'intake_run_id');
     assertStrictId(intakeArtifactId, 'intake_artifact_id');
 
-    console.log(`[PASS] Intake descoberto na evidência consumida da Etapa A: Run ${intakeRunId} | Artefacto ${intakeArtifactId}`);
+    console.log(`[PASS] Intake descoberto na evidência consumida da Etapa A: Run ${intakeRunId} | Artefacto ${intakeArtifactId} (Fontes: ${intakeLinkage.linkage_sources.join(', ')})`);
 
     // Consulta individual ao run do Intake
     const resRunIntake = fetchIndividualApi(
@@ -704,7 +903,7 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       isCiCanonicalRepo ? 'PASS' : 'FAIL', `repo_id=${ciRun.repository?.id}`);
 
     // -------------------------------------------------------------------------
-    // 5. Reconciliação Direta Cruzada das Três Etapas
+    // 5. Reconciliação Direta Cruzada entre as Três Etapas
     // -------------------------------------------------------------------------
     console.log('\n--- 5. Reconciliação Direta Cruzada entre as Três Etapas ---');
     let stageBChallengeId = '';
@@ -808,7 +1007,7 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       `${checkedHashes} ficheiros verificados fisicamente com 100% de integridade`);
 
     // -------------------------------------------------------------------------
-    // 6. Verificação Externa da Configuração do GitHub: prevent_self_review: true
+    // 6. Verificação Externa da Regra de Proteção (prevent_self_review)
     // -------------------------------------------------------------------------
     console.log('\n--- 6. Verificação Externa da Regra de Proteção (prevent_self_review) ---');
     let envProtectionRule = null;
@@ -932,7 +1131,7 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
     );
 
     // -------------------------------------------------------------------------
-    // 8. Emissão da Atestação Forense Consolidada com Metadados Completos (2.5)
+    // 8. Emissão da Atestação Forense Consolidada com Metadados e Consenso Comprovado
     // -------------------------------------------------------------------------
     console.log('\n--- 8. Emissão da Atestação Forense Consolidada ---');
     const chainAttestation = {
@@ -954,6 +1153,9 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       intake_artifact_id: intakeBundle.artifact.id,
       stage_a_artifact_id: stageABundle.artifact.id,
       stage_b_artifact_id: stageBBundle.artifact.id,
+      linkage_sources: [...stageALinkage.linkage_sources, ...intakeLinkage.linkage_sources],
+      linkage_source_hashes_verified: stageALinkage.linkage_source_hashes_verified && intakeLinkage.linkage_source_hashes_verified,
+      linkage_consensus_verified: stageALinkage.linkage_consensus_verified && intakeLinkage.linkage_consensus_verified,
       artifacts_metadata: {
         intake: {
           artifact_id: intakeBundle.artifact.id,

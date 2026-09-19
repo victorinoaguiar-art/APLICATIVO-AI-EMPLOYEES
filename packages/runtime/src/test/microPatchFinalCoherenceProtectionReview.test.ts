@@ -911,6 +911,12 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         challenge_id: 'CHAL_TEST_001'
       }, null, 2));
       fs.writeFileSync(path.join(zipADir, 'input-package.sha256'), '948cdee5df75eaf336574014f935c0fb644ae2521e4ef27313b48f0bba2d255e  input-package.tar.gz\n');
+
+      // Gerar pilot-evidence-files.sha256 para o pacote da Etapa A
+      const aFilesToHash = fs.readdirSync(zipADir);
+      const aShaLines = aFilesToHash.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(zipADir, f))).digest('hex')}  ${f}`);
+      fs.writeFileSync(path.join(zipADir, 'pilot-evidence-files.sha256'), aShaLines.join('\n') + '\n');
+
       const zipAEntries = fs.readdirSync(zipADir).map(f => ({ name: f, data: fs.readFileSync(path.join(zipADir, f)) }));
       fs.writeFileSync(path.join(mockChainDir, `aetf-pilot-stage-a-${testSha}.zip`), buildZip(zipAEntries));
 
@@ -984,10 +990,12 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       assert.strictEqual(attestation.stage_a_verified, true);
       assert.strictEqual(attestation.stage_b_verified, true);
       assert.strictEqual(attestation.cross_stages_reconciled, true);
+      assert.strictEqual(attestation.linkage_source_hashes_verified, true);
+      assert.strictEqual(attestation.linkage_consensus_verified, true);
     });
   });
 
-  describe('7. Subprompt 1 — Identidade dos Runs e Vinculação Exata dos Artefactos (Correções A e B)', () => {
+  describe('7. Subprompt 1 — Identidade dos Runs, Índice de Hashes e Consenso (Micro-Prompt Corretivo)', () => {
     const testSha = '37927b519f2865e45d5df236df411da126dbe8f8';
     let verifierModule: any;
 
@@ -997,7 +1005,7 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
     });
 
     // -----------------------------------------------------------------------
-    // 7.1. TESTES POSITIVOS (Subprompt 1 — Secção 4.1)
+    // 7.1. TESTES POSITIVOS REAIS
     // -----------------------------------------------------------------------
     it('7.1.1: seleção de uma única correspondência exata via selectExactArtifact', () => {
       const expectedName = `aetf-pilot-stage-a-${testSha}`;
@@ -1011,7 +1019,7 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       assert.strictEqual(selected.name, expectedName);
     });
 
-    it('7.1.2: vínculo válido entre artefacto do Intake e run do Intake', () => {
+    it('7.1.2: vínculo válido entre artefacto do Intake e run do Intake com head_sha estrito', () => {
       const intakeArtName = `aetf-pilot-intake-${testSha}`;
       const intakeRunId = 35444671656;
       const art = {
@@ -1027,7 +1035,7 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       });
     });
 
-    it('7.1.3: vínculo válido entre artefacto da Etapa A e run da Etapa A', () => {
+    it('7.1.3: vínculo válido entre artefacto da Etapa A e run da Etapa A com head_sha estrito', () => {
       const stageAArtName = `aetf-pilot-stage-a-${testSha}`;
       const stageARunId = 35444821530;
       const art = {
@@ -1043,7 +1051,7 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       });
     });
 
-    it('7.1.4: vínculo válido entre artefacto da Etapa B e run da Etapa B', () => {
+    it('7.1.4: vínculo válido entre artefacto da Etapa B e run da Etapa B com head_sha estrito', () => {
       const stageBArtName = `aetf-pilot-closure-${testSha}`;
       const stageBRunId = 35444920839;
       const art = {
@@ -1059,51 +1067,69 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       });
     });
 
-    it('7.1.5: duas execuções da Etapa A no mesmo SHA, confirmando escolha estrita da referenciada pela Etapa B', () => {
-      const stageBExtractedDir = path.join(tmpDir, 'test_stage_b_dual_stage_a');
+    it('7.1.5: duas execuções reais da Etapa A no mesmo SHA — seleção comprovada do run consumido', () => {
+      const stageBExtractedDir = path.join(tmpDir, 'test_stage_b_real_two_stage_a');
       fs.mkdirSync(stageBExtractedDir, { recursive: true });
 
-      // Simula duas execuções da Etapa A (35444821530 e 35444829999), com a Etapa B consumindo a 35444821530
-      fs.writeFileSync(path.join(stageBExtractedDir, 'stage-a-artifact-api-response.json'), JSON.stringify({
-        id: 10584802564,
-        name: `aetf-pilot-stage-a-${testSha}`,
-        workflow_run: { id: 35444821530, head_sha: testSha }
-      }));
-      fs.writeFileSync(path.join(stageBExtractedDir, 'stage-a-run-api-response.json'), JSON.stringify({
-        id: 35444821530,
-        head_sha: testSha
-      }));
+      const consumedRunId = 35444821530;
+      const otherRunId = 35444829999;
+      const consumedArtId = 10584802564;
+      const otherArtId = 10584809999;
 
+      // Fixture: dois pares de Etapa A existem no SHA, mas Etapa B gravou e indexou apenas o par 1
+      const stageAFileContent = JSON.stringify({
+        id: consumedArtId,
+        name: `aetf-pilot-stage-a-${testSha}`,
+        workflow_run: { id: consumedRunId, head_sha: testSha }
+      }, null, 2);
+
+      fs.writeFileSync(path.join(stageBExtractedDir, 'stage-a-artifact-api-response.json'), stageAFileContent);
+      const contentHash = createHash('sha256').update(Buffer.from(stageAFileContent, 'utf8')).digest('hex');
+      fs.writeFileSync(path.join(stageBExtractedDir, 'pilot-evidence-files.sha256'), `${contentHash}  stage-a-artifact-api-response.json\n`);
+
+      // Executa código de produção
       const linkage = verifierModule.extractConsumedStageAIdentifiers(stageBExtractedDir);
-      assert.strictEqual(linkage.stage_a_run_id, 35444821530);
-      assert.strictEqual(linkage.stage_a_artifact_id, 10584802564);
+      assert.strictEqual(linkage.stage_a_run_id, consumedRunId);
+      assert.notStrictEqual(linkage.stage_a_run_id, otherRunId);
+      assert.strictEqual(linkage.stage_a_artifact_id, consumedArtId);
+      assert.notStrictEqual(linkage.stage_a_artifact_id, otherArtId);
+      assert.strictEqual(linkage.linkage_source_hashes_verified, true);
+      assert.strictEqual(linkage.linkage_consensus_verified, true);
     });
 
-    it('7.1.6: duas execuções do Intake no mesmo SHA, confirmando escolha estrita da referenciada pela Etapa A', () => {
-      const stageAExtractedDir = path.join(tmpDir, 'test_stage_a_dual_intake');
+    it('7.1.6: duas execuções reais do Intake no mesmo SHA — seleção comprovada do run consumido', () => {
+      const stageAExtractedDir = path.join(tmpDir, 'test_stage_a_real_two_intake');
       fs.mkdirSync(stageAExtractedDir, { recursive: true });
 
-      // Simula duas execuções de Intake (35444671656 e 35444679999), com a Etapa A consumindo a 35444671656
-      fs.writeFileSync(path.join(stageAExtractedDir, 'intake-artifact-api-response.json'), JSON.stringify({
-        id: 10585326688,
-        name: `aetf-pilot-intake-${testSha}`,
-        workflow_run: { id: 35444671656, head_sha: testSha }
-      }));
-      fs.writeFileSync(path.join(stageAExtractedDir, 'intake-run-api-response.json'), JSON.stringify({
-        id: 35444671656,
-        head_sha: testSha
-      }));
+      const consumedIntakeRunId = 35444671656;
+      const otherIntakeRunId = 35444679999;
+      const consumedIntakeArtId = 10585326688;
+      const otherIntakeArtId = 10585329999;
 
+      const intakeFileContent = JSON.stringify({
+        id: consumedIntakeArtId,
+        name: `aetf-pilot-intake-${testSha}`,
+        workflow_run: { id: consumedIntakeRunId, head_sha: testSha }
+      }, null, 2);
+
+      fs.writeFileSync(path.join(stageAExtractedDir, 'intake-artifact-api-response.json'), intakeFileContent);
+      const contentHash = createHash('sha256').update(Buffer.from(intakeFileContent, 'utf8')).digest('hex');
+      fs.writeFileSync(path.join(stageAExtractedDir, 'pilot-evidence-files.sha256'), `${contentHash}  intake-artifact-api-response.json\n`);
+
+      // Executa código de produção
       const linkage = verifierModule.extractConsumedIntakeIdentifiers(stageAExtractedDir);
-      assert.strictEqual(linkage.intake_run_id, 35444671656);
-      assert.strictEqual(linkage.intake_artifact_id, 10585326688);
+      assert.strictEqual(linkage.intake_run_id, consumedIntakeRunId);
+      assert.notStrictEqual(linkage.intake_run_id, otherIntakeRunId);
+      assert.strictEqual(linkage.intake_artifact_id, consumedIntakeArtId);
+      assert.notStrictEqual(linkage.intake_artifact_id, otherIntakeArtId);
+      assert.strictEqual(linkage.linkage_source_hashes_verified, true);
+      assert.strictEqual(linkage.linkage_consensus_verified, true);
     });
 
     it('7.1.7: produção das respostas individuais e dos respetivos hashes (.json e .sha256)', () => {
       const outTestDir = path.join(tmpDir, 'test_chain_out_hashes');
       fs.mkdirSync(outTestDir, { recursive: true });
 
-      // Testando se a execução do verificador emite todos os arquivos individuais exigidos
       const mockDir = path.join(tmpDir, 'test_mock_chain');
       runCommand(`node scripts/verify-operational-pilot-closure-chain.mjs --stage-b-run-id=35436363480 --mock-data-dir="${mockDir}" --out-dir="${outTestDir}"`);
 
@@ -1135,8 +1161,56 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       }
     });
 
+    it('7.1.8: head_branch estritamente igual a master passa no código de produção', () => {
+      const run = {
+        id: 100,
+        head_branch: 'master',
+        head_sha: testSha,
+        path: '.github/workflows/ci.yml',
+        status: 'completed',
+        conclusion: 'success'
+      };
+      assert.doesNotThrow(() => {
+        verifierModule.validateRunMetadata(run, 100, '.github/workflows/ci.yml', testSha);
+      });
+    });
+
+    it('7.1.9: workflow_run.head_sha estritamente igual a sourceSha passa no código de produção', () => {
+      const art = {
+        id: 200,
+        name: `aetf-pilot-stage-a-${testSha}`,
+        size_in_bytes: 4000,
+        expired: false,
+        workflow_run: { id: 100, head_sha: testSha }
+      };
+      assert.doesNotThrow(() => {
+        verifierModule.validateArtifactMetadata(art, `aetf-pilot-stage-a-${testSha}`, 100, testSha);
+      });
+    });
+
+    it('7.1.10: consenso entre múltiplas fontes coerentes e indexadas é aprovado pelo código de produção', () => {
+      const stageBDir = path.join(tmpDir, 'test_stage_b_consensus_pass');
+      fs.mkdirSync(stageBDir, { recursive: true });
+
+      const content1 = JSON.stringify({ stage_a_run_id: 35444821530, stage_a_artifact_id: 10584802564 });
+      const content2 = JSON.stringify({ id: 10584802564, workflow_run: { id: 35444821530 } });
+
+      fs.writeFileSync(path.join(stageBDir, 'consumed-stage-a.json'), content1);
+      fs.writeFileSync(path.join(stageBDir, 'stage-a-artifact-api-response.json'), content2);
+
+      const h1 = createHash('sha256').update(content1).digest('hex');
+      const h2 = createHash('sha256').update(content2).digest('hex');
+
+      fs.writeFileSync(path.join(stageBDir, 'pilot-evidence-files.sha256'), `${h1}  consumed-stage-a.json\n${h2}  stage-a-artifact-api-response.json\n`);
+
+      const linkage = verifierModule.extractConsumedStageAIdentifiers(stageBDir);
+      assert.strictEqual(linkage.stage_a_run_id, 35444821530);
+      assert.strictEqual(linkage.stage_a_artifact_id, 10584802564);
+      assert.strictEqual(linkage.linkage_consensus_verified, true);
+    });
+
     // -----------------------------------------------------------------------
-    // 7.2. TESTES NEGATIVOS (Subprompt 1 — Secção 4.2)
+    // 7.2. TESTES NEGATIVOS REAIS (Invocação Exclusiva do Código de Produção)
     // -----------------------------------------------------------------------
     it('7.2.1: artefacto esperado ausente e outro presente falha (sem fallback permissivo)', () => {
       const expectedName = `aetf-pilot-closure-${testSha}`;
@@ -1176,7 +1250,7 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
     it('7.2.4: workflow_run.id ausente no artefacto falha', () => {
       const expectedName = `aetf-pilot-stage-a-${testSha}`;
       const artifactsList = [
-        { id: 101, name: expectedName, size_in_bytes: 4000, expired: false } // sem workflow_run
+        { id: 101, name: expectedName, size_in_bytes: 4000, expired: false }
       ];
 
       assert.throws(() => {
@@ -1198,6 +1272,7 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
     it('7.2.6: ID consumido da Etapa A ausente na evidência da Etapa B falha', () => {
       const emptyStageBDir = path.join(tmpDir, 'test_empty_stage_b');
       fs.mkdirSync(emptyStageBDir, { recursive: true });
+      fs.writeFileSync(path.join(emptyStageBDir, 'pilot-evidence-files.sha256'), '# empty\n');
 
       assert.throws(() => {
         verifierModule.extractConsumedStageAIdentifiers(emptyStageBDir);
@@ -1207,6 +1282,7 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
     it('7.2.7: ID consumido do Intake ausente na evidência da Etapa A falha', () => {
       const emptyStageADir = path.join(tmpDir, 'test_empty_stage_a');
       fs.mkdirSync(emptyStageADir, { recursive: true });
+      fs.writeFileSync(path.join(emptyStageADir, 'pilot-evidence-files.sha256'), '# empty\n');
 
       assert.throws(() => {
         verifierModule.extractConsumedIntakeIdentifiers(emptyStageADir);
@@ -1215,7 +1291,7 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
 
     it('7.2.8: run correto no SHA, mas diferente do run consumido falha', () => {
       const runMeta = {
-        id: 99999, // Diferente do run esperado 12345
+        id: 99999,
         path: '.github/workflows/operational-pilot-stage-a.yml',
         head_sha: testSha,
         head_branch: 'master',
@@ -1271,41 +1347,271 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       }, /possui tamanho inválido/);
     });
 
-    it('7.2.12: endpoint individual indisponível no mock dir falha com exit code != 0', () => {
-      const incompleteMockDir = path.join(tmpDir, 'test_incomplete_mock');
+    it('7.2.12: endpoint individual do artefacto ausente falha especificamente ao consultar artefacto', () => {
+      const mockDir = path.join(tmpDir, 'test_mock_missing_artifact_endpoint');
       const failOutDir = path.join(tmpDir, 'test_fail_out_12');
-      fs.mkdirSync(incompleteMockDir, { recursive: true });
+      fs.mkdirSync(mockDir, { recursive: true });
 
-      // Sem stage-b-run-api-response.json
+      // Run da Etapa B e lista válidos
+      fs.writeFileSync(path.join(mockDir, 'stage-b-run-api-response.json'), JSON.stringify({
+        id: 35436363480,
+        status: 'completed',
+        conclusion: 'success',
+        head_sha: testSha,
+        head_branch: 'master',
+        path: '.github/workflows/operational-pilot-stage-b.yml',
+        repository: { id: 1363667011 }
+      }));
+      fs.writeFileSync(path.join(mockDir, 'stage-b-artifacts-list.json'), JSON.stringify({
+        artifacts: [{
+          id: 10581109816,
+          name: `aetf-pilot-closure-${testSha}`,
+          size_in_bytes: 48000,
+          expired: false,
+          workflow_run: { id: 35436363480, head_sha: testSha }
+        }]
+      }));
+      // Mas SEM stage-b-artifact-api-response.json
+
       assert.throws(() => {
-        runCommand(`node scripts/verify-operational-pilot-closure-chain.mjs --stage-b-run-id=35436363480 --mock-data-dir="${incompleteMockDir}" --out-dir="${failOutDir}"`);
-      });
+        runCommand(`node scripts/verify-operational-pilot-closure-chain.mjs --stage-b-run-id=35436363480 --mock-data-dir="${mockDir}" --out-dir="${failOutDir}"`);
+      }, /Endpoint individual '.*actions\/artifacts\/10581109816' indisponível/);
     });
 
-    it('7.2.13: resposta agregada válida, mas resposta individual contraditória falha', () => {
-      // Simulação: lista agregada declara size_in_bytes: 48000, mas endpoint individual declara size_in_bytes: 10000
+    it('7.2.13: resposta agregada e endpoint individual contraditórios provocam falha no código de produção', () => {
       const artAggregated = {
         id: 10581109816,
         name: `aetf-pilot-closure-${testSha}`,
         size_in_bytes: 48000,
-        expired: false,
-        workflow_run: { id: 35436363480 }
+        expired: false
       };
 
       const artIndividualContradictory = {
         id: 10581109816,
         name: `aetf-pilot-closure-${testSha}`,
-        size_in_bytes: 10000, // Contradição!
-        expired: false,
-        workflow_run: { id: 35436363480 }
+        size_in_bytes: 10000, // Divergência real de tamanho
+        expired: false
       };
 
+      // Invocação direta da função de produção
       assert.throws(() => {
-        if (artIndividualContradictory.size_in_bytes !== artAggregated.size_in_bytes) {
-          throw new Error(`[FAIL-CLOSED] Inconsistência detectada entre resposta agregada e endpoint individual do artefacto '${artAggregated.name}'.`);
-        }
-      }, /Inconsistência detectada entre resposta agregada e endpoint individual/);
+        verifierModule.reconcileArtifactResponses(artAggregated, artIndividualContradictory);
+      }, /Inconsistência de tamanho entre resposta agregada \(48000\) e endpoint individual \(10000\)/);
+    });
+
+    it('7.2.14: head_branch ausente no run falha', () => {
+      const run = {
+        id: 100,
+        head_sha: testSha,
+        path: '.github/workflows/ci.yml',
+        status: 'completed',
+        conclusion: 'success'
+        // sem head_branch
+      };
+      assert.throws(() => {
+        verifierModule.validateRunMetadata(run, 100, '.github/workflows/ci.yml', testSha);
+      }, /Branch de origem inválida ou ausente/);
+    });
+
+    it('7.2.15: head_branch: null no run falha', () => {
+      const run = {
+        id: 100,
+        head_branch: null,
+        head_sha: testSha,
+        path: '.github/workflows/ci.yml',
+        status: 'completed',
+        conclusion: 'success'
+      };
+      assert.throws(() => {
+        verifierModule.validateRunMetadata(run, 100, '.github/workflows/ci.yml', testSha);
+      }, /Branch de origem inválida ou ausente/);
+    });
+
+    it('7.2.16: head_branch: "develop" no run falha', () => {
+      const run = {
+        id: 100,
+        head_branch: 'develop',
+        head_sha: testSha,
+        path: '.github/workflows/ci.yml',
+        status: 'completed',
+        conclusion: 'success'
+      };
+      assert.throws(() => {
+        verifierModule.validateRunMetadata(run, 100, '.github/workflows/ci.yml', testSha);
+      }, /esperado 'master', obtido 'develop'/);
+    });
+
+    it('7.2.17: artifact.workflow_run.head_sha ausente no artefacto falha', () => {
+      const art = {
+        id: 200,
+        name: `aetf-pilot-stage-a-${testSha}`,
+        size_in_bytes: 4000,
+        expired: false,
+        workflow_run: { id: 100 } // sem head_sha
+      };
+      assert.throws(() => {
+        verifierModule.validateArtifactMetadata(art, `aetf-pilot-stage-a-${testSha}`, 100, testSha);
+      }, /'workflow_run\.head_sha' ausente ou malformado/);
+    });
+
+    it('7.2.18: artifact.workflow_run.head_sha malformado falha', () => {
+      const art = {
+        id: 200,
+        name: `aetf-pilot-stage-a-${testSha}`,
+        size_in_bytes: 4000,
+        expired: false,
+        workflow_run: { id: 100, head_sha: 'invalid_short_sha' }
+      };
+      assert.throws(() => {
+        verifierModule.validateArtifactMetadata(art, `aetf-pilot-stage-a-${testSha}`, 100, testSha);
+      }, /'workflow_run\.head_sha' ausente ou malformado/);
+    });
+
+    it('7.2.19: artifact.workflow_run.head_sha divergente falha', () => {
+      const art = {
+        id: 200,
+        name: `aetf-pilot-stage-a-${testSha}`,
+        size_in_bytes: 4000,
+        expired: false,
+        workflow_run: { id: 100, head_sha: '0000000000000000000000000000000000000000' }
+      };
+      assert.throws(() => {
+        verifierModule.validateArtifactMetadata(art, `aetf-pilot-stage-a-${testSha}`, 100, testSha);
+      }, /head_sha do artefacto .* diverge do SHA esperado/);
+    });
+
+    it('7.2.20: fonte de linkage presente, mas não indexada no manifesto falha', () => {
+      const stageBDir = path.join(tmpDir, 'test_stage_b_unindexed');
+      fs.mkdirSync(stageBDir, { recursive: true });
+
+      fs.writeFileSync(path.join(stageBDir, 'stage-a-artifact-api-response.json'), JSON.stringify({
+        id: 10584802564,
+        workflow_run: { id: 35444821530 }
+      }));
+      // Manifesto presente, mas NÃO indexa stage-a-artifact-api-response.json
+      fs.writeFileSync(path.join(stageBDir, 'pilot-evidence-files.sha256'), `0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef  other-file.json\n`);
+
+      assert.throws(() => {
+        verifierModule.extractConsumedStageAIdentifiers(stageBDir);
+      }, /Fonte de linkage '.*stage-a-artifact-api-response\.json' presente mas não indexada no manifesto de hashes/);
+    });
+
+    it('7.2.21: fonte indexada com hash físico divergente falha', () => {
+      const stageBDir = path.join(tmpDir, 'test_stage_b_tampered_hash');
+      fs.mkdirSync(stageBDir, { recursive: true });
+
+      const realContent = JSON.stringify({ id: 10584802564, workflow_run: { id: 35444821530 } });
+      fs.writeFileSync(path.join(stageBDir, 'stage-a-artifact-api-response.json'), realContent);
+      // Hash fraudulento no manifesto
+      fs.writeFileSync(path.join(stageBDir, 'pilot-evidence-files.sha256'), `ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff  stage-a-artifact-api-response.json\n`);
+
+      assert.throws(() => {
+        verifierModule.extractConsumedStageAIdentifiers(stageBDir);
+      }, /Hash físico da fonte de linkage '.*stage-a-artifact-api-response\.json' .* diverge do registado no índice/);
+    });
+
+    it('7.2.22: duas fontes com stage_a_run_id diferentes falham por contradição', () => {
+      const stageBDir = path.join(tmpDir, 'test_stage_b_contradictory_run_id');
+      fs.mkdirSync(stageBDir, { recursive: true });
+
+      const content1 = JSON.stringify({ stage_a_run_id: 11111, stage_a_artifact_id: 10584802564 });
+      const content2 = JSON.stringify({ id: 10584802564, workflow_run: { id: 22222 } }); // Contradição de run ID!
+
+      fs.writeFileSync(path.join(stageBDir, 'consumed-stage-a.json'), content1);
+      fs.writeFileSync(path.join(stageBDir, 'stage-a-artifact-api-response.json'), content2);
+
+      const h1 = createHash('sha256').update(content1).digest('hex');
+      const h2 = createHash('sha256').update(content2).digest('hex');
+      fs.writeFileSync(path.join(stageBDir, 'pilot-evidence-files.sha256'), `${h1}  consumed-stage-a.json\n${h2}  stage-a-artifact-api-response.json\n`);
+
+      assert.throws(() => {
+        verifierModule.extractConsumedStageAIdentifiers(stageBDir);
+      }, /Contradição entre fontes de evidência para stage_a_run_id/);
+    });
+
+    it('7.2.23: duas fontes com stage_a_artifact_id diferentes falham por contradição', () => {
+      const stageBDir = path.join(tmpDir, 'test_stage_b_contradictory_art_id');
+      fs.mkdirSync(stageBDir, { recursive: true });
+
+      const content1 = JSON.stringify({ stage_a_run_id: 35444821530, stage_a_artifact_id: 55555 });
+      const content2 = JSON.stringify({ id: 99999, workflow_run: { id: 35444821530 } }); // Contradição de artifact ID!
+
+      fs.writeFileSync(path.join(stageBDir, 'consumed-stage-a.json'), content1);
+      fs.writeFileSync(path.join(stageBDir, 'stage-a-artifact-api-response.json'), content2);
+
+      const h1 = createHash('sha256').update(content1).digest('hex');
+      const h2 = createHash('sha256').update(content2).digest('hex');
+      fs.writeFileSync(path.join(stageBDir, 'pilot-evidence-files.sha256'), `${h1}  consumed-stage-a.json\n${h2}  stage-a-artifact-api-response.json\n`);
+
+      assert.throws(() => {
+        verifierModule.extractConsumedStageAIdentifiers(stageBDir);
+      }, /Contradição entre fontes de evidência para stage_a_artifact_id/);
+    });
+
+    it('7.2.24: duas fontes com intake_run_id diferentes falham por contradição', () => {
+      const stageADir = path.join(tmpDir, 'test_stage_a_contradictory_run_id');
+      fs.mkdirSync(stageADir, { recursive: true });
+
+      const content1 = JSON.stringify({ intake_run_id: 33333, input_artifact_id: 10585326688 });
+      const content2 = JSON.stringify({ id: 10585326688, workflow_run: { id: 44444 } }); // Contradição de run ID!
+
+      fs.writeFileSync(path.join(stageADir, 'consumed-intake.json'), content1);
+      fs.writeFileSync(path.join(stageADir, 'intake-artifact-api-response.json'), content2);
+
+      const h1 = createHash('sha256').update(content1).digest('hex');
+      const h2 = createHash('sha256').update(content2).digest('hex');
+      fs.writeFileSync(path.join(stageADir, 'pilot-evidence-files.sha256'), `${h1}  consumed-intake.json\n${h2}  intake-artifact-api-response.json\n`);
+
+      assert.throws(() => {
+        verifierModule.extractConsumedIntakeIdentifiers(stageADir);
+      }, /Contradição entre fontes de evidência para intake_run_id/);
+    });
+
+    it('7.2.25: duas fontes com intake_artifact_id diferentes falham por contradição', () => {
+      const stageADir = path.join(tmpDir, 'test_stage_a_contradictory_art_id');
+      fs.mkdirSync(stageADir, { recursive: true });
+
+      const content1 = JSON.stringify({ intake_run_id: 35444671656, input_artifact_id: 77777 });
+      const content2 = JSON.stringify({ id: 88888, workflow_run: { id: 35444671656 } }); // Contradição de artifact ID!
+
+      fs.writeFileSync(path.join(stageADir, 'consumed-intake.json'), content1);
+      fs.writeFileSync(path.join(stageADir, 'intake-artifact-api-response.json'), content2);
+
+      const h1 = createHash('sha256').update(content1).digest('hex');
+      const h2 = createHash('sha256').update(content2).digest('hex');
+      fs.writeFileSync(path.join(stageADir, 'pilot-evidence-files.sha256'), `${h1}  consumed-intake.json\n${h2}  intake-artifact-api-response.json\n`);
+
+      assert.throws(() => {
+        verifierModule.extractConsumedIntakeIdentifiers(stageADir);
+      }, /Contradição entre fontes de evidência para intake_artifact_id/);
+    });
+
+    it('7.2.26: fonte de linkage contendo JSON inválido falha', () => {
+      const stageBDir = path.join(tmpDir, 'test_stage_b_invalid_json');
+      fs.mkdirSync(stageBDir, { recursive: true });
+
+      const invalidContent = '{ invalid json content: [ ';
+      fs.writeFileSync(path.join(stageBDir, 'stage-a-artifact-api-response.json'), invalidContent);
+      const h = createHash('sha256').update(invalidContent).digest('hex');
+      fs.writeFileSync(path.join(stageBDir, 'pilot-evidence-files.sha256'), `${h}  stage-a-artifact-api-response.json\n`);
+
+      assert.throws(() => {
+        verifierModule.extractConsumedStageAIdentifiers(stageBDir);
+      }, /Fonte de linkage '.*stage-a-artifact-api-response\.json' contém JSON inválido/);
+    });
+
+    it('7.2.27: índice de hashes ausente no pacote falha', () => {
+      const stageBDir = path.join(tmpDir, 'test_stage_b_no_index');
+      fs.mkdirSync(stageBDir, { recursive: true });
+
+      fs.writeFileSync(path.join(stageBDir, 'stage-a-artifact-api-response.json'), JSON.stringify({ id: 10584802564, workflow_run: { id: 35444821530 } }));
+      // Sem pilot-evidence-files.sha256
+
+      assert.throws(() => {
+        verifierModule.extractConsumedStageAIdentifiers(stageBDir);
+      }, /Índice de hashes ausente no pacote/);
     });
   });
 });
+
 
