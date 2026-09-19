@@ -14,7 +14,9 @@ import {
   OperationalPilotMode,
   HumanReviewStatus,
   DeliveryStatus,
-  SecretProvider
+  SecretProvider,
+  resolveExecutionClassification,
+  assertNoForbiddenDemoClassification
 } from '@ai-employee/shared';
 import { TokenService, AccountRecord } from '@ai-employee/shared/server';
 import { TransactionalPilotStore } from './TransactionalPilotStore.js';
@@ -543,9 +545,9 @@ export class OperationalPilotRunner {
       error_code: null,
       version: 1,
       idempotency_key: input.idempotency_key,
-      execution_mode: this.executionMode,
-      is_simulation: false,
-      classification_level: 'CONTROLLED_OPERATIONAL_PILOT_VALIDATED'
+      execution_mode: resolveExecutionClassification(this.executionMode).execution_mode,
+      is_simulation: resolveExecutionClassification(this.executionMode).is_simulation,
+      classification_level: resolveExecutionClassification(this.executionMode).classification_level
     };
     receipt.receipt_sha256 = sha256(canonicalJson(receipt));
 
@@ -1053,8 +1055,11 @@ export class OperationalPilotRunner {
     fs.writeFileSync(path.join(outputDir, 'pilot-incidents.json'), JSON.stringify(incidents, null, 2), 'utf8');
 
     // Classification
+    const execClass = resolveExecutionClassification(this.executionMode);
+    const isDemo = execClass.is_simulation || this.loadedInput.is_fixture || this.loadedInput.classification === 'AUTOMATED_OPERATIONAL_DEMO';
+
     let classification: OperationalPilotClassification;
-    if (this.executionMode === 'DEMO' || this.loadedInput.is_fixture || this.loadedInput.classification === 'AUTOMATED_OPERATIONAL_DEMO') {
+    if (isDemo) {
       classification = 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED';
     } else if (this.state === 'PENDING_HUMAN_REVIEW') {
       classification = 'CONTROLLED_REAL_PILOT_PENDING_HUMAN_REVIEW';
@@ -1065,23 +1070,26 @@ export class OperationalPilotRunner {
     }
 
     // Final Attestation
-    const isDemo = this.executionMode === 'DEMO' || this.loadedInput.is_fixture || this.loadedInput.classification === 'AUTOMATED_OPERATIONAL_DEMO';
     const attestation: PilotFinalAttestation = {
       pilot_id: this.loadedInput.pilot_id,
       tenant_id: this.loadedInput.tenant_id,
       organization_name: this.loadedInput.organization_name,
-      execution_mode: this.executionMode,
+      execution_mode: isDemo ? 'DEMO' : this.executionMode,
       infrastructure_implemented: true,
       simulation_executed: isDemo,
+      is_simulation: isDemo,
       operational_pilot_started: !isDemo,
       operational_pilot_completed: !isDemo && (this.state === 'PILOT_COMPLETED' || this.state === 'APPROVED_AND_ARCHIVED'),
       classification_status: isDemo ? 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED' : 'CONTROLLED_OPERATIONAL_PILOT_VALIDATED',
-      classification,
-      operational_state: classification,
+      classification: isDemo ? 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED' : classification,
+      operational_state: isDemo ? 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED' : classification,
       metrics,
       gates_result: 'PASS',
       generated_at: new Date().toISOString()
     };
+    if (isDemo) {
+      assertNoForbiddenDemoClassification(attestation, 'pilot-final-attestation.json');
+    }
     fs.writeFileSync(path.join(outputDir, 'pilot-final-attestation.json'), JSON.stringify(attestation, null, 2), 'utf8');
 
     // Build file entries for manifest

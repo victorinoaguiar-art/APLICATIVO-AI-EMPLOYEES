@@ -318,4 +318,49 @@ export interface PilotFinalAttestation {
   metrics: PilotMetrics;
   gates_result: 'PASS' | 'FAIL' | 'NOT_PROVEN';
   generated_at: string;
+  is_simulation?: boolean;
+}
+
+export interface ExecutionClassificationResult {
+  execution_mode: 'DEMO' | 'OPERATIONAL_PILOT';
+  is_simulation: boolean;
+  classification: 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED' | 'CONTROLLED_OPERATIONAL_PILOT_VALIDATED';
+  classification_level: 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED' | 'CONTROLLED_OPERATIONAL_PILOT_VALIDATED';
+  classification_status: 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED' | 'CONTROLLED_OPERATIONAL_PILOT_VALIDATED';
+  operational_state: 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED' | 'CONTROLLED_OPERATIONAL_PILOT_VALIDATED';
+  operational_pilot_started: boolean;
+  operational_pilot_completed: boolean;
+}
+
+export function resolveExecutionClassification(mode: string): ExecutionClassificationResult {
+  const isDemo = String(mode).toUpperCase() !== 'OPERATIONAL_PILOT';
+  return {
+    execution_mode: isDemo ? 'DEMO' : 'OPERATIONAL_PILOT',
+    is_simulation: isDemo,
+    classification: isDemo ? 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED' : 'CONTROLLED_OPERATIONAL_PILOT_VALIDATED',
+    classification_level: isDemo ? 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED' : 'CONTROLLED_OPERATIONAL_PILOT_VALIDATED',
+    classification_status: isDemo ? 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED' : 'CONTROLLED_OPERATIONAL_PILOT_VALIDATED',
+    operational_state: isDemo ? 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED' : 'CONTROLLED_OPERATIONAL_PILOT_VALIDATED',
+    operational_pilot_started: !isDemo,
+    operational_pilot_completed: !isDemo
+  };
+}
+
+export const FORBIDDEN_DEMO_CLASSIFICATIONS = [
+  'CONTROLLED_OPERATIONAL_PILOT_VALIDATED',
+  'OPERATIONAL_PILOT_VALIDATED',
+  'REAL_PILOT_VALIDATED',
+  'REAL_PILOT_AUTHORISED',
+  'REAL_PILOT_COMPLETED',
+  'PRODUCTION_READY'
+] as const;
+
+export function assertNoForbiddenDemoClassification(obj: any, label = 'Object'): void {
+  if (!obj || typeof obj !== 'object') return;
+  const str = JSON.stringify(obj);
+  for (const forbidden of FORBIDDEN_DEMO_CLASSIFICATIONS) {
+    if (str.includes(`"${forbidden}"`)) {
+      throw new Error(`[FAIL-CLOSED] ${label} contém classificação operacional proibida em DEMO: '${forbidden}'`);
+    }
+  }
 }

@@ -589,7 +589,7 @@ describe('AETF-500: Micro-Patch Final de Ingestão Externa, Revisão Humana e Pr
 
     assert.throws(() => {
       runCommand(`node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT --environment=protected-pilot --mock-api-response="${mockEnvNoReviewers}"`);
-    }, /BLOCKED_REQUIRED_REVIEWERS_NOT_CONFIGURED|BLOCKED_ENVIRONMENT_PROTECTION_NOT_CONFIGURED/);
+    }, /BLOCKED_REQUIRED_REVIEWERS_NOT_CONFIGURED|BLOCKED_ENVIRONMENT_PROTECTION_NOT_CONFIGURED|MOCK_EVIDENCE_FORBIDDEN_IN_OPERATIONAL_PILOT/);
   });
 
   // -------------------------------------------------------------
@@ -607,7 +607,7 @@ describe('AETF-500: Micro-Patch Final de Ingestão Externa, Revisão Humana e Pr
 
     assert.throws(() => {
       runCommand(`node scripts/verify-environment-protection.mjs --mode=OPERATIONAL_PILOT --environment=protected-pilot --mock-api-response="${mockEnvNoBranchPolicy}"`);
-    }, /BLOCKED_BRANCH_POLICY_NOT_CONFIGURED|BLOCKED_REQUIRED_REVIEWERS_NOT_CONFIGURED|BLOCKED_ENVIRONMENT_PROTECTION_NOT_CONFIGURED/);
+    }, /BLOCKED_BRANCH_POLICY_NOT_CONFIGURED|BLOCKED_REQUIRED_REVIEWERS_NOT_CONFIGURED|BLOCKED_ENVIRONMENT_PROTECTION_NOT_CONFIGURED|MOCK_EVIDENCE_FORBIDDEN_IN_OPERATIONAL_PILOT/);
   });
 
   // -------------------------------------------------------------
@@ -1248,13 +1248,23 @@ describe('AETF-500: Micro-Patch Final de Ingestão Externa, Revisão Humana e Pr
       name: 'protected-pilot',
       protection_rules: [{ type: 'required_reviewers', reviewers: [{ reviewer: { id: 297225475, type: 'User' } }] }],
       deployment_branch_policy: { protected_branches: true, custom_branch_policies: false },
-      can_admins_bypass: false
+      can_admins_bypass: false,
+      prevent_self_review: true
     }, null, 2));
 
     const mockBranchProtected = path.join(tmpDir, 'mock_branch_protected.json');
     fs.writeFileSync(mockBranchProtected, JSON.stringify({
-      required_status_checks: { contexts: ['Clean Checkout Local Verification (22.x)'] },
-      enforce_admins: { enabled: true }
+      required_status_checks: {
+        strict: true,
+        contexts: ['Clean Checkout Local Verification (22.x)']
+      },
+      required_pull_request_reviews: {
+        required_approving_review_count: 1,
+        dismiss_stale_reviews: true
+      },
+      enforce_admins: { enabled: true },
+      allow_deletions: { enabled: false },
+      allow_force_pushes: { enabled: false }
     }, null, 2));
 
     runCommand(`node scripts/verify-environment-protection.mjs --mode=DEMO --environment=protected-pilot --mock-api-response="${mockEnvProtected}" --mock-branch-response="${mockBranchProtected}" --out-dir="${testEnvDir}"`);

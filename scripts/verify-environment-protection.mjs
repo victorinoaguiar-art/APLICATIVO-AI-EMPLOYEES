@@ -31,11 +31,14 @@ console.log('================================================================');
 const mockApiResponseArg = getArg('mock-api-response', process.env.MOCK_ENV_API_RESPONSE || '');
 const mockBranchResponseArg = getArg('mock-branch-response', process.env.MOCK_BRANCH_API_RESPONSE || '');
 
-if (mode === 'OPERATIONAL_PILOT') {
-  if (process.env.MOCK_ENV_API_RESPONSE || process.env.MOCK_BRANCH_API_RESPONSE) {
-    console.error('\n[FAIL-CLOSED] Respostas simuladas via variáveis de ambiente (MOCK_ENV_API_RESPONSE, MOCK_BRANCH_API_RESPONSE) são categoricamente proibidos no modo OPERATIONAL_PILOT.');
-    process.exit(1);
-  }
+if (mode === 'OPERATIONAL_PILOT' && (
+  mockApiResponseArg ||
+  mockBranchResponseArg ||
+  process.env.MOCK_ENV_API_RESPONSE ||
+  process.env.MOCK_BRANCH_API_RESPONSE
+)) {
+  console.error('\n[FAIL-CLOSED] MOCK_EVIDENCE_FORBIDDEN_IN_OPERATIONAL_PILOT: Respostas simuladas via CLI (--mock-*) ou variáveis de ambiente são proibidas no modo OPERATIONAL_PILOT.');
+  process.exit(1);
 }
 
 // 1. Consulta ao Ambiente GitHub (protected-pilot)
@@ -153,10 +156,23 @@ const enforceAdminsBranch = Boolean(
   branchResponse.enforce_admins.enabled === true
 );
 
+const hasPullRequest = Boolean(branchResponse && branchResponse.required_pull_request_reviews);
+const approvingReviewCount = branchResponse?.required_pull_request_reviews?.required_approving_review_count ?? 0;
+const dismissStaleReviews = Boolean(branchResponse?.required_pull_request_reviews?.dismiss_stale_reviews);
+const strictBranch = Boolean(branchResponse?.required_status_checks?.strict);
+const blockDeletions = Boolean(branchResponse?.allow_deletions?.enabled === false);
+const blockForcePushes = Boolean(branchResponse?.allow_force_pushes?.enabled === false);
+const preventSelfReview = Boolean(apiResponse?.prevent_self_review === true);
+
+const isEnvFullyProtected = hasRequiredReviewers && hasBranchPolicy && canAdminsBypass === false && preventSelfReview;
+const isBranchFullyProtected = hasStatusChecks && strictBranch && hasPullRequest && approvingReviewCount >= 1 && dismissStaleReviews && enforceAdminsBranch && blockDeletions && blockForcePushes;
+
 let status = 'UNPROTECTED';
-if (hasRequiredReviewers && hasBranchPolicy && canAdminsBypass === false) {
+if (!apiResponse || !branchResponse || fetchEnvError || fetchBranchError || apiResponse.error || branchResponse.error) {
+  status = 'PROTECTION_EVIDENCE_UNAVAILABLE';
+} else if (isEnvFullyProtected && isBranchFullyProtected) {
   status = 'FULLY_PROTECTED';
-} else if (hasRequiredReviewers) {
+} else if (hasRequiredReviewers || hasStatusChecks) {
   status = 'PARTIALLY_PROTECTED';
 }
 
@@ -178,12 +194,19 @@ const verificationReport = {
   has_deployment_branch_policy: hasBranchPolicy,
   has_branch_policy: hasBranchPolicy,
   can_admins_bypass: canAdminsBypass,
+  prevent_self_review: preventSelfReview,
   protection_rules_count: Array.isArray(apiResponse?.protection_rules) ? apiResponse.protection_rules.length : 0,
   protection_rules: apiResponse?.protection_rules || [],
   branch_protection: {
     has_status_checks: hasStatusChecks,
+    strict_branch: strictBranch,
+    has_pull_request: hasPullRequest,
+    approving_review_count: approvingReviewCount,
+    dismiss_stale_reviews: dismissStaleReviews,
     enforce_admins: enforceAdminsBranch,
-    raw_status: branchResponse ? 'CONFIGURED' : 'NOT_CONFIGURED_OR_UNAVAILABLE'
+    block_deletions: blockDeletions,
+    block_force_pushes: blockForcePushes,
+    raw_status: branchResponse && !branchResponse.error ? 'CONFIGURED' : 'NOT_CONFIGURED_OR_UNAVAILABLE'
   }
 };
 
@@ -193,6 +216,7 @@ fs.writeFileSync(verificationFilePath, JSON.stringify(verificationReport, null, 
 console.log(`[PASS] Resposta do Ambiente gravada em: ${apiResponseFilePath} (SHA: ${apiResponseHash.slice(0, 16)}...)`);
 console.log(`[PASS] Resposta de Branch gravada em:   ${branchResponseFilePath} (SHA: ${branchResponseHash.slice(0, 16)}...)`);
 console.log(`[PASS] Relatório de proteção gravado em: ${verificationFilePath}`);
+console.log(`Status de Proteção Atribuído:    ${status}`);
 console.log(`Regras Encontradas:              ${verificationReport.protection_rules_count}`);
 console.log(`Revisores Obrigatórios Ativos:   ${hasRequiredReviewers ? 'SIM' : 'NÃO'}`);
 console.log(`Política de Branch Configurada:  ${hasBranchPolicy ? 'SIM' : 'NÃO'}`);
@@ -201,8 +225,8 @@ console.log(`Checks Obrigatórios em master:   ${hasStatusChecks ? 'SIM' : 'NÃO
 
 // 7. Regras estritas de saída fail-closed no modo operacional
 if (mode === 'OPERATIONAL_PILOT') {
-  if (!apiResponse) {
-    console.error(`\n[FAIL-CLOSED] Erro ao consultar API do GitHub: ${fetchEnvError}`);
+  if (!apiResponse || fetchEnvError || apiResponse.error) {
+    console.error(`\n[FAIL-CLOSED] Erro ao consultar API do ambiente: ${fetchEnvError || apiResponse?.error || 'RESPOSTA_NULA'}`);
     console.error('STATUS: BLOCKED_ENVIRONMENT_PROTECTION_NOT_CONFIGURED');
     process.exit(1);
   }
@@ -212,30 +236,20 @@ if (mode === 'OPERATIONAL_PILOT') {
     process.exit(1);
   }
 
-  if (!hasRequiredReviewers) {
-    console.error('\n[FAIL-CLOSED] BLOCKED_REQUIRED_REVIEWERS_NOT_CONFIGURED');
-    console.error('O ambiente "protected-pilot" não possui regras de proteção com required reviewers configurados.');
-    console.error('Interrupção obrigatória: o piloto operacional real exige ambiente com aprovação humana obrigatória.');
+  if (!branchResponse || fetchBranchError || branchResponse.error) {
+    console.error(`\n[FAIL-CLOSED] Erro ao consultar API de protecção da branch: ${fetchBranchError || branchResponse?.error || 'RESPOSTA_NULA'}`);
+    console.error('STATUS: BLOCKED_BRANCH_PROTECTION_NOT_CONFIGURED');
     process.exit(1);
   }
 
-  if (!hasBranchPolicy) {
-    console.error('\n[FAIL-CLOSED] BLOCKED_BRANCH_POLICY_NOT_CONFIGURED');
-    console.error('O ambiente "protected-pilot" não possui deployment_branch_policy configurada.');
-    console.error('Interrupção obrigatória: o piloto operacional real exige política restrita de branch de deployment.');
+  if (status !== 'FULLY_PROTECTED') {
+    console.error(`\n[FAIL-CLOSED] BLOCKED_ENVIRONMENT_NOT_FULLY_PROTECTED: Status de proteção é '${status}', mas o modo OPERATIONAL_PILOT exige 'FULLY_PROTECTED'.`);
     process.exit(1);
   }
 
-  if (canAdminsBypass !== false) {
-    console.error('\n[FAIL-CLOSED] BLOCKED_ADMIN_BYPASS_NOT_DISABLED');
-    console.error('O ambiente "protected-pilot" permite bypass por administradores (can_admins_bypass !== false).');
-    console.error('Interrupção obrigatória: bypass administrativo deve estar desativado para o piloto operacional real.');
-    process.exit(1);
-  }
-
-  console.log('\n[PASS] Todas as regras de proteção do ambiente GitHub estão em total conformidade.');
+  console.log('\n[PASS] Todas as regras de proteção do ambiente GitHub e da branch master estão em total conformidade (FULLY_PROTECTED).');
 } else {
-  console.log(`\n[INFO] Modo ${mode}: Verificação de regras de proteção concluída e registada com sucesso.`);
+  console.log(`\n[INFO] Modo ${mode}: Verificação de regras de proteção concluída e registada com sucesso (Status: ${status}).`);
 }
 
 process.exit(0);

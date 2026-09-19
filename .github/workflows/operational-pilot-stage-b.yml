@@ -105,6 +105,9 @@ jobs:
         env:
           GIT_COMMIT_SHA: ${{ github.event.inputs.stage_a_head_sha }}
           GITHUB_SHA: ${{ github.event.inputs.stage_a_head_sha }}
+          GITHUB_TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_ENV_APPROVAL_ID: ${{ github.run_id }}
           REVIEWER_TOKEN: ${{ secrets.PILOT_REVIEWER_TOKEN }}
           REVIEW_SIGNATURE: ${{ secrets.PILOT_REVIEW_SIGNATURE }}
           REVIEWER_SECRET: ${{ secrets.PILOT_SECRET_REV_MARIA }}

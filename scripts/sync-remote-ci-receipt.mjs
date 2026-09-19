@@ -39,34 +39,83 @@ if (fs.existsSync(receiptPath)) {
   } catch {}
 }
 
-console.log(`[SYNC-REMOTE-RECEIPT] Fetching GitHub Actions run details for Run ID ${runId}...`);
+console.log(`[SYNC-REMOTE-RECEIPT] Fetching primary CI run raw API response for Run ID ${runId}...`);
 try {
-  const runOutput = execSync(`gh run view ${runId} --json databaseId,url,status,conclusion,createdAt,updatedAt,headSha`, {
-    encoding: 'utf8',
-    cwd: ROOT_DIR
-  });
-  const runData = JSON.parse(runOutput);
+  const primaryRunRaw = process.env.MOCK_PRIMARY_RUN_RESPONSE
+    ? fs.readFileSync(process.env.MOCK_PRIMARY_RUN_RESPONSE, 'utf8')
+    : execSync(`gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${runId}`, {
+        encoding: 'utf8',
+        cwd: ROOT_DIR,
+        stdio: ['pipe', 'pipe', 'pipe']
+      }).trim();
+  const primaryRunData = JSON.parse(primaryRunRaw);
+  const primaryRunResPath = path.join(evidenceDir, 'primary-ci-run-api-response.json');
+  fs.writeFileSync(primaryRunResPath, primaryRunRaw, 'utf8');
+  const primaryRunSha256 = crypto.createHash('sha256').update(primaryRunRaw).digest('hex');
+  fs.writeFileSync(`${primaryRunResPath}.sha256`, `${primaryRunSha256}  primary-ci-run-api-response.json\n`, 'utf8');
+
+  if (primaryRunData.status !== 'completed') {
+    console.error(`[FATAL] PRIMARY_CI_STATUS_NOT_COMPLETED: Primary CI run status is '${primaryRunData.status}'. Receipt can only be generated after completion.`);
+    process.exit(1);
+  }
+  if (primaryRunData.conclusion !== 'success') {
+    console.error(`[FATAL] PRIMARY_CI_CONCLUSION_NOT_SUCCESS: Primary CI run conclusion is '${primaryRunData.conclusion}'. Expected 'success'.`);
+    process.exit(1);
+  }
+
+  console.log(`[SYNC-REMOTE-RECEIPT] Fetching primary CI jobs raw API response for Run ID ${runId}...`);
+  const primaryJobsRaw = process.env.MOCK_PRIMARY_JOBS_RESPONSE
+    ? fs.readFileSync(process.env.MOCK_PRIMARY_JOBS_RESPONSE, 'utf8')
+    : execSync(`gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${runId}/jobs`, {
+        encoding: 'utf8',
+        cwd: ROOT_DIR,
+        stdio: ['pipe', 'pipe', 'pipe']
+      }).trim();
+  const primaryJobsData = JSON.parse(primaryJobsRaw);
+  const primaryJobsResPath = path.join(evidenceDir, 'primary-ci-jobs-api-response.json');
+  fs.writeFileSync(primaryJobsResPath, primaryJobsRaw, 'utf8');
+  const primaryJobsSha256 = crypto.createHash('sha256').update(primaryJobsRaw).digest('hex');
+  fs.writeFileSync(`${primaryJobsResPath}.sha256`, `${primaryJobsSha256}  primary-ci-jobs-api-response.json\n`, 'utf8');
+
+  if (primaryRunData.head_sha !== headSha) {
+    console.error(`[FATAL] PRIMARY_CI_SHA_MISMATCH: Head SHA '${primaryRunData.head_sha}' !== expected '${headSha}'`);
+    process.exit(1);
+  }
+  if (primaryRunData.repository?.id !== 1363667011 || primaryRunData.head_repository?.id !== 1363667011) {
+    console.error(`[FATAL] PRIMARY_CI_REPO_INVALID: Repository ID (${primaryRunData.repository?.id}) !== 1363667011`);
+    process.exit(1);
+  }
 
   receipt.repository = 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES';
+  receipt.repository_id = 1363667011;
+  receipt.head_repository_id = 1363667011;
   receipt.branch = 'master';
-  receipt.commit_sha = runData.headSha || headSha;
-  receipt.run_id = runData.databaseId;
-  receipt.run_url = runData.url;
-  receipt.status = runData.status;
-  receipt.conclusion = runData.conclusion;
-  receipt.started_at = runData.createdAt;
-  receipt.completed_at = runData.updatedAt;
-  receipt.primary_run_id = runData.databaseId || Number(runId);
+  receipt.commit_sha = primaryRunData.head_sha || headSha;
+  receipt.workflow_path = primaryRunData.path || '.github/workflows/ci.yml';
+  receipt.run_id = primaryRunData.id;
+  receipt.run_attempt = primaryRunData.run_attempt || 1;
+  receipt.run_url = primaryRunData.html_url;
+  receipt.status = primaryRunData.status;
+  receipt.conclusion = primaryRunData.conclusion;
+  receipt.started_at = primaryRunData.created_at;
+  receipt.completed_at = primaryRunData.updated_at;
+  receipt.primary_run_id = primaryRunData.id || Number(runId);
+  receipt.raw_run_response_sha256 = primaryRunSha256;
+  receipt.raw_jobs_response_sha256 = primaryJobsSha256;
+  receipt.verified_at = new Date().toISOString();
+  receipt.jobs = primaryJobsData.jobs || [];
 
   // Query remote verification run details directly from GitHub API
   if (remoteRunId) {
     console.log(`[SYNC-REMOTE-RECEIPT] Fetching authoritative remote execution details for Run ID ${remoteRunId}...`);
     try {
-      const remoteApiRaw = execSync(`gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${remoteRunId}`, {
-        encoding: 'utf8',
-        cwd: ROOT_DIR,
-        stdio: ['pipe', 'pipe', 'pipe']
-      }).trim();
+      const remoteApiRaw = process.env.MOCK_REMOTE_RUN_RESPONSE
+        ? fs.readFileSync(process.env.MOCK_REMOTE_RUN_RESPONSE, 'utf8')
+        : execSync(`gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${remoteRunId}`, {
+            encoding: 'utf8',
+            cwd: ROOT_DIR,
+            stdio: ['pipe', 'pipe', 'pipe']
+          }).trim();
       const remoteApiData = JSON.parse(remoteApiRaw);
 
       const remoteApiResPath = path.join(evidenceDir, 'remote-workflow-run-api-response.json');
@@ -148,13 +197,11 @@ try {
     process.exit(1);
   }
 
-  const jobsOutput = execSync(`gh run view ${runId} --json jobs`, { encoding: 'utf8', cwd: ROOT_DIR });
-  const jobsData = JSON.parse(jobsOutput);
-  receipt.jobs = jobsData.jobs || [];
-
-  // Derive skipped and failed required steps from real job steps
+  // Derive skipped, failed, pending, and cancelled required steps from real job steps
   const skippedSteps = [];
   const failedSteps = [];
+  const pendingSteps = [];
+  const cancelledSteps = [];
   for (const [jobName, steps] of Object.entries(REQUIRED_CI_JOBS_AND_STEPS)) {
     const job = receipt.jobs.find(j => j.name === jobName);
     if (!job) {
@@ -167,22 +214,42 @@ try {
         failedSteps.push(`Step missing: ${stepName} in ${jobName}`);
       } else if (step.conclusion === 'skipped' || step.status === 'skipped') {
         skippedSteps.push(`${stepName} (${jobName})`);
-      } else if (['cancelled', 'failure'].includes(step.conclusion) || ['cancelled', 'failure'].includes(step.status)) {
+      } else if (['pending', 'in_progress', 'queued'].includes(step.status) || ['pending', 'in_progress', 'queued'].includes(step.conclusion)) {
+        pendingSteps.push(`${stepName} (${jobName})`);
+      } else if (step.conclusion === 'cancelled' || step.status === 'cancelled') {
+        cancelledSteps.push(`${stepName} (${jobName})`);
+      } else if (['failure', 'timed_out'].includes(step.conclusion) || ['failure', 'timed_out'].includes(step.status)) {
         failedSteps.push(`${stepName} [${step.conclusion || step.status}] (${jobName})`);
       }
     }
   }
+  receipt.required_steps_failed = failedSteps;
+  receipt.required_steps_skipped = skippedSteps;
+  receipt.required_steps_pending = pendingSteps;
+  receipt.required_steps_cancelled = cancelledSteps;
   receipt.skipped_required_steps = skippedSteps;
   receipt.failed_required_steps = failedSteps;
+
+  if (receipt.status !== 'completed' || receipt.conclusion !== 'success') {
+    console.error(`[FATAL] PRIMARY_CI_INCOMPLETE: Primary CI status is '${receipt.status}', conclusion is '${receipt.conclusion}' (expected 'completed' / 'success')`);
+    process.exit(1);
+  }
+
+  if (failedSteps.length > 0 || pendingSteps.length > 0 || cancelledSteps.length > 0 || skippedSteps.length > 0) {
+    console.error(`[FATAL] REQUIRED_STEPS_NOT_CLEAN: failed=${failedSteps.length}, pending=${pendingSteps.length}, cancelled=${cancelledSteps.length}, skipped=${skippedSteps.length}`);
+    process.exit(1);
+  }
 
   // Query live branch protection if token is available
   try {
     console.log('[SYNC-REMOTE-RECEIPT] Querying GitHub API for live branch protection...');
-    const bpApiRaw = execSync('gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/branches/master/protection', {
-      encoding: 'utf8',
-      cwd: ROOT_DIR,
-      stdio: ['pipe', 'pipe', 'pipe']
-    }).trim();
+    const bpApiRaw = process.env.MOCK_BP_API_RESPONSE
+      ? fs.readFileSync(process.env.MOCK_BP_API_RESPONSE, 'utf8')
+      : execSync('gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/branches/master/protection', {
+          encoding: 'utf8',
+          cwd: ROOT_DIR,
+          stdio: ['pipe', 'pipe', 'pipe']
+        }).trim();
     const bpApiData = JSON.parse(bpApiRaw);
 
     const bpApiResPath = path.join(evidenceDir, 'branch-protection-api-response.json');
@@ -245,7 +312,9 @@ try {
       'github-actions-receipt.json',
       'branch-protection.json',
       'branch-protection-api-response.json',
-      'remote-workflow-run-api-response.json'
+      'remote-workflow-run-api-response.json',
+      'primary-ci-run-api-response.json',
+      'primary-ci-jobs-api-response.json'
     ];
     const hashes = {};
     for (const f of filesToHash) {

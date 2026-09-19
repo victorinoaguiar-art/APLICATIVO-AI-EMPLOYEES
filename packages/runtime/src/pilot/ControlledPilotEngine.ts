@@ -20,7 +20,8 @@ import {
   PilotFinalAttestation,
   PilotReviewChallenge,
   PilotDocumentValidationReceipt,
-  SecretProvider
+  SecretProvider,
+  resolveExecutionClassification
 } from '@ai-employee/shared';
 import { TransactionalPilotStore } from './TransactionalPilotStore.js';
 import { PhysicalDocumentValidator } from './PhysicalDocumentValidator.js';
@@ -424,10 +425,11 @@ export class ControlledPilotEngine {
     const completedAt = new Date().toISOString();
     const outputHash = docValidation.sha256;
 
-    const isSim = pilot.execution_mode === 'SIMULATION';
-    const classificationLevel = isSim
+    const execClass = resolveExecutionClassification(pilot.execution_mode);
+    const isSim = pilot.execution_mode === 'SIMULATION' ? true : execClass.is_simulation;
+    const classificationLevel = pilot.execution_mode === 'SIMULATION'
       ? 'CONTROLLED_PILOT_SIMULATOR_IMPLEMENTED'
-      : 'OPERATIONAL_PILOT_INFRASTRUCTURE_READY';
+      : execClass.classification_level;
 
     const receipt: PilotTaskReceipt = {
       task_id: request.task_id,

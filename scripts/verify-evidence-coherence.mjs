@@ -367,6 +367,22 @@ export function verifyEvidenceCoherence(options = {}) {
       };
     }
 
+    if (Array.isArray(receipt.required_steps_pending) && receipt.required_steps_pending.length > 0) {
+      return {
+        valid: false,
+        code: ERROR_CODES.REQUIRED_STEP_MISSING,
+        error: `Required CI steps are pending: ${receipt.required_steps_pending.join(', ')}`
+      };
+    }
+
+    if (Array.isArray(receipt.required_steps_cancelled) && receipt.required_steps_cancelled.length > 0) {
+      return {
+        valid: false,
+        code: ERROR_CODES.REQUIRED_STEP_SKIPPED,
+        error: `Required CI steps were cancelled: ${receipt.required_steps_cancelled.join(', ')}`
+      };
+    }
+
     // Physical jobs and steps inspection (Prompt section 5)
     if (!Array.isArray(receipt.jobs) || receipt.jobs.length === 0) {
       return {

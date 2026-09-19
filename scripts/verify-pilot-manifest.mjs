@@ -213,6 +213,51 @@ if (fs.existsSync(attestationFile)) {
       }
     }
 
+    if (attestation.execution_mode === 'DEMO') {
+      if (attestation.operational_pilot_started === true || attestation.operational_pilot_completed === true) {
+        console.error('[FALHA] Piloto em DEMO não pode ter operational_pilot_started/completed = true.');
+        hasError = true;
+      }
+      if (attestation.simulation_executed === false) {
+        console.error('[FALHA] Piloto em DEMO não pode ter simulation_executed = false.');
+        hasError = true;
+      }
+      const forbiddenInDemo = [
+        'CONTROLLED_OPERATIONAL_PILOT_VALIDATED',
+        'OPERATIONAL_PILOT_VALIDATED',
+        'REAL_PILOT_VALIDATED',
+        'REAL_PILOT_AUTHORISED',
+        'REAL_PILOT_COMPLETED',
+        'PRODUCTION_READY'
+      ];
+      for (const forbidden of forbiddenInDemo) {
+        if (
+          attestation.classification_status === forbidden ||
+          attestation.classification === forbidden ||
+          attestation.operational_state === forbidden
+        ) {
+          console.error(`[FALHA] Piloto em DEMO não pode conter classificação operacional proibida: ${forbidden}.`);
+          hasError = true;
+        }
+      }
+      const taskReceiptPath = path.join(targetDir, 'pilot-task-receipt.json');
+      if (fs.existsSync(taskReceiptPath)) {
+        try {
+          const taskRc = JSON.parse(fs.readFileSync(taskReceiptPath, 'utf8'));
+          if (taskRc.is_simulation === false) {
+            console.error('[FALHA] Recibo de tarefa em DEMO não pode ter is_simulation = false.');
+            hasError = true;
+          }
+          for (const forbidden of forbiddenInDemo) {
+            if (taskRc.classification_level === forbidden) {
+              console.error(`[FALHA] Recibo de tarefa em DEMO não pode ter classification_level = ${forbidden}.`);
+              hasError = true;
+            }
+          }
+        } catch {}
+      }
+    }
+
     if (attestation.gates_result !== 'PASS' && !args.includes('--allow-partial-gates')) {
       console.error(`[FALHA] Resultado dos gates não é PASS: ${attestation.gates_result}`);
       hasError = true;

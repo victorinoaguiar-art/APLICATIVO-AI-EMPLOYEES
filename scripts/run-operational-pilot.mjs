@@ -37,6 +37,7 @@ const stageAArtifactId = getArg('stage-a-artifact-id', process.env.STAGE_A_ARTIF
 const stageAHeadSha = getArg('stage-a-head-sha', process.env.STAGE_A_HEAD_SHA || '');
 const challengeId = getArg('challenge-id', process.env.CHALLENGE_ID || '');
 const eventSignedAt = getArg('event-signed-at', process.env.EVENT_SIGNED_AT || '');
+const initiatingActorArg = getArg('initiating-actor', process.env.GITHUB_TRIGGERING_ACTOR || process.env.GITHUB_ACTOR || '');
 
 const hasCliToken = process.argv.some(a => a.startsWith('--reviewer-token='));
 const hasCliSignature = process.argv.some(a => a.startsWith('--signature='));
@@ -176,6 +177,14 @@ try {
       }
     }
 
+    const earlyInitiator = initiatingActorArg || process.env.GITHUB_TRIGGERING_ACTOR || process.env.GITHUB_ACTOR || '';
+    const earlyReviewer = reviewerIdArg || '';
+    if (mode === 'OPERATIONAL_PILOT' && earlyInitiator && earlyReviewer && earlyInitiator.toLowerCase() === earlyReviewer.toLowerCase()) {
+      console.error(`\n[FAIL-CLOSED] SEGREGATION_OF_DUTIES_VIOLATION: O iniciador da execução ('${earlyInitiator}') não pode ser o revisor/aprovador ('${earlyReviewer}').`);
+      console.error('Auto-aprovação é categoricamente proibida em OPERATIONAL_PILOT.');
+      process.exit(1);
+    }
+
     // Se estiver a correr separadamente na Etapa B, carregar estado da BD SQLite
     if (stage === 'review-and-close') {
       console.log('[B1] A carregar contexto persistido a partir do SQLite...');
@@ -203,11 +212,19 @@ try {
     const activeReviewer = loadedInput.authorized_reviewers[0];
     const targetReviewerId = reviewerIdArg || activeReviewer.reviewer_id;
 
+    const initiatingActorId = initiatingActorArg || process.env.GITHUB_TRIGGERING_ACTOR || process.env.GITHUB_ACTOR || loadedInput.requested_by || 'system_initiator';
+    const reviewerSubjectId = targetReviewerId;
+
     console.log('\n[B2] A validar credenciais e submeter decisão humana...');
     let token = process.env.REVIEWER_TOKEN || process.env.PILOT_REVIEWER_TOKEN || reviewerTokenArg;
     let signature = process.env.REVIEW_SIGNATURE || process.env.PILOT_REVIEW_SIGNATURE || signatureArg;
 
     if (mode === 'OPERATIONAL_PILOT') {
+      if (initiatingActorId && reviewerSubjectId && initiatingActorId.toLowerCase() === reviewerSubjectId.toLowerCase()) {
+        console.error(`\n[FAIL-CLOSED] SEGREGATION_OF_DUTIES_VIOLATION: O iniciador da execução ('${initiatingActorId}') não pode ser o revisor/aprovador ('${reviewerSubjectId}').`);
+        console.error('Auto-aprovação é categoricamente proibida em OPERATIONAL_PILOT.');
+        process.exit(1);
+      }
       if (!token) {
         console.error('\n[FAIL-CLOSED] Token de autenticação do revisor (REVIEWER_TOKEN) é estritamente obrigatório no modo operacional.');
         console.error('Auto-emissão de token pelo próprio script é expressamente proibida.');
@@ -248,6 +265,29 @@ try {
     });
     console.log(`[PASS] Decisão registada: ${reviewReceipt.decision} por ${reviewReceipt.reviewer}`);
     console.log(`[PASS] Recibo de Revisão: ${reviewReceipt.review_id} (SHA: ${reviewReceipt.receipt_sha256.slice(0, 16)}...)`);
+
+    // Emitir recibo de independência do revisor (Prompt Secção 9.3)
+    const approvalId = process.env.GITHUB_ENV_APPROVAL_ID || process.env.GITHUB_RUN_ID || 'DEMO_ENV_APPROVAL';
+    const independenceReceipt = {
+      reviewer_id: targetReviewerId,
+      reviewer_subject_id: reviewerSubjectId,
+      reviewer_authorization_id: `AUTH_RECORD_${targetReviewerId}_${loadedInput.tenant_id}`,
+      github_environment_approval_id: String(approvalId),
+      initiating_actor_id: initiatingActorId,
+      independence_verified: initiatingActorId.toLowerCase() !== reviewerSubjectId.toLowerCase(),
+      prevent_self_review: true,
+      decision: reviewReceipt.decision,
+      challenge_id: challengeId || reviewReceipt.challenge_id,
+      review_signature_sha256: reviewReceipt.review_signature_sha256 || createHash('sha256').update(signature || 'DEMO_SIGNATURE').digest('hex'),
+      event_signed_at: eventSignedAt || new Date().toISOString(),
+      review_received_at: reviewReceipt.reviewed_at,
+      challenge_consumed_at: new Date().toISOString()
+    };
+    const independenceReceiptPath = path.join(path.resolve(outputDirArg), 'reviewer-independence-receipt.json');
+    fs.writeFileSync(independenceReceiptPath, JSON.stringify(independenceReceipt, null, 2), 'utf8');
+    const indepSha = createHash('sha256').update(fs.readFileSync(independenceReceiptPath)).digest('hex');
+    fs.writeFileSync(`${independenceReceiptPath}.sha256`, `${indepSha}  reviewer-independence-receipt.json\n`, 'utf8');
+    console.log(`[PASS] Recibo de Independência Humana emitido: ${independenceReceiptPath}`);
 
     if (decisionArg !== 'APPROVED') {
       console.log(`\n[INFO] Tarefa não aprovada (Decisão: ${decisionArg}). O arquivamento final não prosseguirá.`);

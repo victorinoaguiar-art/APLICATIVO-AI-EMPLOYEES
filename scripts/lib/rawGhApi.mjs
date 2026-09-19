@@ -50,10 +50,17 @@ export function fetchAndPreserveGhApi(endpoint, outDir, baseFilename, extraMeta 
   const targetDir = path.resolve(process.cwd(), outDir);
   fs.mkdirSync(targetDir, { recursive: true });
 
-  const rawBytes = execFileSync('gh', ['api', endpoint], {
-    maxBuffer: 50 * 1024 * 1024,
-    stdio: ['pipe', 'pipe', 'pipe']
-  });
+  let rawBytes;
+  if (extraMeta?.mockBytes) {
+    rawBytes = Buffer.isBuffer(extraMeta.mockBytes) ? extraMeta.mockBytes : Buffer.from(extraMeta.mockBytes, 'utf8');
+  } else if (extraMeta?.mockFilePath && fs.existsSync(extraMeta.mockFilePath)) {
+    rawBytes = fs.readFileSync(extraMeta.mockFilePath);
+  } else {
+    rawBytes = execFileSync('gh', ['api', endpoint], {
+      maxBuffer: 50 * 1024 * 1024,
+      stdio: ['pipe', 'pipe', 'pipe']
+    });
+  }
 
   if (!rawBytes || rawBytes.length === 0) {
     throw new Error(`Resposta vazia da API do GitHub para endpoint: '${endpoint}'.`);
@@ -75,20 +82,27 @@ export function fetchAndPreserveGhApi(endpoint, outDir, baseFilename, extraMeta 
     throw new Error(`Falha de parsing JSON da resposta bruta de '${endpoint}': ${err.message}`);
   }
 
-  // Montar sidecar estrito
+  // Montar sidecar estrito com separação semântica de artefacto vs run
+  const isArtifact = Boolean(parsed.archive_download_url || parsed.workflow_run);
+
   const meta = {
     endpoint,
     query_url: `https://api.github.com/${endpoint}`,
     retrieved_at: new Date().toISOString(),
     actor: process.env.GITHUB_ACTOR || 'github-actions[bot]',
-    repository_id: parsed.repository?.id ?? parsed.workflow_run?.repository_id ?? null,
+    repository_id: isArtifact ? (parsed.workflow_run?.repository_id ?? null) : (parsed.repository?.id ?? null),
+    head_repository_id: isArtifact ? (parsed.workflow_run?.head_repository_id ?? null) : (parsed.head_repository?.id ?? null),
     workflow_id: parsed.workflow_id ?? null,
     workflow_path: parsed.path ?? null,
-    run_id: parsed.id ?? parsed.workflow_run?.id ?? null,
+    workflow_run_id: isArtifact ? (parsed.workflow_run?.id ?? null) : (parsed.id ?? null),
+    run_id: isArtifact ? (parsed.workflow_run?.id ?? null) : (parsed.id ?? null),
     run_attempt: parsed.run_attempt ?? null,
-    artifact_id: parsed.id && parsed.archive_download_url ? parsed.id : null,
-    head_sha: parsed.head_sha ?? parsed.workflow_run?.head_sha ?? null,
-    head_branch: parsed.head_branch ?? parsed.workflow_run?.head_branch ?? null,
+    artifact_id: isArtifact ? (parsed.id ?? null) : null,
+    artifact_name: isArtifact ? (parsed.name ?? null) : null,
+    head_sha: isArtifact ? (parsed.workflow_run?.head_sha ?? null) : (parsed.head_sha ?? null),
+    head_branch: isArtifact ? (parsed.workflow_run?.head_branch ?? null) : (parsed.head_branch ?? null),
+    expired: isArtifact ? Boolean(parsed.expired) : null,
+    size_in_bytes: isArtifact ? (parsed.size_in_bytes ?? null) : null,
     status: parsed.status ?? null,
     conclusion: parsed.conclusion ?? null,
     raw_filename: `${baseFilename}.json`,

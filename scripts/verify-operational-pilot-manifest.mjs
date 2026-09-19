@@ -48,10 +48,51 @@ if (!fs.existsSync(shaIndexFile)) {
 // 1. Validação Ajv estrita do manifesto
 console.log('\n[1/3] A validar schema Ajv estrito do manifesto...');
 try {
-  const ajv = new PilotAjvValidator();
   const manifestData = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  if (manifestData.execution_mode === 'DEMO') {
+    const forbidden = [
+      'CONTROLLED_OPERATIONAL_PILOT_VALIDATED',
+      'OPERATIONAL_PILOT_VALIDATED',
+      'REAL_PILOT_VALIDATED',
+      'REAL_PILOT_AUTHORISED',
+      'REAL_PILOT_COMPLETED',
+      'PRODUCTION_READY'
+    ];
+    for (const f of forbidden) {
+      if (
+        manifestData.classification === f ||
+        manifestData.classification_level === f ||
+        manifestData.operational_state === f
+      ) {
+        console.error(`\n[ERRO DE COERÊNCIA DEMO] [DEMO_FORBIDDEN_CLASSIFICATION] Manifesto em DEMO contém classificação operacional proibida: '${f}'`);
+        process.exit(1);
+      }
+    }
+  }
+  const ajv = new PilotAjvValidator();
   ajv.validateEvidenceManifest(manifestData, 'pilot-evidence-manifest.json');
   console.log(`[PASS] Schema Ajv validado com sucesso (total de ficheiros: ${manifestData.total_files}).`);
+
+  if (manifestData.execution_mode === 'DEMO') {
+    const forbidden = [
+      'CONTROLLED_OPERATIONAL_PILOT_VALIDATED',
+      'OPERATIONAL_PILOT_VALIDATED',
+      'REAL_PILOT_VALIDATED',
+      'REAL_PILOT_AUTHORISED',
+      'REAL_PILOT_COMPLETED',
+      'PRODUCTION_READY'
+    ];
+    for (const f of forbidden) {
+      if (
+        manifestData.classification === f ||
+        manifestData.classification_level === f ||
+        manifestData.operational_state === f
+      ) {
+        console.error(`\n[ERRO DE COERÊNCIA DEMO] Manifesto em DEMO contém classificação operacional proibida: '${f}'`);
+        process.exit(1);
+      }
+    }
+  }
 } catch (err) {
   console.error(`\n[ERRO DE SCHEMA AJV] ${err.message}`);
   process.exit(1);
