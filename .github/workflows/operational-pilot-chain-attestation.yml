@@ -67,7 +67,8 @@ jobs:
         run: |
           node scripts/verify-operational-pilot-closure-chain.mjs \
             --stage-b-run-id="${{ steps.target-sha.outputs.run_id }}" \
-            --out-dir=.artifacts/chain_attestation
+            --out-dir=.artifacts/chain_attestation \
+            --no-mock=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

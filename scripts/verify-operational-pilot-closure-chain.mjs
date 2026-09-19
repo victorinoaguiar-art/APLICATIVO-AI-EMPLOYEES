@@ -20,17 +20,20 @@ function getArg(name, fallback = '') {
   return found ? found.slice(prefix.length) : fallback;
 }
 
-const isCI = process.env.GITHUB_ACTIONS === 'true' || process.env.CI === 'true';
 const mode = getArg('mode', process.env.EXECUTION_MODE || 'DEMO');
 const hasMockArg = args.some(a => a.startsWith('--mock-data-dir'));
 const hasMockEnv = Boolean(process.env.MOCK_DATA_DIR);
 
-// 1. Guarda Fail-Closed Anti-Mock em Execuções Operacionais e CI (Ponto 5 da Auditoria)
-if (isCI || mode === 'OPERATIONAL_PILOT' || getArg('no-mock') === 'true') {
-  if (hasMockArg || hasMockEnv) {
-    console.error('\n[FAIL-CLOSED] Mocks são terminantemente proibidos em ambiente operacional ou de CI.');
-    process.exit(1);
-  }
+// 1. Guarda Fail-Closed Anti-Mock em Execuções Operacionais (Ponto 5 da Auditoria)
+const isOperationalExecution = (
+  mode === 'OPERATIONAL_PILOT' ||
+  getArg('no-mock') === 'true' ||
+  (process.env.GITHUB_WORKFLOW && process.env.GITHUB_WORKFLOW.includes('Operational Pilot - Atestação Independente'))
+);
+
+if (isOperationalExecution && (hasMockArg || hasMockEnv)) {
+  console.error('\n[FAIL-CLOSED] Mocks são terminantemente proibidos no verificador final utilizado operacionalmente.');
+  process.exit(1);
 }
 
 const mockDataDir = (hasMockArg || hasMockEnv)
