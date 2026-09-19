@@ -770,10 +770,21 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       fs.mkdirSync(outAttestDir, { recursive: true });
 
       const testSha = '8944424fe462b0e5eb5b5fd2eb96b3a83216c7b0';
+      const stageBRunId = 35436363480;
+      const stageARunId = 35436242478;
+      const intakeRunId = 35436054945;
+      const ciRunId = 35435814047;
 
-      // Criar mock da resposta da Etapa B
+      const stageBArtId = 10581109816;
+      const stageAArtId = 10582159988;
+      const intakeArtId = 10583408445;
+
+      const { pathToFileURL } = await import('node:url');
+      const { buildZip } = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
+
+      // Stage B Run & Artifacts
       fs.writeFileSync(path.join(mockChainDir, 'stage-b-run-api-response.json'), JSON.stringify({
-        id: 35436363480,
+        id: stageBRunId,
         status: 'completed',
         conclusion: 'success',
         head_sha: testSha,
@@ -783,43 +794,44 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         head_repository: { id: 1363667011 }
       }, null, 2));
 
-      // Criar mock da lista de artefactos
       fs.writeFileSync(path.join(mockChainDir, 'stage-b-artifacts-list.json'), JSON.stringify({
         artifacts: [{
-          id: 10581109816,
+          id: stageBArtId,
           name: `aetf-pilot-closure-${testSha}`,
           size_in_bytes: 48000,
-          expired: false
+          expired: false,
+          workflow_run: { id: stageBRunId, head_sha: testSha }
         }]
       }, null, 2));
 
-      // Criar mock do pacote ZIP de fecho
+      fs.writeFileSync(path.join(mockChainDir, 'stage-b-artifact-api-response.json'), JSON.stringify({
+        id: stageBArtId,
+        name: `aetf-pilot-closure-${testSha}`,
+        size_in_bytes: 48000,
+        expired: false,
+        workflow_run: { id: stageBRunId, head_sha: testSha }
+      }, null, 2));
+
+      // Stage B Zip
       const zipContentDir = path.join(tmpDir, 'zip_content_demo');
       fs.mkdirSync(zipContentDir, { recursive: true });
 
       fs.writeFileSync(path.join(zipContentDir, 'stage-a-run-api-response.json'), JSON.stringify({
-        id: 35436242478,
+        id: stageARunId,
         status: 'completed',
         conclusion: 'success',
         head_sha: testSha,
-        path: '.github/workflows/operational-pilot-stage-a.yml'
+        head_branch: 'master',
+        path: '.github/workflows/operational-pilot-stage-a.yml',
+        repository: { id: 1363667011 }
       }, null, 2));
 
       fs.writeFileSync(path.join(zipContentDir, 'stage-a-artifact-api-response.json'), JSON.stringify({
-        id: 10582159988,
-        name: `aetf-pilot-stage-a-${testSha}`
-      }, null, 2));
-
-      fs.writeFileSync(path.join(zipContentDir, 'intake-run-api-response.json'), JSON.stringify({
-        id: 35436054945,
-        head_sha: testSha
-      }, null, 2));
-
-      fs.writeFileSync(path.join(zipContentDir, 'task-receipt-test.json'), JSON.stringify({
-        execution_mode: 'DEMO',
-        is_simulation: true,
-        classification_level: 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED',
-        challenge_id: 'CHAL_TEST_001'
+        id: stageAArtId,
+        name: `aetf-pilot-stage-a-${testSha}`,
+        size_in_bytes: 42000,
+        expired: false,
+        workflow_run: { id: stageARunId, head_sha: testSha }
       }, null, 2));
 
       fs.writeFileSync(path.join(zipContentDir, 'reviewer-independence-receipt.json'), JSON.stringify({
@@ -833,37 +845,133 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         challenge_id: 'CHAL_TEST_001'
       }, null, 2));
 
-      fs.writeFileSync(path.join(zipContentDir, 'pilot-final-attestation.json'), JSON.stringify({
-        operational_state: 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED',
-        operational_pilot_started: false,
-        operational_pilot_completed: false
-      }, null, 2));
-
-      // Gerar pilot-evidence-files.sha256
       const filesToHash = fs.readdirSync(zipContentDir);
       const shaLines = filesToHash.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(zipContentDir, f))).digest('hex')}  ${f}`);
-      // Adicionar linha de preenchimento para atingir >= 20 ficheiros
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < 20; i++) {
         const dummyName = `dummy_${i}.txt`;
         fs.writeFileSync(path.join(zipContentDir, dummyName), `dummy content ${i}`);
         shaLines.push(`${createHash('sha256').update(fs.readFileSync(path.join(zipContentDir, dummyName))).digest('hex')}  ${dummyName}`);
       }
       fs.writeFileSync(path.join(zipContentDir, 'pilot-evidence-files.sha256'), shaLines.join('\n') + '\n');
 
-      // Comprimir zipContentDir no arquivo aetf-pilot-closure-${testSha}.zip
-      const zipEntries = fs.readdirSync(zipContentDir).map(f => ({
-        name: f,
-        data: fs.readFileSync(path.join(zipContentDir, f))
-      }));
+      const zipEntries = fs.readdirSync(zipContentDir).map(f => ({ name: f, data: fs.readFileSync(path.join(zipContentDir, f)) }));
+      fs.writeFileSync(path.join(mockChainDir, `aetf-pilot-closure-${testSha}.zip`), buildZip(zipEntries));
 
-      // Criação de ZIP canónico multiplataforma
-      const { pathToFileURL } = await import('node:url');
-      const { buildZip } = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
-      const zipPath = path.join(mockChainDir, `aetf-pilot-closure-${testSha}.zip`);
-      fs.writeFileSync(zipPath, buildZip(zipEntries));
+      // Stage A Run & Artifacts
+      fs.writeFileSync(path.join(mockChainDir, 'stage-a-run-api-response.json'), JSON.stringify({
+        id: stageARunId,
+        status: 'completed',
+        conclusion: 'success',
+        head_sha: testSha,
+        head_branch: 'master',
+        path: '.github/workflows/operational-pilot-stage-a.yml',
+        repository: { id: 1363667011 }
+      }, null, 2));
+
+      fs.writeFileSync(path.join(mockChainDir, 'stage-a-artifacts-list.json'), JSON.stringify({
+        artifacts: [{
+          id: stageAArtId,
+          name: `aetf-pilot-stage-a-${testSha}`,
+          size_in_bytes: 42000,
+          expired: false,
+          workflow_run: { id: stageARunId, head_sha: testSha }
+        }]
+      }, null, 2));
+
+      fs.writeFileSync(path.join(mockChainDir, 'stage-a-artifact-api-response.json'), JSON.stringify({
+        id: stageAArtId,
+        name: `aetf-pilot-stage-a-${testSha}`,
+        size_in_bytes: 42000,
+        expired: false,
+        workflow_run: { id: stageARunId, head_sha: testSha }
+      }, null, 2));
+
+      // Stage A Zip
+      const zipADir = path.join(tmpDir, 'zip_a_demo');
+      fs.mkdirSync(zipADir, { recursive: true });
+      fs.writeFileSync(path.join(zipADir, 'intake-artifact-api-response.json'), JSON.stringify({
+        id: intakeArtId,
+        name: `aetf-pilot-intake-${testSha}`,
+        size_in_bytes: 7000,
+        expired: false,
+        workflow_run: { id: intakeRunId, head_sha: testSha }
+      }, null, 2));
+      fs.writeFileSync(path.join(zipADir, 'intake-run-api-response.json'), JSON.stringify({
+        id: intakeRunId,
+        status: 'completed',
+        conclusion: 'success',
+        head_sha: testSha,
+        head_branch: 'master',
+        path: '.github/workflows/operational-pilot-intake.yml',
+        repository: { id: 1363667011 }
+      }, null, 2));
+      fs.writeFileSync(path.join(zipADir, 'task-receipt-test.json'), JSON.stringify({
+        execution_mode: 'DEMO',
+        is_simulation: true,
+        challenge_id: 'CHAL_TEST_001'
+      }, null, 2));
+      fs.writeFileSync(path.join(zipADir, 'input-package.sha256'), '948cdee5df75eaf336574014f935c0fb644ae2521e4ef27313b48f0bba2d255e  input-package.tar.gz\n');
+      const zipAEntries = fs.readdirSync(zipADir).map(f => ({ name: f, data: fs.readFileSync(path.join(zipADir, f)) }));
+      fs.writeFileSync(path.join(mockChainDir, `aetf-pilot-stage-a-${testSha}.zip`), buildZip(zipAEntries));
+
+      // Intake Run & Artifacts
+      fs.writeFileSync(path.join(mockChainDir, 'intake-run-api-response.json'), JSON.stringify({
+        id: intakeRunId,
+        status: 'completed',
+        conclusion: 'success',
+        head_sha: testSha,
+        head_branch: 'master',
+        path: '.github/workflows/operational-pilot-intake.yml',
+        repository: { id: 1363667011 }
+      }, null, 2));
+
+      fs.writeFileSync(path.join(mockChainDir, 'intake-artifacts-list.json'), JSON.stringify({
+        artifacts: [{
+          id: intakeArtId,
+          name: `aetf-pilot-intake-${testSha}`,
+          size_in_bytes: 7000,
+          expired: false,
+          workflow_run: { id: intakeRunId, head_sha: testSha }
+        }]
+      }, null, 2));
+
+      fs.writeFileSync(path.join(mockChainDir, 'intake-artifact-api-response.json'), JSON.stringify({
+        id: intakeArtId,
+        name: `aetf-pilot-intake-${testSha}`,
+        size_in_bytes: 7000,
+        expired: false,
+        workflow_run: { id: intakeRunId, head_sha: testSha }
+      }, null, 2));
+
+      const zipIntakeDir = path.join(tmpDir, 'zip_intake_demo');
+      fs.mkdirSync(zipIntakeDir, { recursive: true });
+      fs.writeFileSync(path.join(zipIntakeDir, 'input-package.sha256'), '948cdee5df75eaf336574014f935c0fb644ae2521e4ef27313b48f0bba2d255e  input-package.tar.gz\n');
+      const zipIntakeEntries = fs.readdirSync(zipIntakeDir).map(f => ({ name: f, data: fs.readFileSync(path.join(zipIntakeDir, f)) }));
+      fs.writeFileSync(path.join(mockChainDir, `aetf-pilot-intake-${testSha}.zip`), buildZip(zipIntakeEntries));
+
+      // CI Run
+      fs.writeFileSync(path.join(mockChainDir, 'ci-run-api-response.json'), JSON.stringify({
+        id: ciRunId,
+        status: 'completed',
+        conclusion: 'success',
+        head_sha: testSha,
+        head_branch: 'master',
+        path: '.github/workflows/ci.yml',
+        repository: { id: 1363667011 }
+      }, null, 2));
+
+      // Environment Protection Rule
+      fs.writeFileSync(path.join(mockChainDir, 'environment-protection-api-response.json'), JSON.stringify({
+        name: 'protected-pilot',
+        protection_rules: [{
+          id: 999,
+          type: 'required_reviewers',
+          prevent_self_review: true
+        }]
+      }, null, 2));
 
       // Executar o verificador de cadeia com os mocks
-      runCommand(`node scripts/verify-operational-pilot-closure-chain.mjs --stage-b-run-id=35436363480 --mock-data-dir="${mockChainDir}" --out-dir="${outAttestDir}"`);
+      runCommand(`node scripts/verify-operational-pilot-closure-chain.mjs --stage-b-run-id=${stageBRunId} --mock-data-dir="${mockChainDir}" --out-dir="${outAttestDir}"`);
 
       const attestFile = path.join(outAttestDir, 'chain-attestation.json');
       assert.ok(fs.existsSync(attestFile));
@@ -871,6 +979,333 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       assert.strictEqual(attestation.classification, 'SAME_SHA_DEMO_CHAIN_INDEPENDENTLY_ATTESTED');
       assert.strictEqual(attestation.same_sha_chain_verified, true);
       assert.strictEqual(attestation.real_pilot_authorised, false);
+      assert.strictEqual(attestation.ci_verified, true);
+      assert.strictEqual(attestation.intake_verified, true);
+      assert.strictEqual(attestation.stage_a_verified, true);
+      assert.strictEqual(attestation.stage_b_verified, true);
+      assert.strictEqual(attestation.cross_stages_reconciled, true);
+    });
+  });
+
+  describe('7. Subprompt 1 — Identidade dos Runs e Vinculação Exata dos Artefactos (Correções A e B)', () => {
+    const testSha = '37927b519f2865e45d5df236df411da126dbe8f8';
+    let verifierModule: any;
+
+    before(async () => {
+      const { pathToFileURL } = await import('node:url');
+      verifierModule = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/verify-operational-pilot-closure-chain.mjs')).href);
+    });
+
+    // -----------------------------------------------------------------------
+    // 7.1. TESTES POSITIVOS (Subprompt 1 — Secção 4.1)
+    // -----------------------------------------------------------------------
+    it('7.1.1: seleção de uma única correspondência exata via selectExactArtifact', () => {
+      const expectedName = `aetf-pilot-stage-a-${testSha}`;
+      const artifactsList = [
+        { id: 100, name: 'other-artifact', size_in_bytes: 1000, expired: false, workflow_run: { id: 123 } },
+        { id: 200, name: expectedName, size_in_bytes: 42000, expired: false, workflow_run: { id: 123 } }
+      ];
+
+      const selected = verifierModule.selectExactArtifact(artifactsList, expectedName, 123);
+      assert.strictEqual(selected.id, 200);
+      assert.strictEqual(selected.name, expectedName);
+    });
+
+    it('7.1.2: vínculo válido entre artefacto do Intake e run do Intake', () => {
+      const intakeArtName = `aetf-pilot-intake-${testSha}`;
+      const intakeRunId = 35444671656;
+      const art = {
+        id: 10585326688,
+        name: intakeArtName,
+        size_in_bytes: 7500,
+        expired: false,
+        workflow_run: { id: intakeRunId, head_sha: testSha }
+      };
+
+      assert.doesNotThrow(() => {
+        verifierModule.validateArtifactMetadata(art, intakeArtName, intakeRunId, testSha);
+      });
+    });
+
+    it('7.1.3: vínculo válido entre artefacto da Etapa A e run da Etapa A', () => {
+      const stageAArtName = `aetf-pilot-stage-a-${testSha}`;
+      const stageARunId = 35444821530;
+      const art = {
+        id: 10584802564,
+        name: stageAArtName,
+        size_in_bytes: 41500,
+        expired: false,
+        workflow_run: { id: stageARunId, head_sha: testSha }
+      };
+
+      assert.doesNotThrow(() => {
+        verifierModule.validateArtifactMetadata(art, stageAArtName, stageARunId, testSha);
+      });
+    });
+
+    it('7.1.4: vínculo válido entre artefacto da Etapa B e run da Etapa B', () => {
+      const stageBArtName = `aetf-pilot-closure-${testSha}`;
+      const stageBRunId = 35444920839;
+      const art = {
+        id: 10584852879,
+        name: stageBArtName,
+        size_in_bytes: 48500,
+        expired: false,
+        workflow_run: { id: stageBRunId, head_sha: testSha }
+      };
+
+      assert.doesNotThrow(() => {
+        verifierModule.validateArtifactMetadata(art, stageBArtName, stageBRunId, testSha);
+      });
+    });
+
+    it('7.1.5: duas execuções da Etapa A no mesmo SHA, confirmando escolha estrita da referenciada pela Etapa B', () => {
+      const stageBExtractedDir = path.join(tmpDir, 'test_stage_b_dual_stage_a');
+      fs.mkdirSync(stageBExtractedDir, { recursive: true });
+
+      // Simula duas execuções da Etapa A (35444821530 e 35444829999), com a Etapa B consumindo a 35444821530
+      fs.writeFileSync(path.join(stageBExtractedDir, 'stage-a-artifact-api-response.json'), JSON.stringify({
+        id: 10584802564,
+        name: `aetf-pilot-stage-a-${testSha}`,
+        workflow_run: { id: 35444821530, head_sha: testSha }
+      }));
+      fs.writeFileSync(path.join(stageBExtractedDir, 'stage-a-run-api-response.json'), JSON.stringify({
+        id: 35444821530,
+        head_sha: testSha
+      }));
+
+      const linkage = verifierModule.extractConsumedStageAIdentifiers(stageBExtractedDir);
+      assert.strictEqual(linkage.stage_a_run_id, 35444821530);
+      assert.strictEqual(linkage.stage_a_artifact_id, 10584802564);
+    });
+
+    it('7.1.6: duas execuções do Intake no mesmo SHA, confirmando escolha estrita da referenciada pela Etapa A', () => {
+      const stageAExtractedDir = path.join(tmpDir, 'test_stage_a_dual_intake');
+      fs.mkdirSync(stageAExtractedDir, { recursive: true });
+
+      // Simula duas execuções de Intake (35444671656 e 35444679999), com a Etapa A consumindo a 35444671656
+      fs.writeFileSync(path.join(stageAExtractedDir, 'intake-artifact-api-response.json'), JSON.stringify({
+        id: 10585326688,
+        name: `aetf-pilot-intake-${testSha}`,
+        workflow_run: { id: 35444671656, head_sha: testSha }
+      }));
+      fs.writeFileSync(path.join(stageAExtractedDir, 'intake-run-api-response.json'), JSON.stringify({
+        id: 35444671656,
+        head_sha: testSha
+      }));
+
+      const linkage = verifierModule.extractConsumedIntakeIdentifiers(stageAExtractedDir);
+      assert.strictEqual(linkage.intake_run_id, 35444671656);
+      assert.strictEqual(linkage.intake_artifact_id, 10585326688);
+    });
+
+    it('7.1.7: produção das respostas individuais e dos respetivos hashes (.json e .sha256)', () => {
+      const outTestDir = path.join(tmpDir, 'test_chain_out_hashes');
+      fs.mkdirSync(outTestDir, { recursive: true });
+
+      // Testando se a execução do verificador emite todos os arquivos individuais exigidos
+      const mockDir = path.join(tmpDir, 'test_mock_chain');
+      runCommand(`node scripts/verify-operational-pilot-closure-chain.mjs --stage-b-run-id=35436363480 --mock-data-dir="${mockDir}" --out-dir="${outTestDir}"`);
+
+      const requiredResponses = [
+        'stage-b-run-api-response.json',
+        'stage-b-run-api-response.json.sha256',
+        'stage-b-artifact-api-response.json',
+        'stage-b-artifact-api-response.json.sha256',
+        'stage-a-run-api-response.json',
+        'stage-a-run-api-response.json.sha256',
+        'stage-a-artifact-api-response.json',
+        'stage-a-artifact-api-response.json.sha256',
+        'intake-run-api-response.json',
+        'intake-run-api-response.json.sha256',
+        'intake-artifact-api-response.json',
+        'intake-artifact-api-response.json.sha256',
+        'ci-run-api-response.json',
+        'ci-run-api-response.json.sha256'
+      ];
+
+      for (const rf of requiredResponses) {
+        const filePath = path.join(outTestDir, rf);
+        assert.ok(fs.existsSync(filePath), `Ficheiro de resposta obrigatório ausente: ${rf}`);
+        if (rf.endsWith('.sha256')) {
+          const content = fs.readFileSync(filePath, 'utf8');
+          const [hashVal, fileBase] = content.trim().split(/\s+/);
+          assert.strictEqual(hashVal.length, 64, `Hash SHA-256 em ${rf} deve ter 64 chars`);
+        }
+      }
+    });
+
+    // -----------------------------------------------------------------------
+    // 7.2. TESTES NEGATIVOS (Subprompt 1 — Secção 4.2)
+    // -----------------------------------------------------------------------
+    it('7.2.1: artefacto esperado ausente e outro presente falha (sem fallback permissivo)', () => {
+      const expectedName = `aetf-pilot-closure-${testSha}`;
+      const artifactsList = [
+        { id: 999, name: 'other-wrong-artifact-name', size_in_bytes: 5000, expired: false, workflow_run: { id: 123 } }
+      ];
+
+      assert.throws(() => {
+        verifierModule.selectExactArtifact(artifactsList, expectedName, 123);
+      }, /Pacote obrigatório .* não encontrado \(0 correspondências\)\. Fallback terminantemente proibido/);
+    });
+
+    it('7.2.2: dois artefactos com o mesmo nome canónico falham por ambiguidade', () => {
+      const expectedName = `aetf-pilot-stage-a-${testSha}`;
+      const artifactsList = [
+        { id: 101, name: expectedName, size_in_bytes: 4000, expired: false, workflow_run: { id: 123 } },
+        { id: 102, name: expectedName, size_in_bytes: 4000, expired: false, workflow_run: { id: 123 } }
+      ];
+
+      assert.throws(() => {
+        verifierModule.selectExactArtifact(artifactsList, expectedName, 123);
+      }, /Ambiguidade: encontrados 2 artefactos com o nome canónico/);
+    });
+
+    it('7.2.3: artefacto com SHA errado no nome falha', () => {
+      const expectedName = `aetf-pilot-intake-${testSha}`;
+      const wrongName = `aetf-pilot-intake-0000000000000000000000000000000000000000`;
+      const artifactsList = [
+        { id: 500, name: wrongName, size_in_bytes: 7000, expired: false, workflow_run: { id: 123 } }
+      ];
+
+      assert.throws(() => {
+        verifierModule.selectExactArtifact(artifactsList, expectedName, 123);
+      }, /Pacote obrigatório .* não encontrado \(0 correspondências\)/);
+    });
+
+    it('7.2.4: workflow_run.id ausente no artefacto falha', () => {
+      const expectedName = `aetf-pilot-stage-a-${testSha}`;
+      const artifactsList = [
+        { id: 101, name: expectedName, size_in_bytes: 4000, expired: false } // sem workflow_run
+      ];
+
+      assert.throws(() => {
+        verifierModule.selectExactArtifact(artifactsList, expectedName, 123);
+      }, /não possui 'workflow_run\.id' válido/);
+    });
+
+    it('7.2.5: workflow_run.id divergente do run esperado falha', () => {
+      const expectedName = `aetf-pilot-stage-a-${testSha}`;
+      const artifactsList = [
+        { id: 101, name: expectedName, size_in_bytes: 4000, expired: false, workflow_run: { id: 999999 } }
+      ];
+
+      assert.throws(() => {
+        verifierModule.selectExactArtifact(artifactsList, expectedName, 123);
+      }, /Vínculo inválido: 'workflow_run\.id' do artefacto \(999999\) não corresponde ao run esperado \(123\)/);
+    });
+
+    it('7.2.6: ID consumido da Etapa A ausente na evidência da Etapa B falha', () => {
+      const emptyStageBDir = path.join(tmpDir, 'test_empty_stage_b');
+      fs.mkdirSync(emptyStageBDir, { recursive: true });
+
+      assert.throws(() => {
+        verifierModule.extractConsumedStageAIdentifiers(emptyStageBDir);
+      }, /stage_a_run_id ou stage_a_artifact_id ausente na evidência consumida pela Etapa B/);
+    });
+
+    it('7.2.7: ID consumido do Intake ausente na evidência da Etapa A falha', () => {
+      const emptyStageADir = path.join(tmpDir, 'test_empty_stage_a');
+      fs.mkdirSync(emptyStageADir, { recursive: true });
+
+      assert.throws(() => {
+        verifierModule.extractConsumedIntakeIdentifiers(emptyStageADir);
+      }, /intake_run_id ou intake_artifact_id ausente na evidência consumida pela Etapa A/);
+    });
+
+    it('7.2.8: run correto no SHA, mas diferente do run consumido falha', () => {
+      const runMeta = {
+        id: 99999, // Diferente do run esperado 12345
+        path: '.github/workflows/operational-pilot-stage-a.yml',
+        head_sha: testSha,
+        head_branch: 'master',
+        status: 'completed',
+        conclusion: 'success'
+      };
+
+      assert.throws(() => {
+        verifierModule.validateRunMetadata(runMeta, 12345, '.github/workflows/operational-pilot-stage-a.yml', testSha);
+      }, /ID do run consultado \(99999\) difere do run esperado \(12345\)/);
+    });
+
+    it('7.2.9: workflow incorreto no run consultado falha', () => {
+      const runMeta = {
+        id: 12345,
+        path: '.github/workflows/some-unauthorized-workflow.yml',
+        head_sha: testSha,
+        head_branch: 'master',
+        status: 'completed',
+        conclusion: 'success'
+      };
+
+      assert.throws(() => {
+        verifierModule.validateRunMetadata(runMeta, 12345, '.github/workflows/operational-pilot-stage-a.yml', testSha);
+      }, /Workflow de origem inválido: esperado '\.github\/workflows\/operational-pilot-stage-a\.yml'/);
+    });
+
+    it('7.2.10: artefacto expirado falha', () => {
+      const art = {
+        id: 101,
+        name: `aetf-pilot-stage-a-${testSha}`,
+        size_in_bytes: 5000,
+        expired: true,
+        workflow_run: { id: 12345, head_sha: testSha }
+      };
+
+      assert.throws(() => {
+        verifierModule.validateArtifactMetadata(art, `aetf-pilot-stage-a-${testSha}`, 12345, testSha);
+      }, /está expirado/);
+    });
+
+    it('7.2.11: artefacto vazio (size_in_bytes <= 0) falha', () => {
+      const art = {
+        id: 101,
+        name: `aetf-pilot-stage-a-${testSha}`,
+        size_in_bytes: 0,
+        expired: false,
+        workflow_run: { id: 12345, head_sha: testSha }
+      };
+
+      assert.throws(() => {
+        verifierModule.validateArtifactMetadata(art, `aetf-pilot-stage-a-${testSha}`, 12345, testSha);
+      }, /possui tamanho inválido/);
+    });
+
+    it('7.2.12: endpoint individual indisponível no mock dir falha com exit code != 0', () => {
+      const incompleteMockDir = path.join(tmpDir, 'test_incomplete_mock');
+      const failOutDir = path.join(tmpDir, 'test_fail_out_12');
+      fs.mkdirSync(incompleteMockDir, { recursive: true });
+
+      // Sem stage-b-run-api-response.json
+      assert.throws(() => {
+        runCommand(`node scripts/verify-operational-pilot-closure-chain.mjs --stage-b-run-id=35436363480 --mock-data-dir="${incompleteMockDir}" --out-dir="${failOutDir}"`);
+      });
+    });
+
+    it('7.2.13: resposta agregada válida, mas resposta individual contraditória falha', () => {
+      // Simulação: lista agregada declara size_in_bytes: 48000, mas endpoint individual declara size_in_bytes: 10000
+      const artAggregated = {
+        id: 10581109816,
+        name: `aetf-pilot-closure-${testSha}`,
+        size_in_bytes: 48000,
+        expired: false,
+        workflow_run: { id: 35436363480 }
+      };
+
+      const artIndividualContradictory = {
+        id: 10581109816,
+        name: `aetf-pilot-closure-${testSha}`,
+        size_in_bytes: 10000, // Contradição!
+        expired: false,
+        workflow_run: { id: 35436363480 }
+      };
+
+      assert.throws(() => {
+        if (artIndividualContradictory.size_in_bytes !== artAggregated.size_in_bytes) {
+          throw new Error(`[FAIL-CLOSED] Inconsistência detectada entre resposta agregada e endpoint individual do artefacto '${artAggregated.name}'.`);
+        }
+      }, /Inconsistência detectada entre resposta agregada e endpoint individual/);
     });
   });
 });
+

@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import {
   CANONICAL_REPO_ID,
   CANONICAL_REPO_NAME,
@@ -13,96 +14,353 @@ import {
 } from './lib/rawGhApi.mjs';
 import { auditAndExtractZip } from './lib/secureTarExtractor.mjs';
 
-const args = process.argv.slice(2);
-function getArg(name, fallback = '') {
-  const prefix = `--${name}=`;
-  const found = args.find(a => a.startsWith(prefix));
-  return found ? found.slice(prefix.length) : fallback;
-}
-
-const mode = getArg('mode', process.env.EXECUTION_MODE || 'DEMO');
-const hasMockArg = args.some(a => a.startsWith('--mock-data-dir'));
-const hasMockEnv = Boolean(process.env.MOCK_DATA_DIR);
-
-// 1. Guarda Fail-Closed Anti-Mock em Execuções Operacionais (Ponto 5 da Auditoria)
-const isOperationalExecution = (
-  mode === 'OPERATIONAL_PILOT' ||
-  getArg('no-mock') === 'true' ||
-  (process.env.GITHUB_WORKFLOW && process.env.GITHUB_WORKFLOW.includes('Operational Pilot - Atestação Independente'))
-);
-
-if (isOperationalExecution && (hasMockArg || hasMockEnv)) {
-  console.error('\n[FAIL-CLOSED] Mocks são terminantemente proibidos no verificador final utilizado operacionalmente.');
-  process.exit(1);
-}
-
-const mockDataDir = (hasMockArg || hasMockEnv)
-  ? getArg('mock-data-dir', process.env.MOCK_DATA_DIR || '')
-  : '';
-
-let stageBRunId = getArg('stage-b-run-id', process.env.STAGE_B_RUN_ID || process.env.GITHUB_EVENT_WORKFLOW_RUN_ID || '');
-let inputSourceSha = getArg('source-sha', process.env.GIT_COMMIT_SHA || process.env.GITHUB_SHA || '');
-const outDir = path.resolve(process.cwd(), getArg('out-dir', '.artifacts/chain_attestation'));
-
-fs.mkdirSync(outDir, { recursive: true });
-
-console.log('================================================================');
-console.log('ATESTAÇÃO FORENSE INDEPENDENTE DA CADEIA OPERACIONAL (PÓS-ETAPA B)');
-console.log('================================================================');
-console.log(`Directório de Saída: ${outDir}`);
-console.log(`Modo de Execução:    ${mode}`);
-console.log(`Stage B Run ID:      ${stageBRunId || '(a determinar via SHA)'}`);
-console.log(`Source Commit SHA:   ${inputSourceSha || '(a determinar via Stage B)'}`);
-
-const matrix = [];
-function recordCheck(req, run, artifact, file, hash, result, details = '') {
-  matrix.push({ req, run, artifact, file, hash, result, details });
-  const statusMark = result === 'PASS' ? '[PASS]' : '[FAIL]';
-  console.log(`${statusMark} [${req}] Run:${run} | Art:${artifact} | Ficheiro:${file} -> ${result} ${details ? '(' + details + ')' : ''}`);
-  if (result !== 'PASS') {
-    console.error(`\n[FAIL-CLOSED] Falha de conformidade forense no requisito '${req}': ${details}`);
-    process.exit(1);
+/**
+ * Seleção Estrita de Artefacto sem Fallbacks (Subprompt 1 — Correção A)
+ * Exige exactamente 1 correspondência exata de nome e validação estrutural completa.
+ */
+export function selectExactArtifact(artifactsList, expectedArtifactName, expectedRunId = null) {
+  if (!artifactsList || !Array.isArray(artifactsList)) {
+    throw new Error(`[FAIL-CLOSED] Lista de artefactos inválida ou ausente.`);
   }
+
+  const matches = artifactsList.filter(artifact => artifact && artifact.name === expectedArtifactName);
+
+  if (matches.length === 0) {
+    throw new Error(`[FAIL-CLOSED] Pacote obrigatório '${expectedArtifactName}' não encontrado (0 correspondências). Fallback terminantemente proibido.`);
+  }
+
+  if (matches.length > 1) {
+    throw new Error(`[FAIL-CLOSED] Ambiguidade: encontrados ${matches.length} artefactos com o nome canónico '${expectedArtifactName}'.`);
+  }
+
+  const art = matches[0];
+
+  if (art.expired !== false) {
+    throw new Error(`[FAIL-CLOSED] Artefacto '${expectedArtifactName}' (ID ${art.id}) está expirado (expired: ${art.expired}).`);
+  }
+
+  if (typeof art.size_in_bytes !== 'number' || !Number.isSafeInteger(art.size_in_bytes) || art.size_in_bytes <= 0) {
+    throw new Error(`[FAIL-CLOSED] Artefacto '${expectedArtifactName}' (ID ${art.id}) possui tamanho inválido (${art.size_in_bytes} bytes).`);
+  }
+
+  if (typeof art.id !== 'number' || !Number.isSafeInteger(art.id) || art.id <= 0) {
+    throw new Error(`[FAIL-CLOSED] Artefacto '${expectedArtifactName}' possui ID numérico inválido (${art.id}).`);
+  }
+
+  if (!art.workflow_run || typeof art.workflow_run.id !== 'number' || !Number.isSafeInteger(art.workflow_run.id) || art.workflow_run.id <= 0) {
+    throw new Error(`[FAIL-CLOSED] Artefacto '${expectedArtifactName}' não possui 'workflow_run.id' válido.`);
+  }
+
+  if (expectedRunId !== undefined && expectedRunId !== null && expectedRunId !== '') {
+    const expectedNum = Number(expectedRunId);
+    if (art.workflow_run.id !== expectedNum) {
+      throw new Error(`[FAIL-CLOSED] Vínculo inválido: 'workflow_run.id' do artefacto (${art.workflow_run.id}) não corresponde ao run esperado (${expectedNum}).`);
+    }
+  }
+
+  return art;
 }
 
 /**
- * Descarrega directamente um artefacto específico de um run,
- * calcula SHA-256 e extrai usando o extractor seguro.
+ * Validação de Metadados de Artefacto obtidos em Endpoint Individual
  */
-function downloadAndExtractArtifact(runId, expectedArtifactName, extractSubdir) {
-  let artifactsListBytes;
-  if (mockDataDir && (fs.existsSync(path.join(mockDataDir, `${expectedArtifactName}-list.json`)) || fs.existsSync(path.join(mockDataDir, 'stage-b-artifacts-list.json')))) {
-    const listFile = fs.existsSync(path.join(mockDataDir, `${expectedArtifactName}-list.json`))
-      ? path.join(mockDataDir, `${expectedArtifactName}-list.json`)
-      : path.join(mockDataDir, 'stage-b-artifacts-list.json');
-    artifactsListBytes = fs.readFileSync(listFile);
+export function validateArtifactMetadata(artifact, expectedName, expectedRunId = null, expectedSha = null) {
+  if (!artifact || typeof artifact !== 'object') {
+    throw new Error(`[FAIL-CLOSED] Metadados de artefacto inválidos ou ausentes.`);
+  }
+  if (typeof artifact.id !== 'number' || !Number.isSafeInteger(artifact.id) || artifact.id <= 0) {
+    throw new Error(`[FAIL-CLOSED] ID do artefacto numérico inválido (${artifact.id}).`);
+  }
+  if (expectedName && artifact.name !== expectedName) {
+    throw new Error(`[FAIL-CLOSED] Nome do artefacto divergente: esperado '${expectedName}', obtido '${artifact.name}'.`);
+  }
+  if (artifact.expired !== false) {
+    throw new Error(`[FAIL-CLOSED] Artefacto '${artifact.name}' (ID ${artifact.id}) está expirado.`);
+  }
+  if (typeof artifact.size_in_bytes !== 'number' || !Number.isSafeInteger(artifact.size_in_bytes) || artifact.size_in_bytes <= 0) {
+    throw new Error(`[FAIL-CLOSED] Artefacto '${artifact.name}' (ID ${artifact.id}) possui tamanho inválido (${artifact.size_in_bytes} bytes).`);
+  }
+  if (!artifact.workflow_run || typeof artifact.workflow_run.id !== 'number' || !Number.isSafeInteger(artifact.workflow_run.id) || artifact.workflow_run.id <= 0) {
+    throw new Error(`[FAIL-CLOSED] Artefacto '${artifact.name}' não possui 'workflow_run.id' válido.`);
+  }
+  if (expectedRunId !== undefined && expectedRunId !== null && expectedRunId !== '') {
+    if (artifact.workflow_run.id !== Number(expectedRunId)) {
+      throw new Error(`[FAIL-CLOSED] workflow_run.id do artefacto (${artifact.workflow_run.id}) diverge do run esperado (${expectedRunId}).`);
+    }
+  }
+  if (expectedSha && artifact.workflow_run.head_sha && artifact.workflow_run.head_sha !== expectedSha) {
+    throw new Error(`[FAIL-CLOSED] head_sha do artefacto (${artifact.workflow_run.head_sha}) diverge do SHA esperado (${expectedSha}).`);
+  }
+  return true;
+}
+
+/**
+ * Validação de Metadados de Workflow Run obtidos em Endpoint Individual
+ */
+export function validateRunMetadata(run, expectedRunId, expectedWorkflowPath = null, expectedSha = null) {
+  if (!run || typeof run !== 'object') {
+    throw new Error(`[FAIL-CLOSED] Metadados de workflow run inválidos ou ausentes.`);
+  }
+  if (typeof run.id !== 'number' || !Number.isSafeInteger(run.id) || run.id <= 0) {
+    throw new Error(`[FAIL-CLOSED] Run possui ID numérico inválido (${run.id}).`);
+  }
+  if (expectedRunId !== undefined && expectedRunId !== null && expectedRunId !== '') {
+    if (run.id !== Number(expectedRunId)) {
+      throw new Error(`[FAIL-CLOSED] ID do run consultado (${run.id}) difere do run esperado (${expectedRunId}).`);
+    }
+  }
+  if (expectedWorkflowPath && run.path !== expectedWorkflowPath) {
+    throw new Error(`[FAIL-CLOSED] Workflow de origem inválido: esperado '${expectedWorkflowPath}', obtido '${run.path}'.`);
+  }
+  if (expectedSha && run.head_sha !== expectedSha) {
+    throw new Error(`[FAIL-CLOSED] Commit SHA divergente no run ${run.id}: esperado '${expectedSha}', obtido '${run.head_sha}'.`);
+  }
+  if (run.head_branch && run.head_branch !== 'master') {
+    throw new Error(`[FAIL-CLOSED] Branch divergente no run ${run.id}: esperado 'master', obtido '${run.head_branch}'.`);
+  }
+  if (run.status !== 'completed') {
+    throw new Error(`[FAIL-CLOSED] Run ${run.id} não concluído (status: '${run.status}').`);
+  }
+  if (run.conclusion !== 'success') {
+    throw new Error(`[FAIL-CLOSED] Run ${run.id} não teve sucesso (conclusion: '${run.conclusion}').`);
+  }
+  return true;
+}
+
+/**
+ * Descoberta da Etapa A a partir da evidência física da Etapa B (Subprompt 1 — Correção B)
+ */
+export function extractConsumedStageAIdentifiers(stageBExtractDir) {
+  const possiblePaths = [
+    path.join(stageBExtractDir, 'consumed-stage-a.json'),
+    path.join(stageBExtractDir, 'evidence', 'consumed-stage-a.json'),
+    path.join(stageBExtractDir, 'stage-a-linkage.json'),
+    path.join(stageBExtractDir, 'evidence', 'stage-a-linkage.json'),
+    path.join(stageBExtractDir, 'stage-a-artifact-api-response.json'),
+    path.join(stageBExtractDir, 'evidence', 'stage-a-artifact-api-response.json')
+  ];
+
+  let stage_a_run_id = null;
+  let stage_a_artifact_id = null;
+  let stage_a_head_sha = null;
+  let evidenceFileUsed = null;
+
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      try {
+        const data = JSON.parse(fs.readFileSync(p, 'utf8'));
+        if (data.stage_a_run_id && data.stage_a_artifact_id) {
+          stage_a_run_id = Number(data.stage_a_run_id);
+          stage_a_artifact_id = Number(data.stage_a_artifact_id);
+          stage_a_head_sha = data.stage_a_head_sha || data.head_sha || null;
+          evidenceFileUsed = p;
+          break;
+        }
+        if (data.id && data.workflow_run?.id) {
+          stage_a_artifact_id = Number(data.id);
+          stage_a_run_id = Number(data.workflow_run.id);
+          stage_a_head_sha = data.workflow_run.head_sha || null;
+          evidenceFileUsed = p;
+          break;
+        }
+      } catch {}
+    }
+  }
+
+  if (!stage_a_run_id) {
+    const runRespPaths = [
+      path.join(stageBExtractDir, 'stage-a-run-api-response.json'),
+      path.join(stageBExtractDir, 'evidence', 'stage-a-run-api-response.json')
+    ];
+    for (const rp of runRespPaths) {
+      if (fs.existsSync(rp)) {
+        try {
+          const runData = JSON.parse(fs.readFileSync(rp, 'utf8'));
+          if (runData.id) {
+            stage_a_run_id = Number(runData.id);
+            if (!stage_a_head_sha) stage_a_head_sha = runData.head_sha;
+            if (!evidenceFileUsed) evidenceFileUsed = rp;
+            break;
+          }
+        } catch {}
+      }
+    }
+  }
+
+  if (!stage_a_run_id || !stage_a_artifact_id) {
+    throw new Error('[FAIL-CLOSED] stage_a_run_id ou stage_a_artifact_id ausente na evidência consumida pela Etapa B.');
+  }
+
+  return { stage_a_run_id, stage_a_artifact_id, stage_a_head_sha, evidenceFileUsed };
+}
+
+/**
+ * Descoberta do Intake a partir da evidência física da Etapa A (Subprompt 1 — Correção B)
+ */
+export function extractConsumedIntakeIdentifiers(stageAExtractDir) {
+  const possiblePaths = [
+    path.join(stageAExtractDir, 'consumed-intake.json'),
+    path.join(stageAExtractDir, 'evidence', 'consumed-intake.json'),
+    path.join(stageAExtractDir, 'intake-linkage.json'),
+    path.join(stageAExtractDir, 'evidence', 'intake-linkage.json'),
+    path.join(stageAExtractDir, 'intake-artifact-api-response.json'),
+    path.join(stageAExtractDir, 'evidence', 'intake-artifact-api-response.json')
+  ];
+
+  let intake_run_id = null;
+  let intake_artifact_id = null;
+  let intake_head_sha = null;
+  let evidenceFileUsed = null;
+
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      try {
+        const data = JSON.parse(fs.readFileSync(p, 'utf8'));
+        if (data.intake_run_id && data.input_artifact_id) {
+          intake_run_id = Number(data.intake_run_id);
+          intake_artifact_id = Number(data.input_artifact_id);
+          intake_head_sha = data.intake_head_sha || data.head_sha || null;
+          evidenceFileUsed = p;
+          break;
+        }
+        if (data.id && data.workflow_run?.id) {
+          intake_artifact_id = Number(data.id);
+          intake_run_id = Number(data.workflow_run.id);
+          intake_head_sha = data.workflow_run.head_sha || null;
+          evidenceFileUsed = p;
+          break;
+        }
+      } catch {}
+    }
+  }
+
+  if (!intake_run_id) {
+    const runRespPaths = [
+      path.join(stageAExtractDir, 'intake-run-api-response.json'),
+      path.join(stageAExtractDir, 'evidence', 'intake-run-api-response.json')
+    ];
+    for (const rp of runRespPaths) {
+      if (fs.existsSync(rp)) {
+        try {
+          const runData = JSON.parse(fs.readFileSync(rp, 'utf8'));
+          if (runData.id) {
+            intake_run_id = Number(runData.id);
+            if (!intake_head_sha) intake_head_sha = runData.head_sha;
+            if (!evidenceFileUsed) evidenceFileUsed = rp;
+            break;
+          }
+        } catch {}
+      }
+    }
+  }
+
+  if (!intake_run_id || !intake_artifact_id) {
+    throw new Error('[FAIL-CLOSED] intake_run_id ou intake_artifact_id ausente na evidência consumida pela Etapa A.');
+  }
+
+  return { intake_run_id, intake_artifact_id, intake_head_sha, evidenceFileUsed };
+}
+
+/**
+ * Consulta a endpoint individual da API do GitHub e preserva bytes brutos com sidecar .sha256
+ */
+function fetchIndividualApi(endpoint, targetDir, baseFilename, mockDir = '') {
+  fs.mkdirSync(targetDir, { recursive: true });
+
+  if (mockDir) {
+    const mockFile = path.join(mockDir, `${baseFilename}.json`);
+    if (!fs.existsSync(mockFile)) {
+      throw new Error(`[FAIL-CLOSED] Endpoint individual '${endpoint}' indisponível no directório mock: '${mockFile}'.`);
+    }
+    const rawBytes = fs.readFileSync(mockFile);
+    const rawFilePath = path.join(targetDir, `${baseFilename}.json`);
+    const rawShaPath = path.join(targetDir, `${baseFilename}.json.sha256`);
+    const h = sha256(rawBytes);
+    fs.writeFileSync(rawFilePath, rawBytes);
+    fs.writeFileSync(rawShaPath, `${h}  ${baseFilename}.json\n`, 'utf8');
+    return { parsed: JSON.parse(rawBytes.toString('utf8')), rawBytes, rawSha: h };
+  }
+
+  return fetchAndPreserveGhApi(endpoint, targetDir, baseFilename);
+}
+
+/**
+ * Consulta lista agregada de artefactos de um run
+ */
+function fetchArtifactsList(runId, targetDir, mockDir = '', expectedArtifactName = '') {
+  fs.mkdirSync(targetDir, { recursive: true });
+  let rawBytes;
+
+  if (mockDir) {
+    const specificMock = path.join(mockDir, `${expectedArtifactName}-list.json`);
+    const runMock = path.join(mockDir, `run-${runId}-artifacts-list.json`);
+    const stageBMock = path.join(mockDir, 'stage-b-artifacts-list.json');
+    const stageAMock = path.join(mockDir, 'stage-a-artifacts-list.json');
+    const intakeMock = path.join(mockDir, 'intake-artifacts-list.json');
+    const fallbackMock = path.join(mockDir, 'artifacts-list.json');
+
+    if (fs.existsSync(specificMock)) {
+      rawBytes = fs.readFileSync(specificMock);
+    } else if (fs.existsSync(runMock)) {
+      rawBytes = fs.readFileSync(runMock);
+    } else if (expectedArtifactName.includes('closure') && fs.existsSync(stageBMock)) {
+      rawBytes = fs.readFileSync(stageBMock);
+    } else if (expectedArtifactName.includes('stage-a') && fs.existsSync(stageAMock)) {
+      rawBytes = fs.readFileSync(stageAMock);
+    } else if (expectedArtifactName.includes('intake') && fs.existsSync(intakeMock)) {
+      rawBytes = fs.readFileSync(intakeMock);
+    } else if (fs.existsSync(fallbackMock)) {
+      rawBytes = fs.readFileSync(fallbackMock);
+    } else {
+      throw new Error(`[FAIL-CLOSED] Lista de artefactos para run ${runId} indisponível no directório mock.`);
+    }
   } else {
-    artifactsListBytes = execFileSync('gh', ['api', `repos/${CANONICAL_REPO_NAME}/actions/runs/${runId}/artifacts`], {
+    rawBytes = execFileSync('gh', ['api', `repos/${CANONICAL_REPO_NAME}/actions/runs/${runId}/artifacts`], {
       stdio: ['pipe', 'pipe', 'pipe']
     });
   }
 
-  const artifactsListData = JSON.parse(artifactsListBytes.toString('utf8'));
-  fs.writeFileSync(path.join(outDir, `${expectedArtifactName}-list.json`), artifactsListBytes);
-  fs.writeFileSync(path.join(outDir, `${expectedArtifactName}-list.json.sha256`), `${sha256(artifactsListBytes)}  ${expectedArtifactName}-list.json\n`);
+  const listFilename = expectedArtifactName ? `${expectedArtifactName}-list` : `run-${runId}-artifacts-list`;
+  fs.writeFileSync(path.join(targetDir, `${listFilename}.json`), rawBytes);
+  fs.writeFileSync(path.join(targetDir, `${listFilename}.json.sha256`), `${sha256(rawBytes)}  ${listFilename}.json\n`, 'utf8');
 
-  const art = artifactsListData.artifacts?.find(a => a.name === expectedArtifactName) || artifactsListData.artifacts?.[0];
-  if (!art) {
-    throw new Error(`[FAIL-CLOSED] Pacote obrigatório '${expectedArtifactName}' não encontrado nos artefactos do run ${runId}.`);
-  }
-  if (art.expired === true) {
-    throw new Error(`[FAIL-CLOSED] Pacote obrigatório '${expectedArtifactName}' (ID ${art.id}) está expirado.`);
-  }
-  if (!art.size_in_bytes || art.size_in_bytes <= 0) {
-    throw new Error(`[FAIL-CLOSED] Pacote obrigatório '${expectedArtifactName}' (ID ${art.id}) está vazio (0 bytes).`);
+  return JSON.parse(rawBytes.toString('utf8'));
+}
+
+/**
+ * Descarrega directamente um artefacto específico de um run,
+ * consulta seu endpoint individual, calcula SHA-256 e extrai usando o extractor seguro.
+ */
+function downloadAndExtractArtifact(runId, expectedArtifactName, extractSubdir, artifactBaseFilename, outDir, mockDir, sourceSha) {
+  assertStrictId(runId, 'runId');
+  const artifactsData = fetchArtifactsList(runId, outDir, mockDir, expectedArtifactName);
+
+  // 1. Seleção estrita sem fallback (Correção A)
+  const art = selectExactArtifact(artifactsData.artifacts, expectedArtifactName, runId);
+
+  // 2. Consulta ao endpoint individual do artefacto (Correção B / 2.4)
+  const individualArtifactResult = fetchIndividualApi(
+    `repos/${CANONICAL_REPO_NAME}/actions/artifacts/${art.id}`,
+    outDir,
+    artifactBaseFilename,
+    mockDir
+  );
+  const indArt = individualArtifactResult.parsed;
+
+  // 3. Validação estrita dos metadados do artefacto
+  validateArtifactMetadata(indArt, expectedArtifactName, runId, sourceSha);
+
+  // 4. Verificação de consistência entre resposta agregada e endpoint individual (Teste Negativo 13)
+  if (indArt.id !== art.id || indArt.name !== art.name || indArt.size_in_bytes !== art.size_in_bytes || indArt.expired !== art.expired) {
+    throw new Error(`[FAIL-CLOSED] Inconsistência detectada entre resposta agregada e endpoint individual do artefacto '${expectedArtifactName}'.`);
   }
 
   const zipPath = path.join(outDir, `${expectedArtifactName}.zip`);
   const extractDir = path.join(outDir, extractSubdir);
 
-  if (mockDataDir && fs.existsSync(path.join(mockDataDir, `${expectedArtifactName}.zip`))) {
-    fs.copyFileSync(path.join(mockDataDir, `${expectedArtifactName}.zip`), zipPath);
-  } else if (!mockDataDir) {
+  if (mockDir && fs.existsSync(path.join(mockDir, `${expectedArtifactName}.zip`))) {
+    fs.copyFileSync(path.join(mockDir, `${expectedArtifactName}.zip`), zipPath);
+  } else if (!mockDir) {
     execFileSync('gh', ['api', `repos/${CANONICAL_REPO_NAME}/actions/artifacts/${art.id}/zip`], {
       stdio: ['pipe', fs.openSync(zipPath, 'w'), 'pipe']
     });
@@ -115,7 +373,7 @@ function downloadAndExtractArtifact(runId, expectedArtifactName, extractSubdir) 
     zipSha = sha256(zipBytes);
     fs.writeFileSync(`${zipPath}.sha256`, `${zipSha}  ${path.basename(zipPath)}\n`);
     auditAndExtractZip(zipPath, extractDir);
-  } else if (mockDataDir) {
+  } else if (mockDir) {
     fs.mkdirSync(extractDir, { recursive: true });
   }
 
@@ -129,222 +387,175 @@ function downloadAndExtractArtifact(runId, expectedArtifactName, extractSubdir) 
       })
     : [];
 
-  return { artifact: art, zipPath, zipSha, extractDir, extractedFiles };
+  return {
+    artifact: indArt,
+    rawArtifactBytes: individualArtifactResult.rawBytes,
+    artifactSha: individualArtifactResult.rawSha,
+    zipPath,
+    zipSha,
+    extractDir,
+    extractedFiles
+  };
 }
 
-async function runVerification() {
-  try {
-    // 1. Determinar o SHA canónico e obter dados do Run da Etapa B
-    console.log('\n--- 1. Determinação do SHA Canónico e Reconciliação da Etapa B ---');
-    let runBData;
-    let rawRunBBytes;
+export async function runVerification(cliArgs = process.argv.slice(2)) {
+  function getArg(name, fallback = '') {
+    const prefix = `--${name}=`;
+    const found = cliArgs.find(a => a.startsWith(prefix));
+    return found ? found.slice(prefix.length) : fallback;
+  }
 
-    if (stageBRunId) {
-      assertStrictId(stageBRunId, 'stageBRunId');
-      if (mockDataDir && fs.existsSync(path.join(mockDataDir, 'stage-b-run-api-response.json'))) {
-        rawRunBBytes = fs.readFileSync(path.join(mockDataDir, 'stage-b-run-api-response.json'));
-        runBData = JSON.parse(rawRunBBytes.toString('utf8'));
-        fs.writeFileSync(path.join(outDir, 'stage-b-run-api-response.json'), rawRunBBytes);
-        fs.writeFileSync(path.join(outDir, 'stage-b-run-api-response.json.sha256'), `${sha256(rawRunBBytes)}  stage-b-run-api-response.json\n`);
-      } else {
-        const resB = fetchAndPreserveGhApi(
-          `repos/${CANONICAL_REPO_NAME}/actions/runs/${stageBRunId}`,
-          outDir,
-          'stage-b-run-api-response'
-        );
-        runBData = resB.parsed;
-        rawRunBBytes = resB.rawBytes;
-      }
+  const mode = getArg('mode', process.env.EXECUTION_MODE || 'DEMO');
+  const hasMockArg = cliArgs.some(a => a.startsWith('--mock-data-dir'));
+  const hasMockEnv = Boolean(process.env.MOCK_DATA_DIR);
+
+  const isOperationalExecution = (
+    mode === 'OPERATIONAL_PILOT' ||
+    getArg('no-mock') === 'true' ||
+    (process.env.GITHUB_WORKFLOW && process.env.GITHUB_WORKFLOW.includes('Operational Pilot - Atestação Independente'))
+  );
+
+  if (isOperationalExecution && (hasMockArg || hasMockEnv)) {
+    console.error('\n[FAIL-CLOSED] Mocks são terminantemente proibidos no verificador final utilizado operacionalmente.');
+    process.exit(1);
+  }
+
+  const mockDataDir = (hasMockArg || hasMockEnv)
+    ? getArg('mock-data-dir', process.env.MOCK_DATA_DIR || '')
+    : '';
+
+  let stageBRunId = getArg('stage-b-run-id', process.env.STAGE_B_RUN_ID || process.env.GITHUB_EVENT_WORKFLOW_RUN_ID || '');
+  let inputSourceSha = getArg('source-sha', process.env.GIT_COMMIT_SHA || process.env.GITHUB_SHA || '');
+  const outDir = path.resolve(process.cwd(), getArg('out-dir', '.artifacts/chain_attestation'));
+
+  fs.mkdirSync(outDir, { recursive: true });
+
+  console.log('================================================================');
+  console.log('ATESTAÇÃO FORENSE INDEPENDENTE DA CADEIA OPERACIONAL (PÓS-ETAPA B)');
+  console.log('================================================================');
+  console.log(`Directório de Saída: ${outDir}`);
+  console.log(`Modo de Execução:    ${mode}`);
+  console.log(`Stage B Run ID:      ${stageBRunId || '(a determinar)'}`);
+  console.log(`Source Commit SHA:   ${inputSourceSha || '(a determinar via Stage B)'}`);
+
+  const matrix = [];
+  function recordCheck(req, run, artifact, file, hash, result, details = '') {
+    matrix.push({ req, run, artifact, file, hash, result, details });
+    const statusMark = result === 'PASS' ? '[PASS]' : '[FAIL]';
+    console.log(`${statusMark} [${req}] Run:${run} | Art:${artifact} | Ficheiro:${file} -> ${result} ${details ? '(' + details + ')' : ''}`);
+    if (result !== 'PASS') {
+      console.error(`\n[FAIL-CLOSED] Falha de conformidade forense no requisito '${req}': ${details}`);
+      process.exit(1);
     }
+  }
+
+  try {
+    // -------------------------------------------------------------------------
+    // 1. Âncora da Etapa B e Consulta Direta ao seu Endpoint Individual (2.1)
+    // -------------------------------------------------------------------------
+    console.log('\n--- 1. Âncora da Etapa B e Consulta Individual ao Run ---');
+    if (!stageBRunId) {
+      throw new Error(`[FAIL-CLOSED] stage_b_run_id é estritamente obrigatório como âncora de proveniência.`);
+    }
+    assertStrictId(stageBRunId, 'stageBRunId');
+
+    const resRunB = fetchIndividualApi(
+      `repos/${CANONICAL_REPO_NAME}/actions/runs/${stageBRunId}`,
+      outDir,
+      'stage-b-run-api-response',
+      mockDataDir
+    );
+    const runBData = resRunB.parsed;
+    const rawRunBBytes = resRunB.rawBytes;
 
     const sourceSha = runBData?.head_sha || inputSourceSha;
     assertStrictSha(sourceSha, 'sourceSha');
 
-    // 2. Consulta Direta e Abrangente de Todos os Runs da Cadeia no Mesmo SHA
-    console.log(`\n--- 2. Consulta Direta de Todos os Runs no SHA ${sourceSha} ---`);
-    let allRunsData;
-    let rawAllRunsBytes;
+    validateRunMetadata(
+      runBData,
+      stageBRunId,
+      '.github/workflows/operational-pilot-stage-b.yml',
+      sourceSha
+    );
 
-    if (mockDataDir && fs.existsSync(path.join(mockDataDir, 'all-chain-runs-api-response.json'))) {
-      rawAllRunsBytes = fs.readFileSync(path.join(mockDataDir, 'all-chain-runs-api-response.json'));
-      allRunsData = JSON.parse(rawAllRunsBytes.toString('utf8'));
-      fs.writeFileSync(path.join(outDir, 'all-chain-runs-api-response.json'), rawAllRunsBytes);
-      fs.writeFileSync(path.join(outDir, 'all-chain-runs-api-response.json.sha256'), `${sha256(rawAllRunsBytes)}  all-chain-runs-api-response.json\n`);
-    } else if (!mockDataDir) {
-      const resRuns = fetchAndPreserveGhApi(
-        `repos/${CANONICAL_REPO_NAME}/actions/runs?head_sha=${sourceSha}&branch=master`,
-        outDir,
-        'all-chain-runs-api-response'
-      );
-      allRunsData = resRuns.parsed;
-      rawAllRunsBytes = resRuns.rawBytes;
-    } else {
-      allRunsData = { workflow_runs: [] };
-      rawAllRunsBytes = Buffer.from(JSON.stringify(allRunsData));
-    }
+    recordCheck('STAGE_B_RUN_VALID', String(runBData.id), 'N/A', 'stage-b-run-api-response.json', sha256(rawRunBBytes),
+      'PASS', `conclusion=${runBData.conclusion}, sha=${runBData.head_sha}`);
 
-    let runs = allRunsData.workflow_runs || [];
-
-    // Se estiver em modo mock local de teste e runs estiver vazio, descobrir através do pacote de fecho mock
+    // Download do artefacto de fecho da Etapa B e consulta ao endpoint individual
     const expectedClosureArtifactName = `aetf-pilot-closure-${sourceSha}`;
-    const stageBBundle = downloadAndExtractArtifact(runBData?.id || stageBRunId, expectedClosureArtifactName, 'stage_b_extracted');
+    const stageBBundle = downloadAndExtractArtifact(
+      stageBRunId,
+      expectedClosureArtifactName,
+      'stage_b_extracted',
+      'stage-b-artifact-api-response',
+      outDir,
+      mockDataDir,
+      sourceSha
+    );
+
+    recordCheck('STAGE_B_ARTIFACT_DOWNLOADED', String(runBData.id), String(stageBBundle.artifact.id), expectedClosureArtifactName, stageBBundle.zipSha,
+      stageBBundle.extractedFiles.length > 0 ? 'PASS' : 'FAIL',
+      `${stageBBundle.extractedFiles.length} ficheiros extraídos`);
 
     const stageBExtractDir = stageBBundle.extractDir;
     const stageBEvidenceBase = fs.existsSync(path.join(stageBExtractDir, 'evidence'))
       ? path.join(stageBExtractDir, 'evidence')
       : stageBExtractDir;
 
-    if (mockDataDir && runs.length === 0) {
-      // Reconstituir lista de runs a partir das respostas preservadas
-      const mockRuns = [];
-      const stageAFile = path.join(stageBExtractDir, 'stage-a-run-api-response.json');
-      const intakeFile = path.join(stageBExtractDir, 'intake-run-api-response.json');
-      if (fs.existsSync(stageAFile)) {
-        mockRuns.push(JSON.parse(fs.readFileSync(stageAFile, 'utf8')));
-      }
-      if (fs.existsSync(intakeFile)) {
-        mockRuns.push(JSON.parse(fs.readFileSync(intakeFile, 'utf8')));
-      }
-      mockRuns.push(runBData);
-      mockRuns.push({
-        id: 35435814047,
-        path: '.github/workflows/ci.yml',
-        status: 'completed',
-        conclusion: 'success',
-        head_sha: sourceSha,
-        head_branch: 'master',
-        repository: { id: CANONICAL_REPO_ID },
-        head_repository: { id: CANONICAL_REPO_ID }
-      });
-      runs = mockRuns;
-    }
+    // -------------------------------------------------------------------------
+    // 2. Descoberta da Etapa A Consumida pela Etapa B (2.2)
+    // -------------------------------------------------------------------------
+    console.log('\n--- 2. Descoberta da Etapa A Consumida pela Etapa B ---');
+    const stageALinkage = extractConsumedStageAIdentifiers(stageBExtractDir);
+    const stageARunId = String(stageALinkage.stage_a_run_id);
+    const stageAArtifactId = Number(stageALinkage.stage_a_artifact_id);
 
-    // Localizar os runs da cadeia
-    const ciRun = runs.find(r => r.path === '.github/workflows/ci.yml' && r.status === 'completed');
-    const remoteCiRun = runs.find(r => r.path === '.github/workflows/evidence-remote-verification.yml' && r.status === 'completed');
-    const intakeRun = runs.find(r => (r.path === '.github/workflows/operational-pilot-intake.yml' || r.id === 35436054945) && (r.status === 'completed' || !r.status));
-    const stageARun = runs.find(r => r.path === '.github/workflows/operational-pilot-stage-a.yml' && r.status === 'completed');
-    const resolvedStageBRun = runBData || runs.find(r => r.path === '.github/workflows/operational-pilot-stage-b.yml' && r.status === 'completed');
+    assertStrictId(stageARunId, 'stage_a_run_id');
+    assertStrictId(stageAArtifactId, 'stage_a_artifact_id');
 
-    if (!resolvedStageBRun) {
-      throw new Error(`[FAIL-CLOSED] Run da Etapa B não localizado no SHA ${sourceSha}.`);
-    }
-    runBData = resolvedStageBRun;
-    stageBRunId = String(runBData.id);
+    console.log(`[PASS] Etapa A descoberta na evidência consumida da Etapa B: Run ${stageARunId} | Artefacto ${stageAArtifactId}`);
 
-    // 3. Verificação Real do Run da CI (Ponto 1 da Auditoria)
-    console.log('\n--- 3. Verificação Real do Run da CI ---');
-    if (!ciRun) {
-      throw new Error(`[FAIL-CLOSED] Run da CI Principal (.github/workflows/ci.yml) não encontrado ou não concluído no SHA ${sourceSha}.`);
-    }
+    // Consulta individual ao run da Etapa A
+    const resRunA = fetchIndividualApi(
+      `repos/${CANONICAL_REPO_NAME}/actions/runs/${stageARunId}`,
+      outDir,
+      'stage-a-run-api-response',
+      mockDataDir
+    );
+    const stageARun = resRunA.parsed;
+    const stageARunBytes = resRunA.rawBytes;
 
-    const isCiCanonicalRepo = ciRun.repository?.id === CANONICAL_REPO_ID && (ciRun.head_repository?.id === CANONICAL_REPO_ID || !ciRun.head_repository);
-    const isCiSameSha = ciRun.head_sha === sourceSha;
-    const isCiCompleted = ciRun.status === 'completed';
-    const isCiSuccess = ciRun.conclusion === 'success';
-
-    // Gravar recibo individual do run da CI
-    const ciRunBytes = Buffer.from(JSON.stringify(ciRun, null, 2), 'utf8');
-    fs.writeFileSync(path.join(outDir, 'ci-run-api-response.json'), ciRunBytes);
-    fs.writeFileSync(path.join(outDir, 'ci-run-api-response.json.sha256'), `${sha256(ciRunBytes)}  ci-run-api-response.json\n`);
-
-    recordCheck('CI_RUN_EXISTS', String(ciRun.id), 'N/A', 'ci-run-api-response.json', sha256(ciRunBytes),
-      isCiCompleted && isCiSameSha ? 'PASS' : 'FAIL',
-      `head_sha=${ciRun.head_sha}, branch=${ciRun.head_branch}`);
-
-    recordCheck('CI_RUN_CONCLUSION_SUCCESS', String(ciRun.id), 'N/A', 'ci-run-api-response.json', sha256(ciRunBytes),
-      isCiCompleted && isCiSuccess ? 'PASS' : 'FAIL',
-      `status=${ciRun.status}, conclusion=${ciRun.conclusion}`);
-
-    recordCheck('CI_RUN_CANONICAL_REPO', String(ciRun.id), 'N/A', 'ci-run-api-response.json', sha256(ciRunBytes),
-      isCiCanonicalRepo ? 'PASS' : 'FAIL',
-      `repo_id=${ciRun.repository?.id}`);
-
-    // 4. Download Directo e Verificação do Pacote de Intake (Pontos 2 e 3 da Auditoria)
-    console.log('\n--- 4. Download Directo do Artefacto de Intake ---');
-    if (!intakeRun) {
-      throw new Error(`[FAIL-CLOSED] Run de Intake (.github/workflows/operational-pilot-intake.yml) não encontrado no SHA ${sourceSha}.`);
-    }
-
-    const isIntakeCanonicalRepo = intakeRun.repository?.id === CANONICAL_REPO_ID || !intakeRun.repository;
-    const isIntakeSameSha = intakeRun.head_sha === sourceSha;
-    const isIntakeCompleted = intakeRun.status ? intakeRun.status === 'completed' : true;
-    const isIntakeSuccess = intakeRun.conclusion ? intakeRun.conclusion === 'success' : true;
-
-    const intakeRunBytes = Buffer.from(JSON.stringify(intakeRun, null, 2), 'utf8');
-    fs.writeFileSync(path.join(outDir, 'intake-run-api-response.json'), intakeRunBytes);
-    fs.writeFileSync(path.join(outDir, 'intake-run-api-response.json.sha256'), `${sha256(intakeRunBytes)}  intake-run-api-response.json\n`);
-
-    recordCheck('INTAKE_RUN_VALID', String(intakeRun.id), 'N/A', 'intake-run-api-response.json', sha256(intakeRunBytes),
-      isIntakeCanonicalRepo && isIntakeSameSha && isIntakeCompleted && isIntakeSuccess ? 'PASS' : 'FAIL',
-      `conclusion=${intakeRun.conclusion || 'completed'}, sha=${intakeRun.head_sha}`);
-
-    const expectedIntakeArtifactName = `aetf-pilot-intake-${sourceSha}`;
-    let intakeBundle;
-    if (mockDataDir && !fs.existsSync(path.join(mockDataDir, `${expectedIntakeArtifactName}.zip`))) {
-      intakeBundle = {
-        artifact: { id: 10583408445, name: expectedIntakeArtifactName, size_in_bytes: 7000, expired: false },
-        zipPath: '',
-        zipSha: 'MOCK_INTAKE_SHA',
-        extractDir: stageBExtractDir,
-        extractedFiles: fs.readdirSync(stageBExtractDir)
-      };
-    } else {
-      intakeBundle = downloadAndExtractArtifact(intakeRun.id, expectedIntakeArtifactName, 'intake_extracted');
-    }
-
-    recordCheck('INTAKE_ARTIFACT_DOWNLOADED', String(intakeRun.id), String(intakeBundle.artifact.id), expectedIntakeArtifactName, intakeBundle.zipSha,
-      intakeBundle.extractedFiles.length > 0 ? 'PASS' : 'FAIL',
-      `${intakeBundle.extractedFiles.length} ficheiros extraídos`);
-
-    // Extrair hash do pacote de entrada do Intake
-    let intakePackageSha = '';
-    const intakePkgShaPath = path.join(intakeBundle.extractDir, 'input-package.sha256');
-    const intakeOrigShaPath = path.join(intakeBundle.extractDir, 'original-package.sha256');
-    if (fs.existsSync(intakePkgShaPath)) {
-      intakePackageSha = fs.readFileSync(intakePkgShaPath, 'utf8').trim().split(/\s+/)[0];
-    } else if (fs.existsSync(intakeOrigShaPath)) {
-      intakePackageSha = fs.readFileSync(intakeOrigShaPath, 'utf8').trim().split(/\s+/)[0];
-    }
-
-    // 5. Download Directo e Verificação do Pacote da Etapa A (Pontos 2 e 3 da Auditoria)
-    console.log('\n--- 5. Download Directo do Artefacto da Etapa A ---');
-    if (!stageARun) {
-      throw new Error(`[FAIL-CLOSED] Run da Etapa A (.github/workflows/operational-pilot-stage-a.yml) não encontrado no SHA ${sourceSha}.`);
-    }
-
-    const isStageACanonicalRepo = stageARun.repository?.id === CANONICAL_REPO_ID || !stageARun.repository;
-    const isStageASameSha = stageARun.head_sha === sourceSha;
-    const isStageACompleted = stageARun.status === 'completed';
-    const isStageASuccess = stageARun.conclusion === 'success';
-
-    const stageARunBytes = Buffer.from(JSON.stringify(stageARun, null, 2), 'utf8');
-    fs.writeFileSync(path.join(outDir, 'stage-a-run-api-response.json'), stageARunBytes);
-    fs.writeFileSync(path.join(outDir, 'stage-a-run-api-response.json.sha256'), `${sha256(stageARunBytes)}  stage-a-run-api-response.json\n`);
+    validateRunMetadata(
+      stageARun,
+      stageARunId,
+      '.github/workflows/operational-pilot-stage-a.yml',
+      sourceSha
+    );
 
     recordCheck('STAGE_A_RUN_VALID', String(stageARun.id), 'N/A', 'stage-a-run-api-response.json', sha256(stageARunBytes),
-      isStageACanonicalRepo && isStageASameSha && isStageACompleted && isStageASuccess ? 'PASS' : 'FAIL',
-      `conclusion=${stageARun.conclusion}, sha=${stageARun.head_sha}`);
+      'PASS', `conclusion=${stageARun.conclusion}, sha=${stageARun.head_sha}`);
 
+    // Download do artefacto da Etapa A e consulta individual ao endpoint do artefacto
     const expectedStageAArtifactName = `aetf-pilot-stage-a-${sourceSha}`;
-    let stageABundle;
-    if (mockDataDir && !fs.existsSync(path.join(mockDataDir, `${expectedStageAArtifactName}.zip`))) {
-      stageABundle = {
-        artifact: { id: 10584071143, name: expectedStageAArtifactName, size_in_bytes: 41000, expired: false },
-        zipPath: '',
-        zipSha: 'MOCK_STAGE_A_SHA',
-        extractDir: stageBExtractDir,
-        extractedFiles: fs.readdirSync(stageBExtractDir)
-      };
-    } else {
-      stageABundle = downloadAndExtractArtifact(stageARun.id, expectedStageAArtifactName, 'stage_a_extracted');
+    const stageABundle = downloadAndExtractArtifact(
+      stageARunId,
+      expectedStageAArtifactName,
+      'stage_a_extracted',
+      'stage-a-artifact-api-response',
+      outDir,
+      mockDataDir,
+      sourceSha
+    );
+
+    if (stageABundle.artifact.id !== stageAArtifactId) {
+      throw new Error(`[FAIL-CLOSED] ID do artefacto da Etapa A descarregado (${stageABundle.artifact.id}) diverge do ID consumido pela Etapa B (${stageAArtifactId}).`);
     }
 
     recordCheck('STAGE_A_ARTIFACT_DOWNLOADED', String(stageARun.id), String(stageABundle.artifact.id), expectedStageAArtifactName, stageABundle.zipSha,
       stageABundle.extractedFiles.length > 0 ? 'PASS' : 'FAIL',
       `${stageABundle.extractedFiles.length} ficheiros extraídos`);
 
-    // Extrair desafio emitido na Etapa A (directamente da base de dados física pilot.db no pacote descarregado ou recibos)
+    // Extrair desafio emitido na Etapa A (directamente da base de dados física pilot.db no pacote da Etapa A)
     let stageAChallengeId = '';
     const stageADbPath = path.join(stageABundle.extractDir, 'pilot.db');
     if (fs.existsSync(stageADbPath)) {
@@ -361,7 +572,6 @@ async function runVerification() {
     }
 
     if (!stageAChallengeId) {
-      // Fallback para ficheiro de recibo ou task-receipt mock
       const possibleReceiptFiles = [
         path.join(stageABundle.extractDir, 'task-receipt-test.json'),
         path.join(stageBExtractDir, 'task-receipt-test.json'),
@@ -382,26 +592,121 @@ async function runVerification() {
       Boolean(stageAChallengeId && stageAChallengeId.startsWith('CHAL_')) ? 'PASS' : 'FAIL',
       `challenge_id=${stageAChallengeId}`);
 
-    // 6. Download Directo e Verificação do Pacote de Fecho da Etapa B (Pontos 2 e 3 da Auditoria)
-    console.log('\n--- 6. Download Directo do Artefacto da Etapa B ---');
-    const isStageBCanonicalRepo = (runBData.repository?.id === CANONICAL_REPO_ID || !runBData.repository) &&
-      (runBData.head_repository?.id === CANONICAL_REPO_ID || !runBData.head_repository);
-    const isStageBSameSha = runBData.head_sha === sourceSha;
-    const isStageBCompleted = runBData.status === 'completed';
-    const isStageBSuccess = runBData.conclusion === 'success';
+    // -------------------------------------------------------------------------
+    // 3. Descoberta do Intake Consumido pela Etapa A (2.3)
+    // -------------------------------------------------------------------------
+    console.log('\n--- 3. Descoberta do Intake Consumido pela Etapa A ---');
+    const intakeLinkage = extractConsumedIntakeIdentifiers(stageABundle.extractDir);
+    const intakeRunId = String(intakeLinkage.intake_run_id);
+    const intakeArtifactId = Number(intakeLinkage.intake_artifact_id);
 
-    recordCheck('STAGE_B_RUN_VALID', String(runBData.id), 'N/A', 'stage-b-run-api-response.json', rawRunBBytes ? sha256(rawRunBBytes) : 'N/A',
-      isStageBCanonicalRepo && isStageBSameSha && isStageBCompleted && isStageBSuccess ? 'PASS' : 'FAIL',
-      `conclusion=${runBData.conclusion}, sha=${runBData.head_sha}`);
+    assertStrictId(intakeRunId, 'intake_run_id');
+    assertStrictId(intakeArtifactId, 'intake_artifact_id');
 
-    recordCheck('STAGE_B_ARTIFACT_DOWNLOADED', String(runBData.id), String(stageBBundle.artifact.id), expectedClosureArtifactName, stageBBundle.zipSha,
-      stageBBundle.extractedFiles.length > 0 ? 'PASS' : 'FAIL',
-      `${stageBBundle.extractedFiles.length} ficheiros extraídos`);
+    console.log(`[PASS] Intake descoberto na evidência consumida da Etapa A: Run ${intakeRunId} | Artefacto ${intakeArtifactId}`);
 
-    // 7. Reconciliação Direta Cruzada (Run, Artefacto, Workflow, SHA, Hashes) entre Intake, Etapa A e Etapa B (Ponto 4)
-    console.log('\n--- 7. Reconciliação Direta Cruzada entre as Três Etapas ---');
+    // Consulta individual ao run do Intake
+    const resRunIntake = fetchIndividualApi(
+      `repos/${CANONICAL_REPO_NAME}/actions/runs/${intakeRunId}`,
+      outDir,
+      'intake-run-api-response',
+      mockDataDir
+    );
+    const intakeRun = resRunIntake.parsed;
+    const intakeRunBytes = resRunIntake.rawBytes;
 
-    // Localizar recibo de revisão da Etapa B e extrair desafio consumido
+    validateRunMetadata(
+      intakeRun,
+      intakeRunId,
+      '.github/workflows/operational-pilot-intake.yml',
+      sourceSha
+    );
+
+    recordCheck('INTAKE_RUN_VALID', String(intakeRun.id), 'N/A', 'intake-run-api-response.json', sha256(intakeRunBytes),
+      'PASS', `conclusion=${intakeRun.conclusion}, sha=${intakeRun.head_sha}`);
+
+    // Download do artefacto de Intake e consulta individual ao endpoint do artefacto
+    const expectedIntakeArtifactName = `aetf-pilot-intake-${sourceSha}`;
+    const intakeBundle = downloadAndExtractArtifact(
+      intakeRunId,
+      expectedIntakeArtifactName,
+      'intake_extracted',
+      'intake-artifact-api-response',
+      outDir,
+      mockDataDir,
+      sourceSha
+    );
+
+    if (intakeBundle.artifact.id !== intakeArtifactId) {
+      throw new Error(`[FAIL-CLOSED] ID do artefacto de Intake descarregado (${intakeBundle.artifact.id}) diverge do ID consumido pela Etapa A (${intakeArtifactId}).`);
+    }
+
+    recordCheck('INTAKE_ARTIFACT_DOWNLOADED', String(intakeRun.id), String(intakeBundle.artifact.id), expectedIntakeArtifactName, intakeBundle.zipSha,
+      intakeBundle.extractedFiles.length > 0 ? 'PASS' : 'FAIL',
+      `${intakeBundle.extractedFiles.length} ficheiros extraídos`);
+
+    let intakePackageSha = '';
+    const intakePkgShaPath = path.join(intakeBundle.extractDir, 'input-package.sha256');
+    const intakeOrigShaPath = path.join(intakeBundle.extractDir, 'original-package.sha256');
+    if (fs.existsSync(intakePkgShaPath)) {
+      intakePackageSha = fs.readFileSync(intakePkgShaPath, 'utf8').trim().split(/\s+/)[0];
+    } else if (fs.existsSync(intakeOrigShaPath)) {
+      intakePackageSha = fs.readFileSync(intakeOrigShaPath, 'utf8').trim().split(/\s+/)[0];
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. Verificação Real do Run da CI Principal no SHA Canónico
+    // -------------------------------------------------------------------------
+    console.log('\n--- 4. Verificação Real do Run da CI Principal ---');
+    let ciRunId;
+    if (mockDataDir && fs.existsSync(path.join(mockDataDir, 'ci-run-api-response.json'))) {
+      const parsedMockCi = JSON.parse(fs.readFileSync(path.join(mockDataDir, 'ci-run-api-response.json'), 'utf8'));
+      ciRunId = String(parsedMockCi.id);
+    } else {
+      const resRuns = fetchAndPreserveGhApi(
+        `repos/${CANONICAL_REPO_NAME}/actions/runs?head_sha=${sourceSha}&branch=master`,
+        outDir,
+        'all-chain-runs-api-response'
+      );
+      const runs = resRuns.parsed.workflow_runs || [];
+      const foundCi = runs.find(r => r.path === '.github/workflows/ci.yml' && r.status === 'completed');
+      if (!foundCi) {
+        throw new Error(`[FAIL-CLOSED] Run da CI Principal (.github/workflows/ci.yml) não encontrado ou não concluído no SHA ${sourceSha}.`);
+      }
+      ciRunId = String(foundCi.id);
+    }
+
+    const resCi = fetchIndividualApi(
+      `repos/${CANONICAL_REPO_NAME}/actions/runs/${ciRunId}`,
+      outDir,
+      'ci-run-api-response',
+      mockDataDir
+    );
+    const ciRun = resCi.parsed;
+    const ciRunBytes = resCi.rawBytes;
+
+    validateRunMetadata(
+      ciRun,
+      ciRunId,
+      '.github/workflows/ci.yml',
+      sourceSha
+    );
+
+    const isCiCanonicalRepo = ciRun.repository?.id === CANONICAL_REPO_ID && (ciRun.head_repository?.id === CANONICAL_REPO_ID || !ciRun.head_repository);
+
+    recordCheck('CI_RUN_EXISTS', String(ciRun.id), 'N/A', 'ci-run-api-response.json', sha256(ciRunBytes),
+      'PASS', `head_sha=${ciRun.head_sha}, branch=${ciRun.head_branch}`);
+
+    recordCheck('CI_RUN_CONCLUSION_SUCCESS', String(ciRun.id), 'N/A', 'ci-run-api-response.json', sha256(ciRunBytes),
+      'PASS', `status=${ciRun.status}, conclusion=${ciRun.conclusion}`);
+
+    recordCheck('CI_RUN_CANONICAL_REPO', String(ciRun.id), 'N/A', 'ci-run-api-response.json', sha256(ciRunBytes),
+      isCiCanonicalRepo ? 'PASS' : 'FAIL', `repo_id=${ciRun.repository?.id}`);
+
+    // -------------------------------------------------------------------------
+    // 5. Reconciliação Direta Cruzada das Três Etapas
+    // -------------------------------------------------------------------------
+    console.log('\n--- 5. Reconciliação Direta Cruzada entre as Três Etapas ---');
     let stageBChallengeId = '';
     let stageBReviewReceiptPath = null;
     const possibleReviewDirs = [
@@ -439,7 +744,6 @@ async function runVerification() {
       stageAChallengeId === stageBChallengeId && stageAChallengeId !== '' ? 'PASS' : 'FAIL',
       `stage_a_chal=${stageAChallengeId} === stage_b_chal=${stageBChallengeId}`);
 
-    // Reconciliação de hash do pacote de ingestão
     const stageAInputShaPath = path.join(stageABundle.extractDir, 'input-package.sha256');
     let stageAInputSha = '';
     if (fs.existsSync(stageAInputShaPath)) {
@@ -451,7 +755,6 @@ async function runVerification() {
       isPackageHashReconciled ? 'PASS' : 'FAIL',
       `intake_hash=${intakePackageSha.slice(0, 16)}... === stage_a_hash=${stageAInputSha.slice(0, 16)}...`);
 
-    // Recibo de independência e segregação de funções
     const indepReceiptPath = fs.existsSync(path.join(stageBEvidenceBase, 'reviewer-independence-receipt.json'))
       ? path.join(stageBEvidenceBase, 'reviewer-independence-receipt.json')
       : path.join(stageBExtractDir, 'reviewer-independence-receipt.json');
@@ -470,7 +773,6 @@ async function runVerification() {
       indepReceipt.classification === 'DEMO_REVIEW_INDEPENDENCE_SIMULATED' ? 'PASS' : 'FAIL',
       `approval_id=${indepReceipt.github_environment_approval_id}, sim=${indepReceipt.is_simulation}`);
 
-    // Verificação física dos hashes contra pilot-evidence-files.sha256 na Etapa B
     const indexPath = fs.existsSync(path.join(stageBEvidenceBase, 'pilot-evidence-files.sha256'))
       ? path.join(stageBEvidenceBase, 'pilot-evidence-files.sha256')
       : path.join(stageBExtractDir, 'pilot-evidence-files.sha256');
@@ -505,8 +807,10 @@ async function runVerification() {
       checkedHashes >= 20 ? 'PASS' : 'FAIL',
       `${checkedHashes} ficheiros verificados fisicamente com 100% de integridade`);
 
-    // 8. Verificação Externa da Configuração do GitHub: prevent_self_review: true (Pontos 7 e 8 da Auditoria)
-    console.log('\n--- 8. Verificação Externa da Regra de Proteção (prevent_self_review) ---');
+    // -------------------------------------------------------------------------
+    // 6. Verificação Externa da Configuração do GitHub: prevent_self_review: true
+    // -------------------------------------------------------------------------
+    console.log('\n--- 6. Verificação Externa da Regra de Proteção (prevent_self_review) ---');
     let envProtectionRule = null;
     let rawEnvBytes = null;
     try {
@@ -523,8 +827,7 @@ async function runVerification() {
         envProtectionRule = resEnv.parsed;
       }
     } catch (envErr) {
-      console.warn(`[WARN] Consulta direta à API de ambientes indisponível via token actual: ${envErr.message}`);
-      // Recorrer à evidência autenticada preservada no pacote da Etapa A
+      console.warn(`[WARN] Consulta à API de ambientes indisponível: ${envErr.message}`);
       const envSavedFile = path.join(stageABundle.extractDir, 'environment-api-response.json');
       if (fs.existsSync(envSavedFile)) {
         rawEnvBytes = fs.readFileSync(envSavedFile);
@@ -542,8 +845,14 @@ async function runVerification() {
       (isPreventSelfReviewActive || mode === 'DEMO') ? 'PASS' : 'FAIL',
       `prevent_self_review=${reqReviewRule?.prevent_self_review ?? 'DEMO_SIMULATED'}`);
 
-    // 9. Cálculo Dinâmico de TODOS os Estados de Verificação (Ponto 6 da Auditoria)
-    console.log('\n--- 9. Cálculo Dinâmico de Todos os Estados de Verificação ---');
+    // -------------------------------------------------------------------------
+    // 7. Cálculo Dinâmico de TODOS os Estados de Verificação
+    // -------------------------------------------------------------------------
+    console.log('\n--- 7. Cálculo Dinâmico de Todos os Estados de Verificação ---');
+    const isCiCompleted = ciRun.status === 'completed';
+    const isCiSuccess = ciRun.conclusion === 'success';
+    const isCiSameSha = ciRun.head_sha === sourceSha;
+
     const ci_verified = Boolean(
       ciRun &&
       isCiCompleted &&
@@ -552,6 +861,11 @@ async function runVerification() {
       isCiCanonicalRepo &&
       ciRun.path === '.github/workflows/ci.yml'
     );
+
+    const isIntakeCompleted = intakeRun.status === 'completed';
+    const isIntakeSuccess = intakeRun.conclusion === 'success';
+    const isIntakeSameSha = intakeRun.head_sha === sourceSha;
+    const isIntakeCanonicalRepo = intakeRun.repository?.id === CANONICAL_REPO_ID || !intakeRun.repository;
 
     const intake_verified = Boolean(
       intakeRun &&
@@ -563,6 +877,11 @@ async function runVerification() {
       intakeBundle.extractedFiles.length > 0
     );
 
+    const isStageACompleted = stageARun.status === 'completed';
+    const isStageASuccess = stageARun.conclusion === 'success';
+    const isStageASameSha = stageARun.head_sha === sourceSha;
+    const isStageACanonicalRepo = stageARun.repository?.id === CANONICAL_REPO_ID || !stageARun.repository;
+
     const stage_a_verified = Boolean(
       stageARun &&
       isStageACompleted &&
@@ -573,6 +892,11 @@ async function runVerification() {
       stageABundle.extractedFiles.length > 0 &&
       Boolean(stageAChallengeId)
     );
+
+    const isStageBCompleted = runBData.status === 'completed';
+    const isStageBSuccess = runBData.conclusion === 'success';
+    const isStageBSameSha = runBData.head_sha === sourceSha;
+    const isStageBCanonicalRepo = (runBData.repository?.id === CANONICAL_REPO_ID || !runBData.repository);
 
     const stage_b_verified = Boolean(
       runBData &&
@@ -607,8 +931,10 @@ async function runVerification() {
       runBData.head_sha === sourceSha
     );
 
-    // 10. Emissão da Atestação Forense Consolidada
-    console.log('\n--- 10. Emissão da Atestação Forense Consolidada ---');
+    // -------------------------------------------------------------------------
+    // 8. Emissão da Atestação Forense Consolidada com Metadados Completos (2.5)
+    // -------------------------------------------------------------------------
+    console.log('\n--- 8. Emissão da Atestação Forense Consolidada ---');
     const chainAttestation = {
       source_sha: sourceSha,
       execution_mode: mode,
@@ -622,13 +948,41 @@ async function runVerification() {
       cross_stages_reconciled,
       environment_prevent_self_review_observed: isPreventSelfReviewActive,
       ci_run_id: ciRun.id,
-      remote_verification_run_id: remoteCiRun ? remoteCiRun.id : null,
       intake_run_id: intakeRun.id,
       stage_a_run_id: stageARun.id,
       stage_b_run_id: runBData.id,
       intake_artifact_id: intakeBundle.artifact.id,
       stage_a_artifact_id: stageABundle.artifact.id,
       stage_b_artifact_id: stageBBundle.artifact.id,
+      artifacts_metadata: {
+        intake: {
+          artifact_id: intakeBundle.artifact.id,
+          artifact_name: intakeBundle.artifact.name,
+          artifact_size_bytes: intakeBundle.artifact.size_in_bytes,
+          artifact_expired: intakeBundle.artifact.expired,
+          workflow_run_id: intakeBundle.artifact.workflow_run.id,
+          source_sha: sourceSha,
+          zip_sha256: intakeBundle.zipSha
+        },
+        stage_a: {
+          artifact_id: stageABundle.artifact.id,
+          artifact_name: stageABundle.artifact.name,
+          artifact_size_bytes: stageABundle.artifact.size_in_bytes,
+          artifact_expired: stageABundle.artifact.expired,
+          workflow_run_id: stageABundle.artifact.workflow_run.id,
+          source_sha: sourceSha,
+          zip_sha256: stageABundle.zipSha
+        },
+        stage_b: {
+          artifact_id: stageBBundle.artifact.id,
+          artifact_name: stageBBundle.artifact.name,
+          artifact_size_bytes: stageBBundle.artifact.size_in_bytes,
+          artifact_expired: stageBBundle.artifact.expired,
+          workflow_run_id: stageBBundle.artifact.workflow_run.id,
+          source_sha: sourceSha,
+          zip_sha256: stageBBundle.zipSha
+        }
+      },
       challenge_id: stageAChallengeId,
       review_independence_evidence: 'SYNTHETIC_DEMO',
       real_pilot_authorised: false,
@@ -640,7 +994,6 @@ async function runVerification() {
     fs.writeFileSync(attestationPath, JSON.stringify(chainAttestation, null, 2), 'utf8');
     fs.writeFileSync(`${attestationPath}.sha256`, `${sha256(fs.readFileSync(attestationPath))}  chain-attestation.json\n`, 'utf8');
 
-    // Matriz Requirement -> Run -> Artifact -> File -> Hash -> Result
     const matrixLines = [
       '# Matriz de Atestação Forense da Cadeia Operacional',
       '',
@@ -658,7 +1011,6 @@ async function runVerification() {
     fs.writeFileSync(matrixPath, matrixLines.join('\n') + '\n', 'utf8');
     fs.writeFileSync(`${matrixPath}.sha256`, `${sha256(fs.readFileSync(matrixPath))}  chain-attestation-matrix.md\n`, 'utf8');
 
-    // Índice integral do pacote de atestação
     const outFiles = fs.readdirSync(outDir).filter(f => f !== 'chain-evidence-files.sha256' && fs.statSync(path.join(outDir, f)).isFile()).sort();
     const indexLinesOut = outFiles.map(f => `${sha256(fs.readFileSync(path.join(outDir, f)))}  ${f}`);
     fs.writeFileSync(path.join(outDir, 'chain-evidence-files.sha256'), indexLinesOut.join('\n') + '\n', 'utf8');
@@ -669,11 +1021,15 @@ async function runVerification() {
     console.log(`Atestação JSON gravada em:      ${attestationPath}`);
     console.log('================================================================\n');
 
-    process.exit(0);
+    return chainAttestation;
   } catch (err) {
     console.error(`\n[FATAL] Erro durante a atestação independente da cadeia: ${err.message}`);
     process.exit(1);
   }
 }
 
-runVerification();
+// Invocação direta CLI
+const isMain = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+if (isMain) {
+  runVerification();
+}
