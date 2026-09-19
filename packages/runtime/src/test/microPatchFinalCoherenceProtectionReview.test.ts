@@ -763,7 +763,7 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       assert.strictEqual(enriched.enriched_from_verified_run, true);
     });
 
-    it('6.6: verify-operational-pilot-closure-chain valida a cadeia completa em DEMO e emite SAME_SHA_DEMO_CHAIN_INDEPENDENTLY_ATTESTED', () => {
+    it('6.6: verify-operational-pilot-closure-chain valida a cadeia completa em DEMO e emite SAME_SHA_DEMO_CHAIN_INDEPENDENTLY_ATTESTED', async () => {
       const mockChainDir = path.join(tmpDir, 'test_mock_chain');
       const outAttestDir = path.join(tmpDir, 'test_chain_out');
       fs.mkdirSync(mockChainDir, { recursive: true });
@@ -856,10 +856,11 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         data: fs.readFileSync(path.join(zipContentDir, f))
       }));
 
-      // Criação de ZIP simples compatível
+      // Criação de ZIP canónico multiplataforma
+      const { pathToFileURL } = await import('node:url');
+      const { buildZip } = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/lib/secureTarExtractor.mjs')).href);
       const zipPath = path.join(mockChainDir, `aetf-pilot-closure-${testSha}.zip`);
-      // Utilizar PowerShell Compress-Archive para gerar zip válido
-      runCommand(`powershell -NoProfile -Command "Compress-Archive -Path '${zipContentDir}/*' -DestinationPath '${zipPath}' -Force"`);
+      fs.writeFileSync(zipPath, buildZip(zipEntries));
 
       // Executar o verificador de cadeia com os mocks
       runCommand(`node scripts/verify-operational-pilot-closure-chain.mjs --stage-b-run-id=35436363480 --mock-data-dir="${mockChainDir}" --out-dir="${outAttestDir}"`);
