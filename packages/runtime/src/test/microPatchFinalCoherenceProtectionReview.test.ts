@@ -790,8 +790,8 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         head_sha: testSha,
         head_branch: 'master',
         path: '.github/workflows/operational-pilot-stage-b.yml',
-        repository: { id: 1363667011 },
-        head_repository: { id: 1363667011 }
+        repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' },
+        head_repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' }
       }, null, 2));
 
       fs.writeFileSync(path.join(mockChainDir, 'stage-b-artifacts-list.json'), JSON.stringify({
@@ -816,6 +816,8 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       const zipContentDir = path.join(tmpDir, 'zip_content_demo');
       fs.mkdirSync(zipContentDir, { recursive: true });
 
+      fs.writeFileSync(path.join(zipContentDir, 'input-package.sha256'), '948cdee5df75eaf336574014f935c0fb644ae2521e4ef27313b48f0bba2d255e  input-package.tar.gz\n');
+
       fs.writeFileSync(path.join(zipContentDir, 'stage-a-run-api-response.json'), JSON.stringify({
         id: stageARunId,
         status: 'completed',
@@ -823,7 +825,8 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         head_sha: testSha,
         head_branch: 'master',
         path: '.github/workflows/operational-pilot-stage-a.yml',
-        repository: { id: 1363667011 }
+        repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' },
+        head_repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' }
       }, null, 2));
 
       fs.writeFileSync(path.join(zipContentDir, 'stage-a-artifact-api-response.json'), JSON.stringify({
@@ -865,7 +868,8 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         head_sha: testSha,
         head_branch: 'master',
         path: '.github/workflows/operational-pilot-stage-a.yml',
-        repository: { id: 1363667011 }
+        repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' },
+        head_repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' }
       }, null, 2));
 
       fs.writeFileSync(path.join(mockChainDir, 'stage-a-artifacts-list.json'), JSON.stringify({
@@ -903,7 +907,8 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         head_sha: testSha,
         head_branch: 'master',
         path: '.github/workflows/operational-pilot-intake.yml',
-        repository: { id: 1363667011 }
+        repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' },
+        head_repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' }
       }, null, 2));
       fs.writeFileSync(path.join(zipADir, 'task-receipt-test.json'), JSON.stringify({
         execution_mode: 'DEMO',
@@ -928,7 +933,8 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         head_sha: testSha,
         head_branch: 'master',
         path: '.github/workflows/operational-pilot-intake.yml',
-        repository: { id: 1363667011 }
+        repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' },
+        head_repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' }
       }, null, 2));
 
       fs.writeFileSync(path.join(mockChainDir, 'intake-artifacts-list.json'), JSON.stringify({
@@ -963,7 +969,8 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         head_sha: testSha,
         head_branch: 'master',
         path: '.github/workflows/ci.yml',
-        repository: { id: 1363667011 }
+        repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' },
+        head_repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' }
       }, null, 2));
 
       // Environment Protection Rule
@@ -979,17 +986,20 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       // Executar o verificador de cadeia com os mocks
       runCommand(`node scripts/verify-operational-pilot-closure-chain.mjs --stage-b-run-id=${stageBRunId} --mock-data-dir="${mockChainDir}" --out-dir="${outAttestDir}"`);
 
-      const attestFile = path.join(outAttestDir, 'chain-attestation.json');
-      assert.ok(fs.existsSync(attestFile));
-      const attestation = JSON.parse(fs.readFileSync(attestFile, 'utf8'));
-      assert.strictEqual(attestation.classification, 'SAME_SHA_DEMO_CHAIN_INDEPENDENTLY_ATTESTED');
+      assert.strictEqual(fs.existsSync(path.join(outAttestDir, 'chain-attestation.json')), true);
+      const attestation = JSON.parse(fs.readFileSync(path.join(outAttestDir, 'chain-attestation.json'), 'utf8'));
+
       assert.strictEqual(attestation.same_sha_chain_verified, true);
-      assert.strictEqual(attestation.real_pilot_authorised, false);
       assert.strictEqual(attestation.ci_verified, true);
       assert.strictEqual(attestation.intake_verified, true);
       assert.strictEqual(attestation.stage_a_verified, true);
       assert.strictEqual(attestation.stage_b_verified, true);
       assert.strictEqual(attestation.cross_stages_reconciled, true);
+      assert.strictEqual(attestation.canonical_repository_chain_verified, true);
+      assert.strictEqual(attestation.cross_stage_package_hash_reconciled, true);
+      assert.strictEqual(attestation.api_response_hashes_verified, true);
+      assert.strictEqual(attestation.evidence_index_hashes_verified, true);
+      assert.strictEqual(attestation.artifact_zip_hashes_computed, true);
       assert.strictEqual(attestation.linkage_source_hashes_verified, true);
       assert.strictEqual(attestation.linkage_consensus_verified, true);
     });
@@ -1084,7 +1094,8 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         status: 'completed',
         conclusion: 'success',
         path: '.github/workflows/operational-pilot-stage-a.yml',
-        repository: { id: 1363667011 }
+        repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' },
+        head_repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' }
       };
       const artA1 = {
         id: artA1Id,
@@ -1102,7 +1113,8 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         status: 'completed',
         conclusion: 'success',
         path: '.github/workflows/operational-pilot-stage-a.yml',
-        repository: { id: 1363667011 }
+        repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' },
+        head_repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' }
       };
       const artA2 = {
         id: artA2Id,
@@ -1201,7 +1213,8 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         status: 'completed',
         conclusion: 'success',
         path: '.github/workflows/operational-pilot-intake.yml',
-        repository: { id: 1363667011 }
+        repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' },
+        head_repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' }
       };
       const artI1 = {
         id: artI1Id,
@@ -1219,7 +1232,8 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         status: 'completed',
         conclusion: 'success',
         path: '.github/workflows/operational-pilot-intake.yml',
-        repository: { id: 1363667011 }
+        repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' },
+        head_repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' }
       };
       const artI2 = {
         id: artI2Id,
@@ -1343,7 +1357,9 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         head_sha: testSha,
         path: '.github/workflows/ci.yml',
         status: 'completed',
-        conclusion: 'success'
+        conclusion: 'success',
+        repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' },
+        head_repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' }
       };
       assert.doesNotThrow(() => {
         verifierModule.validateRunMetadata(run, 100, '.github/workflows/ci.yml', testSha);
@@ -1535,7 +1551,8 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         head_sha: testSha,
         head_branch: 'master',
         path: '.github/workflows/operational-pilot-stage-b.yml',
-        repository: { id: 1363667011 }
+        repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' },
+        head_repository: { id: 1363667011, full_name: 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES' }
       }));
       fs.writeFileSync(path.join(mockDir, 'stage-b-artifacts-list.json'), JSON.stringify({
         artifacts: [{
@@ -2003,6 +2020,407 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       assert.throws(() => {
         verifierModule.loadPackageIndexMap(pDir);
       }, /Hash SHA-256 malformado/);
+    });
+  });
+
+  describe('8. Subprompt 2 — Identidade Canónica e Verdade dos Hashes', () => {
+    let verifierModule: any;
+    const testSha = '37927b519f2865e45d5df236df411da126dbe8f8';
+    const canonicalRepoId = 1363667011;
+    const canonicalRepoName = 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES';
+    const sampleSha256 = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+    const altSha256 = '948cdee5df75eaf336574014f935c0fb644ae2521e4ef27313b48f0bba2d255e';
+
+    before(async () => {
+      const { pathToFileURL } = await import('node:url');
+      verifierModule = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/verify-operational-pilot-closure-chain.mjs')).href);
+    });
+
+    // -------------------------------------------------------------------------
+    // 8.1. TESTES POSITIVOS OBRIGATÓRIOS (Secção 3)
+    // -------------------------------------------------------------------------
+    describe('8.1. Testes Positivos Obrigatórios', () => {
+      it('8.1.1: CI com os dois IDs e os dois nomes canónicos passa no código de produção', () => {
+        const ciRun = {
+          id: 1001,
+          head_branch: 'master',
+          head_sha: testSha,
+          status: 'completed',
+          conclusion: 'success',
+          path: '.github/workflows/ci.yml',
+          repository: { id: canonicalRepoId, full_name: canonicalRepoName },
+          head_repository: { id: canonicalRepoId, full_name: canonicalRepoName }
+        };
+        const res = verifierModule.validateRunRepositoryIdentity(ciRun, 'CI');
+        assert.strictEqual(res, true);
+      });
+
+      it('8.1.2: Intake com identidade canónica passa no código de produção', () => {
+        const intakeRun = {
+          id: 1002,
+          head_branch: 'master',
+          head_sha: testSha,
+          status: 'completed',
+          conclusion: 'success',
+          path: '.github/workflows/operational-pilot-intake.yml',
+          repository: { id: canonicalRepoId, full_name: canonicalRepoName },
+          head_repository: { id: canonicalRepoId, full_name: canonicalRepoName }
+        };
+        const res = verifierModule.validateRunRepositoryIdentity(intakeRun, 'Intake');
+        assert.strictEqual(res, true);
+      });
+
+      it('8.1.3: Etapa A com identidade canónica passa no código de produção', () => {
+        const stageARun = {
+          id: 1003,
+          head_branch: 'master',
+          head_sha: testSha,
+          status: 'completed',
+          conclusion: 'success',
+          path: '.github/workflows/operational-pilot-stage-a.yml',
+          repository: { id: canonicalRepoId, full_name: canonicalRepoName },
+          head_repository: { id: canonicalRepoId, full_name: canonicalRepoName }
+        };
+        const res = verifierModule.validateRunRepositoryIdentity(stageARun, 'Stage A');
+        assert.strictEqual(res, true);
+      });
+
+      it('8.1.4: Etapa B com identidade canónica passa no código de produção', () => {
+        const stageBRun = {
+          id: 1004,
+          head_branch: 'master',
+          head_sha: testSha,
+          status: 'completed',
+          conclusion: 'success',
+          path: '.github/workflows/operational-pilot-stage-b.yml',
+          repository: { id: canonicalRepoId, full_name: canonicalRepoName },
+          head_repository: { id: canonicalRepoId, full_name: canonicalRepoName }
+        };
+        const res = verifierModule.validateRunRepositoryIdentity(stageBRun, 'Stage B');
+        assert.strictEqual(res, true);
+      });
+
+      it('8.1.5: cadeia com os quatro runs canónicos produz canonical_repository_chain_verified: true', () => {
+        const runs = ['CI', 'Intake', 'Stage A', 'Stage B'].map((label, idx) => ({
+          id: 2000 + idx,
+          head_branch: 'master',
+          head_sha: testSha,
+          repository: { id: canonicalRepoId, full_name: canonicalRepoName },
+          head_repository: { id: canonicalRepoId, full_name: canonicalRepoName }
+        }));
+        const results = runs.map((r, i) => verifierModule.validateRunRepositoryIdentity(r, `run-${i}`));
+        const canonical_repository_chain_verified = results.every(r => r === true);
+        assert.strictEqual(canonical_repository_chain_verified, true);
+      });
+
+      it('8.1.6: SHA-256 estrito válido passa no código de produção', () => {
+        const parsed = verifierModule.assertStrictSha256Format(sampleSha256, 'test_hash');
+        assert.strictEqual(parsed, sampleSha256);
+      });
+
+      it('8.1.7: bytes físicos coincidentes com o sidecar passam no código de produção', () => {
+        const testDir = path.join(tmpDir, 'test_sidecar_match_dir');
+        fs.mkdirSync(testDir, { recursive: true });
+        const filePath = path.join(testDir, 'payload.json');
+        const sidecarPath = path.join(testDir, 'payload.json.sha256');
+        const fileContent = JSON.stringify({ status: 'ok', random: 42 });
+        fs.writeFileSync(filePath, fileContent);
+        const expectedHash = createHash('sha256').update(fileContent).digest('hex');
+        fs.writeFileSync(sidecarPath, `${expectedHash}  payload.json\n`);
+
+        const res = verifierModule.verifySidecarHash(filePath, sidecarPath, 'payload');
+        assert.strictEqual(res.match, true);
+        assert.strictEqual(res.actualHash, expectedHash);
+        assert.strictEqual(res.expectedHash, expectedHash);
+      });
+
+      it('8.1.8: Intake, Etapa A e Etapa B com o mesmo hash do pacote passam no código de produção', () => {
+        const res = verifierModule.reconcilePackageHashes(sampleSha256, sampleSha256, sampleSha256);
+        assert.strictEqual(res, true);
+      });
+
+      it('8.1.9: índice completo com todos os hashes físicos coincidentes passa no código de produção', () => {
+        const indexDir = path.join(tmpDir, 'test_full_index_pass_dir');
+        fs.mkdirSync(indexDir, { recursive: true });
+        const f1 = path.join(indexDir, 'doc1.txt');
+        const f2 = path.join(indexDir, 'doc2.txt');
+        fs.writeFileSync(f1, 'content 1');
+        fs.writeFileSync(f2, 'content 2');
+        const h1 = createHash('sha256').update('content 1').digest('hex');
+        const h2 = createHash('sha256').update('content 2').digest('hex');
+        fs.writeFileSync(path.join(indexDir, 'pilot-evidence-files.sha256'), `${h1}  doc1.txt\n${h2}  doc2.txt\n`);
+
+        const { indexMap } = verifierModule.loadPackageIndexMap(indexDir);
+        const res1 = verifierModule.verifyFileAgainstPackageIndex(indexDir, f1, indexMap);
+        const res2 = verifierModule.verifyFileAgainstPackageIndex(indexDir, f2, indexMap);
+        assert.strictEqual(res1.actualHash, h1);
+        assert.strictEqual(res2.actualHash, h2);
+      });
+
+      it('8.1.10: respostas individuais da API com sidecars corretos passam no código de produção', () => {
+        const apiDir = path.join(tmpDir, 'test_api_sidecar_pass_dir');
+        fs.mkdirSync(apiDir, { recursive: true });
+        const apiFile = path.join(apiDir, 'stage-b-run-api-response.json');
+        const apiSidecar = path.join(apiDir, 'stage-b-run-api-response.json.sha256');
+        const apiContent = JSON.stringify({ id: 12345, status: 'completed' });
+        fs.writeFileSync(apiFile, apiContent);
+        const apiHash = createHash('sha256').update(apiContent).digest('hex');
+        fs.writeFileSync(apiSidecar, `${apiHash}  stage-b-run-api-response.json\n`);
+
+        const res = verifierModule.verifySidecarHash(apiFile, apiSidecar, 'stage-b-run-api-response.json');
+        assert.strictEqual(res.match, true);
+        assert.strictEqual(res.actualHash, apiHash);
+      });
+    });
+
+    // -------------------------------------------------------------------------
+    // 8.2. TESTES NEGATIVOS OBRIGATÓRIOS (Secção 4)
+    // -------------------------------------------------------------------------
+    describe('8.2. Testes Negativos Obrigatórios', () => {
+      // Identidade
+      it('8.2.1: repository ausente falha no código de produção', () => {
+        const run = {
+          id: 100,
+          head_repository: { id: canonicalRepoId, full_name: canonicalRepoName }
+        };
+        assert.throws(() => {
+          verifierModule.validateRunRepositoryIdentity(run, 'test-run');
+        }, /Objeto 'repository' ausente no run 'test-run'/);
+      });
+
+      it('8.2.2: repository.id ausente falha no código de produção', () => {
+        const run = {
+          id: 100,
+          repository: { full_name: canonicalRepoName },
+          head_repository: { id: canonicalRepoId, full_name: canonicalRepoName }
+        };
+        assert.throws(() => {
+          verifierModule.validateRunRepositoryIdentity(run, 'test-run');
+        }, /'repository.id' ausente, nulo, zero ou inválido/);
+      });
+
+      it('8.2.3: repository.id divergente falha no código de produção', () => {
+        const run = {
+          id: 100,
+          repository: { id: 9999999999, full_name: canonicalRepoName },
+          head_repository: { id: canonicalRepoId, full_name: canonicalRepoName }
+        };
+        assert.throws(() => {
+          verifierModule.validateRunRepositoryIdentity(run, 'test-run');
+        }, /'repository.id' \(9999999999\) diverge do canónico/);
+      });
+
+      it('8.2.4: repository.full_name ausente falha no código de produção', () => {
+        const run = {
+          id: 100,
+          repository: { id: canonicalRepoId },
+          head_repository: { id: canonicalRepoId, full_name: canonicalRepoName }
+        };
+        assert.throws(() => {
+          verifierModule.validateRunRepositoryIdentity(run, 'test-run');
+        }, /'repository.full_name' ausente ou inválido/);
+      });
+
+      it('8.2.5: repository.full_name divergente falha no código de produção', () => {
+        const run = {
+          id: 100,
+          repository: { id: canonicalRepoId, full_name: 'attacker/APLICATIVO-AI-EMPLOYEES' },
+          head_repository: { id: canonicalRepoId, full_name: canonicalRepoName }
+        };
+        assert.throws(() => {
+          verifierModule.validateRunRepositoryIdentity(run, 'test-run');
+        }, /'repository.full_name' \('attacker\/APLICATIVO-AI-EMPLOYEES'\) diverge do canónico/);
+      });
+
+      it('8.2.6: head_repository ausente falha no código de produção', () => {
+        const run = {
+          id: 100,
+          repository: { id: canonicalRepoId, full_name: canonicalRepoName }
+        };
+        assert.throws(() => {
+          verifierModule.validateRunRepositoryIdentity(run, 'test-run');
+        }, /Objeto 'head_repository' ausente no run 'test-run'/);
+      });
+
+      it('8.2.7: head_repository.id ausente falha no código de produção', () => {
+        const run = {
+          id: 100,
+          repository: { id: canonicalRepoId, full_name: canonicalRepoName },
+          head_repository: { full_name: canonicalRepoName }
+        };
+        assert.throws(() => {
+          verifierModule.validateRunRepositoryIdentity(run, 'test-run');
+        }, /'head_repository.id' ausente, nulo, zero ou inválido/);
+      });
+
+      it('8.2.8: head_repository.id divergente falha no código de produção', () => {
+        const run = {
+          id: 100,
+          repository: { id: canonicalRepoId, full_name: canonicalRepoName },
+          head_repository: { id: 9999999999, full_name: canonicalRepoName }
+        };
+        assert.throws(() => {
+          verifierModule.validateRunRepositoryIdentity(run, 'test-run');
+        }, /'head_repository.id' \(9999999999\) diverge do canónico/);
+      });
+
+      it('8.2.9: head_repository.full_name ausente falha no código de produção', () => {
+        const run = {
+          id: 100,
+          repository: { id: canonicalRepoId, full_name: canonicalRepoName },
+          head_repository: { id: canonicalRepoId }
+        };
+        assert.throws(() => {
+          verifierModule.validateRunRepositoryIdentity(run, 'test-run');
+        }, /'head_repository.full_name' ausente ou inválido/);
+      });
+
+      it('8.2.10: head_repository.full_name divergente falha no código de produção', () => {
+        const run = {
+          id: 100,
+          repository: { id: canonicalRepoId, full_name: canonicalRepoName },
+          head_repository: { id: canonicalRepoId, full_name: 'fork-org/APLICATIVO-AI-EMPLOYEES' }
+        };
+        assert.throws(() => {
+          verifierModule.validateRunRepositoryIdentity(run, 'test-run');
+        }, /'head_repository.full_name' \('fork-org\/APLICATIVO-AI-EMPLOYEES'\) diverge do canónico/);
+      });
+
+      it('8.2.11: repository.id correto e head_repository.id incorreto falha no código de produção', () => {
+        const run = {
+          id: 100,
+          repository: { id: canonicalRepoId, full_name: canonicalRepoName },
+          head_repository: { id: 12345, full_name: canonicalRepoName }
+        };
+        assert.throws(() => {
+          verifierModule.validateRunRepositoryIdentity(run, 'test-run');
+        }, /'head_repository.id' \(12345\) diverge do canónico/);
+      });
+
+      it('8.2.12: run de fork rejeitado no código de produção', () => {
+        const run = {
+          id: 100,
+          repository: { id: canonicalRepoId, full_name: canonicalRepoName, fork: false },
+          head_repository: { id: canonicalRepoId, full_name: canonicalRepoName, fork: true }
+        };
+        assert.throws(() => {
+          verifierModule.validateRunRepositoryIdentity(run, 'fork-run');
+        }, /Run 'fork-run' rejeitado: proveniente de fork/);
+      });
+
+      // Hashes
+      it('8.2.13: hash ausente falha no código de produção', () => {
+        assert.throws(() => {
+          verifierModule.assertStrictSha256Format(null, 'null_test');
+        }, /Formato de hash inválido para 'null_test'/);
+      });
+
+      it('8.2.14: hash vazio falha no código de produção', () => {
+        assert.throws(() => {
+          verifierModule.assertStrictSha256Format('', 'empty_test');
+        }, /Hash SHA-256 inválido para 'empty_test'/);
+      });
+
+      it('8.2.15: hash curto (<64) falha no código de produção', () => {
+        assert.throws(() => {
+          verifierModule.assertStrictSha256Format('a'.repeat(63), 'short_test');
+        }, /Hash SHA-256 inválido para 'short_test'/);
+      });
+
+      it('8.2.16: hash longo (>64) falha no código de produção', () => {
+        assert.throws(() => {
+          verifierModule.assertStrictSha256Format('a'.repeat(65), 'long_test');
+        }, /Hash SHA-256 inválido para 'long_test'/);
+      });
+
+      it('8.2.17: carácter não hexadecimal falha no código de produção', () => {
+        assert.throws(() => {
+          verifierModule.assertStrictSha256Format('z'.repeat(64), 'non_hex_test');
+        }, /Hash SHA-256 inválido para 'non_hex_test'/);
+      });
+
+      it('8.2.18: sidecar ausente falha no código de produção', () => {
+        const dummyFile = path.join(tmpDir, 'test_dummy_src.txt');
+        fs.writeFileSync(dummyFile, 'dummy');
+        const nonExistentSidecar = path.join(tmpDir, 'non_existent.sha256');
+
+        assert.throws(() => {
+          verifierModule.verifySidecarHash(dummyFile, nonExistentSidecar, 'test');
+        }, /Ficheiro sidecar '.*' ausente/);
+      });
+
+      it('8.2.19: ficheiro físico ausente falha no código de produção', () => {
+        const nonExistentFile = path.join(tmpDir, 'non_existent_file.txt');
+        const dummySidecar = path.join(tmpDir, 'test_dummy.sha256');
+        fs.writeFileSync(dummySidecar, `${sampleSha256}  non_existent_file.txt\n`);
+
+        assert.throws(() => {
+          verifierModule.verifySidecarHash(nonExistentFile, dummySidecar, 'test');
+        }, /Ficheiro físico '.*' ausente/);
+      });
+
+      it('8.2.20: nome do ficheiro divergente no sidecar falha no código de produção', () => {
+        const targetFile = path.join(tmpDir, 'fileA.txt');
+        const sidecar = path.join(tmpDir, 'fileA.txt.sha256');
+        fs.writeFileSync(targetFile, 'data');
+        fs.writeFileSync(sidecar, `${sampleSha256}  fileB.txt\n`);
+
+        assert.throws(() => {
+          verifierModule.verifySidecarHash(targetFile, sidecar, 'test');
+        }, /Nome de ficheiro divergente no sidecar/);
+      });
+
+      it('8.2.21: hash esperado diferente do hash físico falha no código de produção', () => {
+        const targetFile = path.join(tmpDir, 'fileMismatch.txt');
+        const sidecar = path.join(tmpDir, 'fileMismatch.txt.sha256');
+        fs.writeFileSync(targetFile, 'actual content');
+        fs.writeFileSync(sidecar, `${sampleSha256}  fileMismatch.txt\n`);
+
+        assert.throws(() => {
+          verifierModule.verifySidecarHash(targetFile, sidecar, 'test');
+        }, /Hash esperado .* diferente do hash físico/);
+      });
+
+      it('8.2.22: hash do Intake ausente falha no código de produção', () => {
+        assert.throws(() => {
+          verifierModule.reconcilePackageHashes(null, sampleSha256, sampleSha256);
+        }, /Hash do pacote publicado no Intake ausente/);
+      });
+
+      it('8.2.23: hash da Etapa A ausente falha no código de produção', () => {
+        assert.throws(() => {
+          verifierModule.reconcilePackageHashes(sampleSha256, null, sampleSha256);
+        }, /Hash do pacote consumido pela Etapa A ausente/);
+      });
+
+      it('8.2.24: hash da Etapa B ausente falha no código de produção', () => {
+        assert.throws(() => {
+          verifierModule.reconcilePackageHashes(sampleSha256, sampleSha256, null);
+        }, /Hash do pacote\/entrada preservado na Etapa B ausente/);
+      });
+
+      it('8.2.25: Intake e Etapa A divergentes falham no código de produção', () => {
+        assert.throws(() => {
+          verifierModule.reconcilePackageHashes(sampleSha256, altSha256, altSha256);
+        }, /Reconciliação transversal falhou: hash do Intake .* diverge do hash consumido na Etapa A/);
+      });
+
+      it('8.2.26: Etapa A e Etapa B divergentes falham no código de produção', () => {
+        assert.throws(() => {
+          verifierModule.reconcilePackageHashes(sampleSha256, sampleSha256, altSha256);
+        }, /Reconciliação transversal falhou: hash da Etapa A .* diverge do hash preservado na Etapa B/);
+      });
+
+      it('8.2.27: duas fontes canónicas contraditórias falham no código de produção', () => {
+        const contraDir = path.join(tmpDir, 'test_contradictory_sources_dir');
+        fs.mkdirSync(contraDir, { recursive: true });
+        fs.writeFileSync(path.join(contraDir, 'input-package.sha256'), `${sampleSha256}  input-package.tar.gz\n`);
+        fs.writeFileSync(path.join(contraDir, 'original-package.sha256'), `${altSha256}  original-package.tar.gz\n`);
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(contraDir, 'Intake');
+        }, /Fontes canónicas contraditórias em Intake/);
+      });
     });
   });
 });

@@ -104,6 +104,58 @@ export function validateArtifactMetadata(artifact, expectedName, expectedRunId =
 }
 
 /**
+ * Validação Estrita da Identidade Canónica do Repositório (Subprompt 2 — Sem Fallbacks)
+ * Exige estritamente nos 4 runs da cadeia (CI, Intake, Etapa A, Etapa B):
+ * - run.repository.id === 1363667011
+ * - run.head_repository.id === 1363667011
+ * - run.repository.full_name === 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES'
+ * - run.head_repository.full_name === 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES'
+ * Rejeita runs de fork, repositórios ausentes, nulos, textuais, zeros ou divergentes.
+ */
+export function validateRunRepositoryIdentity(run, runLabel = 'run') {
+  if (!run || typeof run !== 'object') {
+    throw new Error(`[FAIL-CLOSED] Metadados de run inválidos ou ausentes para '${runLabel}'.`);
+  }
+  if (!run.repository || typeof run.repository !== 'object') {
+    throw new Error(`[FAIL-CLOSED] Objeto 'repository' ausente no run '${runLabel}'.`);
+  }
+  if (typeof run.repository.id !== 'number' || !Number.isSafeInteger(run.repository.id) || run.repository.id <= 0) {
+    throw new Error(`[FAIL-CLOSED] 'repository.id' ausente, nulo, zero ou inválido no run '${runLabel}'.`);
+  }
+  if (run.repository.id !== CANONICAL_REPO_ID) {
+    throw new Error(`[FAIL-CLOSED] 'repository.id' (${run.repository.id}) diverge do canónico (${CANONICAL_REPO_ID}) no run '${runLabel}'.`);
+  }
+  if (!run.repository.full_name || typeof run.repository.full_name !== 'string') {
+    throw new Error(`[FAIL-CLOSED] 'repository.full_name' ausente ou inválido no run '${runLabel}'.`);
+  }
+  if (run.repository.full_name !== CANONICAL_REPO_NAME) {
+    throw new Error(`[FAIL-CLOSED] 'repository.full_name' ('${run.repository.full_name}') diverge do canónico ('${CANONICAL_REPO_NAME}') no run '${runLabel}'.`);
+  }
+
+  if (!run.head_repository || typeof run.head_repository !== 'object') {
+    throw new Error(`[FAIL-CLOSED] Objeto 'head_repository' ausente no run '${runLabel}'.`);
+  }
+  if (typeof run.head_repository.id !== 'number' || !Number.isSafeInteger(run.head_repository.id) || run.head_repository.id <= 0) {
+    throw new Error(`[FAIL-CLOSED] 'head_repository.id' ausente, nulo, zero ou inválido no run '${runLabel}'.`);
+  }
+  if (run.head_repository.id !== CANONICAL_REPO_ID) {
+    throw new Error(`[FAIL-CLOSED] 'head_repository.id' (${run.head_repository.id}) diverge do canónico (${CANONICAL_REPO_ID}) no run '${runLabel}'.`);
+  }
+  if (!run.head_repository.full_name || typeof run.head_repository.full_name !== 'string') {
+    throw new Error(`[FAIL-CLOSED] 'head_repository.full_name' ausente ou inválido no run '${runLabel}'.`);
+  }
+  if (run.head_repository.full_name !== CANONICAL_REPO_NAME) {
+    throw new Error(`[FAIL-CLOSED] 'head_repository.full_name' ('${run.head_repository.full_name}') diverge do canónico ('${CANONICAL_REPO_NAME}') no run '${runLabel}'.`);
+  }
+
+  if (run.repository.fork === true || run.head_repository.fork === true) {
+    throw new Error(`[FAIL-CLOSED] Run '${runLabel}' rejeitado: proveniente de fork.`);
+  }
+
+  return true;
+}
+
+/**
  * Validação de Metadados de Workflow Run obtidos em Endpoint Individual
  */
 export function validateRunMetadata(run, expectedRunId, expectedWorkflowPath = null, expectedSha = null) {
@@ -139,7 +191,184 @@ export function validateRunMetadata(run, expectedRunId, expectedWorkflowPath = n
   if (run.conclusion !== 'success') {
     throw new Error(`[FAIL-CLOSED] Run ${run.id} não teve sucesso (conclusion: '${run.conclusion}').`);
   }
+
+  // Validação estrita de identidade canónica do repositório (Subprompt 2)
+  validateRunRepositoryIdentity(run, expectedRunId ? String(expectedRunId) : String(run.id));
+
   return true;
+}
+
+/**
+ * Validação de Formato Estrito SHA-256 (Subprompt 2 — Verdade dos Hashes)
+ * Rejeita qualquer hash que não tenha exactamente 64 caracteres hexadecimais (/^[a-f0-9]{64}$/).
+ */
+export function assertStrictSha256Format(val, label = 'hash') {
+  if (typeof val !== 'string') {
+    throw new Error(`[FAIL-CLOSED] Formato de hash inválido para '${label}': esperado string, obtido ${val === null ? 'null' : typeof val}.`);
+  }
+  const normalized = val.toLowerCase();
+  if (!/^[a-f0-9]{64}$/.test(normalized)) {
+    throw new Error(`[FAIL-CLOSED] Hash SHA-256 inválido para '${label}': '${val}'. Deve conter exactamente 64 caracteres hexadecimais.`);
+  }
+  return normalized;
+}
+
+/**
+ * Extração de Hash SHA-256 de um Ficheiro Checksum / Sidecar (Subprompt 2)
+ */
+export function extractStrictSha256FromFile(filePath, label = 'sidecar') {
+  if (!filePath || !fs.existsSync(filePath)) {
+    throw new Error(`[FAIL-CLOSED] Ficheiro sidecar '${filePath}' ausente para '${label}'.`);
+  }
+  const content = fs.readFileSync(filePath, 'utf8');
+  const lines = content.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0 && !l.startsWith('#'));
+  if (lines.length === 0) {
+    throw new Error(`[FAIL-CLOSED] Ficheiro de checksum '${filePath}' está vazio para '${label}'.`);
+  }
+  const firstLine = lines[0];
+  const parts = firstLine.split(/\s+/);
+  if (parts.length < 1 || !parts[0]) {
+    throw new Error(`[FAIL-CLOSED] Linha de checksum malformada em '${filePath}': '${firstLine}'.`);
+  }
+  const hash = assertStrictSha256Format(parts[0], `${label} (${path.basename(filePath)})`);
+  const referencedFile = parts.length > 1 ? parts.slice(1).join(' ').replace(/^\*/, '') : null;
+  return { hash, referencedFile, rawContent: content };
+}
+
+/**
+ * Validação de Integridade Física contra Ficheiro Sidecar .sha256 (Subprompt 2)
+ */
+export function verifySidecarHash(sourceFilePath, sidecarFilePath, label = 'sidecar') {
+  if (!sourceFilePath || !fs.existsSync(sourceFilePath)) {
+    throw new Error(`[FAIL-CLOSED] Ficheiro físico '${sourceFilePath}' ausente para '${label}'.`);
+  }
+  if (!sidecarFilePath || !fs.existsSync(sidecarFilePath)) {
+    throw new Error(`[FAIL-CLOSED] Ficheiro sidecar '${sidecarFilePath}' ausente para '${label}'.`);
+  }
+
+  const { hash: expectedHash, referencedFile } = extractStrictSha256FromFile(sidecarFilePath, label);
+
+  if (!referencedFile) {
+    throw new Error(`[FAIL-CLOSED] Linha sem nome de ficheiro no sidecar '${path.basename(sidecarFilePath)}' para '${label}'.`);
+  }
+
+  const sourceBase = path.basename(sourceFilePath);
+  const refBase = path.basename(referencedFile);
+  if (sourceBase !== refBase) {
+    throw new Error(`[FAIL-CLOSED] Nome de ficheiro divergente no sidecar '${path.basename(sidecarFilePath)}': esperado '${sourceBase}', registado '${refBase}'.`);
+  }
+
+  const sourceBytes = fs.readFileSync(sourceFilePath);
+  const actualHash = sha256(sourceBytes).toLowerCase();
+  assertStrictSha256Format(actualHash, `actual physical hash for ${label}`);
+
+  if (actualHash !== expectedHash.toLowerCase()) {
+    throw new Error(`[FAIL-CLOSED] Hash esperado (${expectedHash}) diferente do hash físico (${actualHash}) para '${label}'.`);
+  }
+
+  return { actualHash, expectedHash, match: true };
+}
+
+/**
+ * Reconciliação Transversal de Hashes do Pacote: Intake == Etapa A == Etapa B (Subprompt 2)
+ */
+export function reconcilePackageHashes(intakeSha, stageASha, stageBSha) {
+  if (!intakeSha) {
+    throw new Error(`[FAIL-CLOSED] Hash do pacote publicado no Intake ausente.`);
+  }
+  if (!stageASha) {
+    throw new Error(`[FAIL-CLOSED] Hash do pacote consumido pela Etapa A ausente.`);
+  }
+  if (!stageBSha) {
+    throw new Error(`[FAIL-CLOSED] Hash do pacote/entrada preservado na Etapa B ausente.`);
+  }
+
+  const cleanIntake = assertStrictSha256Format(intakeSha, 'Intake package hash');
+  const cleanStageA = assertStrictSha256Format(stageASha, 'Stage A package hash');
+  const cleanStageB = assertStrictSha256Format(stageBSha, 'Stage B package hash');
+
+  if (cleanIntake !== cleanStageA) {
+    throw new Error(`[FAIL-CLOSED] Reconciliação transversal falhou: hash do Intake (${cleanIntake}) diverge do hash consumido na Etapa A (${cleanStageA}).`);
+  }
+
+  if (cleanStageA !== cleanStageB) {
+    throw new Error(`[FAIL-CLOSED] Reconciliação transversal falhou: hash da Etapa A (${cleanStageA}) diverge do hash preservado na Etapa B (${cleanStageB}).`);
+  }
+
+  return true;
+}
+
+/**
+ * Extração Segura de Hash de Pacote de um Bundle Extraído (Subprompt 2)
+ * Rejeita qualquer pacote sem hash ou com fontes contraditórias.
+ */
+export function extractPackageHashFromBundle(extractDir, stageName = 'Stage') {
+  if (!extractDir || !fs.existsSync(extractDir)) {
+    throw new Error(`[FAIL-CLOSED] Diretório de extração '${extractDir}' ausente para ${stageName}.`);
+  }
+
+  let fileSha = null;
+  let origSha = null;
+  let jsonSha = null;
+
+  const inputPkgShaPath = path.join(extractDir, 'input-package.sha256');
+  const origPkgShaPath = path.join(extractDir, 'original-package.sha256');
+  const evInputPkgShaPath = path.join(extractDir, 'evidence', 'input-package.sha256');
+  const evOrigPkgShaPath = path.join(extractDir, 'evidence', 'original-package.sha256');
+
+  const pInput = fs.existsSync(inputPkgShaPath) ? inputPkgShaPath : (fs.existsSync(evInputPkgShaPath) ? evInputPkgShaPath : null);
+  const pOrig = fs.existsSync(origPkgShaPath) ? origPkgShaPath : (fs.existsSync(evOrigPkgShaPath) ? evOrigPkgShaPath : null);
+
+  if (pInput) {
+    const ext = extractStrictSha256FromFile(pInput, `${stageName} input-package.sha256`);
+    fileSha = ext.hash;
+  }
+  if (pOrig) {
+    const ext = extractStrictSha256FromFile(pOrig, `${stageName} original-package.sha256`);
+    origSha = ext.hash;
+  }
+
+  // Verificar contradição entre ficheiros de hash no mesmo pacote
+  if (fileSha && origSha && fileSha !== origSha) {
+    throw new Error(`[FAIL-CLOSED] Fontes canónicas contraditórias em ${stageName}: input-package.sha256 (${fileSha}) diverge de original-package.sha256 (${origSha}).`);
+  }
+
+  // Se for Etapa B, pode também conter consumed-stage-a.json com o hash preservado
+  const consumedStageAPath = path.join(extractDir, 'consumed-stage-a.json');
+  const evConsumedStageAPath = path.join(extractDir, 'evidence', 'consumed-stage-a.json');
+  const pConsumed = fs.existsSync(consumedStageAPath) ? consumedStageAPath : (fs.existsSync(evConsumedStageAPath) ? evConsumedStageAPath : null);
+
+  if (pConsumed) {
+    try {
+      const data = JSON.parse(fs.readFileSync(pConsumed, 'utf8'));
+      const rawJ = data.input_package_sha || data.package_hash || data.original_package_sha || null;
+      if (rawJ) {
+        jsonSha = assertStrictSha256Format(String(rawJ), `${stageName} JSON package hash`);
+      }
+    } catch (parseErr) {
+      if (parseErr.message && parseErr.message.includes('[FAIL-CLOSED]')) throw parseErr;
+    }
+  }
+
+  const primarySha = fileSha || origSha;
+
+  // Verificar contradição entre ficheiro e JSON
+  if (primarySha && jsonSha && primarySha !== jsonSha) {
+    throw new Error(`[FAIL-CLOSED] Fontes canónicas contraditórias em ${stageName}: manifesto físico (${primarySha}) diverge de JSON de linkage (${jsonSha}).`);
+  }
+
+  const resolvedSha = primarySha || jsonSha;
+  if (!resolvedSha) {
+    if (stageName.toLowerCase().includes('intake')) {
+      throw new Error(`[FAIL-CLOSED] Hash do pacote publicado no Intake ausente (input-package.sha256 / original-package.sha256).`);
+    } else if (stageName.toLowerCase().includes('stage a') || stageName.toLowerCase().includes('etapa a')) {
+      throw new Error(`[FAIL-CLOSED] Hash do pacote consumido pela Etapa A ausente (input-package.sha256 / original-package.sha256).`);
+    } else {
+      throw new Error(`[FAIL-CLOSED] Hash do pacote/entrada preservado na Etapa B ausente ou não encontrado.`);
+    }
+  }
+
+  return assertStrictSha256Format(resolvedSha, `${stageName} package hash`);
 }
 
 /**
@@ -687,16 +916,16 @@ function downloadAndExtractArtifact(runId, expectedArtifactName, extractSubdir, 
     });
   }
 
-  let zipSha = 'MOCK_ZIP_SHA';
-  let zipBytes = Buffer.from('mock');
-  if (fs.existsSync(zipPath)) {
-    zipBytes = fs.readFileSync(zipPath);
-    zipSha = sha256(zipBytes);
-    fs.writeFileSync(`${zipPath}.sha256`, `${zipSha}  ${path.basename(zipPath)}\n`);
-    auditAndExtractZip(zipPath, extractDir);
-  } else if (mockDir) {
-    fs.mkdirSync(extractDir, { recursive: true });
+  if (!fs.existsSync(zipPath)) {
+    throw new Error(`[FAIL-CLOSED] Ficheiro ZIP '${zipPath}' ausente após download do artefacto '${expectedArtifactName}'.`);
   }
+
+  const zipBytes = fs.readFileSync(zipPath);
+  const zipSha = sha256(zipBytes).toLowerCase();
+  assertStrictSha256Format(zipSha, `ZIP de ${expectedArtifactName}`);
+  fs.writeFileSync(`${zipPath}.sha256`, `${zipSha}  ${path.basename(zipPath)}\n`, 'utf8');
+  verifySidecarHash(zipPath, `${zipPath}.sha256`, `ZIP de ${expectedArtifactName}`);
+  auditAndExtractZip(zipPath, extractDir);
 
   const extractedFiles = fs.existsSync(extractDir)
     ? fs.readdirSync(extractDir, { recursive: true }).filter(f => {
@@ -823,6 +1052,11 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       ? path.join(stageBExtractDir, 'evidence')
       : stageBExtractDir;
 
+    const stageBPreservedSha = extractPackageHashFromBundle(stageBExtractDir, 'Stage B');
+    const stage_b_preserved_hash_verified = Boolean(stageBPreservedSha && /^[a-f0-9]{64}$/.test(stageBPreservedSha));
+    recordCheck('STAGE_B_PRESERVED_HASH_VALID', String(runBData.id), String(stageBBundle.artifact.id), 'input-package.sha256', stageBPreservedSha,
+      stage_b_preserved_hash_verified ? 'PASS' : 'FAIL', `hash=${stageBPreservedSha.slice(0, 16)}...`);
+
     // -------------------------------------------------------------------------
     // 2. Descoberta da Etapa A Consumida pela Etapa B com Consenso e Índice (2.2)
     // -------------------------------------------------------------------------
@@ -883,6 +1117,11 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
     recordCheck('STAGE_A_ARTIFACT_DOWNLOADED', String(stageARun.id), String(stageABundle.artifact.id), expectedStageAArtifactName, stageABundle.zipSha,
       stageABundle.extractedFiles.length > 0 ? 'PASS' : 'FAIL',
       `${stageABundle.extractedFiles.length} ficheiros extraídos`);
+
+    const stageAInputSha = extractPackageHashFromBundle(stageABundle.extractDir, 'Stage A');
+    const stage_a_input_hash_verified = Boolean(stageAInputSha && /^[a-f0-9]{64}$/.test(stageAInputSha));
+    recordCheck('STAGE_A_INPUT_HASH_VALID', String(stageARun.id), String(stageABundle.artifact.id), 'input-package.sha256', stageAInputSha,
+      stage_a_input_hash_verified ? 'PASS' : 'FAIL', `hash=${stageAInputSha.slice(0, 16)}...`);
 
     // Extrair desafio emitido na Etapa A (directamente da base de dados física pilot.db no pacote da Etapa A)
     let stageAChallengeId = '';
@@ -982,14 +1221,10 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       intakeBundle.extractedFiles.length > 0 ? 'PASS' : 'FAIL',
       `${intakeBundle.extractedFiles.length} ficheiros extraídos`);
 
-    let intakePackageSha = '';
-    const intakePkgShaPath = path.join(intakeBundle.extractDir, 'input-package.sha256');
-    const intakeOrigShaPath = path.join(intakeBundle.extractDir, 'original-package.sha256');
-    if (fs.existsSync(intakePkgShaPath)) {
-      intakePackageSha = fs.readFileSync(intakePkgShaPath, 'utf8').trim().split(/\s+/)[0];
-    } else if (fs.existsSync(intakeOrigShaPath)) {
-      intakePackageSha = fs.readFileSync(intakeOrigShaPath, 'utf8').trim().split(/\s+/)[0];
-    }
+    const intakePackageSha = extractPackageHashFromBundle(intakeBundle.extractDir, 'Intake');
+    const intake_package_hash_verified = Boolean(intakePackageSha && /^[a-f0-9]{64}$/.test(intakePackageSha));
+    recordCheck('INTAKE_PACKAGE_HASH_VALID', String(intakeRun.id), String(intakeBundle.artifact.id), 'input-package.sha256', intakePackageSha,
+      intake_package_hash_verified ? 'PASS' : 'FAIL', `hash=${intakePackageSha.slice(0, 16)}...`);
 
     // -------------------------------------------------------------------------
     // 4. Verificação Real do Run da CI Principal no SHA Canónico
@@ -1029,7 +1264,7 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       sourceSha
     );
 
-    const isCiCanonicalRepo = ciRun.repository?.id === CANONICAL_REPO_ID && (ciRun.head_repository?.id === CANONICAL_REPO_ID || !ciRun.head_repository);
+    validateRunRepositoryIdentity(ciRun, 'CI');
 
     recordCheck('CI_RUN_EXISTS', String(ciRun.id), 'N/A', 'ci-run-api-response.json', sha256(ciRunBytes),
       'PASS', `head_sha=${ciRun.head_sha}, branch=${ciRun.head_branch}`);
@@ -1038,10 +1273,10 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       'PASS', `status=${ciRun.status}, conclusion=${ciRun.conclusion}`);
 
     recordCheck('CI_RUN_CANONICAL_REPO', String(ciRun.id), 'N/A', 'ci-run-api-response.json', sha256(ciRunBytes),
-      isCiCanonicalRepo ? 'PASS' : 'FAIL', `repo_id=${ciRun.repository?.id}`);
+      'PASS', `repo_id=${ciRun.repository?.id}, head_repo_id=${ciRun.head_repository?.id}`);
 
     // -------------------------------------------------------------------------
-    // 5. Reconciliação Direta Cruzada entre as Três Etapas
+    // 5. Reconciliação Direta Cruzada entre as Três Etapas e Verdade dos Hashes
     // -------------------------------------------------------------------------
     console.log('\n--- 5. Reconciliação Direta Cruzada entre as Três Etapas ---');
     let stageBChallengeId = '';
@@ -1081,16 +1316,40 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       stageAChallengeId === stageBChallengeId && stageAChallengeId !== '' ? 'PASS' : 'FAIL',
       `stage_a_chal=${stageAChallengeId} === stage_b_chal=${stageBChallengeId}`);
 
-    const stageAInputShaPath = path.join(stageABundle.extractDir, 'input-package.sha256');
-    let stageAInputSha = '';
-    if (fs.existsSync(stageAInputShaPath)) {
-      stageAInputSha = fs.readFileSync(stageAInputShaPath, 'utf8').trim().split(/\s+/)[0];
-    }
-    const isPackageHashReconciled = !intakePackageSha || !stageAInputSha || (intakePackageSha === stageAInputSha);
+    // Reconciliação transversal estrita dos 3 hashes de pacote
+    reconcilePackageHashes(intakePackageSha, stageAInputSha, stageBPreservedSha);
+    const cross_stage_package_hash_reconciled = Boolean(
+      intake_package_hash_verified &&
+      stage_a_input_hash_verified &&
+      stage_b_preserved_hash_verified &&
+      intakePackageSha === stageAInputSha &&
+      stageAInputSha === stageBPreservedSha
+    );
 
-    recordCheck('PACKAGE_HASH_RECONCILED', String(intakeRun.id), String(stageABundle.artifact.id), 'input-package.sha256', 'N/A',
-      isPackageHashReconciled ? 'PASS' : 'FAIL',
-      `intake_hash=${intakePackageSha.slice(0, 16)}... === stage_a_hash=${stageAInputSha.slice(0, 16)}...`);
+    recordCheck('PACKAGE_HASH_RECONCILED', String(intakeRun.id), String(stageABundle.artifact.id), 'input-package.sha256', intakePackageSha,
+      cross_stage_package_hash_reconciled ? 'PASS' : 'FAIL',
+      `intake=${intakePackageSha.slice(0, 16)}... === stage_a=${stageAInputSha.slice(0, 16)}... === stage_b=${stageBPreservedSha.slice(0, 16)}...`);
+
+    // Validação estrita dos sidecars das respostas de API
+    const apiFilesToVerify = [
+      'stage-b-run-api-response.json',
+      'stage-b-artifact-api-response.json',
+      'stage-a-run-api-response.json',
+      'stage-a-artifact-api-response.json',
+      'intake-run-api-response.json',
+      'intake-artifact-api-response.json',
+      'ci-run-api-response.json'
+    ];
+
+    for (const apiFile of apiFilesToVerify) {
+      const fPath = path.join(outDir, apiFile);
+      const sPath = path.join(outDir, `${apiFile}.sha256`);
+      verifySidecarHash(fPath, sPath, `API response ${apiFile}`);
+    }
+    const api_response_hashes_verified = true;
+
+    recordCheck('API_RESPONSE_HASHES_VERIFIED', 'N/A', 'N/A', 'api responses', 'N/A',
+      'PASS', `${apiFilesToVerify.length} respostas de API com sidecars verificados fisicamente`);
 
     const indepReceiptPath = fs.existsSync(path.join(stageBEvidenceBase, 'reviewer-independence-receipt.json'))
       ? path.join(stageBEvidenceBase, 'reviewer-independence-receipt.json')
@@ -1123,7 +1382,7 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
     for (const line of indexLines) {
       const parts = line.trim().split(/\s+/);
       if (parts.length < 2) continue;
-      const expectedH = parts[0];
+      const expectedH = assertStrictSha256Format(parts[0], 'evidence index entry');
       const rawFileName = parts.slice(1).join(' ');
       const canonicalFile = normalizeCanonicalPath(rawFileName);
       const filePath = fs.existsSync(path.join(stageBEvidenceBase, canonicalFile))
@@ -1133,15 +1392,17 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       if (!fs.existsSync(filePath)) {
         throw new Error(`[FAIL-CLOSED] Ficheiro indexado ausente: ${rawFileName}`);
       }
-      const computedH = sha256(fs.readFileSync(filePath));
-      if (computedH.toLowerCase() !== expectedH.toLowerCase()) {
+      const computedH = sha256(fs.readFileSync(filePath)).toLowerCase();
+      if (computedH !== expectedH) {
         throw new Error(`[FAIL-CLOSED] Hash divergente para ${rawFileName}`);
       }
       checkedHashes++;
     }
 
+    const evidence_index_hashes_verified = checkedHashes >= 20;
+
     recordCheck('PHYSICAL_HASH_INTEGRITY', String(runBData.id), String(stageBBundle.artifact.id), 'pilot-evidence-files.sha256', sha256(fs.readFileSync(indexPath)),
-      checkedHashes >= 20 ? 'PASS' : 'FAIL',
+      evidence_index_hashes_verified ? 'PASS' : 'FAIL',
       `${checkedHashes} ficheiros verificados fisicamente com 100% de integridade`);
 
     // -------------------------------------------------------------------------
@@ -1186,6 +1447,27 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
     // 7. Cálculo Dinâmico de TODOS os Estados de Verificação
     // -------------------------------------------------------------------------
     console.log('\n--- 7. Cálculo Dinâmico de Todos os Estados de Verificação ---');
+
+    // Identidade Canónica Estrita nos 4 Runs
+    const ci_repository_identity_verified = validateRunRepositoryIdentity(ciRun, 'CI');
+    const intake_repository_identity_verified = validateRunRepositoryIdentity(intakeRun, 'Intake');
+    const stage_a_repository_identity_verified = validateRunRepositoryIdentity(stageARun, 'Stage A');
+    const stage_b_repository_identity_verified = validateRunRepositoryIdentity(runBData, 'Stage B');
+
+    const canonical_repository_chain_verified = Boolean(
+      ci_repository_identity_verified &&
+      intake_repository_identity_verified &&
+      stage_a_repository_identity_verified &&
+      stage_b_repository_identity_verified
+    );
+
+    // Hashes dos ZIPs computados e validados
+    const artifact_zip_hashes_computed = Boolean(
+      /^[a-f0-9]{64}$/.test(intakeBundle.zipSha) &&
+      /^[a-f0-9]{64}$/.test(stageABundle.zipSha) &&
+      /^[a-f0-9]{64}$/.test(stageBBundle.zipSha)
+    );
+
     const isCiCompleted = ciRun.status === 'completed';
     const isCiSuccess = ciRun.conclusion === 'success';
     const isCiSameSha = ciRun.head_sha === sourceSha;
@@ -1195,56 +1477,56 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       isCiCompleted &&
       isCiSuccess &&
       isCiSameSha &&
-      isCiCanonicalRepo &&
+      ci_repository_identity_verified &&
       ciRun.path === '.github/workflows/ci.yml'
     );
 
     const isIntakeCompleted = intakeRun.status === 'completed';
     const isIntakeSuccess = intakeRun.conclusion === 'success';
     const isIntakeSameSha = intakeRun.head_sha === sourceSha;
-    const isIntakeCanonicalRepo = intakeRun.repository?.id === CANONICAL_REPO_ID || !intakeRun.repository;
 
     const intake_verified = Boolean(
       intakeRun &&
       isIntakeCompleted &&
       isIntakeSuccess &&
       isIntakeSameSha &&
-      isIntakeCanonicalRepo &&
+      intake_repository_identity_verified &&
       intakeBundle &&
-      intakeBundle.extractedFiles.length > 0
+      intakeBundle.extractedFiles.length > 0 &&
+      intake_package_hash_verified
     );
 
     const isStageACompleted = stageARun.status === 'completed';
     const isStageASuccess = stageARun.conclusion === 'success';
     const isStageASameSha = stageARun.head_sha === sourceSha;
-    const isStageACanonicalRepo = stageARun.repository?.id === CANONICAL_REPO_ID || !stageARun.repository;
 
     const stage_a_verified = Boolean(
       stageARun &&
       isStageACompleted &&
       isStageASuccess &&
       isStageASameSha &&
-      isStageACanonicalRepo &&
+      stage_a_repository_identity_verified &&
       stageABundle &&
       stageABundle.extractedFiles.length > 0 &&
-      Boolean(stageAChallengeId)
+      Boolean(stageAChallengeId) &&
+      stage_a_input_hash_verified
     );
 
     const isStageBCompleted = runBData.status === 'completed';
     const isStageBSuccess = runBData.conclusion === 'success';
     const isStageBSameSha = runBData.head_sha === sourceSha;
-    const isStageBCanonicalRepo = (runBData.repository?.id === CANONICAL_REPO_ID || !runBData.repository);
 
     const stage_b_verified = Boolean(
       runBData &&
       isStageBCompleted &&
       isStageBSuccess &&
       isStageBSameSha &&
-      isStageBCanonicalRepo &&
+      stage_b_repository_identity_verified &&
       stageBBundle &&
       stageBBundle.extractedFiles.length > 0 &&
       stageBChallengeId === stageAChallengeId &&
-      checkedHashes >= 20
+      evidence_index_hashes_verified &&
+      stage_b_preserved_hash_verified
     );
 
     const cross_stages_reconciled = Boolean(
@@ -1253,7 +1535,7 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       stage_b_verified &&
       stageAChallengeId === stageBChallengeId &&
       stageAChallengeId !== '' &&
-      isPackageHashReconciled
+      cross_stage_package_hash_reconciled
     );
 
     const same_sha_chain_verified = Boolean(
@@ -1262,11 +1544,27 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       stage_a_verified &&
       stage_b_verified &&
       cross_stages_reconciled &&
+      canonical_repository_chain_verified &&
+      cross_stage_package_hash_reconciled &&
+      api_response_hashes_verified &&
+      evidence_index_hashes_verified &&
+      artifact_zip_hashes_computed &&
       ciRun.head_sha === sourceSha &&
       intakeRun.head_sha === sourceSha &&
       stageARun.head_sha === sourceSha &&
       runBData.head_sha === sourceSha
     );
+
+    // Se qualquer estado obrigatório for falso, ausente ou não demonstrável, encerra com erro (fail-closed)
+    if (!canonical_repository_chain_verified ||
+        !cross_stage_package_hash_reconciled ||
+        !api_response_hashes_verified ||
+        !evidence_index_hashes_verified ||
+        !artifact_zip_hashes_computed ||
+        !same_sha_chain_verified) {
+      console.error('\n[FAIL-CLOSED] Um ou mais estados obrigatórios de verificação não foram comprovados.');
+      process.exit(1);
+    }
 
     // -------------------------------------------------------------------------
     // 8. Emissão da Atestação Forense Consolidada com Metadados e Consenso Comprovado
@@ -1278,6 +1576,18 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       same_sha_chain_verified,
       canonical_repo_id: CANONICAL_REPO_ID,
       canonical_repo_name: CANONICAL_REPO_NAME,
+      ci_repository_identity_verified,
+      intake_repository_identity_verified,
+      stage_a_repository_identity_verified,
+      stage_b_repository_identity_verified,
+      canonical_repository_chain_verified,
+      intake_package_hash_verified,
+      stage_a_input_hash_verified,
+      stage_b_preserved_hash_verified,
+      cross_stage_package_hash_reconciled,
+      api_response_hashes_verified,
+      evidence_index_hashes_verified,
+      artifact_zip_hashes_computed,
       ci_verified,
       intake_verified,
       stage_a_verified,
