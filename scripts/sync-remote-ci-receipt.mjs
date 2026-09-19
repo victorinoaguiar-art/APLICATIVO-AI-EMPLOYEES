@@ -256,6 +256,7 @@ try {
     fs.writeFileSync(bpApiResPath, bpApiRaw, 'utf8');
 
     const bpResponseSha256 = crypto.createHash('sha256').update(bpApiRaw).digest('hex');
+    fs.writeFileSync(`${bpApiResPath}.sha256`, `${bpResponseSha256}  branch-protection-api-response.json\n`, 'utf8');
     const bpJsonPath = path.join(evidenceDir, 'branch-protection.json');
 
     const branchProtectionReceipt = {
@@ -266,12 +267,12 @@ try {
       queried_at: new Date().toISOString(),
       query_actor: receipt.remote_actor,
       query_run_id: receipt.remote_verification_run_id,
-      primary_run_id: Number(runData.databaseId || runId),
+      primary_run_id: Number(primaryRunData.id || runId),
       remote_verification_run_id: receipt.remote_verification_run_id,
       remote_run_attempt: receipt.remote_run_attempt,
       remote_run_url: receipt.remote_run_url,
       query_workflow: process.env.GITHUB_WORKFLOW || 'Evidence Remote Verification',
-      source_sha: runData.headSha || headSha,
+      source_sha: primaryRunData.head_sha || headSha,
       http_status: 200,
       branch_protection_status: 'CONFIGURED',
       required_status_checks: bpApiData.required_status_checks?.contexts || [],
