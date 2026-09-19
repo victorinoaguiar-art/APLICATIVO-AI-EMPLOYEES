@@ -344,40 +344,47 @@ export function extractPackageHashFromBundle(extractDir, stageName = 'Stage') {
   // 1. Carregar obrigatoriamente o índice de evidências do pacote
   const { indexMap } = loadPackageIndexMap(extractDir);
 
-  let fileSha = null;
-  let origSha = null;
+  const candidateSidecars = [
+    'input-package.sha256',
+    path.join('evidence', 'input-package.sha256'),
+    'original-package.sha256',
+    path.join('evidence', 'original-package.sha256')
+  ];
 
-  const inputPkgShaPath = path.join(extractDir, 'input-package.sha256');
-  const origPkgShaPath = path.join(extractDir, 'original-package.sha256');
-  const evInputPkgShaPath = path.join(extractDir, 'evidence', 'input-package.sha256');
-  const evOrigPkgShaPath = path.join(extractDir, 'evidence', 'original-package.sha256');
+  const candidateJsons = [
+    'consumed-stage-a.json',
+    path.join('evidence', 'consumed-stage-a.json')
+  ];
 
-  const pInput = fs.existsSync(inputPkgShaPath) ? inputPkgShaPath : (fs.existsSync(evInputPkgShaPath) ? evInputPkgShaPath : null);
-  const pOrig = fs.existsSync(origPkgShaPath) ? origPkgShaPath : (fs.existsSync(evOrigPkgShaPath) ? evOrigPkgShaPath : null);
+  const validatedSources = [];
 
-  const validatePackageSidecar = (sidecarPath, label) => {
-    // a. Autenticar o próprio ficheiro .sha256 contra o índice do pacote
-    verifyFileAgainstPackageIndex(extractDir, sidecarPath, indexMap);
+  // Avaliar todas as fontes .sha256 fisicamente presentes sem preferência silenciosa
+  for (const relPath of candidateSidecars) {
+    const fullPath = path.join(extractDir, relPath);
+    if (!fs.existsSync(fullPath)) continue;
+
+    // a. Autenticar o próprio ficheiro .sha256 contra o índice do pacote pelo caminho exacto
+    const { normalizedRel } = verifyFileAgainstPackageIndex(extractDir, fullPath, indexMap);
 
     // b. Extrair hash estrito e caminho do ficheiro referido
-    const ext = extractStrictSha256FromFile(sidecarPath, label);
+    const ext = extractStrictSha256FromFile(fullPath, `${stageName} ${normalizedRel}`);
     if (!ext.referencedFile) {
-      throw new Error(`[FAIL-CLOSED] Ficheiro sidecar '${path.basename(sidecarPath)}' não especifica ficheiro referido para ${label}.`);
+      throw new Error(`[FAIL-CLOSED] Ficheiro sidecar '${normalizedRel}' não especifica ficheiro referido para ${stageName}.`);
     }
 
     const canonicalRef = normalizeCanonicalPath(ext.referencedFile);
-    const sidecarDir = path.dirname(sidecarPath);
+    const sidecarDir = path.dirname(fullPath);
     const resolvedPhysicalTarget = path.resolve(sidecarDir, canonicalRef);
 
     // c. Validar que o ficheiro referido reside dentro do extractDir
     const relToExtract = path.relative(extractDir, resolvedPhysicalTarget);
     if (relToExtract.startsWith('..') || path.isAbsolute(relToExtract)) {
-      throw new Error(`[FAIL-CLOSED] Ficheiro referido '${canonicalRef}' escapa do directório de extração para ${label}.`);
+      throw new Error(`[FAIL-CLOSED] Ficheiro referido '${canonicalRef}' escapa do directório de extração para ${stageName} (${normalizedRel}).`);
     }
 
     // d. Validar que o ficheiro referido existe fisicamente
     if (!fs.existsSync(resolvedPhysicalTarget)) {
-      throw new Error(`[FAIL-CLOSED] Ficheiro físico referido '${canonicalRef}' ausente em '${extractDir}' para ${label}.`);
+      throw new Error(`[FAIL-CLOSED] Ficheiro físico referido '${canonicalRef}' ausente em '${extractDir}' para ${stageName} (${normalizedRel}).`);
     }
 
     // e. Autenticar o ficheiro referido contra o índice do pacote
@@ -389,49 +396,39 @@ export function extractPackageHashFromBundle(extractDir, stageName = 'Stage') {
     assertStrictSha256Format(calculatedHash, `bytes físicos de ${canonicalRef}`);
 
     if (calculatedHash !== ext.hash.toLowerCase()) {
-      throw new Error(`[FAIL-CLOSED] Bytes físicos adulterados em '${canonicalRef}' para ${label}: hash físico (${calculatedHash}) diverge do hash declarado (${ext.hash}).`);
+      throw new Error(`[FAIL-CLOSED] Bytes físicos adulterados em '${canonicalRef}' para ${stageName} (${normalizedRel}): hash físico (${calculatedHash}) diverge do hash declarado (${ext.hash}).`);
     }
 
-    return ext.hash;
-  };
-
-  if (pInput) {
-    fileSha = validatePackageSidecar(pInput, `${stageName} input-package.sha256`);
-  }
-  if (pOrig) {
-    origSha = validatePackageSidecar(pOrig, `${stageName} original-package.sha256`);
+    validatedSources.push({
+      type: 'sidecar',
+      path: normalizedRel,
+      hash: ext.hash.toLowerCase()
+    });
   }
 
-  // Verificar contradição entre ficheiros de hash no mesmo pacote
-  if (fileSha && origSha && fileSha !== origSha) {
-    throw new Error(`[FAIL-CLOSED] Fontes canónicas contraditórias em ${stageName}: input-package.sha256 (${fileSha}) diverge de original-package.sha256 (${origSha}).`);
-  }
+  // Avaliar todas as fontes JSON de linkage fisicamente presentes sem preferência silenciosa
+  for (const relPath of candidateJsons) {
+    const fullPath = path.join(extractDir, relPath);
+    if (!fs.existsSync(fullPath)) continue;
 
-  // 2. Avaliar fontes JSON de linkage (ex.: consumed-stage-a.json)
-  let jsonSha = null;
-  const consumedStageAPath = path.join(extractDir, 'consumed-stage-a.json');
-  const evConsumedStageAPath = path.join(extractDir, 'evidence', 'consumed-stage-a.json');
-  const pConsumed = fs.existsSync(consumedStageAPath) ? consumedStageAPath : (fs.existsSync(evConsumedStageAPath) ? evConsumedStageAPath : null);
-
-  if (pConsumed) {
-    // a. Autenticar o ficheiro JSON contra o índice
-    verifyFileAgainstPackageIndex(extractDir, pConsumed, indexMap);
+    // a. Autenticar o ficheiro JSON contra o índice pelo caminho exacto
+    const { normalizedRel } = verifyFileAgainstPackageIndex(extractDir, fullPath, indexMap);
 
     // b. Ler e fazer parse estrito (sem abafar SyntaxError)
-    const rawContent = fs.readFileSync(pConsumed, 'utf8');
+    const rawContent = fs.readFileSync(fullPath, 'utf8');
     if (!rawContent || !rawContent.trim()) {
-      throw new Error(`[FAIL-CLOSED] Ficheiro JSON de linkage '${path.basename(pConsumed)}' está vazio.`);
+      throw new Error(`[FAIL-CLOSED] Ficheiro JSON de linkage '${normalizedRel}' está vazio.`);
     }
 
     let data;
     try {
       data = JSON.parse(rawContent);
     } catch (parseErr) {
-      throw new Error(`[FAIL-CLOSED] Ficheiro JSON de linkage '${path.basename(pConsumed)}' malformado: ${parseErr.message}`);
+      throw new Error(`[FAIL-CLOSED] Ficheiro JSON de linkage '${normalizedRel}' malformado: ${parseErr.message}`);
     }
 
     if (!data || typeof data !== 'object' || Array.isArray(data)) {
-      throw new Error(`[FAIL-CLOSED] Conteúdo de '${path.basename(pConsumed)}' não é um objecto JSON válido.`);
+      throw new Error(`[FAIL-CLOSED] Conteúdo de '${normalizedRel}' não é um objecto JSON válido.`);
     }
 
     // c. Recolher todos os campos de hash de pacote reconhecidos
@@ -442,7 +439,7 @@ export function extractPackageHashFromBundle(extractDir, stageName = 'Stage') {
       if (key in data) {
         const rawVal = data[key];
         if (rawVal === null || rawVal === undefined || typeof rawVal !== 'string' || !rawVal.trim()) {
-          throw new Error(`[FAIL-CLOSED] Campo de hash '${key}' presente no JSON de linkage com valor nulo, vazio ou de tipo inválido.`);
+          throw new Error(`[FAIL-CLOSED] Campo de hash '${key}' presente no JSON de linkage com valor nulo, vazio ou de tipo inválido (${normalizedRel}).`);
         }
         const validatedHash = assertStrictSha256Format(rawVal.trim(), `${stageName} JSON.${key}`);
         collectedHashes.push({ key, hash: validatedHash });
@@ -450,7 +447,7 @@ export function extractPackageHashFromBundle(extractDir, stageName = 'Stage') {
     }
 
     if (collectedHashes.length === 0) {
-      throw new Error(`[FAIL-CLOSED] Ficheiro JSON de linkage '${path.basename(pConsumed)}' não contém nenhum campo de hash reconhecido.`);
+      throw new Error(`[FAIL-CLOSED] Ficheiro JSON de linkage '${normalizedRel}' não contém nenhum campo de hash reconhecido.`);
     }
 
     // d. Comparar todos os campos entre si na mesma fonte JSON
@@ -458,22 +455,19 @@ export function extractPackageHashFromBundle(extractDir, stageName = 'Stage') {
     for (let i = 1; i < collectedHashes.length; i++) {
       const otherEntry = collectedHashes[i];
       if (firstEntry.hash !== otherEntry.hash) {
-        throw new Error(`[FAIL-CLOSED] Campos contraditórios no mesmo JSON de linkage ('${path.basename(pConsumed)}'): ${firstEntry.key} (${firstEntry.hash}) diverge de ${otherEntry.key} (${otherEntry.hash}).`);
+        throw new Error(`[FAIL-CLOSED] Campos contraditórios no mesmo JSON de linkage ('${normalizedRel}'): ${firstEntry.key} (${firstEntry.hash}) diverge de ${otherEntry.key} (${otherEntry.hash}).`);
       }
     }
 
-    jsonSha = firstEntry.hash;
+    validatedSources.push({
+      type: 'json',
+      path: normalizedRel,
+      hash: firstEntry.hash
+    });
   }
 
-  const primarySha = fileSha || origSha;
-
-  // Verificar contradição entre manifesto físico (.sha256) e JSON
-  if (primarySha && jsonSha && primarySha !== jsonSha) {
-    throw new Error(`[FAIL-CLOSED] Fontes canónicas contraditórias em ${stageName}: manifesto físico (${primarySha}) diverge de JSON de linkage (${jsonSha}).`);
-  }
-
-  const resolvedSha = primarySha || jsonSha;
-  if (!resolvedSha) {
+  // Se nenhuma fonte canónica válida foi encontrada
+  if (validatedSources.length === 0) {
     if (stageName.toLowerCase().includes('intake')) {
       throw new Error(`[FAIL-CLOSED] Hash do pacote publicado no Intake ausente (input-package.sha256 / original-package.sha256).`);
     } else if (stageName.toLowerCase().includes('stage a') || stageName.toLowerCase().includes('etapa a')) {
@@ -483,7 +477,27 @@ export function extractPackageHashFromBundle(extractDir, stageName = 'Stage') {
     }
   }
 
-  return assertStrictSha256Format(resolvedSha, `${stageName} package hash`);
+  // Reconciliar estritamente todas as fontes presentes entre si (fail-closed contra qualquer contradição)
+  const firstSource = validatedSources[0];
+  for (let i = 1; i < validatedSources.length; i++) {
+    const otherSource = validatedSources[i];
+    if (firstSource.hash !== otherSource.hash) {
+      if (firstSource.type === 'sidecar' && otherSource.type === 'json') {
+        throw new Error(`[FAIL-CLOSED] Fontes canónicas contraditórias em ${stageName}: manifesto físico '${firstSource.path}' (${firstSource.hash}) diverge de JSON de linkage '${otherSource.path}' (${otherSource.hash}).`);
+      } else if (firstSource.type === 'json' && otherSource.type === 'sidecar') {
+        throw new Error(`[FAIL-CLOSED] Fontes canónicas contraditórias em ${stageName}: JSON de linkage '${firstSource.path}' (${firstSource.hash}) diverge de manifesto físico '${otherSource.path}' (${otherSource.hash}).`);
+      } else if (firstSource.path.includes('input-package') && otherSource.path.includes('original-package')) {
+        throw new Error(`[FAIL-CLOSED] Fontes canónicas contraditórias em ${stageName}: input-package.sha256 (${firstSource.hash}) diverge de original-package.sha256 (${otherSource.hash}).`);
+      } else {
+        throw new Error(`[FAIL-CLOSED] Fontes canónicas contraditórias em ${stageName}: '${firstSource.path}' (${firstSource.hash}) diverge de '${otherSource.path}' (${otherSource.hash}).`);
+      }
+    }
+  }
+
+  // Preservar lista dos caminhos exactos validados para permitir auditoria interna
+  extractPackageHashFromBundle.lastValidatedSources = validatedSources.map(s => s.path);
+
+  return assertStrictSha256Format(firstSource.hash, `${stageName} package hash`);
 }
 
 /**
@@ -1063,6 +1077,47 @@ function downloadAndExtractArtifact(runId, expectedArtifactName, extractSubdir, 
   };
 }
 
+export const MANDATORY_VERIFICATION_STATE_KEYS = [
+  'canonical_repository_chain_verified',
+  'intake_package_hash_verified',
+  'stage_a_input_hash_verified',
+  'stage_b_preserved_hash_verified',
+  'cross_stage_package_hash_reconciled',
+  'api_response_hashes_verified',
+  'evidence_index_hashes_verified',
+  'artifact_zip_hashes_computed',
+  'same_sha_chain_verified'
+];
+
+/**
+ * Gate de Estados Obrigatórios de Verificação (Micro-Patch Final)
+ * Valida estritamente que todos os estados obrigatórios são exactamente `true` (boolean).
+ * Rejeita categoricamente `false`, `null`, `undefined`, zero, strings (incluindo "true"),
+ * NaN ou campos ausentes. Lança erro fail-closed identificando explicitamente todos os estados não comprovados.
+ */
+export function assertMandatoryVerificationStates(states) {
+  if (!states || typeof states !== 'object' || Array.isArray(states)) {
+    throw new Error('[FAIL-CLOSED] Objeto de estados de verificação obrigatórios ausente ou inválido.');
+  }
+
+  const unprovenStates = [];
+  for (const key of MANDATORY_VERIFICATION_STATE_KEYS) {
+    if (!(key in states)) {
+      unprovenStates.push(`${key} (campo ausente)`);
+    } else if (states[key] !== true) {
+      const val = states[key];
+      const valDesc = val === null ? 'null' : val === undefined ? 'undefined' : typeof val === 'string' ? `"${val}"` : String(val);
+      unprovenStates.push(`${key}=${valDesc}`);
+    }
+  }
+
+  if (unprovenStates.length > 0) {
+    throw new Error(`[FAIL-CLOSED] Estados obrigatórios de verificação não comprovados: ${unprovenStates.join(', ')}.`);
+  }
+
+  return true;
+}
+
 export async function runVerification(cliArgs = process.argv.slice(2)) {
   function getArg(name, fallback = '') {
     const prefix = `--${name}=`;
@@ -1486,18 +1541,9 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
 
     const { foundIndexPath: indexPath, indexMap } = loadPackageIndexMap(stageBExtractDir);
     let checkedHashes = 0;
-    for (const [canonicalFile, expectedH] of indexMap.entries()) {
-      const filePath = fs.existsSync(path.join(stageBEvidenceBase, canonicalFile))
-        ? path.join(stageBEvidenceBase, canonicalFile)
-        : path.join(stageBExtractDir, canonicalFile);
-
-      if (!fs.existsSync(filePath)) {
-        throw new Error(`[FAIL-CLOSED] Ficheiro indexado ausente: ${canonicalFile}`);
-      }
-      const computedH = sha256(fs.readFileSync(filePath)).toLowerCase();
-      if (computedH !== expectedH) {
-        throw new Error(`[FAIL-CLOSED] Hash divergente para ${canonicalFile}: esperado ${expectedH}, obtido ${computedH}`);
-      }
+    for (const [canonicalFile] of indexMap.entries()) {
+      const filePath = path.join(stageBExtractDir, canonicalFile);
+      verifyFileAgainstPackageIndex(stageBExtractDir, filePath, indexMap);
       checkedHashes++;
     }
 
@@ -1656,16 +1702,20 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       runBData.head_sha === sourceSha
     );
 
-    // Se qualquer estado obrigatório for falso, ausente ou não demonstrável, encerra com erro (fail-closed)
-    if (!canonical_repository_chain_verified ||
-        !cross_stage_package_hash_reconciled ||
-        !api_response_hashes_verified ||
-        !evidence_index_hashes_verified ||
-        !artifact_zip_hashes_computed ||
-        !same_sha_chain_verified) {
-      console.error('\n[FAIL-CLOSED] Um ou mais estados obrigatórios de verificação não foram comprovados.');
-      process.exit(1);
-    }
+    // 7. Gate Estrito de Estados Obrigatórios de Verificação (Micro-Patch Final)
+    const verificationStates = {
+      canonical_repository_chain_verified,
+      intake_package_hash_verified,
+      stage_a_input_hash_verified,
+      stage_b_preserved_hash_verified,
+      cross_stage_package_hash_reconciled,
+      api_response_hashes_verified,
+      evidence_index_hashes_verified,
+      artifact_zip_hashes_computed,
+      same_sha_chain_verified
+    };
+
+    assertMandatoryVerificationStates(verificationStates);
 
     // -------------------------------------------------------------------------
     // 8. Emissão da Atestação Forense Consolidada com Metadados e Consenso Comprovado

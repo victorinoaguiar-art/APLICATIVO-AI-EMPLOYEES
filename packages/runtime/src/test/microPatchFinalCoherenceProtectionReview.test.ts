@@ -2904,19 +2904,22 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         }, /Hash físico da fonte de linkage 'input-package\.tar\.gz' .* diverge do registado no índice|Bytes físicos adulterados/);
       });
 
-      it('9.2.23: qualquer estado obrigatório falso impede atestação positiva', () => {
+      it('9.2.23: qualquer estado obrigatório falso impede atestação positiva chamando o gate real de produção', () => {
         const invalidStates = {
+          canonical_repository_chain_verified: true,
           intake_package_hash_verified: false,
           stage_a_input_hash_verified: true,
           stage_b_preserved_hash_verified: true,
           cross_stage_package_hash_reconciled: true,
           api_response_hashes_verified: true,
           evidence_index_hashes_verified: true,
-          canonical_repository_chain_verified: true
+          artifact_zip_hashes_computed: true,
+          same_sha_chain_verified: true
         };
 
-        const allPositive = Object.values(invalidStates).every(v => v === true);
-        assert.strictEqual(allPositive, false);
+        assert.throws(() => {
+          verifierModule.assertMandatoryVerificationStates(invalidStates);
+        }, /Estados obrigatórios de verificação não comprovados:.*intake_package_hash_verified=false/);
       });
     });
 
@@ -2960,6 +2963,396 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         assert.strictEqual(states.stage_a_input_hash_verified, true);
         assert.strictEqual(states.stage_b_preserved_hash_verified, true);
         assert.strictEqual(states.cross_stage_package_hash_reconciled, true);
+      });
+    });
+
+    describe('9.4 Micro-Patch Final — Fontes Duplicadas, Caminho Exacto e Gate de Produção', () => {
+      // -----------------------------------------------------------------------
+      // Fontes duplicadas (Itens 1 a 7)
+      // -----------------------------------------------------------------------
+      it('9.4.1: raiz válida + evidence/ válida e coerente passa no código de produção', () => {
+        const testDir = path.join(suiteDir, 'test_9_4_1_coherent_duplicates');
+        fs.mkdirSync(path.join(testDir, 'evidence'), { recursive: true });
+        const payload = Buffer.from('CANONICAL_PAYLOAD_COHERENT_DUPLICATES_2026');
+        const hPayload = createHash('sha256').update(payload).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'input-package.tar.gz'), payload);
+        fs.writeFileSync(path.join(testDir, 'evidence', 'input-package.tar.gz'), payload);
+        fs.writeFileSync(path.join(testDir, 'input-package.sha256'), `${hPayload}  input-package.tar.gz\n`);
+        fs.writeFileSync(path.join(testDir, 'evidence', 'input-package.sha256'), `${hPayload}  input-package.tar.gz\n`);
+
+        const hRootSidecar = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'input-package.sha256'))).digest('hex');
+        const hEvSidecar = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'evidence', 'input-package.sha256'))).digest('hex');
+
+        const indexContent = [
+          `${hPayload}  input-package.tar.gz`,
+          `${hRootSidecar}  input-package.sha256`,
+          `${hPayload}  evidence/input-package.tar.gz`,
+          `${hEvSidecar}  evidence/input-package.sha256`
+        ].join('\n') + '\n';
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), indexContent);
+
+        const extracted = verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        assert.strictEqual(extracted, hPayload);
+        assert.deepStrictEqual(verifierModule.extractPackageHashFromBundle.lastValidatedSources, [
+          'input-package.sha256',
+          'evidence/input-package.sha256'
+        ]);
+      });
+
+      it('9.4.2: raiz válida + evidence/ malformada falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_4_2_malformed_evidence');
+        fs.mkdirSync(path.join(testDir, 'evidence'), { recursive: true });
+        const payload = Buffer.from('PAYLOAD_ROOT_VALID');
+        const hPayload = createHash('sha256').update(payload).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'input-package.tar.gz'), payload);
+        fs.writeFileSync(path.join(testDir, 'input-package.sha256'), `${hPayload}  input-package.tar.gz\n`);
+        fs.writeFileSync(path.join(testDir, 'evidence', 'input-package.sha256'), 'MALFORMED_LINE_WITHOUT_HASH\n');
+
+        const hRootSidecar = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'input-package.sha256'))).digest('hex');
+        const hEvSidecar = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'evidence', 'input-package.sha256'))).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), [
+          `${hPayload}  input-package.tar.gz`,
+          `${hRootSidecar}  input-package.sha256`,
+          `${hEvSidecar}  evidence/input-package.sha256`
+        ].join('\n') + '\n');
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        }, /Linha sem nome ou caminho de ficheiro|malformado|Hash SHA-256 inválido/);
+      });
+
+      it('9.4.3: raiz válida + evidence/ não indexada falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_4_3_unindexed_evidence');
+        fs.mkdirSync(path.join(testDir, 'evidence'), { recursive: true });
+        const payload = Buffer.from('PAYLOAD_ROOT_VALID_UNINDEXED_EV');
+        const hPayload = createHash('sha256').update(payload).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'input-package.tar.gz'), payload);
+        fs.writeFileSync(path.join(testDir, 'input-package.sha256'), `${hPayload}  input-package.tar.gz\n`);
+        fs.writeFileSync(path.join(testDir, 'evidence', 'input-package.sha256'), `${hPayload}  input-package.tar.gz\n`);
+
+        const hRootSidecar = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'input-package.sha256'))).digest('hex');
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), [
+          `${hPayload}  input-package.tar.gz`,
+          `${hRootSidecar}  input-package.sha256`
+        ].join('\n') + '\n');
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        }, /Fonte de linkage 'evidence\/input-package\.sha256' presente mas não indexada no manifesto de hashes/);
+      });
+
+      it('9.4.4: raiz válida + evidence/ fisicamente adulterada falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_4_4_tampered_evidence');
+        fs.mkdirSync(path.join(testDir, 'evidence'), { recursive: true });
+        const payload = Buffer.from('PAYLOAD_ROOT_VALID_TAMPERED_EV');
+        const hPayload = createHash('sha256').update(payload).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'input-package.tar.gz'), payload);
+        fs.writeFileSync(path.join(testDir, 'input-package.sha256'), `${hPayload}  input-package.tar.gz\n`);
+
+        fs.writeFileSync(path.join(testDir, 'evidence', 'input-package.sha256'), `${hPayload}  input-package.tar.gz\n`);
+        const hEvSidecarOriginal = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'evidence', 'input-package.sha256'))).digest('hex');
+        fs.writeFileSync(path.join(testDir, 'evidence', 'input-package.sha256'), `${hPayload}  tampered.tar.gz\n`);
+
+        const hRootSidecar = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'input-package.sha256'))).digest('hex');
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), [
+          `${hPayload}  input-package.tar.gz`,
+          `${hRootSidecar}  input-package.sha256`,
+          `${hEvSidecarOriginal}  evidence/input-package.sha256`
+        ].join('\n') + '\n');
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        }, /Hash físico da fonte de linkage 'evidence\/input-package\.sha256' .* diverge do registado no índice/);
+      });
+
+      it('9.4.5: duas fontes .sha256 autenticadas mas contraditórias falham com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_4_5_contradictory_sidecars');
+        fs.mkdirSync(path.join(testDir, 'evidence'), { recursive: true });
+        const payload1 = Buffer.from('PAYLOAD_1_SIDECAR');
+        const payload2 = Buffer.from('PAYLOAD_2_SIDECAR_ALT');
+        const h1 = createHash('sha256').update(payload1).digest('hex');
+        const h2 = createHash('sha256').update(payload2).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'input-package.tar.gz'), payload1);
+        fs.writeFileSync(path.join(testDir, 'evidence', 'input-package.tar.gz'), payload2);
+        fs.writeFileSync(path.join(testDir, 'input-package.sha256'), `${h1}  input-package.tar.gz\n`);
+        fs.writeFileSync(path.join(testDir, 'evidence', 'input-package.sha256'), `${h2}  input-package.tar.gz\n`);
+
+        const hRootSidecar = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'input-package.sha256'))).digest('hex');
+        const hEvSidecar = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'evidence', 'input-package.sha256'))).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), [
+          `${h1}  input-package.tar.gz`,
+          `${hRootSidecar}  input-package.sha256`,
+          `${h2}  evidence/input-package.tar.gz`,
+          `${hEvSidecar}  evidence/input-package.sha256`
+        ].join('\n') + '\n');
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        }, /Fontes canónicas contraditórias em Stage B/);
+      });
+
+      it('9.4.6: dois JSON autenticados mas contraditórios falham com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_4_6_contradictory_jsons');
+        fs.mkdirSync(path.join(testDir, 'evidence'), { recursive: true });
+
+        const jsonRoot = JSON.stringify({ input_package_sha: sampleSha256 });
+        const jsonEv = JSON.stringify({ input_package_sha: altSha256 });
+        fs.writeFileSync(path.join(testDir, 'consumed-stage-a.json'), jsonRoot);
+        fs.writeFileSync(path.join(testDir, 'evidence', 'consumed-stage-a.json'), jsonEv);
+
+        const hRootJson = createHash('sha256').update(jsonRoot).digest('hex');
+        const hEvJson = createHash('sha256').update(jsonEv).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), [
+          `${hRootJson}  consumed-stage-a.json`,
+          `${hEvJson}  evidence/consumed-stage-a.json`
+        ].join('\n') + '\n');
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        }, /Fontes canónicas contraditórias em Stage B.*consumed-stage-a\.json.*diverge de.*evidence\/consumed-stage-a\.json/);
+      });
+
+      it('9.4.7: uma das fontes duplicadas com caminho incorrecto no índice falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_4_7_wrong_index_path');
+        fs.mkdirSync(path.join(testDir, 'evidence'), { recursive: true });
+        const payload = Buffer.from('PAYLOAD_WRONG_INDEX_PATH');
+        const hPayload = createHash('sha256').update(payload).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'input-package.tar.gz'), payload);
+        fs.writeFileSync(path.join(testDir, 'evidence', 'input-package.tar.gz'), payload);
+        fs.writeFileSync(path.join(testDir, 'input-package.sha256'), `${hPayload}  input-package.tar.gz\n`);
+        fs.writeFileSync(path.join(testDir, 'evidence', 'input-package.sha256'), `${hPayload}  input-package.tar.gz\n`);
+
+        const hRootSidecar = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'input-package.sha256'))).digest('hex');
+        const hEvSidecar = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'evidence', 'input-package.sha256'))).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), [
+          `${hPayload}  input-package.tar.gz`,
+          `${hRootSidecar}  input-package.sha256`,
+          `${hPayload}  evidence/input-package.tar.gz`,
+          `${hEvSidecar}  wrong/input-package.sha256`
+        ].join('\n') + '\n');
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        }, /Fonte de linkage 'evidence\/input-package\.sha256' presente mas não indexada no manifesto de hashes/);
+      });
+
+      // -----------------------------------------------------------------------
+      // Caminho exacto do índice (Itens 8 a 11)
+      // -----------------------------------------------------------------------
+      it('9.4.8: índice contém documento.json e apenas o ficheiro da raiz autentica essa entrada', () => {
+        const testDir = path.join(suiteDir, 'test_9_4_8_root_exact');
+        fs.mkdirSync(testDir, { recursive: true });
+        const content = 'CONTENT_DOC_ROOT_EXACT';
+        fs.writeFileSync(path.join(testDir, 'documento.json'), content);
+        const h = createHash('sha256').update(content).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `${h}  documento.json\n`);
+        const { indexMap } = verifierModule.loadPackageIndexMap(testDir);
+
+        const res = verifierModule.verifyFileAgainstPackageIndex(testDir, path.join(testDir, 'documento.json'), indexMap);
+        assert.strictEqual(res.match, true);
+        assert.strictEqual(res.normalizedRel, 'documento.json');
+
+        assert.throws(() => {
+          verifierModule.verifyFileAgainstPackageIndex(testDir, path.join(testDir, 'evidence', 'documento.json'), indexMap);
+        }, /não existe/);
+      });
+
+      it('9.4.9: índice contém evidence/documento.json e apenas o ficheiro em evidence/ autentica essa entrada', () => {
+        const testDir = path.join(suiteDir, 'test_9_4_9_evidence_exact');
+        fs.mkdirSync(path.join(testDir, 'evidence'), { recursive: true });
+        const content = 'CONTENT_DOC_EVIDENCE_EXACT';
+        fs.writeFileSync(path.join(testDir, 'evidence', 'documento.json'), content);
+        const h = createHash('sha256').update(content).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `${h}  evidence/documento.json\n`);
+        const { indexMap } = verifierModule.loadPackageIndexMap(testDir);
+
+        const res = verifierModule.verifyFileAgainstPackageIndex(testDir, path.join(testDir, 'evidence', 'documento.json'), indexMap);
+        assert.strictEqual(res.match, true);
+        assert.strictEqual(res.normalizedRel, 'evidence/documento.json');
+
+        fs.writeFileSync(path.join(testDir, 'documento.json'), content);
+        assert.throws(() => {
+          verifierModule.verifyFileAgainstPackageIndex(testDir, path.join(testDir, 'documento.json'), indexMap);
+        }, /Fonte de linkage 'documento\.json' presente mas não indexada no manifesto de hashes/);
+      });
+
+      it('9.4.10: existem ambos os ficheiros, mas o ficheiro do caminho exacto foi adulterado: falha mesmo que o homónimo esteja íntegro', () => {
+        const testDir = path.join(suiteDir, 'test_9_4_10_homonym_tampered_exact');
+        fs.mkdirSync(path.join(testDir, 'evidence'), { recursive: true });
+
+        const goodContent = 'GOOD_CANONICAL_BYTES';
+        const tamperedContent = 'TAMPERED_MALICIOUS_BYTES';
+        const hExpected = createHash('sha256').update(goodContent).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `${hExpected}  evidence/documento.json\n`);
+        const { indexMap } = verifierModule.loadPackageIndexMap(testDir);
+
+        fs.writeFileSync(path.join(testDir, 'documento.json'), goodContent);
+        fs.writeFileSync(path.join(testDir, 'evidence', 'documento.json'), tamperedContent);
+
+        assert.throws(() => {
+          verifierModule.verifyFileAgainstPackageIndex(testDir, path.join(testDir, 'evidence', 'documento.json'), indexMap);
+        }, /Hash físico da fonte de linkage 'evidence\/documento\.json' .* diverge do registado no índice/);
+      });
+
+      it('9.4.11: existem ambos os ficheiros e apenas o homónimo alternativo coincide com o hash: deve falhar', () => {
+        const testDir = path.join(suiteDir, 'test_9_4_11_homonym_alternative_match');
+        fs.mkdirSync(path.join(testDir, 'evidence'), { recursive: true });
+
+        const bytesA = 'CONTENT_BYTES_A';
+        const bytesB = 'CONTENT_BYTES_B';
+        const hA = createHash('sha256').update(bytesA).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `${hA}  documento.json\n`);
+        const { indexMap } = verifierModule.loadPackageIndexMap(testDir);
+
+        fs.writeFileSync(path.join(testDir, 'documento.json'), bytesB);
+        fs.writeFileSync(path.join(testDir, 'evidence', 'documento.json'), bytesA);
+
+        assert.throws(() => {
+          verifierModule.verifyFileAgainstPackageIndex(testDir, path.join(testDir, 'documento.json'), indexMap);
+        }, /Hash físico da fonte de linkage 'documento\.json' .* diverge do registado no índice/);
+
+        assert.throws(() => {
+          verifierModule.verifyFileAgainstPackageIndex(testDir, path.join(testDir, 'evidence', 'documento.json'), indexMap);
+        }, /Fonte de linkage 'evidence\/documento\.json' presente mas não indexada no manifesto de hashes/);
+      });
+
+      // -----------------------------------------------------------------------
+      // Gate de produção (Itens 12 a 18)
+      // -----------------------------------------------------------------------
+      it('9.4.12: todos os estados exactamente true passam no gate de produção', () => {
+        const validStates = {
+          canonical_repository_chain_verified: true,
+          intake_package_hash_verified: true,
+          stage_a_input_hash_verified: true,
+          stage_b_preserved_hash_verified: true,
+          cross_stage_package_hash_reconciled: true,
+          api_response_hashes_verified: true,
+          evidence_index_hashes_verified: true,
+          artifact_zip_hashes_computed: true,
+          same_sha_chain_verified: true
+        };
+
+        const res = verifierModule.assertMandatoryVerificationStates(validStates);
+        assert.strictEqual(res, true);
+      });
+
+      it('9.4.13: um estado false falha no gate de produção com identificação precisa do campo', () => {
+        const states = {
+          canonical_repository_chain_verified: true,
+          intake_package_hash_verified: true,
+          stage_a_input_hash_verified: true,
+          stage_b_preserved_hash_verified: true,
+          cross_stage_package_hash_reconciled: true,
+          api_response_hashes_verified: true,
+          evidence_index_hashes_verified: false,
+          artifact_zip_hashes_computed: true,
+          same_sha_chain_verified: true
+        };
+
+        assert.throws(() => {
+          verifierModule.assertMandatoryVerificationStates(states);
+        }, /Estados obrigatórios de verificação não comprovados:.*evidence_index_hashes_verified=false/);
+      });
+
+      it('9.4.14: estado obrigatório ausente falha no gate de produção', () => {
+        const states = {
+          canonical_repository_chain_verified: true,
+          intake_package_hash_verified: true,
+          stage_a_input_hash_verified: true,
+          stage_b_preserved_hash_verified: true,
+          cross_stage_package_hash_reconciled: true,
+          api_response_hashes_verified: true,
+          evidence_index_hashes_verified: true,
+          artifact_zip_hashes_computed: true
+        };
+
+        assert.throws(() => {
+          verifierModule.assertMandatoryVerificationStates(states);
+        }, /Estados obrigatórios de verificação não comprovados:.*same_sha_chain_verified \(campo ausente\)/);
+      });
+
+      it('9.4.15: estado obrigatório com valor null falha no gate de produção', () => {
+        const states = {
+          canonical_repository_chain_verified: true,
+          intake_package_hash_verified: true,
+          stage_a_input_hash_verified: null,
+          stage_b_preserved_hash_verified: true,
+          cross_stage_package_hash_reconciled: true,
+          api_response_hashes_verified: true,
+          evidence_index_hashes_verified: true,
+          artifact_zip_hashes_computed: true,
+          same_sha_chain_verified: true
+        };
+
+        assert.throws(() => {
+          verifierModule.assertMandatoryVerificationStates(states);
+        }, /Estados obrigatórios de verificação não comprovados:.*stage_a_input_hash_verified=null/);
+      });
+
+      it('9.4.16: estado obrigatório com string "true" falha categoricamente no gate de produção', () => {
+        const states = {
+          canonical_repository_chain_verified: true,
+          intake_package_hash_verified: true,
+          stage_a_input_hash_verified: true,
+          stage_b_preserved_hash_verified: true,
+          cross_stage_package_hash_reconciled: true,
+          api_response_hashes_verified: "true",
+          evidence_index_hashes_verified: true,
+          artifact_zip_hashes_computed: true,
+          same_sha_chain_verified: true
+        };
+
+        assert.throws(() => {
+          verifierModule.assertMandatoryVerificationStates(states);
+        }, /Estados obrigatórios de verificação não comprovados:.*api_response_hashes_verified="true"/);
+      });
+
+      it('9.4.17: confirmação de que o teste 9.2.23 e o gate invocam a função real de produção assertMandatoryVerificationStates', () => {
+        assert.strictEqual(typeof verifierModule.assertMandatoryVerificationStates, 'function');
+        assert.ok(Array.isArray(verifierModule.MANDATORY_VERIFICATION_STATE_KEYS));
+        assert.strictEqual(verifierModule.MANDATORY_VERIFICATION_STATE_KEYS.length, 9);
+      });
+
+      it('9.4.18: falha do gate impede a criação de atestação positiva chain-attestation.json', async () => {
+        const outDir = path.join(suiteDir, 'test_9_4_18_attestation_gate_block');
+        fs.mkdirSync(outDir, { recursive: true });
+        const attestationPath = path.join(outDir, 'chain-attestation.json');
+
+        const failingStates = {
+          canonical_repository_chain_verified: true,
+          intake_package_hash_verified: true,
+          stage_a_input_hash_verified: true,
+          stage_b_preserved_hash_verified: true,
+          cross_stage_package_hash_reconciled: true,
+          api_response_hashes_verified: true,
+          evidence_index_hashes_verified: true,
+          artifact_zip_hashes_computed: true,
+          same_sha_chain_verified: false
+        };
+
+        let attestationWritten = false;
+        assert.throws(() => {
+          verifierModule.assertMandatoryVerificationStates(failingStates);
+          fs.writeFileSync(attestationPath, JSON.stringify({ positive: true }));
+          attestationWritten = true;
+        }, /Estados obrigatórios de verificação não comprovados:.*same_sha_chain_verified=false/);
+
+        assert.strictEqual(attestationWritten, false);
+        assert.strictEqual(fs.existsSync(attestationPath), false);
       });
     });
   });
