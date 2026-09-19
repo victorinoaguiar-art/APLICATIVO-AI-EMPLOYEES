@@ -178,13 +178,29 @@ try {
 
   // 4. Validar Coerência DEMO estrita e ausência de classificação real
   console.log('\n--- 4. Validação de Coerência DEMO e Recibo de Independência ---');
-  const taskReceiptFile = fs.readdirSync(stageBExtractDir).find(f => f.startsWith('task-receipt-') && f.endsWith('.json'));
-  if (!taskReceiptFile) {
-    throw new Error('Ficheiro task-receipt-*.json não encontrado no pacote de fecho.');
+  let taskReceiptPath = null;
+  let taskReceiptFile = null;
+  const taskReceiptsDir = path.join(stageBExtractDir, 'task-receipts');
+  if (fs.existsSync(taskReceiptsDir)) {
+    const f = fs.readdirSync(taskReceiptsDir).find(x => x.endsWith('.json'));
+    if (f) {
+      taskReceiptFile = `task-receipts/${f}`;
+      taskReceiptPath = path.join(taskReceiptsDir, f);
+    }
   }
-  const taskReceipt = JSON.parse(fs.readFileSync(path.join(stageBExtractDir, taskReceiptFile), 'utf8'));
+  if (!taskReceiptPath) {
+    const f = fs.readdirSync(stageBExtractDir).find(x => (x.startsWith('task-receipt-') || x.startsWith('task-receipt') || x.startsWith('pilot-task-receipt')) && x.endsWith('.json'));
+    if (f) {
+      taskReceiptFile = f;
+      taskReceiptPath = path.join(stageBExtractDir, f);
+    }
+  }
+  if (!taskReceiptPath || !fs.existsSync(taskReceiptPath)) {
+    throw new Error('Ficheiro de recibo de tarefa (task-receipts/*.json) não encontrado no pacote de fecho.');
+  }
+  const taskReceipt = JSON.parse(fs.readFileSync(taskReceiptPath, 'utf8'));
 
-  recordCheck('DEMO_COHERENCE_TASK', String(runBData.id), String(closureArtifact.id), taskReceiptFile, sha256(fs.readFileSync(path.join(stageBExtractDir, taskReceiptFile))),
+  recordCheck('DEMO_COHERENCE_TASK', String(runBData.id), String(closureArtifact.id), taskReceiptFile, sha256(fs.readFileSync(taskReceiptPath)),
     taskReceipt.execution_mode === 'DEMO' && taskReceipt.is_simulation === true && taskReceipt.classification_level === 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED' ? 'PASS' : 'FAIL',
     `mode=${taskReceipt.execution_mode}, is_simulation=${taskReceipt.is_simulation}`);
 
@@ -228,14 +244,15 @@ try {
     const parts = line.trim().split(/\s+/);
     if (parts.length < 2) continue;
     const expectedH = parts[0];
-    const fileName = parts.slice(1).join(' ');
-    const filePath = path.join(stageBExtractDir, fileName);
+    const rawFileName = parts.slice(1).join(' ');
+    const normalizedFile = rawFileName.replace(/^[./\\]+/, '').split(/[/\\]/).join(path.sep);
+    const filePath = path.join(stageBExtractDir, normalizedFile);
     if (!fs.existsSync(filePath)) {
-      throw new Error(`Ficheiro indexado em pilot-evidence-files.sha256 ausente no disco: ${fileName}`);
+      throw new Error(`Ficheiro indexado em pilot-evidence-files.sha256 ausente no disco: ${rawFileName} (resolvido: ${filePath})`);
     }
     const computedH = sha256(fs.readFileSync(filePath));
     if (computedH.toLowerCase() !== expectedH.toLowerCase()) {
-      throw new Error(`Hash divergente para ${fileName}: esperado ${expectedH}, obtido ${computedH}`);
+      throw new Error(`Hash divergente para ${rawFileName}: esperado ${expectedH}, obtido ${computedH}`);
     }
     checkedHashes++;
   }
