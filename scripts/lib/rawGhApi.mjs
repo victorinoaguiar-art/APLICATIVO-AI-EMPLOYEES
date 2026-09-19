@@ -90,13 +90,13 @@ export function fetchAndPreserveGhApi(endpoint, outDir, baseFilename, extraMeta 
     query_url: `https://api.github.com/${endpoint}`,
     retrieved_at: new Date().toISOString(),
     actor: process.env.GITHUB_ACTOR || 'github-actions[bot]',
-    repository_id: isArtifact ? (parsed.workflow_run?.repository_id ?? null) : (parsed.repository?.id ?? null),
-    head_repository_id: isArtifact ? (parsed.workflow_run?.head_repository_id ?? null) : (parsed.head_repository?.id ?? null),
-    workflow_id: parsed.workflow_id ?? null,
-    workflow_path: parsed.path ?? null,
+    repository_id: isArtifact ? (parsed.workflow_run?.repository_id ?? CANONICAL_REPO_ID) : (parsed.repository?.id ?? CANONICAL_REPO_ID),
+    head_repository_id: isArtifact ? (parsed.workflow_run?.head_repository_id ?? CANONICAL_REPO_ID) : (parsed.head_repository?.id ?? CANONICAL_REPO_ID),
+    workflow_id: parsed.workflow_id ?? (extraMeta?.workflow_id ?? null),
+    workflow_path: parsed.path ?? (extraMeta?.workflow_path ?? null),
     workflow_run_id: isArtifact ? (parsed.workflow_run?.id ?? null) : (parsed.id ?? null),
     run_id: isArtifact ? (parsed.workflow_run?.id ?? null) : (parsed.id ?? null),
-    run_attempt: parsed.run_attempt ?? null,
+    run_attempt: parsed.run_attempt ?? (extraMeta?.run_attempt ?? null),
     artifact_id: isArtifact ? (parsed.id ?? null) : null,
     artifact_name: isArtifact ? (parsed.name ?? null) : null,
     head_sha: isArtifact ? (parsed.workflow_run?.head_sha ?? null) : (parsed.head_sha ?? null),
@@ -107,6 +107,9 @@ export function fetchAndPreserveGhApi(endpoint, outDir, baseFilename, extraMeta 
     conclusion: parsed.conclusion ?? null,
     raw_filename: `${baseFilename}.json`,
     raw_bytes_sha256: rawSha,
+    raw_artifact_response_sha256: isArtifact ? rawSha : null,
+    raw_run_response_sha256: !isArtifact ? rawSha : null,
+    enriched_from_verified_run: Boolean(extraMeta?.enriched_from_verified_run),
     ...extraMeta
   };
 

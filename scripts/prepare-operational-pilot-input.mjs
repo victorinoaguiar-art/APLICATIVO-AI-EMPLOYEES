@@ -197,6 +197,19 @@ else if (!effectivePackageDir) {
         throw new Error(`run_attempt inválido no run do intake: '${runMeta.run_attempt}'.`);
       }
 
+      // Enriquecer sidecar derivado do artefacto do intake com dados validados do run (Prompt Secção 6)
+      if (artifactResult?.metaFilePath && fs.existsSync(artifactResult.metaFilePath)) {
+        const meta = JSON.parse(fs.readFileSync(artifactResult.metaFilePath, 'utf8'));
+        meta.workflow_id = runMeta.workflow_id;
+        meta.workflow_path = runMeta.path;
+        meta.run_attempt = runMeta.run_attempt;
+        meta.raw_artifact_response_sha256 = artifactResult.rawSha;
+        meta.raw_run_response_sha256 = runResult.rawSha;
+        meta.enriched_from_verified_run = true;
+        fs.writeFileSync(artifactResult.metaFilePath, JSON.stringify(meta, null, 2), 'utf8');
+        console.log('[PASS] Sidecar do artefacto do intake enriquecido com metadados do workflow run verificado.');
+      }
+
       const currentCommitSha = process.env.GIT_COMMIT_SHA || process.env.GITHUB_SHA;
       if (currentCommitSha) {
         assertStrictSha(currentCommitSha, 'currentCommitSha');

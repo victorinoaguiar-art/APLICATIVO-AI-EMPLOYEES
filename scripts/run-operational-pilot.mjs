@@ -185,6 +185,57 @@ try {
       process.exit(1);
     }
 
+    let operationalApprovalData = null;
+    let operationalRawApprovalBytes = null;
+    let operationalApprovingLogin = null;
+    let operationalApprovingId = null;
+    let operationalApprovalEventId = null;
+
+    if (mode === 'OPERATIONAL_PILOT') {
+      const approvalMockFile = process.env.MOCK_APPROVAL_RESPONSE;
+      if (approvalMockFile && fs.existsSync(approvalMockFile)) {
+        operationalRawApprovalBytes = fs.readFileSync(approvalMockFile);
+        try {
+          operationalApprovalData = JSON.parse(operationalRawApprovalBytes.toString('utf8'));
+        } catch {}
+      } else {
+        const currentRunId = process.env.GITHUB_RUN_ID;
+        if (currentRunId) {
+          try {
+            const rawResp = execFileSync('gh', ['api', `repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${currentRunId}/approvals`], {
+              stdio: ['pipe', 'pipe', 'pipe']
+            });
+            operationalApprovalData = JSON.parse(rawResp.toString('utf8'));
+            operationalRawApprovalBytes = rawResp;
+          } catch (e) {}
+        }
+      }
+
+      if (!operationalApprovalData || !operationalRawApprovalBytes) {
+        console.error('\n[FAIL-CLOSED] AUTHENTIC_ENVIRONMENT_APPROVAL_EVIDENCE_UNAVAILABLE: Prova autenticada de aprovação externa do ambiente indisponível.');
+        process.exit(1);
+      }
+
+      const approvalEntry = Array.isArray(operationalApprovalData) ? operationalApprovalData[0] : operationalApprovalData;
+      const approvingUser = approvalEntry?.user;
+      operationalApprovingLogin = approvingUser?.login;
+      operationalApprovingId = approvingUser?.id;
+      operationalApprovalEventId = approvalEntry?.id || approvalEntry?.environment_id;
+
+      if (!operationalApprovingLogin || !operationalApprovingId || !operationalApprovalEventId) {
+        console.error('\n[FAIL-CLOSED] AUTHENTIC_ENVIRONMENT_APPROVAL_EVIDENCE_UNAVAILABLE: Resposta de aprovação não contém dados de utilizador ou ID de aprovação.');
+        process.exit(1);
+      }
+
+      const initiatingLogin = process.env.GITHUB_TRIGGERING_ACTOR || process.env.GITHUB_ACTOR || initiatingActorArg || 'unknown_initiator';
+      const initiatingId = process.env.GITHUB_TRIGGERING_ACTOR_ID ? Number(process.env.GITHUB_TRIGGERING_ACTOR_ID) : (earlyInitiator === operationalApprovingLogin ? operationalApprovingId : 1000);
+
+      if (operationalApprovingLogin.toLowerCase() === initiatingLogin.toLowerCase() || operationalApprovingId === initiatingId) {
+        console.error(`\n[FAIL-CLOSED] SEGREGATION_OF_DUTIES_VIOLATION: Auto-aprovação detectada: initiator='${initiatingLogin}' (${initiatingId}) == approver='${operationalApprovingLogin}' (${operationalApprovingId}).`);
+        process.exit(1);
+      }
+    }
+
     // Se estiver a correr separadamente na Etapa B, carregar estado da BD SQLite
     if (stage === 'review-and-close') {
       console.log('[B1] A carregar contexto persistido a partir do SQLite...');
@@ -266,28 +317,81 @@ try {
     console.log(`[PASS] Decisão registada: ${reviewReceipt.decision} por ${reviewReceipt.reviewer}`);
     console.log(`[PASS] Recibo de Revisão: ${reviewReceipt.review_id} (SHA: ${reviewReceipt.receipt_sha256.slice(0, 16)}...)`);
 
-    // Emitir recibo de independência do revisor (Prompt Secção 9.3)
-    const approvalId = process.env.GITHUB_ENV_APPROVAL_ID || process.env.GITHUB_RUN_ID || 'DEMO_ENV_APPROVAL';
-    const independenceReceipt = {
-      reviewer_id: targetReviewerId,
-      reviewer_subject_id: reviewerSubjectId,
-      reviewer_authorization_id: `AUTH_RECORD_${targetReviewerId}_${loadedInput.tenant_id}`,
-      github_environment_approval_id: String(approvalId),
-      initiating_actor_id: initiatingActorId,
-      independence_verified: initiatingActorId.toLowerCase() !== reviewerSubjectId.toLowerCase(),
-      prevent_self_review: true,
-      decision: reviewReceipt.decision,
-      challenge_id: challengeId || reviewReceipt.challenge_id,
-      review_signature_sha256: reviewReceipt.review_signature_sha256 || createHash('sha256').update(signature || 'DEMO_SIGNATURE').digest('hex'),
-      event_signed_at: eventSignedAt || new Date().toISOString(),
-      review_received_at: reviewReceipt.reviewed_at,
-      challenge_consumed_at: new Date().toISOString()
-    };
+    // Emitir recibo de independência do revisor (Prompt Secção 5)
+    let independenceReceipt;
+    if (mode === 'DEMO' || mode === 'SIMULATION') {
+      independenceReceipt = {
+        execution_mode: 'DEMO',
+        is_simulation: true,
+        independence_evidence_type: 'SYNTHETIC_DEMO',
+        reviewer_id: targetReviewerId,
+        reviewer_subject_id: reviewerSubjectId,
+        reviewer_authorization_id: `AUTH_RECORD_${targetReviewerId}_${loadedInput.tenant_id}`,
+        github_environment_approval_id: null,
+        github_environment_approval_verified: false,
+        initiating_actor_id: initiatingActorId,
+        prevent_self_review_observed: false,
+        independence_verified: false,
+        classification: 'DEMO_REVIEW_INDEPENDENCE_SIMULATED',
+        decision: reviewReceipt.decision,
+        challenge_id: challengeId || reviewReceipt.challenge_id,
+        review_signature_sha256: reviewReceipt.review_signature_sha256 || createHash('sha256').update(signature || 'DEMO_SIGNATURE').digest('hex'),
+        event_signed_at: eventSignedAt || new Date().toISOString(),
+        review_received_at: reviewReceipt.reviewed_at,
+        challenge_consumed_at: new Date().toISOString()
+      };
+    } else {
+      // Modo OPERATIONAL_PILOT: reutiliza prova autenticada validada previamente
+      const rawApprovalBytes = operationalRawApprovalBytes;
+      const approvalData = operationalApprovalData;
+      const approvingActorLogin = operationalApprovingLogin;
+      const approvingActorId = operationalApprovingId;
+      const approvalEventId = operationalApprovalEventId;
+
+      const rawApprovalSha = createHash('sha256').update(rawApprovalBytes).digest('hex');
+      const rawApprovalFile = 'environment-approval-api-response.json';
+      const rawApprovalPath = path.join(path.resolve(outputDirArg), rawApprovalFile);
+      fs.writeFileSync(rawApprovalPath, rawApprovalBytes);
+      fs.writeFileSync(`${rawApprovalPath}.sha256`, `${rawApprovalSha}  ${rawApprovalFile}\n`, 'utf8');
+
+      const initiatingLogin = process.env.GITHUB_TRIGGERING_ACTOR || process.env.GITHUB_ACTOR || initiatingActorArg || 'unknown_initiator';
+      const initiatingId = process.env.GITHUB_TRIGGERING_ACTOR_ID ? Number(process.env.GITHUB_TRIGGERING_ACTOR_ID) : (initiatingActorId === approvingActorLogin ? approvingActorId : 1000);
+
+      if (reviewerSubjectId.toLowerCase() !== approvingActorLogin.toLowerCase() && !targetReviewerId.includes(approvingActorLogin)) {
+        console.error(`\n[FAIL-CLOSED] REVIEWER_LINKAGE_INVALID: O revisor autorizado ('${targetReviewerId}') não corresponde ao aprovador autenticado ('${approvingActorLogin}').`);
+        process.exit(1);
+      }
+
+      independenceReceipt = {
+        execution_mode: 'OPERATIONAL_PILOT',
+        is_simulation: false,
+        independence_evidence_type: 'AUTHENTICATED_GITHUB_ENVIRONMENT_APPROVAL',
+        initiating_actor_login: initiatingLogin,
+        initiating_actor_id: initiatingId,
+        approving_actor_login: approvingActorLogin,
+        approving_actor_id: approvingActorId,
+        reviewer_subject_id: reviewerSubjectId,
+        reviewer_authorization_id: `AUTH_RECORD_${targetReviewerId}_${loadedInput.tenant_id}`,
+        github_environment_approval_id: String(approvalEventId),
+        github_environment_approval_verified: true,
+        prevent_self_review_observed: true,
+        independence_verified: true,
+        raw_approval_response_file: rawApprovalFile,
+        raw_approval_response_sha256: rawApprovalSha,
+        decision: reviewReceipt.decision,
+        challenge_id: challengeId || reviewReceipt.challenge_id,
+        review_signature_sha256: reviewReceipt.review_signature_sha256,
+        event_signed_at: eventSignedAt,
+        review_received_at: reviewReceipt.reviewed_at,
+        challenge_consumed_at: new Date().toISOString()
+      };
+    }
+
     const independenceReceiptPath = path.join(path.resolve(outputDirArg), 'reviewer-independence-receipt.json');
     fs.writeFileSync(independenceReceiptPath, JSON.stringify(independenceReceipt, null, 2), 'utf8');
     const indepSha = createHash('sha256').update(fs.readFileSync(independenceReceiptPath)).digest('hex');
     fs.writeFileSync(`${independenceReceiptPath}.sha256`, `${indepSha}  reviewer-independence-receipt.json\n`, 'utf8');
-    console.log(`[PASS] Recibo de Independência Humana emitido: ${independenceReceiptPath}`);
+    console.log(`[PASS] Recibo de Independência Humana emitido (${independenceReceipt.independence_evidence_type}): ${independenceReceiptPath}`);
 
     if (decisionArg !== 'APPROVED') {
       console.log(`\n[INFO] Tarefa não aprovada (Decisão: ${decisionArg}). O arquivamento final não prosseguirá.`);

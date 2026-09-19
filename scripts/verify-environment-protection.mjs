@@ -129,11 +129,29 @@ if (rawBranchText) {
 }
 
 // 5. Analisar e estruturar verificação de ambiente
+const reviewerRules = Array.isArray(apiResponse?.protection_rules)
+  ? apiResponse.protection_rules.filter(rule => rule.type === 'required_reviewers')
+  : [];
+
+const hasSingleReviewerRule = reviewerRules.length === 1;
+const reviewerRule = reviewerRules[0] || null;
 const hasRequiredReviewers = Boolean(
-  apiResponse &&
-  Array.isArray(apiResponse.protection_rules) &&
-  apiResponse.protection_rules.some(r => r.type === 'required_reviewers' && Array.isArray(r.reviewers) && r.reviewers.length > 0)
+  reviewerRule &&
+  Array.isArray(reviewerRule.reviewers) &&
+  reviewerRule.reviewers.length > 0
 );
+
+const preventSelfReviewObserved = Boolean(reviewerRule && reviewerRule.prevent_self_review === true);
+const rootPreventSelfReviewObserved = apiResponse?.prevent_self_review;
+const preventSelfReviewSource = 'protection_rules.required_reviewers';
+
+const hasContradictoryPreventSelfReview = Boolean(
+  rootPreventSelfReviewObserved !== undefined &&
+  rootPreventSelfReviewObserved !== null &&
+  Boolean(rootPreventSelfReviewObserved) !== preventSelfReviewObserved
+);
+
+const preventSelfReview = preventSelfReviewObserved && !hasContradictoryPreventSelfReview;
 
 const hasBranchPolicy = Boolean(
   apiResponse &&
@@ -162,9 +180,8 @@ const dismissStaleReviews = Boolean(branchResponse?.required_pull_request_review
 const strictBranch = Boolean(branchResponse?.required_status_checks?.strict);
 const blockDeletions = Boolean(branchResponse?.allow_deletions?.enabled === false);
 const blockForcePushes = Boolean(branchResponse?.allow_force_pushes?.enabled === false);
-const preventSelfReview = Boolean(apiResponse?.prevent_self_review === true);
 
-const isEnvFullyProtected = hasRequiredReviewers && hasBranchPolicy && canAdminsBypass === false && preventSelfReview;
+const isEnvFullyProtected = hasSingleReviewerRule && hasRequiredReviewers && hasBranchPolicy && canAdminsBypass === false && preventSelfReview;
 const isBranchFullyProtected = hasStatusChecks && strictBranch && hasPullRequest && approvingReviewCount >= 1 && dismissStaleReviews && enforceAdminsBranch && blockDeletions && blockForcePushes;
 
 let status = 'UNPROTECTED';
@@ -190,11 +207,16 @@ const verificationReport = {
   branch_protection_file: 'branch-protection-api-response.json',
   branch_protection_sha256: branchResponseHash,
   status,
+  environment_protection_status: status,
   has_required_reviewers: hasRequiredReviewers,
+  has_single_reviewer_rule: hasSingleReviewerRule,
   has_deployment_branch_policy: hasBranchPolicy,
   has_branch_policy: hasBranchPolicy,
   can_admins_bypass: canAdminsBypass,
   prevent_self_review: preventSelfReview,
+  prevent_self_review_observed: preventSelfReviewObserved,
+  prevent_self_review_source: preventSelfReviewSource,
+  has_contradictory_prevent_self_review: hasContradictoryPreventSelfReview,
   protection_rules_count: Array.isArray(apiResponse?.protection_rules) ? apiResponse.protection_rules.length : 0,
   protection_rules: apiResponse?.protection_rules || [],
   branch_protection: {
@@ -239,6 +261,26 @@ if (mode === 'OPERATIONAL_PILOT') {
   if (!branchResponse || fetchBranchError || branchResponse.error) {
     console.error(`\n[FAIL-CLOSED] Erro ao consultar API de protecção da branch: ${fetchBranchError || branchResponse?.error || 'RESPOSTA_NULA'}`);
     console.error('STATUS: BLOCKED_BRANCH_PROTECTION_NOT_CONFIGURED');
+    process.exit(1);
+  }
+
+  if (!Array.isArray(apiResponse?.protection_rules) || reviewerRules.length !== 1) {
+    console.error(`\n[FAIL-CLOSED] Regra required_reviewers inválida ou ausente em protection_rules (encontradas: ${reviewerRules.length}, esperado: 1).`);
+    process.exit(1);
+  }
+
+  if (!hasRequiredReviewers) {
+    console.error('\n[FAIL-CLOSED] Não existem revisores autorizados configurados na regra required_reviewers.');
+    process.exit(1);
+  }
+
+  if (!preventSelfReviewObserved) {
+    console.error('\n[FAIL-CLOSED] prevent_self_review na regra required_reviewers não é true.');
+    process.exit(1);
+  }
+
+  if (hasContradictoryPreventSelfReview) {
+    console.error('\n[FAIL-CLOSED] Contradição detectada entre prevent_self_review na raiz e na regra required_reviewers.');
     process.exit(1);
   }
 

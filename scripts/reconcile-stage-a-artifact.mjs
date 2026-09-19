@@ -124,6 +124,19 @@ try {
       throw new Error(`Divergência de SHA de segurança: o SHA auditado do workflow (${currentWorkflowSha}) difere do stage_a_head_sha fornecido (${stageAHeadSha}). Execuções entre SHAs diferentes são categoricamente bloqueadas.`);
     }
   }
+
+  // Enriquecer sidecar derivado do artefacto com dados validados do run (Prompt Secção 6)
+  if (artifactResult?.metaFilePath && fs.existsSync(artifactResult.metaFilePath)) {
+    const meta = JSON.parse(fs.readFileSync(artifactResult.metaFilePath, 'utf8'));
+    meta.workflow_id = runMeta.workflow_id;
+    meta.workflow_path = runMeta.path;
+    meta.run_attempt = runMeta.run_attempt;
+    meta.raw_artifact_response_sha256 = artifactResult.rawSha;
+    meta.raw_run_response_sha256 = runResult.rawSha;
+    meta.enriched_from_verified_run = true;
+    fs.writeFileSync(artifactResult.metaFilePath, JSON.stringify(meta, null, 2), 'utf8');
+    console.log('[PASS] Sidecar do artefacto da Etapa A enriquecido com metadados do workflow run verificado.');
+  }
   if (runMeta.status !== 'completed') {
     throw new Error(`Run da Etapa A não concluído: status actual é '${runMeta.status}'.`);
   }

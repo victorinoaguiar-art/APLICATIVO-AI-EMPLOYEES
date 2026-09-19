@@ -1246,7 +1246,11 @@ describe('AETF-500: Micro-Patch Final de Ingestão Externa, Revisão Humana e Pr
     fs.writeFileSync(mockEnvProtected, JSON.stringify({
       id: 123,
       name: 'protected-pilot',
-      protection_rules: [{ type: 'required_reviewers', reviewers: [{ reviewer: { id: 297225475, type: 'User' } }] }],
+      protection_rules: [{
+        type: 'required_reviewers',
+        prevent_self_review: true,
+        reviewers: [{ reviewer: { id: 297225475, type: 'User' } }]
+      }],
       deployment_branch_policy: { protected_branches: true, custom_branch_policies: false },
       can_admins_bypass: false,
       prevent_self_review: true

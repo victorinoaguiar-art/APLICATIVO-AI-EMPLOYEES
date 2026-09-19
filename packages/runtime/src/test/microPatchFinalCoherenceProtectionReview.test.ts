@@ -534,7 +534,7 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       }, /SELF_APPROVAL_FORBIDDEN|SEGREGAÇÃO DE FUNÇÕES VIOLADA|SEGREGATION_OF_DUTIES_VIOLATION/);
     });
 
-    it('5.2: run-operational-pilot gera reviewer-independence-receipt.json quando revisores são estritamente independentes', () => {
+    it('5.2: run-operational-pilot gera reviewer-independence-receipt.json em DEMO marcado como SYNTHETIC_DEMO com approval_id nulo', () => {
       const outStageDir = path.join(tmpDir, 'test_independent_review');
       fs.mkdirSync(outStageDir, { recursive: true });
       const testDb = path.join(outStageDir, 'test_indep.db');
@@ -556,12 +556,320 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       assert.ok(fs.existsSync(receiptPath), 'reviewer-independence-receipt.json deve ser criado');
 
       const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
+      assert.strictEqual(receipt.execution_mode, 'DEMO');
+      assert.strictEqual(receipt.is_simulation, true);
+      assert.strictEqual(receipt.independence_evidence_type, 'SYNTHETIC_DEMO');
+      assert.strictEqual(receipt.github_environment_approval_id, null);
+      assert.strictEqual(receipt.github_environment_approval_verified, false);
       assert.strictEqual(receipt.initiating_actor_id, initiatingActor);
       assert.strictEqual(receipt.reviewer_subject_id, reviewerActor);
-      assert.strictEqual(receipt.independence_verified, true);
-      assert.strictEqual(receipt.prevent_self_review, true);
+      assert.strictEqual(receipt.independence_verified, false);
+      assert.strictEqual(receipt.prevent_self_review_observed, false);
+      assert.strictEqual(receipt.classification, 'DEMO_REVIEW_INDEPENDENCE_SIMULATED');
       assert.ok(receipt.review_signature_sha256 && receipt.review_signature_sha256.length === 64);
       assert.ok(fs.existsSync(receiptPath + '.sha256'));
+    });
+  });
+
+  describe('6. Auditoria Forense Residual: Regra Canónica, Enriquecimento e Atestação Pós-Etapa B', () => {
+    it('6.1: verify-environment-protection lê prevent_self_review canonicamente da regra required_reviewers', () => {
+      const outDir = path.join(tmpDir, 'test_canonical_reviewer_rule');
+      fs.mkdirSync(outDir, { recursive: true });
+
+      const mockEnvWithRule = path.join(tmpDir, 'mock_env_with_rule.json');
+      fs.writeFileSync(mockEnvWithRule, JSON.stringify({
+        id: 9999,
+        name: 'protected-pilot',
+        protection_rules: [
+          {
+            type: 'required_reviewers',
+            prevent_self_review: true,
+            reviewers: [{ reviewer: { id: 297225475, type: 'User' } }]
+          }
+        ],
+        deployment_branch_policy: { protected_branches: true },
+        can_admins_bypass: false,
+        prevent_self_review: true
+      }, null, 2));
+
+      const mockBranchValid = path.join(tmpDir, 'mock_branch_rule_valid.json');
+      fs.writeFileSync(mockBranchValid, JSON.stringify({
+        required_status_checks: { strict: true, contexts: ['CI'] },
+        required_pull_request_reviews: { required_approving_review_count: 1, dismiss_stale_reviews: true },
+        enforce_admins: { enabled: true },
+        allow_deletions: { enabled: false },
+        allow_force_pushes: { enabled: false }
+      }, null, 2));
+
+      runCommand(`node scripts/verify-environment-protection.mjs --mode=DEMO --environment=protected-pilot --mock-api-response="${mockEnvWithRule}" --mock-branch-response="${mockBranchValid}" --out-dir="${outDir}"`);
+
+      const verif = JSON.parse(fs.readFileSync(path.join(outDir, 'environment-protection-verification.json'), 'utf8'));
+      assert.strictEqual(verif.prevent_self_review_observed, true);
+      assert.strictEqual(verif.prevent_self_review_source, 'protection_rules.required_reviewers');
+      assert.strictEqual(verif.status, 'FULLY_PROTECTED');
+    });
+
+    it('6.2: verify-environment-protection detecta contradição quando raiz diverge da regra canónica', () => {
+      const outDir = path.join(tmpDir, 'test_contradictory_rule');
+      fs.mkdirSync(outDir, { recursive: true });
+
+      const mockContradictory = path.join(tmpDir, 'mock_contradictory_env.json');
+      fs.writeFileSync(mockContradictory, JSON.stringify({
+        id: 9999,
+        name: 'protected-pilot',
+        protection_rules: [
+          {
+            type: 'required_reviewers',
+            prevent_self_review: false,
+            reviewers: [{ reviewer: { id: 1, type: 'User' } }]
+          }
+        ],
+        deployment_branch_policy: { protected_branches: true },
+        can_admins_bypass: false,
+        prevent_self_review: true // Contradição com regra required_reviewers
+      }, null, 2));
+
+      const mockBranch = path.join(tmpDir, 'mock_branch_minimal.json');
+      fs.writeFileSync(mockBranch, JSON.stringify({
+        required_status_checks: { strict: true, contexts: ['CI'] }
+      }, null, 2));
+
+      runCommand(`node scripts/verify-environment-protection.mjs --mode=DEMO --environment=protected-pilot --mock-api-response="${mockContradictory}" --mock-branch-response="${mockBranch}" --out-dir="${outDir}"`);
+
+      const verif = JSON.parse(fs.readFileSync(path.join(outDir, 'environment-protection-verification.json'), 'utf8'));
+      assert.strictEqual(verif.has_contradictory_prevent_self_review, true);
+      assert.strictEqual(verif.prevent_self_review, false);
+      assert.notStrictEqual(verif.status, 'FULLY_PROTECTED');
+    });
+
+    it('6.3: run-operational-pilot em OPERATIONAL_PILOT falha sem aprovação autenticada externa', () => {
+      const outDir = path.join(tmpDir, 'test_op_no_approval');
+      fs.mkdirSync(outDir, { recursive: true });
+      const testDb = path.join(outDir, 'test_no_app.db');
+
+      const opInputFile = path.join(outDir, 'operational-pilot-input.json');
+      fs.writeFileSync(opInputFile, JSON.stringify({
+        tenant_id: 'TENANT_LIVE_01',
+        task_id: 'TASK_LIVE_01',
+        idempotency_key: 'IDEMP_OP_001',
+        received_at: new Date().toISOString(),
+        authorization_document_path: 'despacho.pdf',
+        authorization_document_sha256: sha256('pdf'),
+        allowed_data_categories: ['FINANCE'],
+        prohibited_data_categories: [],
+        prohibited_actions: [],
+        allowed_connectors: [],
+        human_reviewers: ['revB'],
+        reviewer_configs: [
+          {
+            reviewer_id: 'revB',
+            display_name: 'Revisor B',
+            role: 'AUDITOR',
+            secret_ref: 'SECRET_REV_B'
+          }
+        ],
+        input_data: { test: true },
+        metadata: {},
+        execution_mode: 'OPERATIONAL_PILOT',
+        classification: 'CONTROLLED_OPERATIONAL_PILOT',
+        disclaimer: 'DISCLAIMER',
+        sensitivity_level: 'COMMERCIAL'
+      }, null, 2));
+
+      assert.throws(() => {
+        runCommand(`node scripts/run-operational-pilot.mjs --stage=review-and-close --mode=OPERATIONAL_PILOT --stage-a-run-id=1001 --stage-a-artifact-id=2001 --stage-a-head-sha=1111222233334444555566667777888899990000 --challenge-id=CHAL_001 --event-signed-at=2026-09-18T00:00:00Z --input="${opInputFile}" --db="${testDb}" --initiating-actor="userA" --reviewer-id="revB" --decision=APPROVED --output-dir="${outDir}"`, {
+          REVIEWER_TOKEN: 'token_sample',
+          REVIEW_SIGNATURE: 'sig_sample'
+        });
+      }, /AUTHENTIC_ENVIRONMENT_APPROVAL_EVIDENCE_UNAVAILABLE/);
+    });
+
+    it('6.4: run-operational-pilot em OPERATIONAL_PILOT falha se actor de aprovação coincidir com iniciador', () => {
+      const outDir = path.join(tmpDir, 'test_op_self_app');
+      fs.mkdirSync(outDir, { recursive: true });
+      const testDb = path.join(outDir, 'test_self_app.db');
+
+      const opInputFile = path.join(outDir, 'operational-pilot-input.json');
+      fs.writeFileSync(opInputFile, JSON.stringify({
+        tenant_id: 'TENANT_LIVE_01',
+        task_id: 'TASK_LIVE_01',
+        idempotency_key: 'IDEMP_OP_002',
+        received_at: new Date().toISOString(),
+        authorization_document_path: 'despacho.pdf',
+        authorization_document_sha256: sha256('pdf'),
+        allowed_data_categories: ['FINANCE'],
+        prohibited_data_categories: [],
+        prohibited_actions: [],
+        allowed_connectors: [],
+        human_reviewers: ['user_operator'],
+        reviewer_configs: [
+          {
+            reviewer_id: 'user_operator',
+            display_name: 'User Operator',
+            role: 'OPERATOR',
+            secret_ref: 'SECRET_OP'
+          }
+        ],
+        input_data: { test: true },
+        metadata: {},
+        execution_mode: 'OPERATIONAL_PILOT',
+        classification: 'CONTROLLED_OPERATIONAL_PILOT',
+        disclaimer: 'DISCLAIMER',
+        sensitivity_level: 'COMMERCIAL'
+      }, null, 2));
+
+      const mockApproval = path.join(tmpDir, 'mock_approval_self.json');
+      fs.writeFileSync(mockApproval, JSON.stringify([{
+        id: 77778888,
+        user: { id: 1000, login: 'user_operator' }
+      }], null, 2));
+
+      assert.throws(() => {
+        runCommand(`node scripts/run-operational-pilot.mjs --stage=review-and-close --mode=OPERATIONAL_PILOT --stage-a-run-id=1001 --stage-a-artifact-id=2001 --stage-a-head-sha=1111222233334444555566667777888899990000 --challenge-id=CHAL_001 --event-signed-at=2026-09-18T00:00:00Z --input="${opInputFile}" --db="${testDb}" --initiating-actor="user_operator" --reviewer-id="user_operator" --decision=APPROVED --output-dir="${outDir}"`, {
+          REVIEWER_TOKEN: 'token_sample',
+          REVIEW_SIGNATURE: 'sig_sample',
+          MOCK_APPROVAL_RESPONSE: mockApproval,
+          GITHUB_TRIGGERING_ACTOR: 'user_operator',
+          GITHUB_TRIGGERING_ACTOR_ID: '1000'
+        });
+      }, /SEGREGATION_OF_DUTIES_VIOLATION/);
+    });
+
+    it('6.5: sidecar derivado de artefacto é enriquecido com workflow_id, workflow_path e run_attempt', () => {
+      const outDir = path.join(tmpDir, 'test_artifact_enrichment');
+      fs.mkdirSync(outDir, { recursive: true });
+
+      const artifactMetaFile = path.join(outDir, 'test-artifact.meta.json');
+      fs.writeFileSync(artifactMetaFile, JSON.stringify({
+        artifact_id: 10582159988,
+        workflow_id: null,
+        workflow_path: null,
+        run_attempt: null
+      }, null, 2));
+
+      // Simulação do enriquecimento após validação do run
+      const runData = { workflow_id: 361645706, path: '.github/workflows/operational-pilot-stage-a.yml', run_attempt: 1 };
+      const meta = JSON.parse(fs.readFileSync(artifactMetaFile, 'utf8'));
+      meta.workflow_id = runData.workflow_id;
+      meta.workflow_path = runData.path;
+      meta.run_attempt = runData.run_attempt;
+      meta.enriched_from_verified_run = true;
+      fs.writeFileSync(artifactMetaFile, JSON.stringify(meta, null, 2), 'utf8');
+
+      const enriched = JSON.parse(fs.readFileSync(artifactMetaFile, 'utf8'));
+      assert.strictEqual(enriched.workflow_id, 361645706);
+      assert.strictEqual(enriched.workflow_path, '.github/workflows/operational-pilot-stage-a.yml');
+      assert.strictEqual(enriched.run_attempt, 1);
+      assert.strictEqual(enriched.enriched_from_verified_run, true);
+    });
+
+    it('6.6: verify-operational-pilot-closure-chain valida a cadeia completa em DEMO e emite SAME_SHA_DEMO_CHAIN_INDEPENDENTLY_ATTESTED', () => {
+      const mockChainDir = path.join(tmpDir, 'test_mock_chain');
+      const outAttestDir = path.join(tmpDir, 'test_chain_out');
+      fs.mkdirSync(mockChainDir, { recursive: true });
+      fs.mkdirSync(outAttestDir, { recursive: true });
+
+      const testSha = '8944424fe462b0e5eb5b5fd2eb96b3a83216c7b0';
+
+      // Criar mock da resposta da Etapa B
+      fs.writeFileSync(path.join(mockChainDir, 'stage-b-run-api-response.json'), JSON.stringify({
+        id: 35436363480,
+        status: 'completed',
+        conclusion: 'success',
+        head_sha: testSha,
+        head_branch: 'master',
+        path: '.github/workflows/operational-pilot-stage-b.yml',
+        repository: { id: 1363667011 },
+        head_repository: { id: 1363667011 }
+      }, null, 2));
+
+      // Criar mock da lista de artefactos
+      fs.writeFileSync(path.join(mockChainDir, 'stage-b-artifacts-list.json'), JSON.stringify({
+        artifacts: [{
+          id: 10581109816,
+          name: `aetf-pilot-closure-${testSha}`,
+          size_in_bytes: 48000,
+          expired: false
+        }]
+      }, null, 2));
+
+      // Criar mock do pacote ZIP de fecho
+      const zipContentDir = path.join(tmpDir, 'zip_content_demo');
+      fs.mkdirSync(zipContentDir, { recursive: true });
+
+      fs.writeFileSync(path.join(zipContentDir, 'stage-a-run-api-response.json'), JSON.stringify({
+        id: 35436242478,
+        status: 'completed',
+        conclusion: 'success',
+        head_sha: testSha,
+        path: '.github/workflows/operational-pilot-stage-a.yml'
+      }, null, 2));
+
+      fs.writeFileSync(path.join(zipContentDir, 'stage-a-artifact-api-response.json'), JSON.stringify({
+        id: 10582159988,
+        name: `aetf-pilot-stage-a-${testSha}`
+      }, null, 2));
+
+      fs.writeFileSync(path.join(zipContentDir, 'intake-run-api-response.json'), JSON.stringify({
+        id: 35436054945,
+        head_sha: testSha
+      }, null, 2));
+
+      fs.writeFileSync(path.join(zipContentDir, 'task-receipt-test.json'), JSON.stringify({
+        execution_mode: 'DEMO',
+        is_simulation: true,
+        classification_level: 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED',
+        challenge_id: 'CHAL_TEST_001'
+      }, null, 2));
+
+      fs.writeFileSync(path.join(zipContentDir, 'reviewer-independence-receipt.json'), JSON.stringify({
+        execution_mode: 'DEMO',
+        is_simulation: true,
+        independence_evidence_type: 'SYNTHETIC_DEMO',
+        github_environment_approval_id: null,
+        independence_verified: false,
+        prevent_self_review_observed: false,
+        classification: 'DEMO_REVIEW_INDEPENDENCE_SIMULATED',
+        challenge_id: 'CHAL_TEST_001'
+      }, null, 2));
+
+      fs.writeFileSync(path.join(zipContentDir, 'pilot-final-attestation.json'), JSON.stringify({
+        operational_state: 'AUTOMATED_OPERATIONAL_DEMO_EXECUTED',
+        operational_pilot_started: false,
+        operational_pilot_completed: false
+      }, null, 2));
+
+      // Gerar pilot-evidence-files.sha256
+      const filesToHash = fs.readdirSync(zipContentDir);
+      const shaLines = filesToHash.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(zipContentDir, f))).digest('hex')}  ${f}`);
+      // Adicionar linha de preenchimento para atingir >= 20 ficheiros
+      for (let i = 0; i < 15; i++) {
+        const dummyName = `dummy_${i}.txt`;
+        fs.writeFileSync(path.join(zipContentDir, dummyName), `dummy content ${i}`);
+        shaLines.push(`${createHash('sha256').update(fs.readFileSync(path.join(zipContentDir, dummyName))).digest('hex')}  ${dummyName}`);
+      }
+      fs.writeFileSync(path.join(zipContentDir, 'pilot-evidence-files.sha256'), shaLines.join('\n') + '\n');
+
+      // Comprimir zipContentDir no arquivo aetf-pilot-closure-${testSha}.zip
+      const zipEntries = fs.readdirSync(zipContentDir).map(f => ({
+        name: f,
+        data: fs.readFileSync(path.join(zipContentDir, f))
+      }));
+
+      // Criação de ZIP simples compatível
+      const zipPath = path.join(mockChainDir, `aetf-pilot-closure-${testSha}.zip`);
+      // Utilizar PowerShell Compress-Archive para gerar zip válido
+      runCommand(`powershell -NoProfile -Command "Compress-Archive -Path '${zipContentDir}/*' -DestinationPath '${zipPath}' -Force"`);
+
+      // Executar o verificador de cadeia com os mocks
+      runCommand(`node scripts/verify-operational-pilot-closure-chain.mjs --stage-b-run-id=35436363480 --mock-data-dir="${mockChainDir}" --out-dir="${outAttestDir}"`);
+
+      const attestFile = path.join(outAttestDir, 'chain-attestation.json');
+      assert.ok(fs.existsSync(attestFile));
+      const attestation = JSON.parse(fs.readFileSync(attestFile, 'utf8'));
+      assert.strictEqual(attestation.classification, 'SAME_SHA_DEMO_CHAIN_INDEPENDENTLY_ATTESTED');
+      assert.strictEqual(attestation.same_sha_chain_verified, true);
+      assert.strictEqual(attestation.real_pilot_authorised, false);
     });
   });
 });

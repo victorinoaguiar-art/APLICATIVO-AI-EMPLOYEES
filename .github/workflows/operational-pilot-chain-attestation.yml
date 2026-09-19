@@ -1,0 +1,82 @@
+name: Operational Pilot - Atestação Independente da Cadeia
+
+on:
+  workflow_run:
+    workflows:
+      - "Operational Pilot - Etapa B (Decisao Humana e Fecho)"
+    types:
+      - completed
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      stage_b_run_id:
+        description: 'Run ID da Etapa B para repetição forense manual'
+        required: true
+        default: ''
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  attest-operational-chain:
+    name: "Atestação Forense Independente da Cadeia Completa"
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_repository.id == 1363667011 &&
+        github.event.workflow_run.head_branch == 'master'
+      )
+
+    steps:
+      - name: Determine Target Commit SHA
+        id: target-sha
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            echo "sha=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_OUTPUT
+            echo "run_id=${{ github.event.workflow_run.id }}" >> $GITHUB_OUTPUT
+          else
+            echo "run_id=${{ github.event.inputs.stage_b_run_id }}" >> $GITHUB_OUTPUT
+            STAGE_B_SHA=$(gh api repos/victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES/actions/runs/${{ github.event.inputs.stage_b_run_id }} --jq '.head_sha')
+            echo "sha=${STAGE_B_SHA}" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout Codebase at Exact Audited SHA
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ steps.target-sha.outputs.sha }}
+
+      - name: Setup Node.js 22.x
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Compile Monorepo Packages
+        run: npm run build:packages
+
+      - name: Execute Independent Post-Stage-B Forensic Verification
+        run: |
+          node scripts/verify-operational-pilot-closure-chain.mjs \
+            --stage-b-run-id="${{ steps.target-sha.outputs.run_id }}" \
+            --out-dir=.artifacts/chain_attestation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_COMMIT_SHA: ${{ steps.target-sha.outputs.sha }}
+          GITHUB_SHA: ${{ steps.target-sha.outputs.sha }}
+
+      - name: Upload Chain Attestation Bundle
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        with:
+          name: aetf-pilot-chain-attestation-${{ steps.target-sha.outputs.sha }}
+          path: .artifacts/chain_attestation
+          retention-days: 90
