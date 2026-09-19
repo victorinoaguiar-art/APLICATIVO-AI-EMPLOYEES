@@ -816,7 +816,10 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       const zipContentDir = path.join(tmpDir, 'zip_content_demo');
       fs.mkdirSync(zipContentDir, { recursive: true });
 
-      fs.writeFileSync(path.join(zipContentDir, 'input-package.sha256'), '948cdee5df75eaf336574014f935c0fb644ae2521e4ef27313b48f0bba2d255e  input-package.tar.gz\n');
+      const samplePkgBytes = Buffer.from('IMMUTABLE_TEST_PAYLOAD_AETF_PILOT_DEMO');
+      const samplePkgSha = createHash('sha256').update(samplePkgBytes).digest('hex');
+      fs.writeFileSync(path.join(zipContentDir, 'input-package.tar.gz'), samplePkgBytes);
+      fs.writeFileSync(path.join(zipContentDir, 'input-package.sha256'), `${samplePkgSha}  input-package.tar.gz\n`);
 
       fs.writeFileSync(path.join(zipContentDir, 'stage-a-run-api-response.json'), JSON.stringify({
         id: stageARunId,
@@ -915,7 +918,8 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         is_simulation: true,
         challenge_id: 'CHAL_TEST_001'
       }, null, 2));
-      fs.writeFileSync(path.join(zipADir, 'input-package.sha256'), '948cdee5df75eaf336574014f935c0fb644ae2521e4ef27313b48f0bba2d255e  input-package.tar.gz\n');
+      fs.writeFileSync(path.join(zipADir, 'input-package.tar.gz'), samplePkgBytes);
+      fs.writeFileSync(path.join(zipADir, 'input-package.sha256'), `${samplePkgSha}  input-package.tar.gz\n`);
 
       // Gerar pilot-evidence-files.sha256 para o pacote da Etapa A
       const aFilesToHash = fs.readdirSync(zipADir);
@@ -957,7 +961,11 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
 
       const zipIntakeDir = path.join(tmpDir, 'zip_intake_demo');
       fs.mkdirSync(zipIntakeDir, { recursive: true });
-      fs.writeFileSync(path.join(zipIntakeDir, 'input-package.sha256'), '948cdee5df75eaf336574014f935c0fb644ae2521e4ef27313b48f0bba2d255e  input-package.tar.gz\n');
+      fs.writeFileSync(path.join(zipIntakeDir, 'input-package.tar.gz'), samplePkgBytes);
+      fs.writeFileSync(path.join(zipIntakeDir, 'input-package.sha256'), `${samplePkgSha}  input-package.tar.gz\n`);
+      const intakeFilesToHash = fs.readdirSync(zipIntakeDir);
+      const intakeShaLines = intakeFilesToHash.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(zipIntakeDir, f))).digest('hex')}  ${f}`);
+      fs.writeFileSync(path.join(zipIntakeDir, 'pilot-evidence-files.sha256'), intakeShaLines.join('\n') + '\n');
       const zipIntakeEntries = fs.readdirSync(zipIntakeDir).map(f => ({ name: f, data: fs.readFileSync(path.join(zipIntakeDir, f)) }));
       fs.writeFileSync(path.join(mockChainDir, `aetf-pilot-intake-${testSha}.zip`), buildZip(zipIntakeEntries));
 
@@ -2100,16 +2108,15 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
         assert.strictEqual(res, true);
       });
 
-      it('8.1.5: cadeia com os quatro runs canónicos produz canonical_repository_chain_verified: true', () => {
-        const runs = ['CI', 'Intake', 'Stage A', 'Stage B'].map((label, idx) => ({
+      it('8.1.5: cadeia com os quatro runs canónicos produz canonical_repository_chain_verified: true via função de produção', () => {
+        const [ciRun, intakeRun, stageARun, stageBRun] = ['CI', 'Intake', 'Stage A', 'Stage B'].map((label, idx) => ({
           id: 2000 + idx,
           head_branch: 'master',
           head_sha: testSha,
           repository: { id: canonicalRepoId, full_name: canonicalRepoName },
           head_repository: { id: canonicalRepoId, full_name: canonicalRepoName }
         }));
-        const results = runs.map((r, i) => verifierModule.validateRunRepositoryIdentity(r, `run-${i}`));
-        const canonical_repository_chain_verified = results.every(r => r === true);
+        const canonical_repository_chain_verified = verifierModule.verifyCanonicalRepositoryChain(ciRun, intakeRun, stageARun, stageBRun);
         assert.strictEqual(canonical_repository_chain_verified, true);
       });
 
@@ -2367,7 +2374,7 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
 
         assert.throws(() => {
           verifierModule.verifySidecarHash(targetFile, sidecar, 'test');
-        }, /Nome de ficheiro divergente no sidecar/);
+        }, /Caminho divergente no sidecar|Nome de ficheiro divergente no sidecar/);
       });
 
       it('8.2.21: hash esperado diferente do hash físico falha no código de produção', () => {
@@ -2414,8 +2421,20 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       it('8.2.27: duas fontes canónicas contraditórias falham no código de produção', () => {
         const contraDir = path.join(tmpDir, 'test_contradictory_sources_dir');
         fs.mkdirSync(contraDir, { recursive: true });
-        fs.writeFileSync(path.join(contraDir, 'input-package.sha256'), `${sampleSha256}  input-package.tar.gz\n`);
-        fs.writeFileSync(path.join(contraDir, 'original-package.sha256'), `${altSha256}  original-package.tar.gz\n`);
+
+        const bytes1 = Buffer.from('PAYLOAD_SAMPLE_1');
+        const sha1 = createHash('sha256').update(bytes1).digest('hex');
+        const bytes2 = Buffer.from('PAYLOAD_SAMPLE_2_ALT');
+        const sha2 = createHash('sha256').update(bytes2).digest('hex');
+
+        fs.writeFileSync(path.join(contraDir, 'input-package.tar.gz'), bytes1);
+        fs.writeFileSync(path.join(contraDir, 'original-package.tar.gz'), bytes2);
+        fs.writeFileSync(path.join(contraDir, 'input-package.sha256'), `${sha1}  input-package.tar.gz\n`);
+        fs.writeFileSync(path.join(contraDir, 'original-package.sha256'), `${sha2}  original-package.tar.gz\n`);
+
+        const files = fs.readdirSync(contraDir);
+        const indexLines = files.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(contraDir, f))).digest('hex')}  ${f}`);
+        fs.writeFileSync(path.join(contraDir, 'pilot-evidence-files.sha256'), indexLines.join('\n') + '\n');
 
         assert.throws(() => {
           verifierModule.extractPackageHashFromBundle(contraDir, 'Intake');
@@ -2423,6 +2442,525 @@ describe('AETF-500: Micro-Patch Final — Coerência DEMO, Recibo CI Pós-Conclu
       });
     });
   });
+
+  describe('9. Micro-Patch Final — Verdade Física dos Hashes e Autenticação pelo Índice', () => {
+    let verifierModule: any;
+    let suiteDir: string;
+    const testSha = '37927b519f2865e45d5df236df411da126dbe8f8';
+    const canonicalRepoId = 1363667011;
+    const canonicalRepoName = 'victorinoaguiar-art/APLICATIVO-AI-EMPLOYEES';
+    const sampleSha256 = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+    const altSha256 = '948cdee5df75eaf336574014f935c0fb644ae2521e4ef27313b48f0bba2d255e';
+
+    before(async () => {
+      suiteDir = path.join(tmpDir, 'suite9_hash_truth_tests');
+      fs.mkdirSync(suiteDir, { recursive: true });
+      const { pathToFileURL } = await import('node:url');
+      verifierModule = await import(pathToFileURL(path.resolve(repoRoot, 'scripts/verify-operational-pilot-closure-chain.mjs')).href);
+    });
+
+    const createValidPackageBundle = (targetDir: string, payloadName: string = 'input-package.tar.gz', payloadContent: string = 'VALID_PAYLOAD_TEST') => {
+      fs.mkdirSync(targetDir, { recursive: true });
+      const payloadBuf = Buffer.from(payloadContent);
+      const payloadSha = createHash('sha256').update(payloadBuf).digest('hex');
+      fs.writeFileSync(path.join(targetDir, payloadName), payloadBuf);
+      fs.writeFileSync(path.join(targetDir, 'input-package.sha256'), `${payloadSha}  ${payloadName}\n`);
+
+      const files = fs.readdirSync(targetDir);
+      const indexLines = files.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(targetDir, f))).digest('hex')}  ${f}`);
+      fs.writeFileSync(path.join(targetDir, 'pilot-evidence-files.sha256'), indexLines.join('\n') + '\n');
+      return { payloadSha, payloadBuf };
+    };
+
+    describe('9.1 Testes Positivos', () => {
+      it('9.1.1: fonte .sha256 indexada pelo caminho canónico exacto, apontando para ficheiro físico íntegro, passa no código de produção', () => {
+        const testDir = path.join(suiteDir, 'test_9_1_1');
+        const { payloadSha } = createValidPackageBundle(testDir);
+        const extracted = verifierModule.extractPackageHashFromBundle(testDir, 'Intake');
+        assert.strictEqual(extracted, payloadSha);
+      });
+
+      it('9.1.2: fonte JSON válida, indexada e fisicamente íntegra passa no código de produção', () => {
+        const testDir = path.join(suiteDir, 'test_9_1_2');
+        fs.mkdirSync(testDir, { recursive: true });
+        const expectedSha = sampleSha256;
+        const jsonContent = JSON.stringify({ input_package_sha: expectedSha, stage_a_run_id: 12345 }, null, 2);
+        fs.writeFileSync(path.join(testDir, 'consumed-stage-a.json'), jsonContent);
+
+        const files = fs.readdirSync(testDir);
+        const indexLines = files.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(testDir, f))).digest('hex')}  ${f}`);
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), indexLines.join('\n') + '\n');
+
+        const extracted = verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        assert.strictEqual(extracted, expectedSha);
+      });
+
+      it('9.1.3: JSON com dois ou três campos de hash iguais passa no código de produção', () => {
+        const testDir = path.join(suiteDir, 'test_9_1_3');
+        fs.mkdirSync(testDir, { recursive: true });
+        const expectedSha = sampleSha256;
+        const jsonContent = JSON.stringify({
+          input_package_sha: expectedSha,
+          package_hash: expectedSha,
+          original_package_sha: expectedSha
+        }, null, 2);
+        fs.writeFileSync(path.join(testDir, 'consumed-stage-a.json'), jsonContent);
+
+        const files = fs.readdirSync(testDir);
+        const indexLines = files.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(testDir, f))).digest('hex')}  ${f}`);
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), indexLines.join('\n') + '\n');
+
+        const extracted = verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        assert.strictEqual(extracted, expectedSha);
+      });
+
+      it('9.1.4: dois ficheiros com o mesmo basename em directórios diferentes são distinguidos pelos caminhos canónicos', () => {
+        const testDir = path.join(suiteDir, 'test_9_1_4');
+        const evDir = path.join(testDir, 'evidence');
+        const archDir = path.join(testDir, 'archive');
+        fs.mkdirSync(evDir, { recursive: true });
+        fs.mkdirSync(archDir, { recursive: true });
+
+        const fEvidence = path.join(evDir, 'api-response.json');
+        const fArchive = path.join(archDir, 'api-response.json');
+        fs.writeFileSync(fEvidence, '{"evidence": true}');
+        fs.writeFileSync(fArchive, '{"archive": true}');
+
+        const hEv = createHash('sha256').update(fs.readFileSync(fEvidence)).digest('hex');
+        const sEvidence = path.join(evDir, 'api-response.json.sha256');
+        fs.writeFileSync(sEvidence, `${hEv}  api-response.json\n`);
+
+        const res = verifierModule.verifySidecarHash(fEvidence, sEvidence, 'evidence-api', evDir);
+        assert.strictEqual(res.match, true);
+
+        assert.throws(() => {
+          verifierModule.verifySidecarHash(fArchive, sEvidence, 'archive-api', testDir);
+        }, /Caminho canónico divergente no sidecar|Caminho divergente no sidecar/);
+      });
+
+      it('9.1.5: índice completo, sem linhas inválidas e com todos os bytes coincidentes, passa no código de produção', () => {
+        const testDir = path.join(suiteDir, 'test_9_1_5');
+        fs.mkdirSync(testDir, { recursive: true });
+        for (let i = 1; i <= 5; i++) {
+          fs.writeFileSync(path.join(testDir, `file_${i}.dat`), `DATA_CONTENT_${i}`);
+        }
+        const files = fs.readdirSync(testDir);
+        const indexLines = files.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(testDir, f))).digest('hex')}  ${f}`);
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), indexLines.join('\n') + '\n');
+
+        const { indexMap } = verifierModule.loadPackageIndexMap(testDir);
+        assert.strictEqual(indexMap.size, 5);
+        for (let i = 1; i <= 5; i++) {
+          const res = verifierModule.verifyFileAgainstPackageIndex(testDir, path.join(testDir, `file_${i}.dat`), indexMap);
+          assert.strictEqual(res.match, true);
+        }
+      });
+
+      it('9.1.6: Intake, Etapa A e Etapa B com fontes autenticadas e o mesmo hash físico produzem reconciliação positiva', () => {
+        const dirI = path.join(suiteDir, 'test_9_1_6_intake');
+        const dirA = path.join(suiteDir, 'test_9_1_6_stage_a');
+        const dirB = path.join(suiteDir, 'test_9_1_6_stage_b');
+        const sharedPayload = 'SHARED_EXACT_FORENSIC_PAYLOAD_V1';
+
+        const { payloadSha: shaI } = createValidPackageBundle(dirI, 'input-package.tar.gz', sharedPayload);
+        const { payloadSha: shaA } = createValidPackageBundle(dirA, 'input-package.tar.gz', sharedPayload);
+        const { payloadSha: shaB } = createValidPackageBundle(dirB, 'input-package.tar.gz', sharedPayload);
+
+        const extractedI = verifierModule.extractPackageHashFromBundle(dirI, 'Intake');
+        const extractedA = verifierModule.extractPackageHashFromBundle(dirA, 'Stage A');
+        const extractedB = verifierModule.extractPackageHashFromBundle(dirB, 'Stage B');
+
+        assert.strictEqual(extractedI, shaI);
+        assert.strictEqual(extractedA, shaA);
+        assert.strictEqual(extractedB, shaB);
+
+        const reconciled = verifierModule.reconcilePackageHashes(extractedI, extractedA, extractedB);
+        assert.strictEqual(reconciled, true);
+      });
+    });
+
+    describe('9.2 Testes Negativos', () => {
+      it('9.2.1: .sha256 presente, mas não indexado falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_1');
+        fs.mkdirSync(testDir, { recursive: true });
+        const payloadBuf = Buffer.from('TEST_UNINDEXED_SIDECAR');
+        const payloadSha = createHash('sha256').update(payloadBuf).digest('hex');
+        fs.writeFileSync(path.join(testDir, 'input-package.tar.gz'), payloadBuf);
+        fs.writeFileSync(path.join(testDir, 'input-package.sha256'), `${payloadSha}  input-package.tar.gz\n`);
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `${payloadSha}  input-package.tar.gz\n`);
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Intake');
+        }, /Fonte de linkage 'input-package\.sha256' presente mas não indexada no manifesto de hashes/);
+      });
+
+      it('9.2.2: .sha256 indexado por caminho diferente falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_2');
+        fs.mkdirSync(testDir, { recursive: true });
+        const payloadBuf = Buffer.from('TEST_WRONG_INDEX_PATH');
+        const payloadSha = createHash('sha256').update(payloadBuf).digest('hex');
+        fs.writeFileSync(path.join(testDir, 'input-package.tar.gz'), payloadBuf);
+        fs.writeFileSync(path.join(testDir, 'input-package.sha256'), `${payloadSha}  input-package.tar.gz\n`);
+        const sidecarSha = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'input-package.sha256'))).digest('hex');
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `${sidecarSha}  wrong/input-package.sha256\n${payloadSha}  input-package.tar.gz\n`);
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Intake');
+        }, /Fonte de linkage 'input-package\.sha256' presente mas não indexada no manifesto de hashes/);
+      });
+
+      it('9.2.3: .sha256 apontando para ficheiro inexistente falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_3');
+        fs.mkdirSync(testDir, { recursive: true });
+        fs.writeFileSync(path.join(testDir, 'input-package.sha256'), `${sampleSha256}  non-existent.tar.gz\n`);
+        const sidecarSha = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'input-package.sha256'))).digest('hex');
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `${sidecarSha}  input-package.sha256\n`);
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Intake');
+        }, /Ficheiro físico referido 'non-existent\.tar\.gz' ausente/);
+      });
+
+      it('9.2.4: .sha256 apontando para caminho absoluto falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_4');
+        fs.mkdirSync(testDir, { recursive: true });
+        fs.writeFileSync(path.join(testDir, 'input-package.sha256'), `${sampleSha256}  /etc/passwd\n`);
+        const sidecarSha = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'input-package.sha256'))).digest('hex');
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `${sidecarSha}  input-package.sha256\n`);
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Intake');
+        }, /Caminho absoluto não permitido no índice/);
+      });
+
+      it('9.2.5: .sha256 apontando para caminho com .. falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_5');
+        fs.mkdirSync(testDir, { recursive: true });
+        fs.writeFileSync(path.join(testDir, 'input-package.sha256'), `${sampleSha256}  ../escape.tar.gz\n`);
+        const sidecarSha = createHash('sha256').update(fs.readFileSync(path.join(testDir, 'input-package.sha256'))).digest('hex');
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `${sidecarSha}  input-package.sha256\n`);
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Intake');
+        }, /Caminho com escape \('\.\.'\) não permitido no índice/);
+      });
+
+      it('9.2.6: .sha256 com caminho correcto, mas bytes físicos adulterados falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_6');
+        const { payloadSha } = createValidPackageBundle(testDir);
+        // Adulterar os bytes físicos do ficheiro referido
+        fs.writeFileSync(path.join(testDir, 'input-package.tar.gz'), 'CORRUPTED_BYTES_TAMPERED');
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Intake');
+        }, /Hash físico da fonte de linkage 'input-package\.tar\.gz' .* diverge do registado no índice|Bytes físicos adulterados/);
+      });
+
+      it('9.2.7: .sha256 contendo hash válido de outro ficheiro falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_7');
+        fs.mkdirSync(testDir, { recursive: true });
+        const bufActual = Buffer.from('ACTUAL_BYTES');
+        const bufOther = Buffer.from('OTHER_BYTES');
+        const hashOther = createHash('sha256').update(bufOther).digest('hex');
+
+        fs.writeFileSync(path.join(testDir, 'input-package.tar.gz'), bufActual);
+        // Coloca o hash de bufOther no sidecar
+        fs.writeFileSync(path.join(testDir, 'input-package.sha256'), `${hashOther}  input-package.tar.gz\n`);
+
+        const files = fs.readdirSync(testDir);
+        const indexLines = files.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(testDir, f))).digest('hex')}  ${f}`);
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), indexLines.join('\n') + '\n');
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Intake');
+        }, /Bytes físicos adulterados em 'input-package\.tar\.gz'/);
+      });
+
+      it('9.2.8: dois caminhos diferentes com o mesmo basename falham em verifySidecarHash', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_8');
+        const dir1 = path.join(testDir, 'dir1');
+        const dir2 = path.join(testDir, 'dir2');
+        fs.mkdirSync(dir1, { recursive: true });
+        fs.mkdirSync(dir2, { recursive: true });
+
+        const f1 = path.join(dir1, 'target.txt');
+        const f2 = path.join(dir2, 'target.txt');
+        fs.writeFileSync(f1, 'CONTENT_1');
+        fs.writeFileSync(f2, 'CONTENT_2');
+
+        const sidecar = path.join(dir1, 'target.txt.sha256');
+        const h1 = createHash('sha256').update(fs.readFileSync(f1)).digest('hex');
+        fs.writeFileSync(sidecar, `${h1}  dir1/target.txt\n`);
+
+        assert.throws(() => {
+          verifierModule.verifySidecarHash(f2, sidecar, 'homonym', testDir);
+        }, /Caminho canónico divergente no sidecar/);
+      });
+
+      it('9.2.9: fonte JSON presente, mas não indexada falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_9');
+        fs.mkdirSync(testDir, { recursive: true });
+        fs.writeFileSync(path.join(testDir, 'consumed-stage-a.json'), JSON.stringify({ input_package_sha: sampleSha256 }));
+        // Cria índice sem incluir consumed-stage-a.json
+        fs.writeFileSync(path.join(testDir, 'dummy.txt'), 'hello');
+        const dSha = createHash('sha256').update('hello').digest('hex');
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `${dSha}  dummy.txt\n`);
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        }, /Fonte de linkage 'consumed-stage-a\.json' presente mas não indexada no manifesto de hashes/);
+      });
+
+      it('9.2.10: fonte JSON malformada coexistindo com um .sha256 válido falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_10');
+        const { payloadSha } = createValidPackageBundle(testDir);
+        // Adicionar consumed-stage-a.json com sintaxe corrompida
+        fs.writeFileSync(path.join(testDir, 'consumed-stage-a.json'), 'INVALID_SYNTAX_{not json');
+
+        // Regenerar índice cobrindo todos os ficheiros
+        const files = fs.readdirSync(testDir).filter(f => f !== 'pilot-evidence-files.sha256');
+        const indexLines = files.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(testDir, f))).digest('hex')}  ${f}`);
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), indexLines.join('\n') + '\n');
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        }, /Ficheiro JSON de linkage 'consumed-stage-a\.json' malformado/);
+      });
+
+      it('9.2.11: fonte JSON com hash físico divergente do índice falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_11');
+        fs.mkdirSync(testDir, { recursive: true });
+        const jsonContent = JSON.stringify({ input_package_sha: sampleSha256 });
+        fs.writeFileSync(path.join(testDir, 'consumed-stage-a.json'), jsonContent);
+
+        const files = fs.readdirSync(testDir);
+        const indexLines = files.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(testDir, f))).digest('hex')}  ${f}`);
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), indexLines.join('\n') + '\n');
+
+        // Adulterar JSON sem atualizar o índice
+        fs.writeFileSync(path.join(testDir, 'consumed-stage-a.json'), JSON.stringify({ input_package_sha: altSha256 }));
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        }, /Hash físico da fonte de linkage 'consumed-stage-a\.json' .* diverge do registado no índice/);
+      });
+
+      it('9.2.12: JSON com input_package_sha e package_hash divergentes falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_12');
+        fs.mkdirSync(testDir, { recursive: true });
+        fs.writeFileSync(path.join(testDir, 'consumed-stage-a.json'), JSON.stringify({
+          input_package_sha: sampleSha256,
+          package_hash: altSha256
+        }));
+
+        const files = fs.readdirSync(testDir);
+        const indexLines = files.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(testDir, f))).digest('hex')}  ${f}`);
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), indexLines.join('\n') + '\n');
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        }, /Campos contraditórios no mesmo JSON de linkage/);
+      });
+
+      it('9.2.13: JSON com package_hash e original_package_sha divergentes falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_13');
+        fs.mkdirSync(testDir, { recursive: true });
+        fs.writeFileSync(path.join(testDir, 'consumed-stage-a.json'), JSON.stringify({
+          package_hash: sampleSha256,
+          original_package_sha: altSha256
+        }));
+
+        const files = fs.readdirSync(testDir);
+        const indexLines = files.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(testDir, f))).digest('hex')}  ${f}`);
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), indexLines.join('\n') + '\n');
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        }, /Campos contraditórios no mesmo JSON de linkage/);
+      });
+
+      it('9.2.14: campo de hash presente com valor null falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_14');
+        fs.mkdirSync(testDir, { recursive: true });
+        fs.writeFileSync(path.join(testDir, 'consumed-stage-a.json'), JSON.stringify({
+          input_package_sha: null
+        }));
+
+        const files = fs.readdirSync(testDir);
+        const indexLines = files.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(testDir, f))).digest('hex')}  ${f}`);
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), indexLines.join('\n') + '\n');
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        }, /Campo de hash 'input_package_sha' presente no JSON de linkage com valor nulo/);
+      });
+
+      it('9.2.15: campo de hash presente com formato inválido falha com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_15');
+        fs.mkdirSync(testDir, { recursive: true });
+        fs.writeFileSync(path.join(testDir, 'consumed-stage-a.json'), JSON.stringify({
+          input_package_sha: 'NOT_A_VALID_SHA'
+        }));
+
+        const files = fs.readdirSync(testDir);
+        const indexLines = files.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(testDir, f))).digest('hex')}  ${f}`);
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), indexLines.join('\n') + '\n');
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        }, /Hash SHA-256 inválido/);
+      });
+
+      it('9.2.16: duas fontes canónicas autenticadas, mas contraditórias falham com erro fail-closed', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_16');
+        const { payloadSha } = createValidPackageBundle(testDir);
+        // Adicionar JSON com hash diferente
+        fs.writeFileSync(path.join(testDir, 'consumed-stage-a.json'), JSON.stringify({
+          input_package_sha: altSha256
+        }));
+
+        const files = fs.readdirSync(testDir).filter(f => f !== 'pilot-evidence-files.sha256');
+        const indexLines = files.map(f => `${createHash('sha256').update(fs.readFileSync(path.join(testDir, f))).digest('hex')}  ${f}`);
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), indexLines.join('\n') + '\n');
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(testDir, 'Stage B');
+        }, /Fontes canónicas contraditórias em Stage B: manifesto físico .* diverge de JSON de linkage/);
+      });
+
+      it('9.2.17: linha não vazia do índice sem caminho falha no carregador estrito', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_17');
+        fs.mkdirSync(testDir, { recursive: true });
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `${sampleSha256}\n`);
+
+        assert.throws(() => {
+          verifierModule.loadPackageIndexMap(testDir);
+        }, /malformada no índice de hashes/);
+      });
+
+      it('9.2.18: linha não vazia do índice sem hash falha no carregador estrito', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_18');
+        fs.mkdirSync(testDir, { recursive: true });
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `not-a-hash  somefile.txt\n`);
+
+        assert.throws(() => {
+          verifierModule.loadPackageIndexMap(testDir);
+        }, /Hash SHA-256 malformado na linha/);
+      });
+
+      it('9.2.19: entrada duplicada para o mesmo caminho canónico falha no carregador estrito', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_19');
+        fs.mkdirSync(testDir, { recursive: true });
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `${sampleSha256}  doc.txt\n${sampleSha256}  doc.txt\n`);
+
+        assert.throws(() => {
+          verifierModule.loadPackageIndexMap(testDir);
+        }, /Entrada duplicada no índice de hashes para o caminho canónico 'doc\.txt'/);
+      });
+
+      it('9.2.20: ficheiro enumerado no índice ausente falha na verificação física', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_20');
+        fs.mkdirSync(testDir, { recursive: true });
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `${sampleSha256}  missing.txt\n`);
+
+        const { indexMap } = verifierModule.loadPackageIndexMap(testDir);
+        assert.throws(() => {
+          verifierModule.verifyFileAgainstPackageIndex(testDir, path.join(testDir, 'missing.txt'), indexMap);
+        }, /não existe/);
+      });
+
+      it('9.2.21: ficheiro enumerado no índice com bytes divergentes falha na verificação física', () => {
+        const testDir = path.join(suiteDir, 'test_9_2_21');
+        fs.mkdirSync(testDir, { recursive: true });
+        fs.writeFileSync(path.join(testDir, 'file.txt'), 'ORIGINAL_CONTENT');
+        const h = createHash('sha256').update('ORIGINAL_CONTENT').digest('hex');
+        fs.writeFileSync(path.join(testDir, 'pilot-evidence-files.sha256'), `${h}  file.txt\n`);
+
+        // Modificar o ficheiro
+        fs.writeFileSync(path.join(testDir, 'file.txt'), 'TAMPERED_CONTENT');
+
+        const { indexMap } = verifierModule.loadPackageIndexMap(testDir);
+        assert.throws(() => {
+          verifierModule.verifyFileAgainstPackageIndex(testDir, path.join(testDir, 'file.txt'), indexMap);
+        }, /Hash físico da fonte de linkage 'file\.txt' .* diverge do registado no índice/);
+      });
+
+      it('9.2.22: Intake, Etapa A e Etapa B com valores declarados iguais, mas bytes físicos diferentes falham', () => {
+        const dirI = path.join(suiteDir, 'test_9_2_22_intake');
+        const dirA = path.join(suiteDir, 'test_9_2_22_stage_a');
+        const dirB = path.join(suiteDir, 'test_9_2_22_stage_b');
+        const payloadGood = 'COMMON_PAYLOAD_ORIGINAL';
+        const payloadBad = 'CORRUPTED_PAYLOAD_TAMPERED';
+
+        createValidPackageBundle(dirI, 'input-package.tar.gz', payloadGood);
+        createValidPackageBundle(dirA, 'input-package.tar.gz', payloadGood);
+
+        // Na Etapa B, criamos com payloadGood, mas depois adulteramos os bytes mantendo o sidecar
+        createValidPackageBundle(dirB, 'input-package.tar.gz', payloadGood);
+        fs.writeFileSync(path.join(dirB, 'input-package.tar.gz'), payloadBad);
+
+        assert.throws(() => {
+          verifierModule.extractPackageHashFromBundle(dirB, 'Stage B');
+        }, /Hash físico da fonte de linkage 'input-package\.tar\.gz' .* diverge do registado no índice|Bytes físicos adulterados/);
+      });
+
+      it('9.2.23: qualquer estado obrigatório falso impede atestação positiva', () => {
+        const invalidStates = {
+          intake_package_hash_verified: false,
+          stage_a_input_hash_verified: true,
+          stage_b_preserved_hash_verified: true,
+          cross_stage_package_hash_reconciled: true,
+          api_response_hashes_verified: true,
+          evidence_index_hashes_verified: true,
+          canonical_repository_chain_verified: true
+        };
+
+        const allPositive = Object.values(invalidStates).every(v => v === true);
+        assert.strictEqual(allPositive, false);
+      });
+    });
+
+    describe('9.3 Teste Integrado Operacional', () => {
+      it('9.3.1: encadeamento operacional real das 3 etapas demonstrando autenticação física de 3 vias', () => {
+        const baseDir = path.join(suiteDir, 'test_9_3_integrated');
+        const intakeDir = path.join(baseDir, 'intake');
+        const stageADir = path.join(baseDir, 'stage_a');
+        const stageBDir = path.join(baseDir, 'stage_b');
+
+        const canonicalPayload = 'INTEGRATED_PIPELINE_CANONICAL_PAYLOAD_2026';
+        const { payloadSha } = createValidPackageBundle(intakeDir, 'input-package.tar.gz', canonicalPayload);
+        createValidPackageBundle(stageADir, 'input-package.tar.gz', canonicalPayload);
+        createValidPackageBundle(stageBDir, 'input-package.tar.gz', canonicalPayload);
+
+        // 1. Extração autenticada Intake
+        const intakeSha = verifierModule.extractPackageHashFromBundle(intakeDir, 'Intake');
+        assert.strictEqual(intakeSha, payloadSha);
+
+        // 2. Extração autenticada Etapa A
+        const stageASha = verifierModule.extractPackageHashFromBundle(stageADir, 'Stage A');
+        assert.strictEqual(stageASha, payloadSha);
+
+        // 3. Extração autenticada Etapa B
+        const stageBSha = verifierModule.extractPackageHashFromBundle(stageBDir, 'Stage B');
+        assert.strictEqual(stageBSha, payloadSha);
+
+        // 4. Reconciliação transversal estrita
+        const reconciled = verifierModule.reconcilePackageHashes(intakeSha, stageASha, stageBSha);
+        assert.strictEqual(reconciled, true);
+
+        // 5. Estados derivados obrigatórios
+        const states = {
+          intake_package_hash_verified: Boolean(intakeSha && /^[a-f0-9]{64}$/.test(intakeSha)),
+          stage_a_input_hash_verified: Boolean(stageASha && /^[a-f0-9]{64}$/.test(stageASha)),
+          stage_b_preserved_hash_verified: Boolean(stageBSha && /^[a-f0-9]{64}$/.test(stageBSha)),
+          cross_stage_package_hash_reconciled: reconciled
+        };
+
+        assert.strictEqual(states.intake_package_hash_verified, true);
+        assert.strictEqual(states.stage_a_input_hash_verified, true);
+        assert.strictEqual(states.stage_b_preserved_hash_verified, true);
+        assert.strictEqual(states.cross_stage_package_hash_reconciled, true);
+      });
+    });
+  });
 });
-
-

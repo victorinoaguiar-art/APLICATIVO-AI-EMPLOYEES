@@ -156,6 +156,17 @@ export function validateRunRepositoryIdentity(run, runLabel = 'run') {
 }
 
 /**
+ * Validação de Cadeia de Identidade Canónica dos 4 Runs (Subprompt 2 & Micro-Patch Final)
+ */
+export function verifyCanonicalRepositoryChain(ciRun, intakeRun, stageARun, stageBRun) {
+  validateRunRepositoryIdentity(ciRun, 'CI');
+  validateRunRepositoryIdentity(intakeRun, 'Intake');
+  validateRunRepositoryIdentity(stageARun, 'Stage A');
+  validateRunRepositoryIdentity(stageBRun, 'Stage B');
+  return true;
+}
+
+/**
  * Validação de Metadados de Workflow Run obtidos em Endpoint Individual
  */
 export function validateRunMetadata(run, expectedRunId, expectedWorkflowPath = null, expectedSha = null) {
@@ -214,7 +225,7 @@ export function assertStrictSha256Format(val, label = 'hash') {
 }
 
 /**
- * Extração de Hash SHA-256 de um Ficheiro Checksum / Sidecar (Subprompt 2)
+ * Extração de Hash SHA-256 de um Ficheiro Checksum / Sidecar (Subprompt 2 & Micro-Patch Final)
  */
 export function extractStrictSha256FromFile(filePath, label = 'sidecar') {
   if (!filePath || !fs.existsSync(filePath)) {
@@ -225,20 +236,25 @@ export function extractStrictSha256FromFile(filePath, label = 'sidecar') {
   if (lines.length === 0) {
     throw new Error(`[FAIL-CLOSED] Ficheiro de checksum '${filePath}' está vazio para '${label}'.`);
   }
+  if (lines.length > 1) {
+    throw new Error(`[FAIL-CLOSED] Mais de uma entrada encontrada no ficheiro sidecar '${path.basename(filePath)}' para '${label}': esperado exatamente uma linha.`);
+  }
   const firstLine = lines[0];
   const parts = firstLine.split(/\s+/);
-  if (parts.length < 1 || !parts[0]) {
-    throw new Error(`[FAIL-CLOSED] Linha de checksum malformada em '${filePath}': '${firstLine}'.`);
+  if (parts.length < 2 || !parts[0] || !parts[1]) {
+    throw new Error(`[FAIL-CLOSED] Linha sem nome ou caminho de ficheiro no sidecar '${path.basename(filePath)}' para '${label}': '${firstLine}'.`);
   }
   const hash = assertStrictSha256Format(parts[0], `${label} (${path.basename(filePath)})`);
-  const referencedFile = parts.length > 1 ? parts.slice(1).join(' ').replace(/^\*/, '') : null;
+  const rawReferenced = parts.slice(1).join(' ').replace(/^\*/, '');
+  const referencedFile = normalizeCanonicalPath(rawReferenced);
   return { hash, referencedFile, rawContent: content };
 }
 
 /**
- * Validação de Integridade Física contra Ficheiro Sidecar .sha256 (Subprompt 2)
+ * Validação de Integridade Física contra Ficheiro Sidecar .sha256 (Micro-Patch Final)
+ * Elimina completamente a comparação por path.basename e valida caminhos canónicos exatos.
  */
-export function verifySidecarHash(sourceFilePath, sidecarFilePath, label = 'sidecar') {
+export function verifySidecarHash(sourceFilePath, sidecarFilePath, label = 'sidecar', rootDir = null) {
   if (!sourceFilePath || !fs.existsSync(sourceFilePath)) {
     throw new Error(`[FAIL-CLOSED] Ficheiro físico '${sourceFilePath}' ausente para '${label}'.`);
   }
@@ -248,17 +264,32 @@ export function verifySidecarHash(sourceFilePath, sidecarFilePath, label = 'side
 
   const { hash: expectedHash, referencedFile } = extractStrictSha256FromFile(sidecarFilePath, label);
 
-  if (!referencedFile) {
-    throw new Error(`[FAIL-CLOSED] Linha sem nome de ficheiro no sidecar '${path.basename(sidecarFilePath)}' para '${label}'.`);
+  const absSource = path.resolve(sourceFilePath);
+  const absSidecarDir = path.dirname(path.resolve(sidecarFilePath));
+  const absDeclared = path.resolve(absSidecarDir, referencedFile);
+
+  if (rootDir) {
+    const absRoot = path.resolve(rootDir);
+    const relSource = path.relative(absRoot, absSource);
+    if (relSource.startsWith('..') || path.isAbsolute(relSource)) {
+      throw new Error(`[FAIL-CLOSED] Ficheiro físico '${sourceFilePath}' escapa da raiz autorizada '${rootDir}'.`);
+    }
+    const relDeclared = path.relative(absRoot, absDeclared);
+    if (relDeclared.startsWith('..') || path.isAbsolute(relDeclared)) {
+      throw new Error(`[FAIL-CLOSED] Ficheiro declarado no sidecar '${referencedFile}' escapa da raiz autorizada '${rootDir}'.`);
+    }
+    const canonicalRelSource = normalizeCanonicalPath(relSource);
+    const canonicalRelDeclared = normalizeCanonicalPath(relDeclared);
+    if (canonicalRelSource !== canonicalRelDeclared) {
+      throw new Error(`[FAIL-CLOSED] Caminho canónico divergente no sidecar '${path.basename(sidecarFilePath)}': esperado '${canonicalRelSource}', declarado '${canonicalRelDeclared}'.`);
+    }
+  } else {
+    if (absDeclared !== absSource) {
+      throw new Error(`[FAIL-CLOSED] Caminho divergente no sidecar '${path.basename(sidecarFilePath)}': esperado '${absSource}', resolvido '${absDeclared}'.`);
+    }
   }
 
-  const sourceBase = path.basename(sourceFilePath);
-  const refBase = path.basename(referencedFile);
-  if (sourceBase !== refBase) {
-    throw new Error(`[FAIL-CLOSED] Nome de ficheiro divergente no sidecar '${path.basename(sidecarFilePath)}': esperado '${sourceBase}', registado '${refBase}'.`);
-  }
-
-  const sourceBytes = fs.readFileSync(sourceFilePath);
+  const sourceBytes = fs.readFileSync(absSource);
   const actualHash = sha256(sourceBytes).toLowerCase();
   assertStrictSha256Format(actualHash, `actual physical hash for ${label}`);
 
@@ -299,17 +330,22 @@ export function reconcilePackageHashes(intakeSha, stageASha, stageBSha) {
 }
 
 /**
- * Extração Segura de Hash de Pacote de um Bundle Extraído (Subprompt 2)
- * Rejeita qualquer pacote sem hash ou com fontes contraditórias.
+ * Extração Segura de Hash de Pacote de um Bundle Extraído (Micro-Patch Final)
+ * - Autentica cada fonte pelo índice aplicável;
+ * - Valida a existência física e integridade byte a byte do ficheiro referido;
+ * - Valida fontes JSON estritamente sem tolerar malformações;
+ * - Compara todos os campos de hash no mesmo JSON e entre fontes.
  */
 export function extractPackageHashFromBundle(extractDir, stageName = 'Stage') {
   if (!extractDir || !fs.existsSync(extractDir)) {
     throw new Error(`[FAIL-CLOSED] Diretório de extração '${extractDir}' ausente para ${stageName}.`);
   }
 
+  // 1. Carregar obrigatoriamente o índice de evidências do pacote
+  const { indexMap } = loadPackageIndexMap(extractDir);
+
   let fileSha = null;
   let origSha = null;
-  let jsonSha = null;
 
   const inputPkgShaPath = path.join(extractDir, 'input-package.sha256');
   const origPkgShaPath = path.join(extractDir, 'original-package.sha256');
@@ -319,13 +355,51 @@ export function extractPackageHashFromBundle(extractDir, stageName = 'Stage') {
   const pInput = fs.existsSync(inputPkgShaPath) ? inputPkgShaPath : (fs.existsSync(evInputPkgShaPath) ? evInputPkgShaPath : null);
   const pOrig = fs.existsSync(origPkgShaPath) ? origPkgShaPath : (fs.existsSync(evOrigPkgShaPath) ? evOrigPkgShaPath : null);
 
+  const validatePackageSidecar = (sidecarPath, label) => {
+    // a. Autenticar o próprio ficheiro .sha256 contra o índice do pacote
+    verifyFileAgainstPackageIndex(extractDir, sidecarPath, indexMap);
+
+    // b. Extrair hash estrito e caminho do ficheiro referido
+    const ext = extractStrictSha256FromFile(sidecarPath, label);
+    if (!ext.referencedFile) {
+      throw new Error(`[FAIL-CLOSED] Ficheiro sidecar '${path.basename(sidecarPath)}' não especifica ficheiro referido para ${label}.`);
+    }
+
+    const canonicalRef = normalizeCanonicalPath(ext.referencedFile);
+    const sidecarDir = path.dirname(sidecarPath);
+    const resolvedPhysicalTarget = path.resolve(sidecarDir, canonicalRef);
+
+    // c. Validar que o ficheiro referido reside dentro do extractDir
+    const relToExtract = path.relative(extractDir, resolvedPhysicalTarget);
+    if (relToExtract.startsWith('..') || path.isAbsolute(relToExtract)) {
+      throw new Error(`[FAIL-CLOSED] Ficheiro referido '${canonicalRef}' escapa do directório de extração para ${label}.`);
+    }
+
+    // d. Validar que o ficheiro referido existe fisicamente
+    if (!fs.existsSync(resolvedPhysicalTarget)) {
+      throw new Error(`[FAIL-CLOSED] Ficheiro físico referido '${canonicalRef}' ausente em '${extractDir}' para ${label}.`);
+    }
+
+    // e. Autenticar o ficheiro referido contra o índice do pacote
+    verifyFileAgainstPackageIndex(extractDir, resolvedPhysicalTarget, indexMap);
+
+    // f. Recalcular os bytes físicos do ficheiro referido e comparar com o hash declarado no sidecar
+    const physicalBytes = fs.readFileSync(resolvedPhysicalTarget);
+    const calculatedHash = sha256(physicalBytes).toLowerCase();
+    assertStrictSha256Format(calculatedHash, `bytes físicos de ${canonicalRef}`);
+
+    if (calculatedHash !== ext.hash.toLowerCase()) {
+      throw new Error(`[FAIL-CLOSED] Bytes físicos adulterados em '${canonicalRef}' para ${label}: hash físico (${calculatedHash}) diverge do hash declarado (${ext.hash}).`);
+    }
+
+    return ext.hash;
+  };
+
   if (pInput) {
-    const ext = extractStrictSha256FromFile(pInput, `${stageName} input-package.sha256`);
-    fileSha = ext.hash;
+    fileSha = validatePackageSidecar(pInput, `${stageName} input-package.sha256`);
   }
   if (pOrig) {
-    const ext = extractStrictSha256FromFile(pOrig, `${stageName} original-package.sha256`);
-    origSha = ext.hash;
+    origSha = validatePackageSidecar(pOrig, `${stageName} original-package.sha256`);
   }
 
   // Verificar contradição entre ficheiros de hash no mesmo pacote
@@ -333,26 +407,67 @@ export function extractPackageHashFromBundle(extractDir, stageName = 'Stage') {
     throw new Error(`[FAIL-CLOSED] Fontes canónicas contraditórias em ${stageName}: input-package.sha256 (${fileSha}) diverge de original-package.sha256 (${origSha}).`);
   }
 
-  // Se for Etapa B, pode também conter consumed-stage-a.json com o hash preservado
+  // 2. Avaliar fontes JSON de linkage (ex.: consumed-stage-a.json)
+  let jsonSha = null;
   const consumedStageAPath = path.join(extractDir, 'consumed-stage-a.json');
   const evConsumedStageAPath = path.join(extractDir, 'evidence', 'consumed-stage-a.json');
   const pConsumed = fs.existsSync(consumedStageAPath) ? consumedStageAPath : (fs.existsSync(evConsumedStageAPath) ? evConsumedStageAPath : null);
 
   if (pConsumed) {
-    try {
-      const data = JSON.parse(fs.readFileSync(pConsumed, 'utf8'));
-      const rawJ = data.input_package_sha || data.package_hash || data.original_package_sha || null;
-      if (rawJ) {
-        jsonSha = assertStrictSha256Format(String(rawJ), `${stageName} JSON package hash`);
-      }
-    } catch (parseErr) {
-      if (parseErr.message && parseErr.message.includes('[FAIL-CLOSED]')) throw parseErr;
+    // a. Autenticar o ficheiro JSON contra o índice
+    verifyFileAgainstPackageIndex(extractDir, pConsumed, indexMap);
+
+    // b. Ler e fazer parse estrito (sem abafar SyntaxError)
+    const rawContent = fs.readFileSync(pConsumed, 'utf8');
+    if (!rawContent || !rawContent.trim()) {
+      throw new Error(`[FAIL-CLOSED] Ficheiro JSON de linkage '${path.basename(pConsumed)}' está vazio.`);
     }
+
+    let data;
+    try {
+      data = JSON.parse(rawContent);
+    } catch (parseErr) {
+      throw new Error(`[FAIL-CLOSED] Ficheiro JSON de linkage '${path.basename(pConsumed)}' malformado: ${parseErr.message}`);
+    }
+
+    if (!data || typeof data !== 'object' || Array.isArray(data)) {
+      throw new Error(`[FAIL-CLOSED] Conteúdo de '${path.basename(pConsumed)}' não é um objecto JSON válido.`);
+    }
+
+    // c. Recolher todos os campos de hash de pacote reconhecidos
+    const recognizedKeys = ['input_package_sha', 'package_hash', 'original_package_sha'];
+    const collectedHashes = [];
+
+    for (const key of recognizedKeys) {
+      if (key in data) {
+        const rawVal = data[key];
+        if (rawVal === null || rawVal === undefined || typeof rawVal !== 'string' || !rawVal.trim()) {
+          throw new Error(`[FAIL-CLOSED] Campo de hash '${key}' presente no JSON de linkage com valor nulo, vazio ou de tipo inválido.`);
+        }
+        const validatedHash = assertStrictSha256Format(rawVal.trim(), `${stageName} JSON.${key}`);
+        collectedHashes.push({ key, hash: validatedHash });
+      }
+    }
+
+    if (collectedHashes.length === 0) {
+      throw new Error(`[FAIL-CLOSED] Ficheiro JSON de linkage '${path.basename(pConsumed)}' não contém nenhum campo de hash reconhecido.`);
+    }
+
+    // d. Comparar todos os campos entre si na mesma fonte JSON
+    const firstEntry = collectedHashes[0];
+    for (let i = 1; i < collectedHashes.length; i++) {
+      const otherEntry = collectedHashes[i];
+      if (firstEntry.hash !== otherEntry.hash) {
+        throw new Error(`[FAIL-CLOSED] Campos contraditórios no mesmo JSON de linkage ('${path.basename(pConsumed)}'): ${firstEntry.key} (${firstEntry.hash}) diverge de ${otherEntry.key} (${otherEntry.hash}).`);
+      }
+    }
+
+    jsonSha = firstEntry.hash;
   }
 
   const primarySha = fileSha || origSha;
 
-  // Verificar contradição entre ficheiro e JSON
+  // Verificar contradição entre manifesto físico (.sha256) e JSON
   if (primarySha && jsonSha && primarySha !== jsonSha) {
     throw new Error(`[FAIL-CLOSED] Fontes canónicas contraditórias em ${stageName}: manifesto físico (${primarySha}) diverge de JSON de linkage (${jsonSha}).`);
   }
@@ -518,7 +633,7 @@ export function verifyFileAgainstPackageIndex(extractDir, fullFilePath, indexMap
     throw new Error(`[FAIL-CLOSED] Hash físico da fonte de linkage '${canonicalRel}' (${actualHash}) diverge do registado no índice (${expectedHash}).`);
   }
 
-  return { normalizedRel: canonicalRel, actualHash };
+  return { normalizedRel: canonicalRel, actualHash, match: true };
 }
 
 /**
@@ -1369,37 +1484,28 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
       indepReceipt.classification === 'DEMO_REVIEW_INDEPENDENCE_SIMULATED' ? 'PASS' : 'FAIL',
       `approval_id=${indepReceipt.github_environment_approval_id}, sim=${indepReceipt.is_simulation}`);
 
-    const indexPath = fs.existsSync(path.join(stageBEvidenceBase, 'pilot-evidence-files.sha256'))
-      ? path.join(stageBEvidenceBase, 'pilot-evidence-files.sha256')
-      : path.join(stageBExtractDir, 'pilot-evidence-files.sha256');
-
-    if (!fs.existsSync(indexPath)) {
-      throw new Error('[FAIL-CLOSED] pilot-evidence-files.sha256 ausente na Etapa B.');
-    }
-
-    const indexLines = fs.readFileSync(indexPath, 'utf8').split('\n').filter(l => l.trim().length > 0);
+    const { foundIndexPath: indexPath, indexMap } = loadPackageIndexMap(stageBExtractDir);
     let checkedHashes = 0;
-    for (const line of indexLines) {
-      const parts = line.trim().split(/\s+/);
-      if (parts.length < 2) continue;
-      const expectedH = assertStrictSha256Format(parts[0], 'evidence index entry');
-      const rawFileName = parts.slice(1).join(' ');
-      const canonicalFile = normalizeCanonicalPath(rawFileName);
+    for (const [canonicalFile, expectedH] of indexMap.entries()) {
       const filePath = fs.existsSync(path.join(stageBEvidenceBase, canonicalFile))
         ? path.join(stageBEvidenceBase, canonicalFile)
         : path.join(stageBExtractDir, canonicalFile);
 
       if (!fs.existsSync(filePath)) {
-        throw new Error(`[FAIL-CLOSED] Ficheiro indexado ausente: ${rawFileName}`);
+        throw new Error(`[FAIL-CLOSED] Ficheiro indexado ausente: ${canonicalFile}`);
       }
       const computedH = sha256(fs.readFileSync(filePath)).toLowerCase();
       if (computedH !== expectedH) {
-        throw new Error(`[FAIL-CLOSED] Hash divergente para ${rawFileName}`);
+        throw new Error(`[FAIL-CLOSED] Hash divergente para ${canonicalFile}: esperado ${expectedH}, obtido ${computedH}`);
       }
       checkedHashes++;
     }
 
-    const evidence_index_hashes_verified = checkedHashes >= 20;
+    if (checkedHashes === 0 || checkedHashes !== indexMap.size) {
+      throw new Error(`[FAIL-CLOSED] Inconsistência na verificação física do índice: ${checkedHashes}/${indexMap.size} entradas verificadas.`);
+    }
+
+    const evidence_index_hashes_verified = true;
 
     recordCheck('PHYSICAL_HASH_INTEGRITY', String(runBData.id), String(stageBBundle.artifact.id), 'pilot-evidence-files.sha256', sha256(fs.readFileSync(indexPath)),
       evidence_index_hashes_verified ? 'PASS' : 'FAIL',
@@ -1449,17 +1555,12 @@ export async function runVerification(cliArgs = process.argv.slice(2)) {
     console.log('\n--- 7. Cálculo Dinâmico de Todos os Estados de Verificação ---');
 
     // Identidade Canónica Estrita nos 4 Runs
-    const ci_repository_identity_verified = validateRunRepositoryIdentity(ciRun, 'CI');
-    const intake_repository_identity_verified = validateRunRepositoryIdentity(intakeRun, 'Intake');
-    const stage_a_repository_identity_verified = validateRunRepositoryIdentity(stageARun, 'Stage A');
-    const stage_b_repository_identity_verified = validateRunRepositoryIdentity(runBData, 'Stage B');
-
-    const canonical_repository_chain_verified = Boolean(
-      ci_repository_identity_verified &&
-      intake_repository_identity_verified &&
-      stage_a_repository_identity_verified &&
-      stage_b_repository_identity_verified
-    );
+    verifyCanonicalRepositoryChain(ciRun, intakeRun, stageARun, runBData);
+    const ci_repository_identity_verified = true;
+    const intake_repository_identity_verified = true;
+    const stage_a_repository_identity_verified = true;
+    const stage_b_repository_identity_verified = true;
+    const canonical_repository_chain_verified = true;
 
     // Hashes dos ZIPs computados e validados
     const artifact_zip_hashes_computed = Boolean(
